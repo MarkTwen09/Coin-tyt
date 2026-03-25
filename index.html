@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FPI Bank Game</title>
+    <style>
+        :root {
+            --bg-dark: #070e01;
+            --main-green: #acff01;
+            --main-purple: #9d00ff;
+            --ui-card-bg: #111a0c;
+            --ui-border: rgba(172, 255, 1, 0.2);
+            --text-gray: #7a7a7a;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Верхняя панель (Header) */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            font-size: 14px;
+        }
+
+        .header-user {
+            color: var(--main-green);
+            background: rgba(172, 255, 1, 0.1);
+            padding: 5px 10px;
+            border-radius: 10px;
+            border: 1px solid var(--ui-border);
+        }
+
+        .header-icon {
+            display: flex;
+            gap: 15px;
+            color: var(--text-gray);
+        }
+
+        /* Блок новостей */
+        .news-card {
+            background: var(--ui-card-bg);
+            margin: 10px 20px;
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid var(--ui-border);
+            position: relative;
+        }
+
+        .news-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .news-text {
+            color: var(--text-gray);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .news-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: red;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Игровое поле */
+        .game-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* 3D-Монета */
+        .coin-container {
+            width: 180px;
+            height: 180px;
+            perspective: 1000px;
+            margin-bottom: 20px;
+        }
+
+        .coin {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s linear;
+        }
+
+        /* Кислотно-зеленая сторона с маской */
+        .coin-side {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+            border: 8px solid var(--main-green);
+            box-shadow: 0 0 15px var(--main-green);
+        }
+
+        .front {
+            background: var(--main-green);
+            transform: rotateY(0deg);
+        }
+
+        .front .mask {
+            font-size: 60px;
+            color: var(--main-purple);
+            text-shadow: 0 0 10px var(--main-purple);
+        }
+
+        .back {
+            background: #222;
+            color: white;
+            border: 8px solid #555;
+            box-shadow: 0 0 15px #555;
+            transform: rotateY(180deg);
+        }
+      /* Анимация вращения */
+        .spin {
+            animation: spinFast 1.5s linear infinite;
+        }
+
+        @keyframes spinFast {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(3600deg); } /* Очень много оборотов */
+        }
+
+        /* Баланс */
+        .balance-label {
+            color: var(--text-gray);
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .balance-value {
+            font-size: 48px;
+            color: var(--main-green);
+            text-shadow: 0 0 10px var(--main-green);
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        /* Панель управления (Играть) */
+        .controls {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .play-btn {
+            width: 100%;
+            background: #1a1a1a;
+            border: 2px solid var(--main-purple);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--main-purple);
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+
+        .play-btn:active {
+            transform: scale(0.97);
+            box-shadow: 0 0 20px var(--main-purple);
+        }
+
+        /* Нижняя навигация (Navbar) */
+        .navbar {
+            background: var(--ui-card-bg);
+            border-top: 1px solid var(--ui-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            padding-bottom: 15px; /* Для айфонов */
+        }
+
+        .nav-item {
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 11px;
+            flex-grow: 1;
+        }
+
+        .nav-item.active {
+            color: var(--main-green);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-user">@PreciseHy...</div>
+        <div class="header-icon">
+            <span>●</span>
+            <span>?</span>
+        </div>
+    </div>
+
+    <div class="news-card">
+        <div class="news-badge">8</div>
+        <div class="news-title">Новости</div>
+        <div class="news-text">Следите за обновлениями и важными событиями проекта.</div>
+    </div>
+
+    <div class="game-area">
+        <div class="coin-container">
+            <div id="coin" class="coin">
+                <div class="coin-side front">
+                    <span class="mask">🎭</span>
+                </div>
+                <div class="coin-side back">🪙</div>
+            </div>
+        </div>
+
+        <div class="balance-label">Монеты</div>
+        <div class="balance-value" id="balance">100</div>
+
+        <div class="controls">
+            <button class="play-btn" onclick="playFlip()">Играть (50)</button>
+        </div>
+    </div>
+
+    <div class="navbar">
+        <div class="nav-item active">
+            <div class="nav-icon">🏠</div>
+            Главная
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon">🎮</div>
+            Игры
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon">💳</div>
+            Платежи
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon">👥</div>
+            Друзья
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon">💰</div>
+            Инвест.
+        </div>
+    </div>
+
+    <script>
+        let balance = 100;
+        const bet = 50; // Фиксированная ставка
+        const balanceEl = document.getElementById('balance');
+        const coinEl = document.getElementById('coin');
+        let isSpinning = false;
+
+        function playFlip() {
+            if (isSpinning) return; // Нельзя нажимать пока крутится
+            if (balance < bet) {
+                alert("Недостаточно монет для игры!");
+                return;
+            }
+          isSpinning = true;
+            balance -= bet; // Сразу списываем ставку
+            balanceEl.innerText = balance;
+            coinEl.classList.add('spin');
+
+            const sides = ['front', 'back'];
+            const result = sides[Math.floor(Math.random() * sides.length)];
+
+            setTimeout(() => {
+                coinEl.classList.remove('spin');
+                
+                // Фиксируем результат
+                if (result === 'front') {
+                    coinEl.style.transform = "rotateY(0deg)";
+                    balance += bet * 2; // Удвоение ставки
+                    balanceEl.innerText = balance;
+                    setTimeout(() => alert("Победа! Ты выиграл!"), 200);
+                } else {
+                    coinEl.style.transform = "rotateY(180deg)";
+                    setTimeout(() => alert("Проигрыш! Монеты сгорели."), 200);
+                }
+                
+                balanceEl.innerText = balance;
+                isSpinning = false;
+            }, 1500); // Время анимации
+        }
+    </script>
+</body>
+</html>
