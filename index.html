@@ -1,210 +1,120 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KAO EMPIRE | FULL VERSION</title>
+    <title>KAO PROJECT</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap');
-
-        :root { --lime: #acff01; --purp: #9d00ff; --black: #050608; --glass: rgba(255, 255, 255, 0.05); }
-
-        body {
-            background: var(--black); color: white; font-family: 'Rajdhani', sans-serif;
-            margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
-            background-image: radial-gradient(circle at 50% -20%, #1a2e10 0%, transparent 50%);
-        }
-
-        /* HEADER */
-        .header {
-            padding: 15px 25px; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 2px solid rgba(172, 255, 1, 0.1); background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 100;
-        }
-        .logo { font-family: 'Orbitron', sans-serif; font-weight: 900; color: var(--lime); letter-spacing: 2px; }
-
-        /* SCREENS */
-        .screen {
-            flex: 1; display: none; flex-direction: column; align-items: center; padding: 20px; 
-            padding-bottom: 120px; overflow-y: auto; animation: scaleUp 0.3s ease-out;
-        }
-        .screen.active { display: flex; }
-        @keyframes scaleUp { from { opacity:0; transform: scale(0.95); } to { opacity:1; transform: scale(1); } }
-
-        /* BALANCE & CARDS */
-        .bal-value { font-family: 'Orbitron', sans-serif; font-size: 45px; color: var(--lime); text-shadow: 0 0 20px rgba(172,255,1,0.5); }
-        .card { 
-            background: var(--glass); border: 1px solid rgba(172,255,1,0.1); 
-            border-radius: 25px; width: 90%; padding: 20px; margin-bottom: 15px; backdrop-filter: blur(10px);
-        }
-
-        /* 3D COIN */
-        .stage { width: 140px; height: 140px; perspective: 1000px; margin: 20px 0; }
-        .coin3d {
-            width: 100%; height: 100%; position: relative; transform-style: preserve-3d; 
-            transition: transform 2s cubic-bezier(0.2, 0, 0.1, 1);
-        }
-        .coin3d div {
-            position: absolute; width: 100%; height: 100%; border-radius: 50%; backface-visibility: hidden;
-            display: flex; align-items: center; justify-content: center; font-size: 60px;
-            border: 4px solid var(--lime); background: #000; box-shadow: inset 0 0 20px var(--lime);
-        }
-        .coin3d .back { transform: rotateY(180deg); border-color: var(--purp); box-shadow: inset 0 0 20px var(--purp); }
-
-        /* BUTTONS */
-        .btn-main {
-            background: var(--purp); color: white; border: none; padding: 18px 50px; border-radius: 50px;
-            font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 16px; cursor: pointer;
-            box-shadow: 0 0 30px rgba(157, 0, 255, 0.4); transition: 0.2s;
-        }
-        .btn-main:active { transform: scale(0.9); }
-
-        /* EARN & WALLET ITEMS */
-        .task-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .task-btn { background: var(--lime); color: black; border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .task-btn.done { background: #333; color: #777; cursor: default; }
-
-        .wallet-card {
-            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
-            border: 1px solid var(--purp); border-radius: 20px; width: 100%; height: 180px;
-            position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
-        .wallet-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(157,0,255,0.1) 0%, transparent 70%); }/* NAV */
-        .nav {
-            position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around;
-            padding: 15px 0 35px; background: rgba(0,0,0,0.95); border-top: 1px solid rgba(172,255,1,0.1); z-index: 1000;
-        }
-        .n-btn { color: #444; text-align: center; font-size: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .n-btn.active { color: var(--lime); }
-        .n-btn i { display: block; font-size: 22px; margin-bottom: 5px; font-style: normal; }
-
-        /* TOAST */
-        #toast {
-            position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
-            padding: 12px 30px; border-radius: 10px; font-weight: 900; z-index: 9999;
-            display: none; font-family: 'Orbitron'; text-align: center;
-        }
+        body { background: #0a0a0a; color: white; font-family: sans-serif; text-align: center; margin: 0; padding-bottom: 80px; }
+        .tab { display: none; padding: 20px; animation: fadeIn 0.3s; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .bal { font-size: 40px; color: #acff01; font-weight: bold; margin: 20px 0; }
+        .coin-btn { width: 150px; height: 150px; border-radius: 50%; border: 5px solid #acff01; background: #111; font-size: 60px; color: white; margin: 20px auto; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        
+        .btn { background: #9d00ff; border: none; color: white; padding: 15px 30px; border-radius: 10px; font-weight: bold; font-size: 16px; width: 80%; margin: 10px 0; cursor: pointer; }
+        .card { background: #1a1a1a; padding: 15px; border-radius: 15px; margin: 10px auto; width: 85%; border: 1px solid #333; }
+        
+        .nav { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; border-top: 1px solid #333; }
+        .nav-item { flex: 1; padding: 15px; font-size: 12px; color: #666; cursor: pointer; }
+        .nav-item.active { color: #acff01; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div id="toast"></div>
+    <div style="padding: 10px; border-bottom: 1px solid #222; font-weight: bold; color: #acff01;">KAO EMPIRE v2.0</div>
 
-    <div class="header">
-        <div class="logo">KAO EMPIRE</div>
-        <div style="color: var(--lime); font-size: 12px; font-weight: bold;">v1.5 PRO</div>
-    </div>
-
-    <div id="scr_home" class="screen active">
-        <div class="bal-value" id="bal_main">500</div>
-        <div class="stage"><div id="coin" class="coin3d"><div class="front">🎭</div><div class="back">🪙</div></div></div>
-        <div style="display:flex; gap:10px; margin-bottom:20px;" id="bet_cont">
-            <button class="task-btn" onclick="setB(10)">10</button>
-            <button class="task-btn" style="background:var(--purp); color:white;" onclick="setB(50)">50</button>
-            <button class="task-btn" onclick="setB(100)">100</button>
+    <div id="home" class="tab active">
+        <div class="bal" id="b1">500</div>
+        <div id="coin_face" class="coin-btn" onclick="flip()">🎭</div>
+        <p>Нажми на монету, чтобы бросить</p>
+        <div style="display: flex; justify-content: center; gap: 10px;">
+            <button class="btn" style="width: auto;" onclick="setBet(10)">10</button>
+            <button class="btn" style="width: auto; background: #acff01; color: black;" onclick="setBet(50)">50</button>
+            <button class="btn" style="width: auto;" onclick="setBet(100)">100</button>
         </div>
-        <button id="play_btn" class="btn-main" onclick="flip()">БРОСИТЬ</button>
     </div>
 
-    <div id="scr_list" class="screen">
-        <h2 style="color:var(--lime); letter-spacing:3px;">ИГРОВОЙ ЗАЛ</h2>
-        <div class="card" onclick="toS('scr_home', 0)"><b>3D COIN FLIP</b><br><small>Удвой свои очки</small></div>
-        <div class="card" onclick="startHL()"><b>HIGH OR LOW</b><br><small>Угадай число</small></div>
-    </div>
-
-    <div id="scr_earn" class="screen">
-        <h2 style="color:var(--lime); letter-spacing:3px;">ЗАРАБОТАТЬ</h2>
+    <div id="earn" class="tab">
+        <h2>ЗАДАНИЯ</h2>
         <div class="card">
-            <div class="task-item">
-                <div><b>Подписка на ТГ</b><br><small>+1000 монет</small></div>
-                <button id="t1" class="task-btn" onclick="doTask('t1', 1000)">ВЫПОЛНИТЬ</button>
-            </div>
+            <div>Подписка на ТГ (+1000)</div>
+            <button class="btn" id="task1" onclick="claim(1000, 'task1')">ПРОВЕРИТЬ</button>
         </div>
         <div class="card">
-            <div class="task-item">
-                <div><b>Пригласить друга</b><br><small>+500 монет</small></div>
-                <button id="t2" class="task-btn" onclick="doTask('t2', 500)">ВЫПОЛНИТЬ</button>
-            </div>
+            <div>Пригласить друга (+500)</div>
+            <button class="btn" id="task2" onclick="claim(500, 'task2')">ПРОВЕРИТЬ</button>
         </div>
     </div>
 
-    <div id="scr_wall" class="screen">
-        <h2 style="color:var(--purp); letter-spacing:3px;">КОШЕЛЕК</h2>
-        <div class="wallet-card">
-            <div style="color:#555; font-size:12px; letter-spacing:2px;">AVAILABLE BALANCE</div>
-            <div class="bal-value" id="bal_wall">500</div>
-            <div style="margin-top:20px; font-size:10px; color:#333;">ID: KAO_USER_8821</div>
+    <div id="wallet" class="tab">
+        <h2>КОШЕЛЕК</h2>
+        <div class="card" style="background: linear-gradient(45deg, #111, #222); height: 150px; display: flex; flex-direction: column; justify-content: center;">
+            <div style="color: #666;">БАЛАНС</div>
+            <div class="bal" id="b2">500</div>
         </div>
-        <button class="btn-main" style="margin-top:30px; width:90%;" onclick="alert('Вывод доступен от 100,000 монет!')">ВЫВЕСТИ СРЕДСТВА</button>
+        <button class="btn" onclick="alert('Вывод от 50.000 монет')">ВЫВЕСТИ</button>
     </div>
 
     <div class="nav">
-        <div class="n-btn active" id="n0" onclick="toS('scr_home', 0)"><i>🏠</i>ГЛАВНАЯ</div>
-        <div class="n-btn" id="n1" onclick="toS('scr_list', 1)"><i>🎮</i>ИГРЫ</div>
-        <div class="n-btn" id="n2" onclick="toS('scr_earn', 2)"><i>💎</i>КВЕСТЫ</div>
-        <div class="n-btn" id="n3" onclick="toS('scr_wall', 3)"><i>💰</i>БАЛАНС</div>
+        <div class="nav-item active" onclick="show('home', this)">🏠 ИГРА</div>
+        <div class="nav-item" onclick="show('earn', this)">💎 ЗАДАНИЯ</div>
+        <div class="nav-item" onclick="show('wallet', this)">💰 КОШЕЛЕК</div>
     </div>
 
     <script>
-        let balance = localStorage.getItem('k_bal_v5') ? parseInt(localStorage.getItem('k_bal_v5')) : 500;
+        let balance = parseInt(localStorage.getItem('k_bal')) || 500;
         let bet = 50;
-        let moving = false;function sync() {
-            document.getElementById('bal_main').innerText = balance;
-            document.getElementById('bal_wall').innerText = balance;
-            localStorage.setItem('k_bal_v5', balance);
-        }
-        sync();
 
-        function toS(id, n) {
-            if(moving) return;
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        function update() {
+            document.getElementById('b1').innerText = balance;
+            document.getElementById('b2').innerText = balance;
+            localStorage.setItem('k_bal', balance);
+        }
+        update();
+
+        function show(id, el) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.n-btn').forEach(b => b.classList.remove('active'));
-            if(n !== undefined) document.getElementById('n'+n).classList.add('active');
+            el.classList.add('active');
+        }function setBet(v) {
+            bet = v;
+            alert("Ставка: " + v);
         }
-
-        function toast(m, w) {
-            const t = document.getElementById('toast');
-            t.innerText = m; t.style.background = w ? '#acff01' : '#ff2d55';
-            t.style.color = w ? 'black' : 'white'; t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 2000);
-        }
-
-        function setB(v) { bet = v; toast("СТАВКА: " + v, true); }
 
         function flip() {
-            if(moving || balance < bet) { if(balance < bet) toast("МАЛО МОНЕТ!", false); return; }
-            moving = true; balance -= bet; sync();
-            const c = document.getElementById('coin');
-            const win = Math.random() > 0.5;
-            const deg = win ? 1800 : 1980;
-            c.style.transition = "transform 2s cubic-bezier(0.2, 0, 0.1, 1)";
-            c.style.transform = rotateY(${deg}deg);
+            if (balance < bet) return alert("Мало монет!");
+            balance -= bet;
+            update();
+            
+            let cf = document.getElementById('coin_face');
+            cf.innerText = "⏳";
+            
             setTimeout(() => {
-                if(win) { balance += bet * 2; toast("ПОБЕДА! +" + bet, true); }
-                else { toast("ПРОИГРЫШ!", false); }
-                sync(); moving = false;
-                c.style.transition = "0.2s";
-                c.style.transform = rotateY(${win ? 0 : 180}deg);
-            }, 2100);
+                let win = Math.random() > 0.5;
+                if (win) {
+                    balance += bet * 2;
+                    cf.innerText = "🎭";
+                    alert("ПОБЕДА!");
+                } else {
+                    cf.innerText = "🪙";
+                    alert("ПРОИГРЫШ!");
+                }
+                update();
+            }, 500);
         }
 
-        function doTask(id, reward) {
-            if(localStorage.getItem(id)) return toast("УЖЕ ВЫПОЛНЕНО", false);
-            balance += reward;
-            localStorage.setItem(id, "true");
-            document.getElementById(id).classList.add('done');
+        function claim(amt, id) {
+            if (localStorage.getItem(id)) return alert("Уже получено!");
+            balance += amt;
+            localStorage.setItem(id, "done");
             document.getElementById(id).innerText = "ГОТОВО";
-            sync();
-            toast("НАГРАДА: +" + reward, true);
+            document.getElementById(id).style.background = "#333";
+            update();
+            alert("Начислено: " + amt);
         }
-
-        // Проверка выполненных квестов при загрузке
-        ['t1', 't2'].forEach(t => {
-            if(localStorage.getItem(t)) {
-                const el = document.getElementById(t);
-                el.classList.add('done'); el.innerText = "ГОТОВО";
-            }
-        });
     </script>
 </body>
 </html>
