@@ -3,94 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kao Project v1.2</title>
+    <title>KAO Premium App</title>
     <style>
         :root {
-            --main-green: #acff01;
-            --main-purple: #9d00ff;
-        }
-        body { 
-            background: radial-gradient(circle at top, #1a2e0a 0%, #050a02 100%); 
-            color: white; 
-            font-family: 'Segoe UI', sans-serif; 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
-            height: 100vh; 
-            align-items: center; 
-            justify-content: space-between; 
-            overflow: hidden; 
-        }
-        .user-tag { margin-top: 20px; border: 1px solid rgba(172,255,1,0.2); padding: 8px 15px; border-radius: 12px; color: var(--main-green); font-size: 13px; background: rgba(0,0,0,0.3); }
-        .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(172,255,1,0.1); padding: 20px; border-radius: 25px; width: 85%; text-align: left; backdrop-filter: blur(15px); }
-        #bal { font-size: 60px; color: var(--main-green); text-shadow: 0 0 20px rgba(172,255,1,0.4); font-weight: bold; margin: 5px 0; }
-        .coin-box { perspective: 1000px; margin: 20px 0; }
-        .coin { width: 160px; height: 160px; border: 6px solid var(--main-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 70px; transition: 2s cubic-bezier(0.1, 0, 0.2, 1); box-shadow: 0 0 40px rgba(172,255,1,0.2); background: rgba(172,255,1,0.1); }
-        .btn { background: var(--main-purple); border: none; color: white; padding: 20px 60px; border-radius: 20px; font-size: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 10px 25px rgba(157, 0, 255, 0.3); transition: 0.2s; text-transform: uppercase; }
-        .btn:active { transform: scale(0.95); }
-        .nav { width: 100%; display: flex; justify-content: space-around; padding: 20px 0; background: rgba(0,0,0,0.6); border-top: 1px solid rgba(172,255,1,0.05); backdrop-filter: blur(10px); }
-        .nav-item { color: #666; font-size: 11px; text-align: center; }
-        .nav-item.active { color: var(--main-green); }
-    </style>
-</head>
-<body>
-    <div class="user-tag">@kaoface_project</div>
-
-    <div class="card">
-        <span style="color: var(--main-green); font-weight: bold;">НОВОСТИ</span><br>
-        <span style="color: #888; font-size: 13px;">Дизайн обновлен до v1.2. Добавлен баланс и 3D-анимация.</span>
-    </div>
-
-    <div style="text-align: center;">
-        <div style="font-size: 14px; color: #666; letter-spacing: 1px;">МОНЕТЫ</div>
-        <div id="bal">500</div>
-    </div>
-
-    <div class="coin-box">
-        <div id="coin" class="coin">🎭</div>
-    </div>
-
-    <button class="btn" onclick="flip()">ИГРАТЬ (50)</button>
-
-    <div class="nav">
-        <div class="nav-item active">🏠<br>Главная</div>
-        <div class="nav-item" onclick="alert('Скоро!')">🎮<br>Игры</div>
-        <div class="nav-item" onclick="alert('Скоро!')">👥<br>Друзья</div>
-        <div class="nav-item" onclick="alert('Скоро!')">💰<br>Кошелек</div>
-    </div>
-
-    <script>
-        let b = localStorage.getItem('b') ? parseInt(localStorage.getItem('b')) : 500;
-        const balEl = document.getElementById('bal');
-        const coinEl = document.getElementById('coin');
-        balEl.innerText = b;
-
-        function flip() {
-            if(b < 50) return alert('Недостаточно монет!');
-            b -= 50; update();
-            
-            coinEl.style.transition = "2s cubic-bezier(0.1, 0, 0.2, 1)";
-            coinEl.style.transform = "rotateY(1800deg)";
-            
-            setTimeout(() => {
-                const win = Math.random() > 0.5;
-                coinEl.style.transition = "0.5s";
-                coinEl.style.transform = "rotateY(0deg)";
-                
-                if(win) { 
-                    b += 100; 
-                    alert('Победа! +100 монет'); 
-                } else { 
-                    alert('Проигрыш! Попробуй еще раз.'); 
-                }
-                update();
-            }, 2100);
+            --bg: #03060e;
+            --primary: #acff01; /* Неоновый зеленый */
+            --secondary: #9d00ff; /* Фиолетовый */
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(172, 255, 1, 0.15);
+            --text: #ffffff;
+            --text-muted: #808da4;
         }
 
-        function update() { 
-            balEl.innerText = b; 
-            localStorage.setItem('b', b); 
+        body {
+            background-color: var(--bg);
+            background-image: radial-gradient(circle at top right, rgba(157, 0, 255, 0.1) 0%, transparent 40%),
+                              radial-gradient(circle at bottom left, rgba(172, 255, 1, 0.05) 0%, transparent 40%);
+            color: var(--text);
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            -webkit-user-select: none; user-select: none;
         }
-    </script>
-</body>
-</html>
+
+        /* Header & Balance */
+        .header {
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: rgba(3, 6, 14, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .user-avatar { width: 35px; height: 35px; background: var(--secondary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; border: 2px solid var(--border); }
+        .user-tag { color: var(--primary); font-size: 14px; font-weight: 500; }
+
+        .balance-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 15px;
+            text-align: right;
+            box-shadow: 0 0 15px rgba(172, 255, 1, 0.1);
+        }
+        .balance-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .balance-value { font-size: 28px; color: var(--primary); font-weight: bold; text-shadow: 0 0 10px rgba(172, 255, 1, 0.5); }
+
+        /* Main Content & Screens */
+        .main-container { flex-grow: 1; position: relative; overflow: hidden; }
+        
+        .screen {
+            position: absolute; width: 100%; height: 100%;
+            opacity: 0; visibility: hidden; transform: translateY(20px);
+            transition: all 0.4s ease;
+            display: flex; flex-direction: column; align-items: center; padding: 25px; box-sizing: border-box;
+        }
+        .screen.active { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        /* Game Screen Elements */
+        .news-bar {
+            background: var(--glass); border: 1px solid var(--border);
+            width: 100%; padding: 15px; border-radius: 18px;
+            margin-bottom: 25px; display: flex; gap: 12px; align-items: center;
+        }
+        .news-icon { font-size: 20px;
