@@ -3,389 +3,316 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kao Premium Mini App v1.3</title>
+    <title>KAO EMPIRE | OFFICIAL</title>
     <style>
         :root {
-            --bg-dark: #050a12;
-            --bg-panel: rgba(255, 255, 255, 0.03);
-            --border-glass: rgba(172, 255, 1, 0.08);
-            --text-green: #acff01;
-            --text-gray: #888;
-            --main-purple: #9d00ff;
-            --shadow-purple: rgba(157, 0, 255, 0.4);
-            --shadow-green: rgba(172, 255, 1, 0.15);
+            --neon-green: #acff01;
+            --neon-purple: #9d00ff;
+            --dark-bg: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(172, 255, 1, 0.15);
         }
 
         body {
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at top left, #1a2e50 0%, #050a12 60%);
-            color: white;
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--dark-bg);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(157, 0, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(172, 255, 1, 0.05) 0%, transparent 40%);
+            color: #fff;
+            font-family: 'Inter', -apple-system, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
-            -webkit-user-select: none;
-            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Header */
+        /* HEADER */
         .header {
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--border-glass);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            z-index: 10;
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .user-block { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; background: linear-gradient(45deg, #111, #222); border: 1px solid var(--glass-border); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .username { font-weight: 800; color: var(--neon-green); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: #555;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .user-tag {
-            color: var(--text-green);
-            background: rgba(172, 255, 1, 0.05);
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 13px;
-            font-weight: 600;
-            border: 1px solid rgba(172,255,1,0.1);
-        }
-
-        .top-up-btn {
-            background: var(--main-purple);
-            border: none;
-            color: white;
-            padding: 8px 18px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 4px 12px var(--shadow-purple);
-            transition: 0.2s;
-        }
-
-        .top-up-btn:active { transform: scale(0.95); }
-
-        /* Screens */
+        /* SCREENS */
         .screen {
             flex-grow: 1;
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px 20px 100px;
-            overflow-y: auto;
-            animation: fadeIn 0.4s ease;
+            padding: 20px;
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .screen.active { display: flex; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Balance */
+        /* BALANCE CARD */
         .balance-card {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-glass);
-            padding: 25px;
-            border-radius: 25px;
-            width: 85%;
-            backdrop-filter: blur(15px);
-            margin-bottom: 30px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            border-radius: 28px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 80%;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            margin-bottom: 40px;
         }
 
-        .balance-label { color: var(--text-gray); font-size: 14px; letter-spacing: 1px; font-weight: 600; margin-bottom: 8px; }
-        .balance-value { font-size: 56px; color: var(--text-green); font-weight: 800; text-shadow: 0 0 30px var(--shadow-green); margin: 0; }/* Coin (Орел/Решка) */
-        .coin-box { perspective: 1000px; margin-bottom: 30px; }
-        .coin { width: 170px; height: 170px; position: relative; transform-style: preserve-3d; transition: transform 0.1s linear; }
-        .coin div { position: absolute; width: 100%; height: 100%; border-radius: 50%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border: 7px solid var(--text-green); box-shadow: 0 0 35px var(--shadow-green); }
-        .coin .front { background: var(--text-green); color: var(--main-purple); font-size: 70px; font-weight: bold; }
-        .coin .back { background: #111; transform: rotateY(180deg); color: #ccc; font-size: 60px; }
+        .bal-label { color: #666; font-size: 12px; font-weight: 700; letter-spacing: 2px; margin-bottom: 10px; }
+        .bal-value { font-size: 55px; font-weight: 900; color: var(--neon-green); text-shadow: 0 0 30px rgba(172, 255, 1, 0.3); margin: 0; }
 
-        /* Игра Больше/Меньше */
-        .game-panel { background: var(--bg-panel); border: 1px solid var(--border-glass); padding: 30px 20px; border-radius: 30px; width: 90%; display: flex; flex-direction: column; align-items: center; gap: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
-        .hl-number-display { font-size: 96px; color: white; font-weight: 800; text-shadow: 0 0 15px rgba(255,255,255,0.2); }
-        .higher-lower-btns { display: flex; gap: 15px; width: 100%; }
-        .hl-btn { flex: 1; padding: 18px; border-radius: 18px; border: 2px solid; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.2s; background: transparent; font-size: 14px; letter-spacing: 1px; }
-        .hl-btn:active { transform: scale(0.95); }
-        .btn-higher { border-color: #acff01; color: #acff01; box-shadow: 0 5px 15px rgba(172, 255, 1, 0.2); }
-        .btn-lower { border-color: #ff4d4d; color: #ff4d4d; box-shadow: 0 5px 15px rgba(255, 77, 77, 0.2); }
+        /* GAME OBJECTS */
+        .coin-wrap { perspective: 1000px; margin-bottom: 40px; }
+        .coin {
+            width: 160px; height: 160px; position: relative;
+            transform-style: preserve-3d; transition: transform 0.1s linear;
+        }
+        .coin div {
+            position: absolute; width: 100%; height: 100%; border-radius: 50%;
+            backface-visibility: hidden; display: flex; align-items: center; justify-content: center;
+            border: 6px solid var(--neon-green); box-shadow: 0 0 40px rgba(172, 255, 1, 0.2);
+            font-size: 70px; background: rgba(0,0,0,0.8);
+        }
+        .coin .back { transform: rotateY(180deg); color: #555; border-color: #333; }
 
-        /* Bet Selector */
-        .bet-selector { display: flex; gap: 12px; margin-bottom: 25px; }
-        .bet-btn { background: var(--bg-panel); border: 1px solid var(--border-glass); color: white; padding: 12px 22px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-size: 14px; font-weight: 600; }
-        .bet-btn.active { background: var(--text-green); color: black; font-weight: 700; border-color: var(--text-green); box-shadow: 0 5px 15px var(--shadow-green); }
+        /* HIGHER-LOWER */
+        .hl-display { background: var(--glass); padding: 40px; border-radius: 30px; border: 1px solid var(--glass-border); width: 85%; text-align: center; }
+        .num-main { font-size: 100px; font-weight: 900; margin: 20px 0; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.2); }/* BUTTONS */
+        .btn-main {
+            background: var(--neon-purple);
+            color: #fff; border: none; padding: 20px 60px; border-radius: 22px;
+            font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+            cursor: pointer; box-shadow: 0 10px 30px var(--neon-purple); transition: 0.3s;
+        }
+        .btn-main:active { transform: scale(0.95); filter: brightness(1.2); }
+        .btn-main.disabled { background: #222; box-shadow: none; color: #444; pointer-events: none; }
 
-        /* Action Buttons */
-        .action-btn { width: 280px; padding: 20px; border-radius: 20px; border: none; color: white; font-size: 20px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.2s; margin-bottom: 20px; }
-        .action-btn:active { transform: scale(0.96); }
-        .btn-play { background: var(--main-purple); box-shadow: 0 8px 25px var(--shadow-purple); }
-        .btn-disabled { background: #222 !important; color: #555 !important; box-shadow: none !important; cursor: not-allowed; }
+        .hl-controls { display: flex; gap: 15px; width: 100%; margin-top: 20px; }
+        .hl-btn {
+            flex: 1; padding: 20px; border-radius: 18px; border: 2px solid;
+            background: transparent; font-weight: 800; font-size: 14px; color: #fff; transition: 0.2s;
+        }
+        .up { border-color: var(--neon-green); color: var(--neon-green); }
+        .down { border-color: #ff3e3e; color: #ff3e3e; }
 
-        /* Bottom Nav */
-        .nav { background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); border-top: 1px solid var(--border-glass); display: flex; justify-content: space-around; padding: 15px 0 25px; position: fixed; bottom: 0; width: 100%; z-index: 100; box-shadow: 0 -10px 30px rgba(0,0,0,0.3); }
-        .nav-item { color: #666; text-align: center; font-size: 11px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-        .nav-item.active { color: var(--text-green); }
-        .nav-icon { font-size: 24px; transition: 0.2s; }
-        .nav-item.active .nav-icon { color: var(--text-green); text-shadow: 0 0 10px var(--shadow-green); }
+        /* BETS */
+        .bet-box { display: flex; gap: 12px; margin-bottom: 30px; }
+        .bet-opt {
+            background: var(--glass); border: 1px solid var(--glass-border);
+            padding: 12px 20px; border-radius: 14px; font-weight: 700; cursor: pointer; transition: 0.2s;
+        }
+        .bet-opt.active { background: var(--neon-green); color: #000; border-color: var(--neon-green); }
 
-        /* Games List */
-        .games-list { display: flex; flex-direction: column; gap: 15px; width: 100%; }
-        .game-item { background: var(--bg-panel); border: 1px solid var(--border-glass); padding: 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; backdrop-filter: blur(10px); }.game-item:active { transform: scale(0.97); background: rgba(255,255,255,0.05); }
-        .game-name { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
-        .game-status { color: var(--text-green); font-size: 11px; font-weight: 700; background: rgba(172, 255, 1, 0.1); padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; }
-        .game-meta { color: var(--text-gray); font-size: 13px; line-height: 1.4; }
+        /* NAV */
+        .nav {
+            position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around;
+            padding: 15px 0 35px; background: rgba(5,5,5,0.9); backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+        }
+        .nav-item { color: #444; text-align: center; font-size: 10px; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
+        .nav-item i { display: block; font-size: 24px; margin-bottom: 5px; font-style: normal; }
+        .nav-item.active { color: var(--neon-green); }
 
-        /* Notifications */
-        #notification { position: fixed; top: 100px; background: #acff01; color: black; padding: 18px 35px; border-radius: 18px; font-weight: bold; box-shadow: 0 15px 40px rgba(0,0,0,0.5); display: none; z-index: 200; animation: slideIn 0.3s ease; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
-        @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        /* LIST */
+        .game-card {
+            background: var(--glass); border: 1px solid var(--glass-border);
+            padding: 20px; border-radius: 20px; width: 90%; display: flex;
+            justify-content: space-between; align-items: center; margin-bottom: 15px;
+        }
 
+        /* NOTIF */
+        #alert {
+            position: fixed; top: 110px; left: 50%; transform: translateX(-50%);
+            padding: 15px 30px; border-radius: 15px; font-weight: 800; z-index: 1000;
+            display: none; animation: pop 0.3s ease;
+        }
+        @keyframes pop { from { opacity: 0; scale: 0.8; } to { opacity: 1; scale: 1; } }
     </style>
 </head>
 <body>
 
-    <div id="notification"></div>
+    <div id="alert"></div>
 
     <div class="header">
-        <div class="user-info">
-            <div class="user-avatar">👤</div>
-            <div class="user-tag">@kao_premium</div>
+        <div class="user-block">
+            <div class="avatar">🕶️</div>
+            <div class="username">KAO_EMPIRE</div>
         </div>
-        <button class="top-up-btn" onclick="alert('Кошелек будет в v1.4!')">ПОПОЛНИТЬ</button>
+        <div style="font-size: 10px; color: #444;">BETA 1.3.5</div>
     </div>
 
-    <div id="home" class="screen active">
+    <div id="scr_home" class="screen active">
         <div class="balance-card">
-            <div class="balance-label">ТВОЙ БАЛАНС</div>
-            <div class="balance-value" id="balance">500</div>
+            <div class="bal-label">TOTAL BALANCE</div>
+            <div class="bal-value" id="b1">500</div>
         </div>
 
-        <div class="coin-box">
-            <div id="coin" class="coin">
+        <div class="coin-wrap">
+            <div id="coin_obj" class="coin">
                 <div class="front">🎭</div>
                 <div class="back">🪙</div>
             </div>
         </div>
 
-        <div class="bet-selector">
-            <button class="bet-btn" onclick="setBet(10, this)">10</button>
-            <button class="bet-btn active" onclick="setBet(50, this)">50</button>
-            <button class="bet-btn" onclick="setBet(100, this)">100</button>
+        <div class="bet-box">
+            <div class="bet-opt" onclick="setB(10, this)">10</div>
+            <div class="bet-opt active" onclick="setB(50, this)">50</div>
+            <div class="bet-opt" onclick="setB(100, this)">100</div>
         </div>
 
-        <button id="play-btn" class="action-btn btn-play" onclick="playFlip()">БРОСИТЬ МОНЕТУ</button>
+        <button id="main_trigger" class="btn-main" onclick="runCoin()">START GAME</button>
     </div>
 
-    <div id="games" class="screen">
-        <h2 style="margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1px; color:white;">ИГРОВОЙ ЗАЛ</h2>
-        <div class="games-list">
-            <div class="game-item" onclick="startHLGame()">
-                <div>
-                    <div class="game-name">БОЛЬШЕ ИЛИ МЕНЬШЕ</div>
-                    <div class="game-meta">Угадай следующее число (1-100). Правильный ответ удваивает ставку.</div>
-                </div>
-                <div class="game-status">АКТИВНА</div>
+    <div id="scr_list" class="screen">
+        <h2 style="margin-bottom: 30px; letter-spacing: 2px;">GAMING HUB</h2>
+        <div class="game-card" onclick="goS('scr_home', 0)"><div>
+                <div style="font-weight: 800;">ORACLE COIN</div>
+                <div style="font-size: 12px; color: #555;">Classic 50/50 Chance</div>
             </div>
-            <div class="game-item" onclick="switchScreen('home', 0)">
-                <div>
-                    <div class="game-name">ОРЕЛ ИЛИ РЕШКА</div>
-                    <div class="game-meta">Классический бросок монеты. Все или ничего!</div>
-                </div>
-                <div class="game-status">АКТИВНА</div>
+            <div style="color: var(--neon-green);">PLAY</div>
+        </div>
+        <div class="game-card" onclick="initHL()">
+            <div>
+                <div style="font-weight: 800;">HIGH OR LOW</div>
+                <div style="font-size: 12px; color: #555;">Predict Next Number</div>
             </div>
-            <div class="game-item" style="opacity: 0.5; cursor: not-allowed;">
-                <div>
-                    <div class="game-name">🎰 СЛОТЫ</div>
-                    <div class="game-meta">Игровые автоматы (В разработке).</div>
-                </div>
-                <div style="color: #ff4d4d; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">СКОРО</div>
-            </div>
+            <div style="color: var(--neon-green);">PLAY</div>
         </div>
     </div>
 
-    <div id="game_hl" class="screen">
-        <button onclick="switchScreen('games', 1)" style="background:none; border:none; color: #666; font-size: 14px; font-weight:600; position:absolute; top:85px; left:15px;">← Назад</button>
-        
-        <div class="balance-card">
-            <div class="balance-label">БАЛАНС</div>
-            <div class="balance-value" id="balance_hl">500</div>
-        </div>
-
-        <div class="game-panel"><div style="color: var(--text-gray); font-size: 14px; font-weight: 600; letter-spacing: 1px;">ТЕКУЩЕЕ ЧИСЛО</div>
-            <div class="hl-number-display" id="hl-number">?</div>
-            <div class="higher-lower-btns">
-                <button class="hl-btn btn-higher" onclick="playHL('higher')">БОЛЬШЕ ▲</button>
-                <button class="hl-btn btn-lower" onclick="playHL('lower')">МЕНЬШЕ ▼</button>
+    <div id="scr_hl" class="screen">
+        <div class="bal-value" id="b2" style="font-size: 30px; margin-bottom: 20px;">500</div>
+        <div class="hl-display">
+            <div class="bal-label">CURRENT NUMBER</div>
+            <div id="hl_val" class="num-main">?</div>
+            <div class="hl-controls">
+                <button class="hl-btn up" onclick="doHL('u')">HIGHER ▲</button>
+                <button class="hl-btn down" onclick="doHL('d')">LOWER ▼</button>
             </div>
         </div>
-        
-        <div class="bet-selector" style="margin-top: 30px;">
-            <button class="bet-btn hl-bet" onclick="setHLBet(10, this)">10</button>
-            <button class="bet-btn active hl-bet" onclick="setHLBet(50, this)">50</button>
-            <button class="bet-btn hl-bet" onclick="setHLBet(100, this)">100</button>
-        </div>
+        <button class="bet-opt" style="margin-top: 40px;" onclick="goS('scr_list', 1)">← BACK</button>
     </div>
 
     <div class="nav">
-        <div class="nav-item active" id="nav-home" onclick="switchScreen('home', 0)">
-            <div class="nav-icon">🏠</div>Главная
-        </div>
-        <div class="nav-item" id="nav-games" onclick="switchScreen('games', 1)">
-            <div class="nav-icon">🎮</div>Игры
-        </div>
-        <div class="nav-item" onclick="alert('Друзья появятся в v1.4')">
-            <div class="nav-icon">👥</div>Друзья
-        </div>
-        <div class="nav-item" onclick="alert('Кошелек появится в v1.4')">
-            <div class="nav-icon">💰</div>Кошелек
-        </div>
+        <div class="nav-item active" id="n0" onclick="goS('scr_home', 0)"><i>🏠</i>HOME</div>
+        <div class="nav-item" id="n1" onclick="goS('scr_list', 1)"><i>🎮</i>GAMES</div>
+        <div class="nav-item" onclick="alert('SOON')"><i>👥</i>EARN</div>
+        <div class="nav-item" onclick="alert('SOON')"><i>💰</i>WALLET</div>
     </div>
 
     <script>
-        let balance = localStorage.getItem('bal') ? parseInt(localStorage.getItem('bal')) : 500;
-        let currentBet = 50;
-        let hlBet = 50;
-        let spinning = false;
-        let currentHLNumber = 0;
+        let balance = localStorage.getItem('k_bal') ? parseInt(localStorage.getItem('k_bal')) : 500;
+        let bet = 50;
+        let activeHL = 0;
+        let lock = false;
 
-        // Init
-        updateBalance();
+        function sync() {
+            document.getElementById('b1').innerText = balance;
+            document.getElementById('b2').innerText = balance;
+            localStorage.setItem('k_bal', balance);
+        }
+        sync();
 
-        // Nav
-        function switchScreen(screenId, navIndex) {
+        function setB(v, el) {
+            if(lock) return;
+            bet = v;
+            document.querySelectorAll('.bet-opt').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function goS(id, n) {
+            if(lock) return;
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-            if(navIndex !== undefined) {
-                document.querySelectorAll('.nav-item')[navIndex].classList.add('active');
+            document.getElementById(id).classList.add('active');
+            if(n !== undefined) {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                document.getElementById('n'+n).classList.add('active');
             }
         }
 
-        // Notification
-        function showNotif(text, type='win') {
-            const notif = document.getElementById('notification');
-            notif.innerText = text;
-            notif.style.background = (type === 'win') ? '#acff01' : '#ff4d4d';
-            notif.style.color = (type === 'win') ? 'black' : 'white';
-            notif.style.display = 'block';
-            setTimeout(() => notif.style.display = 'none', 1800);
+        function notify(msg, win) {
+            const a = document.getElementById('alert');
+            a.innerText = msg;
+            a.style.background = win ? '#acff01' : '#ff3e3e';
+            a.style.color = win ? '#000' : '#fff';
+            a.style.display = 'block';
+            setTimeout(() => a.style.display = 'none', 2000);
         }
 
-        // Common
-        function updateBalance() {
-            document.getElementById('balance').innerText = balance;
-            document.getElementById('balance_hl').innerText = balance;
-            localStorage.setItem('bal', balance);
-        }
-
-        function setBet(val, btn) {
-            currentBet = val;
-            document.querySelectorAll('.bet-btn:not(.hl-bet)').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        }
-
-        // Coin Flip Game
-        function playFlip() {
-            if (spinning || balance < currentBet) {
-                if(balance < currentBet) alert('Недостаточно монет!');
+        function runCoin() {
+            if(lock || balance < bet) {
+                if(balance < bet) notify("NO MONEY!", false);
                 return;
             }
-            spinning = true;
-            balance -= currentBet;
-            updateBalance();
+            lock = true;
+            balance -= bet;
+            sync();
 
-            const coin = document.getElementById('coin');
-            const playBtn = document.getElementById('play-btn');
-            playBtn.classList.add('btn-disabled');
-            playBtn.innerText = 'ЖДЕМ...';
+            const c = document.getElementById('coin_obj');
+            const btn = document.getElementById('main_trigger');
+            btn.classList.add('disabled');
+            btn.innerText = "ROLLING...";
 
-            const result = Math.random() > 0.5 ? 'front' : 'back';
-            const randomRot = result === 'front' ? 0 : 180;
-            const totalRot = 1800 + randomRot; // Много оборотов
+            const win = Math.random() > 0.5;
+            const rot = win ? 1800 : 1980;
 
-            // Плавная 3D анимация броска
-            coin.style.transition = 'transform 1.8s cubic-bezier(0.1, 0, 0.2, 1)';
-            coin.style.transform = rotateY(${totalRot}deg) translateY(-20px);setTimeout(() => {
-                spinning = false;
-                if (result === 'front') {
-                    balance += currentBet * 2;
-                    showNotif('ПОБЕДА! + ' + currentBet + ' 🎭', 'win');
+            c.style.transition = "transform 2s cubic-bezier(0.15, 0, 0.15, 1)";
+            c.style.transform = rotateY(${rot}deg) scale(1.1);
+
+            setTimeout(() => {
+                if(win) {
+                    balance += bet * 2;notify("VICTORY! +" + bet, true);
                 } else {
-                    showNotif('ПРОИГРЫШ! - ' + currentBet + ' 🪙', 'lose');
+                    notify("DEFEAT!", false);
                 }
-                updateBalance();
-                
-                // Сброс без анимации
-                coin.style.transition = 'transform 0.2s';
-                coin.style.transform = rotateY(${randomRot}deg) translateY(0px);
-                playBtn.classList.remove('btn-disabled');
-                playBtn.innerText = 'БРОСИТЬ МОНЕТУ';
-            }, 1900);
+                sync();
+                lock = false;
+                btn.classList.remove('disabled');
+                btn.innerText = "START GAME";
+                c.style.transition = "0.3s";
+                c.style.transform = rotateY(${win ? 0 : 180}deg) scale(1);
+            }, 2100);
         }
 
-        // Higher/Lower Game
-        function startHLGame() {
-            currentHLNumber = Math.floor(Math.random() * 99) + 1;
-            document.getElementById('hl-number').innerText = currentHLNumber;
-            switchScreen('game_hl');
+        function initHL() {
+            activeHL = Math.floor(Math.random() * 80) + 10;
+            document.getElementById('hl_val').innerText = activeHL;
+            goS('scr_hl');
         }
 
-        function setHLBet(val, btn) {
-            hlBet = val;
-            document.querySelectorAll('.hl-bet').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        }
-
-        function playHL(prediction) {
-            if(balance < hlBet) return alert('Недостаточно монет!');
-            balance -= hlBet;
-            updateBalance();
-
-            const nextNumber = Math.floor(Math.random() * 99) + 1;
-            document.getElementById('hl-number').innerText = nextNumber;
+        function doHL(side) {
+            if(lock || balance < 50) return;
+            balance -= 50;
+            const next = Math.floor(Math.random() * 98) + 1;
+            const res = (side === 'u' && next > activeHL) || (side === 'd' && next < activeHL);
             
-            let result = false;
-            if(prediction === 'higher' && nextNumber > currentHLNumber) result = true;
-            if(prediction === 'lower' && nextNumber < currentHLNumber) result = true;
-            if(nextNumber === currentHLNumber) result = false; // Ничья
-
-            if(result) {
-                balance += hlBet * 2;
-                showNotif('ВЕРНО! + ' + hlBet + ' 🎉', 'win');
+            document.getElementById('hl_val').innerText = next;
+            if(res) {
+                balance += 100;
+                notify("JACKPOT!", true);
             } else {
-                showNotif('НЕ УГАДАЛ! Было: ' + nextNumber + ' ❌', 'lose');
+                notify("LOST!", false);
             }
-
-            currentHLNumber = nextNumber;
-            updateBalance();
+            activeHL = next;
+            sync();
         }
-
     </script>
 </body>
 </html>
