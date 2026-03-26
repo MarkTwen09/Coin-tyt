@@ -2,364 +2,255 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Clicker Pro: Skins & Cases</title>
+    <title>NEON CLICKER PRO</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
-
         :root {
-            --neon-blue: #00f2ff;
-            --neon-pink: #ff00c8;
-            --neon-purple: #9d00ff;
-            --gold: #ffcc00;
-            --bg: #05050a;
-            --glass: rgba(255, 255, 255, 0.05);
+            --neon: #00f2ff;
+            --pink: #ff00c8;
+            --bg: #0d0221;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            background: var(--bg);
+            background-color: var(--bg);
             color: white;
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
+            margin: 0;
             height: 100vh;
             overflow: hidden;
-            user-select: none;
         }
 
-        /* --- ЛЕВАЯ ЧАСТЬ: КЛИКЕР --- */
-        .clicker-section {
+        /* ЛЕВАЯ ПАНЕЛЬ - ИГРА */
+        .game-area {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-right: 1px solid rgba(255,255,255,0.1);
-            position: relative;
+            border-right: 2px solid rgba(255, 255, 255, 0.1);
         }
 
-        .balance-display {
-            position: absolute;
-            top: 40px;
-            background: var(--glass);
+        .stats {
+            margin-bottom: 30px;
             padding: 15px 40px;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid var(--neon);
             border-radius: 50px;
-            border: 2px solid var(--neon-blue);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
-            font-size: 2rem;
-            text-shadow: 0 0 10px var(--neon-blue);
+            box-shadow: 0 0 20px var(--neon);
+            font-size: 28px;
+            font-weight: bold;
         }
 
-        .coin-btn {
-            width: 280px;
-            height: 280px;
+        #coin {
+            width: 220px;
+            height: 220px;
             border-radius: 50%;
-            cursor: pointer;
+            background: gold;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 8rem;
+            font-size: 90px;
+            cursor: pointer;
+            user-select: none;
             transition: 0.1s;
-            position: relative;
-            box-shadow: 0 0 60px rgba(255,255,255,0.1);
+            border: 6px solid #fff;
+            box-shadow: 0 0 40px gold;
         }
 
-        .coin-btn:active {
-            transform: scale(0.92);
-        }
+        #coin:active { transform: scale(0.93); }
 
-        /* --- ПРАВАЯ ЧАСТЬ: МАГАЗИН И ИНВЕНТАРЬ --- */
-        .shop-section {
-            width: 450px;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(10px);
-            display: flex;
-            flex-direction: column;
+        /* ПРАВАЯ ПАНЕЛЬ - МАГАЗИН */
+        .side-menu {
+            width: 380px;
+            background: #000;
             padding: 20px;
-            gap: 20px;
             overflow-y: auto;
         }
 
-        h2 {
-            font-size: 1.2rem;
-            color: var(--neon-blue);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            border-bottom: 1px solid var(--neon-blue);
-            padding-bottom: 5px;
-        }
-
-        .card {
-            background: var(--glass);
-            border: 1px solid rgba(255,255,255,0.1);
+        .case-box {
+            background: #1a1a1a;
+            border: 1px solid var(--pink);
             padding: 15px;
+            margin-bottom: 20px;
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: 0.3s;
-        }
-
-        .card:hover {
-            border-color: var(--neon-pink);
-            background: rgba(255, 255, 255, 0.08);
+            text-align: center;
         }
 
         .btn {
-            background: transparent;
-            border: 1px solid var(--neon-blue);
-            color: var(--neon-blue);
-            padding: 8px 15px;
-            border-radius: 5px;
+            background: var(--neon);
+            color: #000;
+            border: none;
+            padding: 12px;
+            width: 100%;
             cursor: pointer;
             font-weight: bold;
             text-transform: uppercase;
-            font-family: 'Orbitron';
+            border-radius: 6px;
+            margin-top: 10px;
         }
 
-        .btn:hover {
-            background: var(--neon-blue);
-            color: black;
-            box-shadow: 0 0 15px var(--neon-blue);
-        }
+        .btn:hover { box-shadow: 0 0 15px var(--neon); }
 
-        /* Инвентарь */
-        .inventory-grid {
+        /* ИНВЕНТАРЬ */
+        .inventory {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
+            margin-top: 15px;
         }
 
-        .inv-item {
-            aspect-ratio: 1;
-            background: var(--glass);
-            border-radius: 8px;
-            border: 2px solid transparent;
+        .slot {
+            height: 70px;
+            background: #222;
+            border: 2px solid #444;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 35px;
             cursor: pointer;
-        }.inv-item.active {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 10px var(--neon-blue);
+            border-radius: 8px;
         }
 
-        /* МОДАЛЬНОЕ ОКНО */
-        .overlay {
-            position: fixed; top:0; left:0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
+        .slot.active {
+            border-color: var(--neon);
+            box-shadow: 0 0 10px var(--neon);
         }
 
-        .drop-card {
+        /* МОДАЛКА */
+        #popup {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: #111;
+            border: 4px solid var(--pink);
             padding: 40px;
+            display: none;
+            z-index: 999;
             text-align: center;
-            border: 2px solid var(--neon-pink);
             border-radius: 20px;
-            background: #000;
-            box-shadow: 0 0 40px var(--neon-pink);
-        }
-
-        .drop-icon {
-            font-size: 6rem;
-            margin: 20px 0;
-            display: block;
-        }
-
-        /* Анимация клика */
-        .plus-one {
-            position: absolute;
-            color: var(--neon-blue);
-            font-weight: bold;
-            pointer-events: none;
-            animation: moveUp 0.6s forwards;
-            font-size: 1.5rem;
-        }
-
-        @keyframes moveUp {
-            from { transform: translateY(0); opacity: 1; }
-            to { transform: translateY(-100px); opacity: 0; }
+            box-shadow: 0 0 50px var(--pink);
         }
     </style>
 </head>
 <body>
 
-    <section class="clicker-section">
-        <div class="balance-display"><span id="balance">0</span> 🪙</div>
-        <div class="coin-btn" id="mainCoin">💰</div>
-    </section>
+    <div class="game-area">
+        <div class="stats">Баланс: <span id="balance">0</span> 🪙</div>
+        <div id="coin" onclick="doClick()">💰</div>
+    </div>
 
-    <section class="shop-section">
-        <h2>Магазин Кейсов</h2>
-        <div class="card">
-            <div>
-                <b>Обычный кейс</b><br>
-                <small style="color:var(--gold)">Цена: 100 🪙</small>
-            </div>
-            <button class="btn" onclick="openCase('standard')">Открыть</button>
+    <div class="side-menu">
+        <h2 style="color:var(--pink)">КЕЙСЫ</h2>
+        <div class="case-box">
+            <p>Стандартный (150 🪙)</p>
+            <button class="btn" onclick="openCase('std')">Открыть</button>
         </div>
-        <div class="card">
-            <div>
-                <b>Элитный кейс</b><br>
-                <small style="color:var(--gold)">Цена: 1,000 🪙</small>
-            </div>
-            <button class="btn" onclick="openCase('elite')">Открыть</button>
-        </div>
+        <div class="case-box">
+            <p>Премиум (1000 🪙)</p>
+            <button class="btn" onclick="openCase('pre')">Открыть</button>
+        </div><h2 style="color:var(--neon)">МОИ СКИНЫ</h2>
+        <div class="inventory" id="inv"></div>
+    </div>
 
-        <h2>Инвентарь скинов</h2>
-        <div class="inventory-grid" id="inventory">
-            </div>
-    </section>
-
-    <div class="overlay" id="overlay">
-        <div class="drop-card">
-            <h1 id="dropMsg">ВЫ ВЫИГРАЛИ!</h1>
-            <span class="drop-icon" id="dropIcon">💰</span>
-            <h2 id="dropName" style="border:none">+500 Монет</h2>
-            <button class="btn" onclick="closeModal()">ЗАБРАТЬ</button>
-        </div>
+    <div id="popup">
+        <h2 id="win-title">ДРОП!</h2>
+        <div id="win-item" style="font-size: 80px; margin: 20px;"></div>
+        <button class="btn" onclick="hidePopup()" style="background:var(--pink)">ЗАБРАТЬ</button>
     </div>
 
     <script>
-        // --- ДАННЫЕ СКИНОВ ---
+        // База данных
         const SKINS = {
-            'default': { name: 'Золото', icon: '💰', style: 'radial-gradient(circle, #ffd700, #ff8c00)', shadow: '#ffcc00' },
-            'neon': { name: 'Киберпанк', icon: '💎', style: 'radial-gradient(circle, #00f2ff, #0066ff)', shadow: '#00f2ff' },
-            'ruby': { name: 'Рубин', icon: '🔴', style: 'radial-gradient(circle, #ff0044, #800000)', shadow: '#ff0044' },
-            'dark': { name: 'Тень', icon: '🌑', style: 'radial-gradient(circle, #444, #000)', shadow: '#ffffff' },
-            'void': { name: 'Апокалипсис', icon: '🌋', style: 'conic-gradient(#ff0000, #ff00c8, #ff0000)', shadow: '#ff00c8' }
+            's1': { icon: '💰', bg: 'gold' },
+            's2': { icon: '💎', bg: '#00f2ff' },
+            's3': { icon: '🔥', bg: '#ff4d00' },
+            's4': { icon: '🍀', bg: '#00ff40' },
+            's5': { icon: '👑', bg: '#ffcc00' },
+            's6': { icon: '👾', bg: '#9d00ff' }
         };
 
-        // --- ГЛОБАЛЬНОЕ СОСТОЯНИЕ ---
-        let state = JSON.parse(localStorage.getItem('save_game')) || {
+        // Состояние
+        let game = JSON.parse(localStorage.getItem('neon_save')) || {
             coins: 0,
-            owned: ['default'],
-            active: 'default'
+            owned: ['s1'],
+            active: 's1'
         };
 
-        const balEl = document.getElementById('balance');
-        const coinEl = document.getElementById('mainCoin');
-        const invEl = document.getElementById('inventory');
-
-        // --- ЛОГИКА ОБНОВЛЕНИЯ UI ---
-        function updateUI() {
-            balEl.innerText = state.coins.toLocaleString();
+        // Обновление всего интерфейса
+        function updateAll() {
+            // Баланс
+            document.getElementById('balance').innerText = Math.floor(game.coins);
             
-            // Применяем скин
-            const s = SKINS[state.active];
-            coinEl.innerText = s.icon;
-            coinEl.style.background = s.style;
-            coinEl.style.boxShadow = 0 0 50px ${s.shadow}66;// Рендер инвентаря
-            invEl.innerHTML = '';
-            state.owned.forEach(id => {
-                const item = document.createElement('div');
-                item.className = inv-item ${id === state.active ? 'active' : ''};
-                item.style.background = SKINS[id].style;
-                item.innerText = SKINS[id].icon;
-                item.onclick = () => {
-                    state.active = id;
-                    updateUI();
-                    save();
-                };
-                invEl.appendChild(item);
+            // Монета
+            const c = document.getElementById('coin');
+            const activeSkin = SKINS[game.active];
+            c.innerText = activeSkin.icon;
+            c.style.background = activeSkin.bg;
+            c.style.boxShadow = 0 0 40px ${activeSkin.bg};
+
+            // Инвентарь
+            const inv = document.getElementById('inv');
+            inv.innerHTML = '';
+            game.owned.forEach(id => {
+                const s = document.createElement('div');
+                s.className = 'slot' + (id === game.active ? ' active' : '');
+                s.innerText = SKINS[id].icon;
+                s.onclick = () => { game.active = id; save(); updateAll(); };
+                inv.appendChild(s);
             });
         }
 
         function save() {
-            localStorage.setItem('save_game', JSON.stringify(state));
+            localStorage.setItem('neon_save', JSON.stringify(game));
         }
 
-        // --- КЛИК ---
-        coinEl.onclick = (e) => {
-            state.coins += 1;
-            
-            // Анимация цифры
-            const p = document.createElement('div');
-            p.className = 'plus-one';
-            p.innerText = '+1';
-            p.style.left = e.clientX + 'px';
-            p.style.top = e.clientY + 'px';
-            document.body.appendChild(p);
-            setTimeout(() => p.remove(), 600);
-
-            updateUI();
+        // Клик
+        function doClick() {
+            game.coins += 1;
+            updateAll();
             save();
-        };
+        }
 
-        // --- КЕЙСЫ ---
-        window.openCase = function(type) {
-            const price = type === 'standard' ? 100 : 1000;
-            
-            if (state.coins < price) {
-                alert("Нужно больше золота! Кликай!");
+        // Логика кейсов
+        function openCase(type) {
+            const price = (type === 'std') ? 150 : 1000;
+            if (game.coins < price) {
+                alert("Не хватает монет!");
                 return;
             }
 
-            state.coins -= price;
+            game.coins -= price;
 
-            let dropSkin = null;
-            let dropCoins = 0;
+            // Рандом монет (от 0.5 до 2.5 цены)
+            let winCoins = Math.floor(Math.random() * (price * 2));
+            game.coins += winCoins;
 
-            if (type === 'standard') {
-                dropCoins = Math.floor(Math.random() * 200) + 10;
-                // Шанс 15% на скин Neon или Dark
-                if (Math.random() < 0.15) {
-                    const pool = ['neon', 'dark'];
-                    dropSkin = pool[Math.floor(Math.random() * pool.length)];
-                }
-            } else {
-                dropCoins = Math.floor(Math.random() * 1500) + 200;
-                // Шанс 30% на редкие скины
-                if (Math.random() < 0.3) {
-                    const pool = ['ruby', 'void', 'neon'];
-                    dropSkin = pool[Math.floor(Math.random() * pool.length)];
+            // Рандом скина (шанс 25%)
+            let winSkin = null;
+            if (Math.random() < 0.25) {
+                const keys = Object.keys(SKINS);
+                winSkin = keys[Math.floor(Math.random() * keys.length)];
+                if (!game.owned.includes(winSkin)) {
+                    game.owned.push(winSkin);
                 }
             }
 
-            // Начисляем приз
-            state.coins += dropCoins;
-            if (dropSkin && !state.owned.includes(dropSkin)) {
-                state.owned.push(dropSkin);
-            }
+            // Показ результата
+            const pop = document.getElementById('popup');
+            pop.style.display = 'block';
+            document.getElementById('win-title').innerText = winSkin ? "ВЫПАЛ СКИН!" : "ВЫИГРЫШ:";
+            document.getElementById('win-item').innerText = winSkin ? SKINS[winSkin].icon : +${winCoins} 🪙;
 
-            showModal(dropCoins, dropSkin);
-            updateUI();
+            updateAll();
             save();
-        };
-
-        // --- МОДАЛКА ---
-        function showModal(c, s) {
-            const modal = document.getElementById('overlay');
-            const msg = document.getElementById('dropMsg');
-            const icon = document.getElementById('dropIcon');
-            const name = document.getElementById('dropName');
-
-            modal.style.display = 'flex';
-
-            if (s && !state.owned.includes(s)) {
-                msg.innerText = "НОВЫЙ СКИН!";
-                icon.innerText = SKINS[s].icon;
-                name.innerText = SKINS[s].name;
-            } else {
-                msg.innerText = "ВЫИГРЫШ";
-                icon.innerText = "💰";
-                name.innerText = +${c} Монет;
-            }
         }
 
-        window.closeModal = function() {
-            document.getElementById('overlay').style.display = 'none';
+        function hidePopup() {
+            document.getElementById('popup').style.display = 'none';
         }
 
-        // Старт
-        updateUI();
-
+        // Первый запуск
+        updateAll();
     </script>
 </body>
 </html>
