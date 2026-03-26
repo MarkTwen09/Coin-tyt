@@ -142,7 +142,8 @@
         .skin-slot.active {
             border-color: var(--accent);
             box-shadow: 0 0 15px var(--glow);
-        }/* МОДАЛКА ВЫИГРЫША */
+        }
+        /* МОДАЛКА ВЫИГРЫША */
         .modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -248,7 +249,8 @@
             
             // Меняем цвета темы под скин
             document.documentElement.style.setProperty('--accent', currentSkin.color);
-            document.documentElement.style.setProperty('--glow', currentSkin.color + '66');// Рисуем инвентарь
+            document.documentElement.style.setProperty('--glow', currentSkin.color + '66');
+            // Рисуем инвентарь
             invContainer.innerHTML = '';
             storage.owned.forEach(id => {
                 const slot = document.createElement('div');
