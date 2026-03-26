@@ -2,339 +2,212 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Clicker: Definitive Edition</title>
+    <title>World Order: Evolution</title>
     <style>
         :root {
-            --accent: #00f2ff;
-            --bg: #050508;
-            --panel: rgba(255, 255, 255, 0.05);
-            --glow: rgba(0, 242, 255, 0.4);
+            --bg: #0d1117;
+            --panel: #161b22;
+            --accent: #238636;
+            --border: #30363d;
+            --gold: #f1e05a;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
 
         body {
-            background: var(--bg);
-            color: white;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            user-select: none;
+            margin: 0; background: var(--bg); color: #c9d1d9;
+            font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh;
         }
 
-        /* ГЛАВНЫЙ КОНТЕЙНЕР */
-        .app {
-            display: flex;
-            width: 95vw;
-            height: 90vh;
-            max-width: 1100px;
-            gap: 20px;
+        /* БОКОВАЯ ПАНЕЛЬ */
+        .sidebar {
+            width: 350px; background: var(--panel); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; padding: 20px; z-index: 10;
         }
 
-        /* ИГРОВАЯ ЗОНА */
-        .clicker-section {
-            flex: 1.5;
-            background: var(--panel);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            backdrop-filter: blur(10px);
+        .tabs { display: flex; gap: 5px; margin-bottom: 20px; }
+        .tab-btn {
+            flex: 1; padding: 8px; background: #21262d; border: 1px solid var(--border);
+            color: #fff; cursor: pointer; border-radius: 6px; font-size: 12px;
         }
+        .tab-btn.active { background: var(--accent); border-color: #fff; }
 
-        .balance-info {
-            position: absolute;
-            top: 40px;
-            text-align: center;
+        .content-section { display: none; flex: 1; flex-direction: column; }
+        .content-section.active { display: flex; }
+
+        /* ЭКОНОМИКА */
+        .stat-card {
+            background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px;
+            margin-bottom: 15px; border: 1px solid var(--border);
         }
+        .gold-text { color: var(--gold); font-size: 24px; font-weight: bold; }
 
-        #balance {
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: var(--accent);
-            text-shadow: 0 0 20px var(--glow);
+        /* КАРТА */
+        .map-wrapper {
+            flex: 1; background: #05070a; position: relative;
+            display: flex; align-items: center; justify-content: center;
         }
-
-        /* МОНЕТА */
-        #main-btn {
-            width: 260px;
-            height: 260px;
-            border-radius: 50%;
-            background: var(--panel);
-            border: 4px solid var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 110px;
-            cursor: pointer;
-            box-shadow: 0 0 40px var(--glow), inset 0 0 20px var(--glow);
-            transition: transform 0.1s;
+        svg { width: 90%; height: auto; transition: 0.3s; }
+        .region {
+            fill: #21262d; stroke: #000; stroke-width: 0.5; transition: 0.3s; cursor: pointer;
         }
+        .region:hover { fill: #30363d !important; }
 
-        #main-btn:active { transform: scale(0.92); }
-
-        /* МАГАЗИН И ИНВЕНТАРЬ */
-        .side-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        /* ЧАТ / ПЕРЕГОВОРЫ */
+        .msg-box {
+            flex: 1; background: #0d1117; border-radius: 8px; padding: 10px;
+            font-size: 13px; overflow-y: auto; margin-bottom: 10px;
         }
-
-        .panel {
-            background: var(--panel);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 25px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; opacity: 0.5; }
-
-        .item-card {
-            background: rgba(255,255,255,0.03);
-            border-radius: 15px;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            border: 1px solid transparent;
-        }
-
-        .item-card:hover { border-color: var(--accent); }
-
-        .btn-buy {
-            background: var(--accent);
-            color: black;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* СЕТКА ИНВЕНТАРЯ */
-        .inv-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-        .skin-slot {
-            aspect-ratio: 1;
-            background: rgba(255,255,255,0.05);
-            border: 2px solid transparent;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            cursor: pointer;
-        }
-
-        .skin-slot.active {
-            border-color: var(--accent);
-            box-shadow: 0 0 15px var(--glow);
-        }
-        /* МОДАЛКА ВЫИГРЫША */
-        .modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
-
-        .modal-box {
-            background: #111;
-            border: 2px solid var(--accent);
-            padding: 40px;
-            border-radius: 25px;
-            text-align: center;
-            box-shadow: 0 0 50px var(--glow);
-        }
-
-        /* ЧАСТИЦЫ КЛИКА */
-        .plus-one {
-            position: absolute;
-            color: var(--accent);
-            font-weight: bold;
-            pointer-events: none;
-            animation: flyUp 0.7s ease-out forwards;
-        }
-
-        @keyframes flyUp {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-120px); opacity: 0; }
+        .msg { margin-bottom: 8px; padding: 5px; border-radius: 4px; background: #1c2128; }
+        
+        input, select {
+            background: #0d1117; border: 1px solid var(--border); color: #fff;
+            padding: 10px; border-radius: 6px; margin-top: 5px;
         }
     </style>
 </head>
 <body>
 
-    <div class="app">
-        <section class="clicker-section">
-            <div class="balance-info">
-                <p style="opacity:0.5; font-size: 12px; letter-spacing: 2px;">WALLET BALANCE</p>
-                <div id="balance">0</div>
-            </div>
-            <div id="main-btn">💰</div>
-        </section>
-
-        <section class="side-section">
-            <div class="panel">
-                <h2>Store Cases</h2>
-                <div class="item-card">
-                    <div><b>Common Case</b><br><small style="color:var(--accent)">100 🪙</small></div>
-                    <button class="btn-buy" onclick="gameOpenCase(100)">OPEN</button>
-                </div>
-                <div class="item-card">
-                    <div><b>Epic Lootbox</b><br><small style="color:var(--accent)">500 🪙</small></div>
-                    <button class="btn-buy" onclick="gameOpenCase(500)">OPEN</button>
-                </div>
-            </div>
-
-            <div class="panel" style="flex:1">
-                <h2>Skins Collection</h2>
-                <div class="inv-grid" id="inv-container"></div>
-            </div>
-        </section>
-    </div>
-
-    <div class="modal" id="win-modal" onclick="closeModal()">
-        <div class="modal-box">
-            <h3 style="opacity:0.6; margin-bottom: 10px;">CONGRATULATIONS!</h3>
-            <div id="win-icon" style="font-size: 80px; margin-bottom: 15px;">🎁</div>
-            <h1 id="win-text" style="color: var(--accent);">+500 Coins</h1>
-            <p style="margin-top: 20px; font-size: 12px; opacity: 0.5;">Click to close</p>
+    <aside class="sidebar">
+        <h2 style="margin: 0 0 20px 0; color: var(--accent);">GLOBAL CONQUEST</h2>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('economy')">ЭКОНОМИКА</button>
+            <button class="tab-btn" onclick="openTab('diplomacy')">ПЕРЕГОВОРЫ</button>
+            <button class="tab-btn" onclick="openTab('army')">ВОЙНА</button>
         </div>
-    </div>
+
+        <div id="economy" class="content-section active">
+            <div class="stat-card">
+                <label>Золотой запас:</label>
+                <div class="gold-text"><span id="gold-val">500</span> 🪙</div>
+                <small>Доход: +<span id="income-val">5</span>/сек</small>
+            </div>
+            <div class="stat-card">
+                <b>Территории:</b> <span id="territory-count">0</span><br>
+                <b>Население:</b> <span id="pop-count">0</span> млн.
+            </div>
+            <button class="tab-btn" style="background: #2ea44f; padding: 15px;" onclick="invest()">ИНВЕСТИРОВАТЬ (100 🪙)</button>
+        </div>
+
+        <div id="diplomacy" class="content-section">
+            <div class="msg-box" id="diplomacy-log">
+                <div class="msg"><b>Министерство:</b> Ожидаем ваших приказов, лидер.</div>
+            </div>
+            <label>Отправить депешу:</label>
+            <select id="target-country">
+                <option>ООН</option>
+                <option>Соседняя страна</option><option>Торговый альянс</option>
+            </select>
+            <input type="text" id="msg-input" placeholder="Текст сообщения...">
+            <button class="tab-btn" style="margin-top:10px" onclick="sendMessage()">ОТПРАВИТЬ</button>
+        </div>
+
+        <div id="army" class="content-section">
+            <div class="stat-card">
+                <b>Армия:</b> <span id="army-val">1000</span> чел.<br>
+                <b>Готовность:</b> Высокая
+            </div>
+            <p style="font-size: 12px; opacity: 0.6;">Выберите регион на карте для экспансии. Стоимость захвата: 250 🪙</p>
+        </div>
+    </aside>
+
+    <main class="map-wrapper">
+        <svg viewBox="0 0 1000 500" id="world-map">
+            <path class="region" d="M100,100 L300,100 L300,250 L100,250 Z" data-name="Северная Америка" onclick="handleRegionClick(this)"></path>
+            <path class="region" d="M320,100 L500,100 L500,200 L320,200 Z" data-name="Европа" onclick="handleRegionClick(this)"></path>
+            <path class="region" d="M520,80 L800,80 L800,250 L520,250 Z" data-name="Азия" onclick="handleRegionClick(this)"></path>
+            <path class="region" d="M350,230 L500,230 L500,400 L350,400 Z" data-name="Африка" onclick="handleRegionClick(this)"></path>
+            <path class="region" d="M150,270 L300,270 L300,450 L150,450 Z" data-name="Южная Америка" onclick="handleRegionClick(this)"></path>
+            <path class="region" d="M600,270 L750,270 L750,420 L600,420 Z" data-name="Австралия" onclick="handleRegionClick(this)"></path>
+            <path class="region" d="M550,40 L850,40 L800,100 L550,100 Z" data-name="Сибирь" onclick="handleRegionClick(this)"></path>
+        </svg>
+    </main>
 
     <script>
-        // 1. БАЗА СКИНОВ
-        const SKINS_DATA = {
-            's1': { icon: '💰', color: '#ffcc00' },
-            's2': { icon: '💎', color: '#00f2ff' },
-            's3': { icon: '🔥', color: '#ff4d00' },
-            's4': { icon: '🍀', color: '#00ff44' },
-            's5': { icon: '⚡', color: '#ffff00' },
-            's6': { icon: '💀', color: '#ffffff' }
+        // ДАННЫЕ ИГРЫ
+        let state = {
+            gold: 500,
+            income: 5,
+            territories: 0,
+            color: '#238636'
         };
 
-        // 2. СОСТОЯНИЕ (Загрузка)
-        let storage = JSON.parse(localStorage.getItem('neon_clicker_v3')) || {
-            coins: 0,
-            owned: ['s1'],
-            active: 's1'
-        };
-
-        const balDisplay = document.getElementById('balance');
-        const mainBtn = document.getElementById('main-btn');
-        const invContainer = document.getElementById('inv-container');
-
-        // 3. ОБНОВЛЕНИЕ ЭКРАНА
-        function refresh() {
-            balDisplay.innerText = Math.floor(storage.coins).toLocaleString();
-            
-            const currentSkin = SKINS_DATA[storage.active];
-            mainBtn.innerText = currentSkin.icon;
-            
-            // Меняем цвета темы под скин
-            document.documentElement.style.setProperty('--accent', currentSkin.color);
-            document.documentElement.style.setProperty('--glow', currentSkin.color + '66');
-            // Рисуем инвентарь
-            invContainer.innerHTML = '';
-            storage.owned.forEach(id => {
-                const slot = document.createElement('div');
-                slot.className = skin-slot ${id === storage.active ? 'active' : ''};
-                slot.innerText = SKINS_DATA[id].icon;
-                slot.onclick = () => {
-                    storage.active = id;
-                    save();
-                    refresh();
-                };
-                invContainer.appendChild(slot);
-            });
+        // ТАБЫ
+        function openTab(tabId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
-        function save() {
-            localStorage.setItem('neon_clicker_v3', JSON.stringify(storage));
+        // ЭКОНОМИКА (Тик раз в секунду)
+        setInterval(() => {
+            state.gold += state.income;
+            updateUI();
+        }, 1000);
+
+        function updateUI() {
+            document.getElementById('gold-val').innerText = state.gold;
+            document.getElementById('income-val').innerText = state.income;
+            document.getElementById('territory-count').innerText = state.territories;
+            document.getElementById('pop-count').innerText = state.territories * 45;
         }
 
-        // 4. КЛИК
-        mainBtn.addEventListener('click', (e) => {
-            storage.coins += 1;
-            
-            // Эффект цифры
-            const p = document.createElement('div');
-            p.className = 'plus-one';
-            p.innerText = '+1';
-            p.style.left = e.clientX + 'px';
-            p.style.top = e.clientY + 'px';
-            document.body.appendChild(p);
-            setTimeout(() => p.remove(), 700);
+        function invest() {
+            if (state.gold >= 100) {
+                state.gold -= 100;
+                state.income += 2;
+                addLog('Экономика', 'Вы инвестировали в заводы. Доход вырос!');
+                updateUI();
+            }
+        }
 
-            save();
-            refresh();
-        });
+        // КЛИК ПО КАРТЕ
+        function handleRegionClick(el) {
+            const regionName = el.getAttribute('data-name');
+            const cost = 250;
 
-        // 5. ЛОГИКА КЕЙСОВ
-        window.gameOpenCase = function(price) {
-            if (storage.coins < price) {
-                alert("NOT ENOUGH COINS!");
+            if (el.style.fill === 'rgb(35, 134, 54)') { // Если уже наш (в hex это #238636)
+                addLog('Инфо', Регион ${regionName} уже под вашим контролем.);
                 return;
             }
 
-            storage.coins -= price;
-
-            let wonSkin = null;
-            let wonCoins = Math.floor(Math.random() * (price * 2.5));
-
-            // 30% шанс на скин
-            if (Math.random() < 0.3) {
-                const keys = Object.keys(SKINS_DATA);
-                const randomId = keys[Math.floor(Math.random() * keys.length)];
-                if (!storage.owned.includes(randomId)) {
-                    wonSkin = randomId;
-                    storage.owned.push(wonSkin);
-                }
-            }
-
-            storage.coins += wonCoins;
-            showModal(wonCoins, wonSkin);
-            save();
-            refresh();
-        };
-
-        function showModal(coins, skinId) {
-            const modal = document.getElementById('win-modal');
-            const icon = document.getElementById('win-icon');
-            const text = document.getElementById('win-text');
-
-            if (skinId) {
-                icon.innerText = SKINS_DATA[skinId].icon;
-                text.innerText = "NEW SKIN!";
+            if (state.gold >= cost) {
+                state.gold -= cost;
+                state.territories++;
+                state.income += 5; // Каждая страна дает доход
+                el.style.fill = state.color;
+                el.style.stroke = '#fff';
+                el.style.strokeWidth = '2';
+                addLog('Война', Вы захватили ${regionName}! Доход увеличен.);
             } else {
-                icon.innerText = "💰";
-                text.innerText = +${coins} Coins;
+                addLog('Ошибка', 'Недостаточно золота для экспансии!');
             }
-            modal.style.display = 'flex';
+            updateUI();
+        }// ДИПЛОМАТИЯ
+        function sendMessage() {
+            const target = document.getElementById('target-country').value;
+            const text = document.getElementById('msg-input').value;
+            if (!text) return;
+
+            addLog('Вы -> ' + target, text);
+            document.getElementById('msg-input').value = '';
+
+            // Случайный ответ от "ИИ"
+            setTimeout(() => {
+                const answers = ["Мы рассмотрим ваше предложение.", "Это неприемлемо!", "Нам нужно больше золота.", "Согласны на торговый пакт."];
+                addLog(target, answers[Math.floor(Math.random()*answers.length)]);
+            }, 2000);
         }
 
-        window.closeModal = function() {
-            document.getElementById('win-modal').style.display = 'none';
+        function addLog(sender, text) {
+            const log = document.getElementById('diplomacy-log');
+            const msg = document.createElement('div');
+            msg.className = 'msg';
+            msg.innerHTML = <b>${sender}:</b> ${text};
+            log.prepend(msg);
         }
 
-        // Запуск
-        refresh();
+        updateUI();
     </script>
 </body>
 </html>
