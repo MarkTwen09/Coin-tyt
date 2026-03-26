@@ -2,212 +2,138 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>World Order: Evolution</title>
+    <title>WORLD CONQUEST PRO</title>
     <style>
-        :root {
-            --bg: #0d1117;
-            --panel: #161b22;
-            --accent: #238636;
-            --border: #30363d;
-            --gold: #f1e05a;
-        }
-
-        body {
-            margin: 0; background: var(--bg); color: #c9d1d9;
-            font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh;
-        }
-
-        /* БОКОВАЯ ПАНЕЛЬ */
-        .sidebar {
-            width: 350px; background: var(--panel); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; padding: 20px; z-index: 10;
-        }
-
-        .tabs { display: flex; gap: 5px; margin-bottom: 20px; }
-        .tab-btn {
-            flex: 1; padding: 8px; background: #21262d; border: 1px solid var(--border);
-            color: #fff; cursor: pointer; border-radius: 6px; font-size: 12px;
-        }
-        .tab-btn.active { background: var(--accent); border-color: #fff; }
-
-        .content-section { display: none; flex: 1; flex-direction: column; }
-        .content-section.active { display: flex; }
-
-        /* ЭКОНОМИКА */
-        .stat-card {
-            background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px;
-            margin-bottom: 15px; border: 1px solid var(--border);
-        }
-        .gold-text { color: var(--gold); font-size: 24px; font-weight: bold; }
+        :root { --accent: #00ff88; --bg: #0d1117; --panel: #161b22; --border: #30363d; }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* ИНТЕРФЕЙС */
+        .sidebar { width: 320px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 25px; box-shadow: 5px 0 20px rgba(0,0,0,0.5); z-index: 10; }
+        .stat-card { background: rgba(0,0,0,0.2); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+        .gold { font-size: 34px; font-weight: 800; color: #f1c40f; text-shadow: 0 0 10px rgba(241,196,15,0.3); }
+        
+        .btn { background: var(--accent); color: #000; border: none; padding: 15px; border-radius: 8px; font-weight: 900; cursor: pointer; width: 100%; transition: 0.2s; text-transform: uppercase; }
+        .btn:hover { filter: brightness(1.2); transform: scale(1.02); }
+        .btn:active { transform: scale(0.98); }
 
         /* КАРТА */
-        .map-wrapper {
-            flex: 1; background: #05070a; position: relative;
-            display: flex; align-items: center; justify-content: center;
-        }
-        svg { width: 90%; height: auto; transition: 0.3s; }
-        .region {
-            fill: #21262d; stroke: #000; stroke-width: 0.5; transition: 0.3s; cursor: pointer;
-        }
-        .region:hover { fill: #30363d !important; }
-
-        /* ЧАТ / ПЕРЕГОВОРЫ */
-        .msg-box {
-            flex: 1; background: #0d1117; border-radius: 8px; padding: 10px;
-            font-size: 13px; overflow-y: auto; margin-bottom: 10px;
-        }
-        .msg { margin-bottom: 8px; padding: 5px; border-radius: 4px; background: #1c2128; }
+        .map-view { flex: 1; background: radial-gradient(circle, #1c2128 0%, #05070a 100%); display: flex; align-items: center; justify-content: center; position: relative; }
+        svg { width: 85%; height: auto; filter: drop-shadow(0 0 30px rgba(0,0,0,0.8)); }
         
-        input, select {
-            background: #0d1117; border: 1px solid var(--border); color: #fff;
-            padding: 10px; border-radius: 6px; margin-top: 5px;
-        }
+        .land { fill: #2d333b; stroke: #444c56; stroke-width: 1.5; transition: 0.4s; cursor: pointer; }
+        .land:hover { fill: #444c56; stroke: #fff; }
+
+        /* ИСТОРИЯ */
+        #log { flex: 1; margin-top: 20px; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 12px; font-size: 13px; overflow-y: auto; border: 1px solid var(--border); color: #8b949e; }
+        .log-msg { margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; }
     </style>
 </head>
 <body>
 
     <aside class="sidebar">
-        <h2 style="margin: 0 0 20px 0; color: var(--accent);">GLOBAL CONQUEST</h2>
+        <h1 style="color:var(--accent); font-size: 22px; margin: 0 0 20px 0;">GLOBAL COMMAND</h1>
         
-        <div class="tabs">
-            <button class="tab-btn active" onclick="openTab('economy')">ЭКОНОМИКА</button>
-            <button class="tab-btn" onclick="openTab('diplomacy')">ПЕРЕГОВОРЫ</button>
-            <button class="tab-btn" onclick="openTab('army')">ВОЙНА</button>
+        <div class="stat-card">
+            <div style="font-size: 11px; opacity: 0.6; letter-spacing: 1px;">ЗОЛОТОЙ ЗАПАС</div>
+            <div class="gold" id="gold-display">500</div>
+            <div style="color:var(--accent); font-size: 13px; font-weight: bold;">+<span id="inc-display">5</span> за сек.</div>
         </div>
 
-        <div id="economy" class="content-section active">
-            <div class="stat-card">
-                <label>Золотой запас:</label>
-                <div class="gold-text"><span id="gold-val">500</span> 🪙</div>
-                <small>Доход: +<span id="income-val">5</span>/сек</small>
-            </div>
-            <div class="stat-card">
-                <b>Территории:</b> <span id="territory-count">0</span><br>
-                <b>Население:</b> <span id="pop-count">0</span> млн.
-            </div>
-            <button class="tab-btn" style="background: #2ea44f; padding: 15px;" onclick="invest()">ИНВЕСТИРОВАТЬ (100 🪙)</button>
+        <div class="stat-card">
+            <div>Захвачено земель: <b id="count-display" style="color:var(--accent)">0</b></div>
+            <div style="font-size: 12px; margin-top: 5px; opacity: 0.7;">Цена захвата: <span style="color:#f1c40f">200 🪙</span></div>
         </div>
 
-        <div id="diplomacy" class="content-section">
-            <div class="msg-box" id="diplomacy-log">
-                <div class="msg"><b>Министерство:</b> Ожидаем ваших приказов, лидер.</div>
-            </div>
-            <label>Отправить депешу:</label>
-            <select id="target-country">
-                <option>ООН</option>
-                <option>Соседняя страна</option><option>Торговый альянс</option>
-            </select>
-            <input type="text" id="msg-input" placeholder="Текст сообщения...">
-            <button class="tab-btn" style="margin-top:10px" onclick="sendMessage()">ОТПРАВИТЬ</button>
-        </div>
+        <button class="btn" onclick="buyUpgrade()">Улучшить шахты (300 🪙)</button>
 
-        <div id="army" class="content-section">
-            <div class="stat-card">
-                <b>Армия:</b> <span id="army-val">1000</span> чел.<br>
-                <b>Готовность:</b> Высокая
-            </div>
-            <p style="font-size: 12px; opacity: 0.6;">Выберите регион на карте для экспансии. Стоимость захвата: 250 🪙</p>
+        <div id="log">
+            <div class="log-msg"><b>[СИСТЕМА]:</b> Инициализация... Карта мира загружена. Выберите цель для атаки.</div>
         </div>
     </aside>
 
-    <main class="map-wrapper">
-        <svg viewBox="0 0 1000 500" id="world-map">
-            <path class="region" d="M100,100 L300,100 L300,250 L100,250 Z" data-name="Северная Америка" onclick="handleRegionClick(this)"></path>
-            <path class="region" d="M320,100 L500,100 L500,200 L320,200 Z" data-name="Европа" onclick="handleRegionClick(this)"></path>
-            <path class="region" d="M520,80 L800,80 L800,250 L520,250 Z" data-name="Азия" onclick="handleRegionClick(this)"></path>
-            <path class="region" d="M350,230 L500,230 L500,400 L350,400 Z" data-name="Африка" onclick="handleRegionClick(this)"></path>
-            <path class="region" d="M150,270 L300,270 L300,450 L150,450 Z" data-name="Южная Америка" onclick="handleRegionClick(this)"></path>
-            <path class="region" d="M600,270 L750,270 L750,420 L600,420 Z" data-name="Австралия" onclick="handleRegionClick(this)"></path>
-            <path class="region" d="M550,40 L850,40 L800,100 L550,100 Z" data-name="Сибирь" onclick="handleRegionClick(this)"></path>
+    <main class="map-view">
+        <svg viewBox="0 0 1000 500">
+            <path class="land" d="M100,60 L380,60 L350,280 L80,250 Z" data-name="Северная Америка"></path>
+            <path class="land" d="M180,300 L320,300 L280,480 L160,450 Z" data-name="Южная Америка"></path>
+            <path class="land" d="M420,60 L580,60 L560,180 L430,190 Z" data-name="Европа"></path>
+            <path class="land" d="M450,210 L620,220 L580,460 L420,430 Z" data-name="Африка"></path>
+            <path class="land" d="M600,40 L960,50 L920,320 L580,300 Z" data-name="Азия"></path>
+            <path class="land" d="M720,350 L920,360 L880,480 L700,460 Z" data-name="Австралия"></path>
         </svg>
     </main>
 
     <script>
-        // ДАННЫЕ ИГРЫ
+        // ИГРОВЫЕ ПЕРЕМЕННЫЕ
         let state = {
             gold: 500,
             income: 5,
-            territories: 0,
-            color: '#238636'
-        };
-
-        // ТАБЫ
-        function openTab(tabId) {
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
+            captured: 0
+        };// ОБНОВЛЕНИЕ ТЕКСТА
+        function syncUI() {
+            document.getElementById('gold-display').innerText = Math.floor(state.gold);
+            document.getElementById('inc-display').innerText = state.income;
+            document.getElementById('count-display').innerText = state.captured;
         }
 
-        // ЭКОНОМИКА (Тик раз в секунду)
+        function postLog(text) {
+            const log = document.getElementById('log');
+            const div = document.createElement('div');
+            div.className = 'log-msg';
+            div.innerHTML = <b>[${new Date().toLocaleTimeString()}]</b> ${text};
+            log.prepend(div);
+        }
+
+        // ДОХОД РАЗ В СЕКУНДУ
         setInterval(() => {
             state.gold += state.income;
-            updateUI();
+            syncUI();
         }, 1000);
 
-        function updateUI() {
-            document.getElementById('gold-val').innerText = state.gold;
-            document.getElementById('income-val').innerText = state.income;
-            document.getElementById('territory-count').innerText = state.territories;
-            document.getElementById('pop-count').innerText = state.territories * 45;
-        }
-
-        function invest() {
-            if (state.gold >= 100) {
-                state.gold -= 100;
-                state.income += 2;
-                addLog('Экономика', 'Вы инвестировали в заводы. Доход вырос!');
-                updateUI();
-            }
-        }
-
-        // КЛИК ПО КАРТЕ
-        function handleRegionClick(el) {
-            const regionName = el.getAttribute('data-name');
-            const cost = 250;
-
-            if (el.style.fill === 'rgb(35, 134, 54)') { // Если уже наш (в hex это #238636)
-                addLog('Инфо', Регион ${regionName} уже под вашим контролем.);
-                return;
-            }
-
-            if (state.gold >= cost) {
-                state.gold -= cost;
-                state.territories++;
-                state.income += 5; // Каждая страна дает доход
-                el.style.fill = state.color;
-                el.style.stroke = '#fff';
-                el.style.strokeWidth = '2';
-                addLog('Война', Вы захватили ${regionName}! Доход увеличен.);
+        // УЛУЧШЕНИЕ ЭКОНОМИКИ
+        function buyUpgrade() {
+            if (state.gold >= 300) {
+                state.gold -= 300;
+                state.income += 10;
+                postLog("Экономика улучшена! Доход вырос на +10.");
+                syncUI();
             } else {
-                addLog('Ошибка', 'Недостаточно золота для экспансии!');
+                postLog("<span style='color:#ff4444'>Недостаточно золота для шахт!</span>");
             }
-            updateUI();
-        }// ДИПЛОМАТИЯ
-        function sendMessage() {
-            const target = document.getElementById('target-country').value;
-            const text = document.getElementById('msg-input').value;
-            if (!text) return;
-
-            addLog('Вы -> ' + target, text);
-            document.getElementById('msg-input').value = '';
-
-            // Случайный ответ от "ИИ"
-            setTimeout(() => {
-                const answers = ["Мы рассмотрим ваше предложение.", "Это неприемлемо!", "Нам нужно больше золота.", "Согласны на торговый пакт."];
-                addLog(target, answers[Math.floor(Math.random()*answers.length)]);
-            }, 2000);
         }
 
-        function addLog(sender, text) {
-            const log = document.getElementById('diplomacy-log');
-            const msg = document.createElement('div');
-            msg.className = 'msg';
-            msg.innerHTML = <b>${sender}:</b> ${text};
-            log.prepend(msg);
-        }
+        // ЗАХВАТ ТЕРРИТОРИЙ
+        document.querySelectorAll('.land').forEach(el => {
+            el.addEventListener('click', function() {
+                const name = this.getAttribute('data-name');
+                const cost = 200;
 
-        updateUI();
+                // Проверка: захвачено ли уже (проверяем цвет заливки)
+                if (this.getAttribute('data-owned') === 'true') {
+                    postLog(Регион ${name} уже принадлежит вам.);
+                    return;
+                }
+
+                if (state.gold >= cost) {
+                    state.gold -= cost;
+                    state.captured++;
+                    state.income += 5;
+                    
+                    // Визуальный эффект захвата
+                    this.setAttribute('data-owned', 'true');
+                    this.style.fill = '#00ff88'; 
+                    this.style.stroke = '#fff';
+                    this.style.strokeWidth = '3px';
+                    
+                    postLog(ПОБЕДА! Регион <b>${name}</b> захвачен. Доход увеличен.);
+                    syncUI();
+                } else {
+                    postLog(<span style='color:#ff4444'>Мало золота для захвата ${name}! Нужно 200.</span>);
+                }
+            });
+        });
+
+        // ПЕРВЫЙ ЗАПУСК
+        syncUI();
     </script>
 </body>
 </html>
