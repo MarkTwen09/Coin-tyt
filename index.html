@@ -2,255 +2,337 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>NEON CLICKER PRO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Clicker: Definitive Edition</title>
     <style>
         :root {
-            --neon: #00f2ff;
-            --pink: #ff00c8;
-            --bg: #0d0221;
+            --accent: #00f2ff;
+            --bg: #050508;
+            --panel: rgba(255, 255, 255, 0.05);
+            --glow: rgba(0, 242, 255, 0.4);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
 
         body {
-            background-color: var(--bg);
+            background: var(--bg);
             color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            margin: 0;
             height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             overflow: hidden;
+            user-select: none;
         }
 
-        /* ЛЕВАЯ ПАНЕЛЬ - ИГРА */
-        .game-area {
-            flex: 1;
+        /* ГЛАВНЫЙ КОНТЕЙНЕР */
+        .app {
+            display: flex;
+            width: 95vw;
+            height: 90vh;
+            max-width: 1100px;
+            gap: 20px;
+        }
+
+        /* ИГРОВАЯ ЗОНА */
+        .clicker-section {
+            flex: 1.5;
+            background: var(--panel);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 30px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-right: 2px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            backdrop-filter: blur(10px);
         }
 
-        .stats {
-            margin-bottom: 30px;
-            padding: 15px 40px;
-            background: rgba(255,255,255,0.05);
-            border: 2px solid var(--neon);
-            border-radius: 50px;
-            box-shadow: 0 0 20px var(--neon);
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        #coin {
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            background: gold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 90px;
-            cursor: pointer;
-            user-select: none;
-            transition: 0.1s;
-            border: 6px solid #fff;
-            box-shadow: 0 0 40px gold;
-        }
-
-        #coin:active { transform: scale(0.93); }
-
-        /* ПРАВАЯ ПАНЕЛЬ - МАГАЗИН */
-        .side-menu {
-            width: 380px;
-            background: #000;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .case-box {
-            background: #1a1a1a;
-            border: 1px solid var(--pink);
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 12px;
+        .balance-info {
+            position: absolute;
+            top: 40px;
             text-align: center;
         }
 
-        .btn {
-            background: var(--neon);
-            color: #000;
-            border: none;
-            padding: 12px;
-            width: 100%;
-            cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
-            border-radius: 6px;
-            margin-top: 10px;
+        #balance {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            text-shadow: 0 0 20px var(--glow);
         }
 
-        .btn:hover { box-shadow: 0 0 15px var(--neon); }
+        /* МОНЕТА */
+        #main-btn {
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: var(--panel);
+            border: 4px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 110px;
+            cursor: pointer;
+            box-shadow: 0 0 40px var(--glow), inset 0 0 20px var(--glow);
+            transition: transform 0.1s;
+        }
 
-        /* ИНВЕНТАРЬ */
-        .inventory {
+        #main-btn:active { transform: scale(0.92); }
+
+        /* МАГАЗИН И ИНВЕНТАРЬ */
+        .side-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; opacity: 0.5; }
+
+        .item-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border: 1px solid transparent;
+        }
+
+        .item-card:hover { border-color: var(--accent); }
+
+        .btn-buy {
+            background: var(--accent);
+            color: black;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* СЕТКА ИНВЕНТАРЯ */
+        .inv-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin-top: 15px;
         }
 
-        .slot {
-            height: 70px;
-            background: #222;
-            border: 2px solid #444;
+        .skin-slot {
+            aspect-ratio: 1;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid transparent;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 35px;
+            font-size: 32px;
             cursor: pointer;
-            border-radius: 8px;
         }
 
-        .slot.active {
-            border-color: var(--neon);
-            box-shadow: 0 0 10px var(--neon);
-        }
-
-        /* МОДАЛКА */
-        #popup {
+        .skin-slot.active {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--glow);
+        }/* МОДАЛКА ВЫИГРЫША */
+        .modal {
             position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            background: #111;
-            border: 4px solid var(--pink);
-            padding: 40px;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
             display: none;
-            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-box {
+            background: #111;
+            border: 2px solid var(--accent);
+            padding: 40px;
+            border-radius: 25px;
             text-align: center;
-            border-radius: 20px;
-            box-shadow: 0 0 50px var(--pink);
+            box-shadow: 0 0 50px var(--glow);
+        }
+
+        /* ЧАСТИЦЫ КЛИКА */
+        .plus-one {
+            position: absolute;
+            color: var(--accent);
+            font-weight: bold;
+            pointer-events: none;
+            animation: flyUp 0.7s ease-out forwards;
+        }
+
+        @keyframes flyUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-120px); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div class="game-area">
-        <div class="stats">Баланс: <span id="balance">0</span> 🪙</div>
-        <div id="coin" onclick="doClick()">💰</div>
+    <div class="app">
+        <section class="clicker-section">
+            <div class="balance-info">
+                <p style="opacity:0.5; font-size: 12px; letter-spacing: 2px;">WALLET BALANCE</p>
+                <div id="balance">0</div>
+            </div>
+            <div id="main-btn">💰</div>
+        </section>
+
+        <section class="side-section">
+            <div class="panel">
+                <h2>Store Cases</h2>
+                <div class="item-card">
+                    <div><b>Common Case</b><br><small style="color:var(--accent)">100 🪙</small></div>
+                    <button class="btn-buy" onclick="gameOpenCase(100)">OPEN</button>
+                </div>
+                <div class="item-card">
+                    <div><b>Epic Lootbox</b><br><small style="color:var(--accent)">500 🪙</small></div>
+                    <button class="btn-buy" onclick="gameOpenCase(500)">OPEN</button>
+                </div>
+            </div>
+
+            <div class="panel" style="flex:1">
+                <h2>Skins Collection</h2>
+                <div class="inv-grid" id="inv-container"></div>
+            </div>
+        </section>
     </div>
 
-    <div class="side-menu">
-        <h2 style="color:var(--pink)">КЕЙСЫ</h2>
-        <div class="case-box">
-            <p>Стандартный (150 🪙)</p>
-            <button class="btn" onclick="openCase('std')">Открыть</button>
+    <div class="modal" id="win-modal" onclick="closeModal()">
+        <div class="modal-box">
+            <h3 style="opacity:0.6; margin-bottom: 10px;">CONGRATULATIONS!</h3>
+            <div id="win-icon" style="font-size: 80px; margin-bottom: 15px;">🎁</div>
+            <h1 id="win-text" style="color: var(--accent);">+500 Coins</h1>
+            <p style="margin-top: 20px; font-size: 12px; opacity: 0.5;">Click to close</p>
         </div>
-        <div class="case-box">
-            <p>Премиум (1000 🪙)</p>
-            <button class="btn" onclick="openCase('pre')">Открыть</button>
-        </div><h2 style="color:var(--neon)">МОИ СКИНЫ</h2>
-        <div class="inventory" id="inv"></div>
-    </div>
-
-    <div id="popup">
-        <h2 id="win-title">ДРОП!</h2>
-        <div id="win-item" style="font-size: 80px; margin: 20px;"></div>
-        <button class="btn" onclick="hidePopup()" style="background:var(--pink)">ЗАБРАТЬ</button>
     </div>
 
     <script>
-        // База данных
-        const SKINS = {
-            's1': { icon: '💰', bg: 'gold' },
-            's2': { icon: '💎', bg: '#00f2ff' },
-            's3': { icon: '🔥', bg: '#ff4d00' },
-            's4': { icon: '🍀', bg: '#00ff40' },
-            's5': { icon: '👑', bg: '#ffcc00' },
-            's6': { icon: '👾', bg: '#9d00ff' }
+        // 1. БАЗА СКИНОВ
+        const SKINS_DATA = {
+            's1': { icon: '💰', color: '#ffcc00' },
+            's2': { icon: '💎', color: '#00f2ff' },
+            's3': { icon: '🔥', color: '#ff4d00' },
+            's4': { icon: '🍀', color: '#00ff44' },
+            's5': { icon: '⚡', color: '#ffff00' },
+            's6': { icon: '💀', color: '#ffffff' }
         };
 
-        // Состояние
-        let game = JSON.parse(localStorage.getItem('neon_save')) || {
+        // 2. СОСТОЯНИЕ (Загрузка)
+        let storage = JSON.parse(localStorage.getItem('neon_clicker_v3')) || {
             coins: 0,
             owned: ['s1'],
             active: 's1'
         };
 
-        // Обновление всего интерфейса
-        function updateAll() {
-            // Баланс
-            document.getElementById('balance').innerText = Math.floor(game.coins);
-            
-            // Монета
-            const c = document.getElementById('coin');
-            const activeSkin = SKINS[game.active];
-            c.innerText = activeSkin.icon;
-            c.style.background = activeSkin.bg;
-            c.style.boxShadow = 0 0 40px ${activeSkin.bg};
+        const balDisplay = document.getElementById('balance');
+        const mainBtn = document.getElementById('main-btn');
+        const invContainer = document.getElementById('inv-container');
 
-            // Инвентарь
-            const inv = document.getElementById('inv');
-            inv.innerHTML = '';
-            game.owned.forEach(id => {
-                const s = document.createElement('div');
-                s.className = 'slot' + (id === game.active ? ' active' : '');
-                s.innerText = SKINS[id].icon;
-                s.onclick = () => { game.active = id; save(); updateAll(); };
-                inv.appendChild(s);
+        // 3. ОБНОВЛЕНИЕ ЭКРАНА
+        function refresh() {
+            balDisplay.innerText = Math.floor(storage.coins).toLocaleString();
+            
+            const currentSkin = SKINS_DATA[storage.active];
+            mainBtn.innerText = currentSkin.icon;
+            
+            // Меняем цвета темы под скин
+            document.documentElement.style.setProperty('--accent', currentSkin.color);
+            document.documentElement.style.setProperty('--glow', currentSkin.color + '66');// Рисуем инвентарь
+            invContainer.innerHTML = '';
+            storage.owned.forEach(id => {
+                const slot = document.createElement('div');
+                slot.className = skin-slot ${id === storage.active ? 'active' : ''};
+                slot.innerText = SKINS_DATA[id].icon;
+                slot.onclick = () => {
+                    storage.active = id;
+                    save();
+                    refresh();
+                };
+                invContainer.appendChild(slot);
             });
         }
 
         function save() {
-            localStorage.setItem('neon_save', JSON.stringify(game));
+            localStorage.setItem('neon_clicker_v3', JSON.stringify(storage));
         }
 
-        // Клик
-        function doClick() {
-            game.coins += 1;
-            updateAll();
+        // 4. КЛИК
+        mainBtn.addEventListener('click', (e) => {
+            storage.coins += 1;
+            
+            // Эффект цифры
+            const p = document.createElement('div');
+            p.className = 'plus-one';
+            p.innerText = '+1';
+            p.style.left = e.clientX + 'px';
+            p.style.top = e.clientY + 'px';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 700);
+
             save();
-        }
+            refresh();
+        });
 
-        // Логика кейсов
-        function openCase(type) {
-            const price = (type === 'std') ? 150 : 1000;
-            if (game.coins < price) {
-                alert("Не хватает монет!");
+        // 5. ЛОГИКА КЕЙСОВ
+        window.gameOpenCase = function(price) {
+            if (storage.coins < price) {
+                alert("NOT ENOUGH COINS!");
                 return;
             }
 
-            game.coins -= price;
+            storage.coins -= price;
 
-            // Рандом монет (от 0.5 до 2.5 цены)
-            let winCoins = Math.floor(Math.random() * (price * 2));
-            game.coins += winCoins;
+            let wonSkin = null;
+            let wonCoins = Math.floor(Math.random() * (price * 2.5));
 
-            // Рандом скина (шанс 25%)
-            let winSkin = null;
-            if (Math.random() < 0.25) {
-                const keys = Object.keys(SKINS);
-                winSkin = keys[Math.floor(Math.random() * keys.length)];
-                if (!game.owned.includes(winSkin)) {
-                    game.owned.push(winSkin);
+            // 30% шанс на скин
+            if (Math.random() < 0.3) {
+                const keys = Object.keys(SKINS_DATA);
+                const randomId = keys[Math.floor(Math.random() * keys.length)];
+                if (!storage.owned.includes(randomId)) {
+                    wonSkin = randomId;
+                    storage.owned.push(wonSkin);
                 }
             }
 
-            // Показ результата
-            const pop = document.getElementById('popup');
-            pop.style.display = 'block';
-            document.getElementById('win-title').innerText = winSkin ? "ВЫПАЛ СКИН!" : "ВЫИГРЫШ:";
-            document.getElementById('win-item').innerText = winSkin ? SKINS[winSkin].icon : +${winCoins} 🪙;
-
-            updateAll();
+            storage.coins += wonCoins;
+            showModal(wonCoins, wonSkin);
             save();
+            refresh();
+        };
+
+        function showModal(coins, skinId) {
+            const modal = document.getElementById('win-modal');
+            const icon = document.getElementById('win-icon');
+            const text = document.getElementById('win-text');
+
+            if (skinId) {
+                icon.innerText = SKINS_DATA[skinId].icon;
+                text.innerText = "NEW SKIN!";
+            } else {
+                icon.innerText = "💰";
+                text.innerText = +${coins} Coins;
+            }
+            modal.style.display = 'flex';
         }
 
-        function hidePopup() {
-            document.getElementById('popup').style.display = 'none';
+        window.closeModal = function() {
+            document.getElementById('win-modal').style.display = 'none';
         }
 
-        // Первый запуск
-        updateAll();
+        // Запуск
+        refresh();
     </script>
 </body>
 </html>
