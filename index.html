@@ -1,101 +1,349 @@
-<!DOCTYPE html>
-<html lang="ru">
+game/
+├── server.js                # Сервер (Express + Socket.io)
+├── package.json             # Зависимости
+├── public/
+│   ├── index.html           # Главная страница
+│   ├── style.css            # Стили
+│   ├── client.js            # Клиентская логика
+│   ├── world.js             # Данные о странах и карта
+│   └── countries.json       # (опционально) Более подробные данныеconst express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
+
+app.use(express.static('public'));
+
+// Игровые комнаты: { roomId: { players: { socketId: { name, countryId } }, countries: {...} } }
+const rooms = {};
+
+io.on('connection', (socket) => {
+    console.log('New client connected:', socket.id);
+
+    // Создать комнату
+    socket.on('createRoom', (roomId, playerName, callback) => {
+        if (rooms[roomId]) {
+            callback({ success: false, error: 'Room already exists' });
+            return;
+        }
+        rooms[roomId] = {
+            players: {},
+            countries: loadInitialCountries(), // загрузка начальных данных стран
+            gameStarted: false
+        };
+        socket.join(roomId);
+        rooms[roomId].players[socket.id] = { name: playerName, countryId: null };
+        callback({ success: true, roomId });
+        io.to(roomId).emit('roomUpdated', getRoomState(roomId));
+    });
+
+    // Присоединиться к комнате
+    socket.on('joinRoom', (roomId, playerName, callback) => {
+        const room = rooms[roomId];
+        if (!room) {
+            callback({ success: false, error: 'Room not found' });
+            return;
+        }
+        if (room.gameStarted) {
+            callback({ success: false, error: 'Game already started' });
+            return;
+        }
+        socket.join(roomId);
+        room.players[socket.id] = { name: playerName, countryId: null };
+        callback({ success: true, roomId });
+        io.to(roomId).emit('roomUpdated', getRoomState(roomId));
+    });
+
+    // Выбор страны
+    socket.on('chooseCountry', (roomId, countryId, callback) => {
+        const room = rooms[roomId];
+        if (!room) return;
+        // Проверить, не занята ли страна
+        const taken = Object.values(room.players).some(p => p.countryId === countryId);
+        if (taken) {
+            callback({ success: false, error: 'Country already taken' });
+            return;
+        }
+        room.players[socket.id].countryId = countryId;
+        callback({ success: true });
+        io.to(roomId).emit('roomUpdated', getRoomState(roomId));
+    });
+
+    // Запуск игры (все выбрали страны)
+    socket.on('startGame', (roomId) => {
+        const room = rooms[roomId];
+        if (!room) return;
+        const allHaveCountry = Object.values(room.players).every(p => p.countryId !== null);
+        if (allHaveCountry && Object.keys(room.players).length >= 2) {
+            room.gameStarted = true;
+            io.to(roomId).emit('gameStarted', room.countries);
+        } else {
+            socket.emit('error', 'Not all players have chosen a country or not enough players');
+        }
+    });
+
+    // Действие игрока
+    socket.on('action', (roomId, action, data) => {
+        const room = rooms[roomId];
+        if (!room || !room.gameStarted) return;
+        const player = room.players[socket.id];
+        if (!player || !player.countryId) return;
+
+        const country = room.countries[player.countryId];
+        if (!country) return;
+
+        switch (action) {
+            case 'improveEconomy':
+                if (country.gold >= 10) {
+                    country.gold -= 10;
+                    country.economy += 5;
+                    country.morale += 2;
+                    io.to(roomId).emit('countryUpdated', player.countryId, country);
+                }
+                break;
+            case 'raisePopulation':
+                if (country.gold >= 15) {
+                    country.gold -= 15;
+                    country.population += 10000;
+                    io.to(roomId).emit('countryUpdated', player.countryId, country);
+                }
+                break;
+            case 'declareWar':// data.targetCountryId
+                const targetId = data.targetCountryId;
+                const targetCountry = room.countries[targetId];
+                if (targetCountry && country.army > 0) {
+                    // Простейшая симуляция войны: сравниваем армию
+                    const winner = country.army >= targetCountry.army ? player.countryId : targetId;
+                    if (winner === player.countryId) {
+                        // Победитель получает часть ресурсов и золота
+                        country.gold += Math.floor(targetCountry.gold * 0.5);
+                        targetCountry.gold = Math.floor(targetCountry.gold * 0.5);
+                        country.population += Math.floor(targetCountry.population * 0.2);
+                        targetCountry.population = Math.floor(targetCountry.population * 0.8);
+                        country.morale += 10;
+                        targetCountry.morale -= 15;
+                    } else {
+                        country.gold = Math.floor(country.gold * 0.7);
+                        country.army = Math.floor(country.army * 0.6);
+                        country.morale -= 20;
+                    }
+                    io.to(roomId).emit('countryUpdated', player.countryId, country);
+                    io.to(roomId).emit('countryUpdated', targetId, targetCountry);
+                    io.to(roomId).emit('warResult', { attacker: player.countryId, defender: targetId, winner });
+                }
+                break;
+            // Другие действия
+        }
+    });
+
+    socket.on('disconnect', () => {
+        // Удалить игрока из комнат
+        for (const roomId in rooms) {
+            if (rooms[roomId].players[socket.id]) {
+                delete rooms[roomId].players[socket.id];
+                io.to(roomId).emit('roomUpdated', getRoomState(roomId));
+                if (Object.keys(rooms[roomId].players).length === 0) {
+                    delete rooms[roomId];
+                }
+                break;
+            }
+        }
+    });
+});
+
+function getRoomState(roomId) {
+    const room = rooms[roomId];
+    if (!room) return null;
+    return {
+        players: Object.values(room.players).map(p => ({ name: p.name, countryId: p.countryId })),
+        gameStarted: room.gameStarted
+    };
+}
+
+function loadInitialCountries() {
+    // Загружаем из файла или определяем вручную
+    return {
+        'usa': { name: 'USA', economy: 80, population: 331000000, army: 100, gold: 500, morale: 70 },
+        'russia': { name: 'Russia', economy: 60, population: 146000000, army: 90, gold: 450, morale: 65 },
+        'china': { name: 'China', economy: 75, population: 1441000000, army: 110, gold: 600, morale: 80 },
+        // ... другие
+    };
+}
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => console.log(Server running on port ${PORT}));<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>EUROPE: TOTAL CONTROL</title>
-    <style>
-        body { margin: 0; background: #0d1117; color: #c9d1d9; font-family: -apple-system, sans-serif; display: flex; height: 100vh; overflow: hidden; }
-        #panel { width: 320px; background: #161b22; border-right: 1px solid #30363d; padding: 25px; display: flex; flex-direction: column; z-index: 100; box-shadow: 10px 0 20px rgba(0,0,0,0.5); }
-        #map-viewport { flex: 1; background: radial-gradient(circle, #1c2128 0%, #0d1117 100%); display: flex; align-items: center; justify-content: center; position: relative; }
-        
-        /* СТИЛЬ СТРАН */
-        .land { fill: #21262d; stroke: #30363d; stroke-width: 0.7; transition: 0.2s; cursor: pointer; }
-        .land:hover { fill: #30363d; stroke: #58a6ff; }
-        .captured { fill: #238636 !important; stroke: #00ff88 !important; stroke-width: 1.5; filter: drop-shadow(0 0 5px #00ff88); }
-
-        .stat-card { background: #0d1117; border: 1px solid #30363d; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-        .gold-val { font-size: 32px; color: #f1e05a; font-weight: bold; text-shadow: 0 0 10px rgba(241, 224, 90, 0.2); }
-        .btn { background: #238636; color: white; border: none; padding: 12px; border-radius: 6px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn:hover { background: #2ea44f; transform: translateY(-2px); }
-        
-        #log { flex: 1; font-size: 12px; color: #8b949e; overflow-y: auto; margin-top: 20px; border-top: 1px solid #30363d; padding-top: 15px; }
-        .log-entry { margin-bottom: 5px; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Strategy Game</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <aside id="panel">
-        <h2 style="color:#58a6ff; margin-top:0;">EUROPE COMMAND</h2>
-        <div class="stat-card">
-            <div style="font-size: 11px; opacity: 0.6;">ЗОЛОТОЙ ЗАПАС</div>
-            <div class="gold-val"><span id="gold">500</span> 🪙</div>
-            <div style="color:#238636; font-size: 13px;">Доход: +<span id="income">5</span>/сек</div>
+    <div id="app">
+        <div id="lobby">
+            <h1>World Strategy Game</h1>
+            <input type="text" id="playerName" placeholder="Your name">
+            <input type="text" id="roomId" placeholder="Room ID">
+            <button id="createBtn">Create Room</button>
+            <button id="joinBtn">Join Room</button>
         </div>
-        
-        <button class="btn" onclick="upgrade()">УЛУЧШИТЬ ЭКОНОМИКУ (300)</button>
-
-        <div id="log">
-            <div class="log-entry"><b>[HQ]:</b> Карта Европы загружена. Ожидание экспансии...</div>
+        <div id="game" style="display:none;">
+            <div id="mapContainer">
+                <canvas id="worldMap" width="1000" height="600"></canvas>
+            </div>
+            <div id="sidebar">
+                <h2 id="countryName"></h2>
+                <p>Economy: <span id="economy"></span></p>
+                <p>Population: <span id="population"></span></p>
+                <p>Army: <span id="army"></span></p>
+                <p>Gold: <span id="gold"></span></p>
+                <p>Morale: <span id="morale"></span></p>
+                <button id="improveEconomyBtn">Improve Economy (10 gold)</button>
+                <button id="raisePopulationBtn">Raise Population (15 gold)</button>
+                <button id="declareWarBtn">Declare War</button>
+                <div id="warTargets"></div>
+            </div>
+            <div id="chat"></div>
         </div>
-    </aside>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="world.js"></script>
+    <script src="client.js"></script>
+</body>
+</html>body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #1e2a3a;
+    color: #ecf0f1;
+}
+#app {
+    display: flex;
+    justify-content: center;
+}
+#lobby {
+    text-align: center;
+    margin-top: 100px;
+}
+#lobby input, #lobby button {
+    margin: 10px;
+    padding: 10px;
+}
+#game {
+    display: flex;
+    width: 1200px;
+}
+#mapContainer {
+    flex: 3;
+}
+#worldMap {
+    border: 1px solid #34495e;
+    background: #2c3e50;
+}
+#sidebar {
+    flex: 1;
+    margin-left: 20px;
+    background: #2c3e50;
+    padding: 15px;
+    border-radius: 8px;
+}
+button {
+    background: #3498db;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+button:hover {
+    background: #2980b9;
+}
+#warTargets {
+    margin-top: 10px;
+}// countries data (синхронизировано с сервером)
+const countriesData = {
+    usa: { name: 'USA', color: '#4a90e2', bounds: [[200,200],[280,280]] }, // примерные координаты
+    russia: { name: 'Russia', color: '#e67e22', bounds: [[400,150],[500,250]] },
+    china: { name: 'China', color: '#e74c3c', bounds: [[600,200],[700,300]] },
+    // ... добавить другие
+};
 
-    <main id="map-viewport">
-        <svg viewBox="0 0 1000 800" id="europe-svg" style="width:90%; height:90%;">
-            <path class="land" data-name="Франция" d="M320,420 L380,420 L420,550 L300,580 L280,500 Z" />
-            <path class="land" data-name="Германия" d="M400,350 L520,350 L540,480 L420,500 L390,450 Z" />
-            <path class="land" data-name="Италия" d="M430,520 L500,520 L550,700 L480,750 L420,600 Z" />
-            <path class="land" data-name="Испания" d="M150,550 L280,550 L300,750 L120,780 L100,650 Z" />
-            <path class="land" data-name="Польша" d="M530,350 L650,350 L680,480 L550,500 Z" />
-            <path class="land" data-name="Скандинавия" d="M450,50 L650,50 L600,320 L430,320 Z" />
-            <path class="land" data-name="Британия" d="M250,250 L350,200 L380,300 L280,350 Z" />
-            <path class="land" data-name="Балканы" d="M550,520 L750,520 L780,700 L580,720 Z" />
-            <path class="land" data-name="Восточный Фланг" d="M680,200 L950,200 L980,550 L700,580 Z" />
-        </svg>
-    </main>
+function drawMap(ctx, selectedCountryId) {
+    for (let id in countriesData) {
+        const c = countriesData[id];
+        const [x1,y1] = c.bounds[0];
+        const [x2,y2] = c.bounds[1];
+        ctx.fillStyle = (selectedCountryId === id) ? '#f1c40f' : c.color;
+        ctx.fillRect(x1, y1, x2-x1, y2-y1);
+        ctx.fillStyle = 'white';
+        ctx.font = '12px Arial';
+        ctx.fillText(c.name, x1+5, y1+20);
+    }
+}
 
-    <script>
-        let gold = 500;
-        let income = 5;
+function getCountryAt(x, y) {
+    for (let id in countriesData) {
+        const [x1,y1] = countriesData[id].bounds[0];
+        const [x2,y2] = countriesData[id].bounds[1];
+        if (x >= x1 && x <= x2 && y >= y1 && y <= y2) return id;
+    }
+    return null;
+}мfunction drawMapAndUI() {
+    drawMap(ctx, currentCountryId);
+}
 
-        function updateUI() {
-            document.getElementById('gold').innerText = Math.floor(gold);
-            document.getElementById('income').innerText = income;
-        }
+function updateSidebar() {
+    const c = countries[currentCountryId];
+    document.getElementById('countryName').innerText = c.name;
+    document.getElementById('economy').innerText = c.economy;
+    document.getElementById('population').innerText = c.population;
+    document.getElementById('army').innerText = c.army;
+    document.getElementById('gold').innerText = c.gold;
+    document.getElementById('morale').innerText = c.morale;
+}
 
-        setInterval(() => {
-            gold += income;
-            updateUI();
-        }, 1000);
-
-        function upgrade() {
-            if (gold >= 300) {
-                gold -= 300; income += 10;
-                addLog("Экономика улучшена! Доход +10");
-                updateUI();
-            } else { alert("Недостаточно золота!"); }
-        }document.querySelectorAll('.land').forEach(country => {
-            country.onclick = function() {
-                const name = this.getAttribute('data-name');
-                if (this.classList.contains('captured')) return;
-
-                if (gold >= 200) {
-                    gold -= 200; income += 5;
-                    this.classList.add('captured');
-                    addLog(Вы захватили ${name}!);
-                    updateUI();
-                } else {
-                    addLog(Нужно 200 🪙 для захвата ${name});
-                }
+function enableGameControls() {
+    document.getElementById('improveEconomyBtn').onclick = () => {
+        socket.emit('action', currentRoomId, 'improveEconomy', {});
+    };
+    document.getElementById('raisePopulationBtn').onclick = () => {
+        socket.emit('action', currentRoomId, 'raisePopulation', {});
+    };
+    document.getElementById('declareWarBtn').onclick = () => {
+        // Показать список других игроков для объявления войны
+        const otherCountries = Object.keys(countries).filter(id => id !== currentCountryId);
+        let warHtml = '<h4>Select target:</h4>';
+        otherCountries.forEach(id => {
+            warHtml += <button class="warTarget" data-id="${id}">${countries[id].name}</button>;
+        });
+        document.getElementById('warTargets').innerHTML = warHtml;
+        document.querySelectorAll('.warTarget').forEach(btn => {
+            btn.onclick = () => {
+                socket.emit('action', currentRoomId, 'declareWar', { targetCountryId: btn.dataset.id });
             };
         });
+    };
+}
 
-        function addLog(txt) {
-            const log = document.getElementById('log');
-            const div = document.createElement('div');
-            div.className = 'log-entry';
-            div.innerHTML = <b>[${new Date().toLocaleTimeString()}]</b> ${txt};
-            log.prepend(div);
+// Обработка кликов по карте для выбора страны (если еще не выбрана)
+canvas.addEventListener('click', (e) => {
+    if (!gameStarted && !currentCountryId) {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const id = getCountryAt(x, y);
+        if (id) {
+            // Предложить выбрать эту страну
+            if (confirm(Choose ${countriesData[id].name}?)) {
+                socket.emit('chooseCountry', currentRoomId, id, (res) => {
+                    if (res.success) currentCountryId = id;
+                    else alert(res.error);
+                });
+            }
         }
-    </script>
-</body>
-</html>
+    }
+});
