@@ -3,393 +3,606 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌍 Простая политическая стратегия</title>
+    <title>🌍 Европейская стратегия - Захват земель</title>
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
-            user-select: none;
         }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #1e2f2a;
-            color: #eee;
+            background: linear-gradient(135deg, #1e3c2c 0%, #0a2f1f 100%);
+            min-height: 100vh;
             padding: 20px;
-            margin: 0;
+            color: #f0f0f0;
         }
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            background: #2a3e35;
-            border-radius: 24px;
+
+        .game-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 25px;
             padding: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            backdrop-filter: blur(3px);
         }
+
         h1 {
             text-align: center;
-            margin: 0 0 5px;
-            font-size: 2rem;
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            text-shadow: 3px 3px 0 #1a472a;
         }
-        .sub {
+
+        .subtitle {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            color: #ffd966;
             font-style: italic;
-            color: #ddd;
         }
-        .game-row {
+
+        .game-layout {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 25px;
         }
-        .map-section {
+
+        .map-container {
             flex: 2;
-            background: #1f2e26;
+            min-width: 500px;
+            background: #2a4a3a;
             border-radius: 20px;
             padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        .map-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .country-card {
-            background: #3a5544;
-            border-radius: 16px;
-            padding: 10px;
-            text-align: center;
+
+        canvas {
+            width: 100%;
+            height: auto;
+            background: #cfe8cf;
+            border-radius: 12px;
             cursor: pointer;
-            transition: 0.2s;
-            border: 2px solid #6b8c6f;
+            box-shadow: 0 0 0 3px #ffd966;
+            display: block;
         }
-        .country-card.selected {
-            border: 3px solid gold;
-            background: #4e6b58;
-            box-shadow: 0 0 12px gold;
-        }
-        .country-name {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-        .country-stats {
-            font-size: 0.8rem;
-            margin-top: 8px;
-        }
+
         .info-panel {
             flex: 1;
-            background: #1f2e26;
+            min-width: 280px;
+            background: #2a3a2a;
             border-radius: 20px;
-            padding: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        .stat {
-            background: #2c4238;
-            margin: 10px 0;
-            padding: 8px 12px;
+
+        .country-header {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            background: #3a5a3a;
             border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .stat {
+            background: #3a553a;
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 10px;
             display: flex;
             justify-content: space-between;
+            font-size: 1.1rem;
         }
+
+        .stat span:first-child {
+            font-weight: bold;
+        }
+
+        .stat span:last-child {
+            font-family: monospace;
+            font-size: 1.3rem;
+            color: #ffd966;
+        }
+
         button {
-            background: #4c7a5e;
+            background: #5a7a5a;
             border: none;
             color: white;
-            padding: 8px 14px;
-            border-radius: 30px;
+            padding: 12px 18px;
+            margin: 8px 5px;
+            border-radius: 25px;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            margin: 5px 5px 0 0;
-            transition: 0.2s;
+            transition: all 0.2s;
         }
+
         button:hover {
-            background: #6c9a7a;
+            background: #7a9a7a;
+            transform: scale(0.98);
         }
+
         .war-btn {
-            background: #a54c2c;
+            background: #aa5a3a;
         }
+
         .war-btn:hover {
-            background: #c85a34;
+            background: #cc6a44;
         }
+
         .enemy-list {
             margin-top: 20px;
-            border-top: 1px solid #5f7e6b;
+            border-top: 2px solid #5a7a5a;
             padding-top: 15px;
         }
+
         .enemy-item {
-            background: #2c4238;
+            background: #3a553a;
             margin: 8px 0;
-            padding: 8px;
-            border-radius: 12px;
+            padding: 10px;
+            border-radius: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .turn-info {
-            margin-top: 15px;
-            background: #00000066;
-            padding: 8px;
-            border-radius: 20px;
-            text-align: center;
+
+        .attack-small {
+            background: #aa5a3a;
+            padding: 5px 12px;
+            font-size: 0.9rem;
         }
+
+        .message-area {
+            margin-top: 15px;
+            padding: 10px;
+            background: #1a2a1a;
+            border-radius: 10px;
+            text-align: center;
+            min-height: 60px;
+        }
+
+        .owned {
+            color: #ffd966;
+            font-weight: bold;
+        }
+
         footer {
             margin-top: 20px;
             text-align: center;
             font-size: 0.8rem;
-            opacity: 0.7;
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>🌍 ПОЛИТИЧЕСКАЯ СТРАТЕГИЯ</h1>
-    <div class="sub">Кликните на страну, чтобы выбрать её. Развивайтесь и захватывайте мир!</div>
-    <div class="game-row"><div class="map-section">
-            <div class="map-grid" id="mapGrid"></div>
-            <div class="turn-info">
-                ⚡ Действия тратят золото. Каждый ход приносит доход от экономики.<br>
-                💡 Чтобы воевать, нажмите кнопку войны у другой страны в панели справа.
+<div class="game-container">
+    <h1>🏰 ЕВРОПЕЙСКАЯ СТРАТЕГИЯ 🏰</h1>
+    <div class="subtitle">⚔️ Кликайте по странам, чтобы выбирать и захватывать! ⚔️</div>
+    
+    <div class="game-layout">
+        <div class="map-container">
+            <canvas id="europeMap" width="900" height="700"></canvas>
+            <div style="margin-top: 12px; text-align: center; font-size: 0.9rem;">
+                🟡 Жёлтый = ваша страна | 🟢 Зелёный = независимые | 🔴 Красный = захваченные вами
             </div>
         </div>
+        
         <div class="info-panel">
-            <h2 id="selectedCountryName">—</h2>
+            <div class="country-header" id="countryName">Выберите страну</div>
             <div class="stat"><span>💰 Экономика</span><span id="economy">0</span></div>
             <div class="stat"><span>👨‍👩‍👧‍👦 Население</span><span id="population">0</span></div>
             <div class="stat"><span>⚔️ Армия</span><span id="army">0</span></div>
             <div class="stat"><span>🪙 Золото</span><span id="gold">0</span></div>
             <div class="stat"><span>❤️ Мораль</span><span id="morale">0</span></div>
+            
             <div style="margin: 15px 0;">
-                <button id="improveEconomyBtn">📈 Улучшить экономику (10⚡)</button>
-                <button id="raisePopulationBtn">👶 Поднять население (15⚡)</button>
-                <button id="nextTurnBtn">⏩ Следующий ход</button>
+                <button id="improveBtn">📈 Улучшить экономику (10⚡)</button>
+                <button id="populationBtn">👶 Поднять население (15⚡)</button>
+                <button id="nextTurnBtn">⏩ Следующий ход + доход</button>
             </div>
+            
             <div class="enemy-list">
-                <strong>⚔️ ДРУГИЕ СТРАНЫ (нажмите для войны):</strong>
-                <div id="enemiesContainer"></div>
+                <strong>⚔️ ДОСТУПНЫЕ ДЛЯ ЗАХВАТА:</strong>
+                <div id="enemiesList"></div>
             </div>
-            <div id="warMessage" style="margin-top: 10px; font-size: 0.9rem;"></div>
+            
+            <div class="message-area" id="messageArea">
+                💡 Кликните по стране на карте, чтобы начать игру
+            </div>
         </div>
     </div>
-    <footer>Игра пошаговая. Управляйте своей страной, улучшайте показатели, воюйте с соседями.</footer>
+    <footer>
+        🎮 Захватывайте соседние страны, развивайте экономику и станьте властелином Европы!
+    </footer>
 </div>
 
 <script>
-    // Данные стран
-    const countries = {
-        usa: { name: "США", economy: 85, population: 331000000, army: 95, gold: 600, morale: 75 },
-        russia: { name: "Россия", economy: 65, population: 146000000, army: 88, gold: 480, morale: 68 },
-        china: { name: "Китай", economy: 80, population: 1441000000, army: 110, gold: 620, morale: 78 },
-        germany: { name: "Германия", economy: 88, population: 83000000, army: 70, gold: 570, morale: 82 },
-        france: { name: "Франция", economy: 82, population: 67000000, army: 68, gold: 540, morale: 79 },
-        uk: { name: "Великобритания", economy: 84, population: 67000000, army: 72, gold: 560, morale: 77 }
+    // ==================== КАРТА ЕВРОПЫ (координаты стран) ====================
+    const europeCountries = {
+        france: { name: "Франция", x: 380, y: 280, width: 100, height: 100, color: "#6a9a6a" },
+        germany: { name: "Германия", x: 500, y: 280, width: 90, height: 90, color: "#6a9a6a" },
+        italy: { name: "Италия", x: 430, y: 400, width: 80, height: 100, color: "#6a9a6a" },
+        spain: { name: "Испания", x: 260, y: 360, width: 100, height: 100, color: "#6a9a6a" },
+        uk: { name: "Великобритания", x: 280, y: 200, width: 80, height: 90, color: "#6a9a6a" },
+        poland: { name: "Польша", x: 620, y: 290, width: 80, height: 70, color: "#6a9a6a" },
+        sweden: { name: "Швеция", x: 540, y: 150, width: 90, height: 90, color: "#6a9a6a" },
+        turkey: { name: "Турция", x: 730, y: 440, width: 100, height: 80, color: "#6a9a6a" },
+        greece: { name: "Греция", x: 590, y: 460, width: 70, height: 70, color: "#6a9a6a" },
+        netherlands: { name: "Нидерланды", x: 460, y: 240, width: 60, height: 50, color: "#6a9a6a" }
     };
-
-    let selectedCountryId = null; // текущая выбранная страна (игрок)
-
-    // Функция для обновления интерфейса (статистика выбранной страны)
-    function updateInfoPanel() {
-        if (!selectedCountryId) {
-            document.getElementById("selectedCountryName").innerText = "—";
-            document.getElementById("economy").innerText = "0";
-            document.getElementById("population").innerText = "0";
-            document.getElementById("army").innerText = "0";
-            document.getElementById("gold").innerText = "0";
-            document.getElementById("morale").innerText = "0";
-            return;
-        }
-        const c = countries[selectedCountryId];
-        document.getElementById("selectedCountryName").innerText = c.name;
-        document.getElementById("economy").innerText = c.economy;
-        document.getElementById("population").innerText = c.population.toLocaleString();
-        document.getElementById("army").innerText = c.army;
-        document.getElementById("gold").innerText = c.gold;
-        document.getElementById("morale").innerText = c.morale;
-    }
-
-    // Отрисовка карты (сетка стран)
-    function renderMap() {
-        const grid = document.getElementById("mapGrid");
-        grid.innerHTML = "";
-        for (let id in countries) {
-            const c = countries[id];
-            const card = document.createElement("div");
-            card.className = "country-card";
-            if (selectedCountryId === id) card.classList.add("selected");
-            card.innerHTML = `
-                <div class="country-name">${c.name}</div><div class="country-stats">
-                    💰${c.economy} ⚔️${c.army} 🪙${c.gold}
-                </div>
-            ;
-            card.addEventListener("click", () => {
-                selectedCountryId = id;
-                renderMap();
-                updateInfoPanel();
-                renderEnemiesList();
-            });
-            grid.appendChild(card);
-        }
-    }
-
-    // Список врагов (все страны, кроме выбранной)
-    function renderEnemiesList() {
-        const container = document.getElementById("enemiesContainer");
-        if (!selectedCountryId) {
-            container.innerHTML = "<div>Сначала выберите страну</div>";
-            return;
-        }
-        let html = "";
-        for (let id in countries) {
-            if (id !== selectedCountryId) {
-                const c = countries[id];
-                html += 
-                    <div class="enemy-item">
-                        <span><strong>${c.name}</strong> 💰${c.economy} ⚔️${c.army}</span>
-                        <button class="war-btn" data-id="${id}">⚔️ ВОЙНА</button>
-                    </div>
-                ;
+    
+    // Статистика стран
+    let countriesStats = {
+        france: { economy: 85, population: 67000000, army: 75, gold: 550, morale: 80, owner: null },
+        germany: { economy: 90, population: 83000000, army: 80, gold: 600, morale: 85, owner: null },
+        italy: { economy: 75, population: 60000000, army: 65, gold: 500, morale: 75, owner: null },
+        spain: { economy: 70, population: 47000000, army: 60, gold: 450, morale: 70, owner: null },
+        uk: { economy: 85, population: 67000000, army: 75, gold: 550, morale: 80, owner: null },
+        poland: { economy: 65, population: 38000000, army: 55, gold: 400, morale: 65, owner: null },
+        sweden: { economy: 80, population: 10000000, army: 50, gold: 480, morale: 85, owner: null },
+        turkey: { economy: 60, population: 84000000, army: 85, gold: 450, morale: 60, owner: null },
+        greece: { economy: 55, population: 10000000, army: 45, gold: 350, morale: 55, owner: null },
+        netherlands: { economy: 88, population: 17000000, army: 45, gold: 520, morale: 82, owner: null }
+    };
+    
+    let currentPlayerCountry = null; // ID страны игрока
+    let playerColor = "#ffcc44"; // цвет игрока (жёлтый)
+    
+    const canvas = document.getElementById('europeMap');
+    const ctx = canvas.getContext('2d');
+    
+    // Отрисовка карты
+    function drawMap() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Рисуем фон (море)
+        ctx.fillStyle = "#7ec8e0";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Рисуем каждую страну
+        for (let id in europeCountries) {
+            const country = europeCountries[id];
+            const stats = countriesStats[id];
+            let color = "#8bc34a"; // нейтральный цвет
+            
+            // Определяем цвет в зависимости от владельца
+            if (stats.owner === currentPlayerCountry) {
+                color = playerColor; // жёлтый - страна игрока
+            } else if (stats.owner !== null && stats.owner !== id) {
+                color = "#cc6644"; // красный - захваченные территории
+            } else {
+                color = "#6a9a6a"; // зелёный - независимые
+            }
+            
+            // Рисуем прямоугольник страны
+            ctx.fillStyle = color;
+            ctx.fillRect(country.x, country.y, country.width, country.height);
+            
+            // Обводка
+            ctx.strokeStyle = "#2c3e2c";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(country.x, country.y, country.width, country.height);
+            
+            // Название страны
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 14px 'Segoe UI'";
+            ctx.shadowBlur = 0;
+            ctx.fillText(country.name, country.x + 8, country.y + 25);
+            
+            // Краткая статистика
+            ctx.font = "10px monospace";
+            ctx.fillStyle = "#f0f0f0";
+            ctx.fillText(`💰${stats.economy}`, country.x + 8, country.y + 45);
+            ctx.fillText(`⚔️${stats.army}`, country.x + 8, country.y + 60);
+            
+            // Если страна захвачена, показываем владельца
+            if (stats.owner && stats.owner !== id) {
+                ctx.fillStyle = "#ffaa88";
+                ctx.font = "9px monospace";
+                const ownerName = europeCountries[stats.owner]?.name || "?";
+                ctx.fillText(`⚔️${ownerName}`, country.x + 8, country.y + 75);
             }
         }
-        container.innerHTML = html;
-        // Вешаем обработчики
-        document.querySelectorAll(".war-btn").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                const targetId = btn.getAttribute("data-id");
-                if (confirm(Начать войну против ${countries[targetId].name}?)) {
+    }
+    
+    // Проверка клика по стране
+    function getCountryAtClick(clientX, clientY) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const x = (clientX - rect.left) * scaleX;
+        const y = (clientY - rect.top) * scaleY;
+        
+        for (let id in europeCountries) {
+            const c = europeCountries[id];
+            if (x >= c.x && x <= c.x + c.width && y >= c.y && y <= c.y + c.height) {
+                return id;
+            }
+        }
+        return null;
+    }
+    
+    // Обновление панели информации
+    function updateInfoPanel() {
+        if (!currentPlayerCountry) {
+            document.getElementById('countryName').innerText = "Выберите страну";
+            document.getElementById('economy').innerText = "0";
+            document.getElementById('population').innerText = "0";
+            document.getElementById('army').innerText = "0";
+            document.getElementById('gold').innerText = "0";
+            document.getElementById('morale').innerText = "0";
+            return;
+        }
+        
+        const stats = countriesStats[currentPlayerCountry];
+        const countryData = europeCountries[currentPlayerCountry];
+        document.getElementById('countryName').innerText = countryData.name;
+        document.getElementById('economy').innerText = stats.economy;
+        document.getElementById('population').innerText = stats.population.toLocaleString();
+        document.getElementById('army').innerText = stats.army;
+        document.getElementById('gold').innerText = stats.gold;
+        document.getElementById('morale').innerText = stats.morale;
+    }
+    
+    // Обновление списка доступных для захвата стран
+    function updateEnemiesList() {
+        if (!currentPlayerCountry) {
+            document.getElementById('enemiesList').innerHTML = '<div>Сначала выберите страну на карте</div>';
+            return;
+        }
+        
+        let html = '';
+        for (let id in europeCountries) {
+            if (id !== currentPlayerCountry) {
+                const stats = countriesStats[id];
+                const country = europeCountries[id];
+                const isCaptured = stats.owner !== null && stats.owner !== id;
+                const ownerName = stats.owner ? europeCountries[stats.owner]?.name : '';
+                
+                html += `
+                    <div class="enemy-item">
+                        <div>
+                            <strong>${country.name}</strong><br>
+                            💰${stats.economy} ⚔️${stats.army}
+                            ${isCaptured ? `<br><span style="color:#ffaa88;">⚔️${ownerName}</span>` : ''}
+                        </div>
+                        <button class="attack-small" data-id="${id}">⚔️ ЗАХВАТИТЬ</button>
+                    </div>
+                `;
+            }
+        }
+        document.getElementById('enemiesList').innerHTML = html;
+        
+        // Добавляем обработчики
+        document.querySelectorAll('.attack-small').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const targetId = btn.getAttribute('data-id');
+                if (confirm(`Начать войну за ${europeCountries[targetId].name}?`)) {
                     declareWar(targetId);
                 }
             });
         });
     }
-
-    // Действия
-    function improveEconomy() {
-        if (!selectedCountryId) {
-            alert("Сначала выберите страну!");
-            return;
-        }
-        const c = countries[selectedCountryId];
-        if (c.gold >= 10) {
-            c.gold -= 10;
-            c.economy += 5;
-            c.morale += 2;
-            updateInfoPanel();
-            renderMap();
-        } else {
-            alert("Не хватает золота (нужно 10)");
-        }
-    }
-
-    function raisePopulation() {
-        if (!selectedCountryId) {
-            alert("Сначала выберите страну!");
-            return;
-        }
-        const c = countries[selectedCountryId];
-        if (c.gold >= 15) {
-            c.gold -= 15;
-            c.population += 10000;
-            updateInfoPanel();
-            renderMap();
-        } else {
-            alert("Не хватает золота (нужно 15)");
-        }
-    }
-
-    // Война
+    
+    // Война и захват
     function declareWar(targetId) {
-        if (!selectedCountryId) return;
-        const attacker = countries[selectedCountryId];
-        const defender = countries[targetId];
-
-        // Простая формула силы
-        let attackerPower = attacker.army * (attacker.morale / 100) * (attacker.economy / 100);
-        let defenderPower = defender.army * (defender.morale / 100) * (defender.economy / 100);
-        let winChance = attackerPower / (attackerPower + defenderPower);
-        let rand = Math.random();
-        let message = "";
-        if (rand < winChance) {
-            // победа атакующего
-            let goldLoot = Math.floor(defender.gold * 0.5);
-            let popLoot = Math.floor(defender.population * 0.2);
-            attacker.gold += goldLoot;
-            attacker.population += popLoot;
-            attacker.morale += 12;
-            defender.gold = Math.floor(defender.gold * 0.5);
-            defender.population = Math.floor(defender.population * 0.8);
-            defender.morale -= 20;
-            message = 🎉 ПОБЕДА! Захвачено ${goldLoot} золота и ${popLoot} населения. Мораль растёт.`;
+        if (!currentPlayerCountry) return;
+        
+        const attacker = countriesStats[currentPlayerCountry];
+        const defender = countriesStats[targetId];
+        
+        // Сила атаки и защиты
+        let attackPower = attacker.army * (attacker.morale / 100) * (attacker.economy / 100);
+        let defensePower = defender.army * (defender.morale / 100) * (defender.economy / 100);
+        let winChance = attackPower / (attackPower + defensePower);
+        
+        let message = '';
+        
+        if (Math.random() < winChance) {
+            // ПОБЕДА! Захват страны
+            const goldGain = Math.floor(defender.gold * 0.6);
+            const popGain = Math.floor(defender.population * 0.3);
+            
+            attacker.gold += goldGain;
+            attacker.population += popGain;
+            attacker.morale += 15;
+            attacker.army += Math.floor(defender.army * 0.3);
+            
+            // Захватываем страну
+            countriesStats[targetId].owner = currentPlayerCountry;
+            // У побеждённой страны остаётся только 40% ресурсов
+            countriesStats[targetId].gold = Math.floor(defender.gold * 0.4);
+            countriesStats[targetId].population = Math.floor(defender.population * 0.7);
+            countriesStats[targetId].morale = Math.floor(defender.morale * 0.5);
+            countriesStats[targetId].army = Math.floor(defender.army * 0.4);
+            
+            message = `🎉 ПОБЕДА! Вы захватили ${europeCountries[targetId].name}! Получено: ${goldGain} золота, ${popGain.toLocaleString()} населения!`;
+            showMessage(message, '#8bc34a');
         } else {
-            // поражение
-            let goldLost = Math.floor(attacker.gold * 0.3);
-            attacker.gold -= goldLost;
-            attacker.army = Math.floor(attacker.army * 0.7);
-            attacker.morale -= 18;defender.morale += 8;
-            message = 💔 ПОРАЖЕНИЕ! Потеряно ${goldLost} золота, армия ослаблена. Мораль падает.;
+            // ПОРАЖЕНИЕ
+            const goldLoss = Math.floor(attacker.gold * 0.3);
+            const armyLoss = Math.floor(attacker.army * 0.4);
+            
+            attacker.gold -= goldLoss;
+            attacker.army -= armyLoss;
+            attacker.morale -= 20;
+            
+            message = `💔 ПОРАЖЕНИЕ! Вы проиграли битву за ${europeCountries[targetId].name}. Потеряно: ${goldLoss} золота, ${armyLoss} армии!`;
+            showMessage(message, '#cc6644');
         }
-        // Ограничения
+        
+        // Ограничиваем значения
         attacker.gold = Math.max(0, attacker.gold);
-        attacker.population = Math.max(1000, attacker.population);
         attacker.army = Math.max(10, attacker.army);
         attacker.morale = Math.min(100, Math.max(0, attacker.morale));
-        defender.morale = Math.min(100, Math.max(0, defender.morale));
-        defender.gold = Math.max(0, defender.gold);
-        defender.population = Math.max(1000, defender.population);
-
-        const msgDiv = document.getElementById("warMessage");
-        msgDiv.innerHTML = message;
-        setTimeout(() => msgDiv.innerHTML = "", 4000);
-
+        
         updateInfoPanel();
-        renderMap();
-        renderEnemiesList();
+        drawMap();
+        updateEnemiesList();
     }
-
-    // Следующий ход: доход для всех, ИИ-улучшения
-    function nextTurn() {
-        if (!selectedCountryId) {
-            alert("Сначала выберите страну, кликнув на карту.");
+    
+    // Показать сообщение
+    function showMessage(msg, color = '#ffd966') {
+        const msgArea = document.getElementById('messageArea');
+        msgArea.innerHTML = msg;
+        msgArea.style.background = color;
+        msgArea.style.color = '#1a1a1a';
+        setTimeout(() => {
+            msgArea.style.background = '#1a2a1a';
+            msgArea.style.color = '#f0f0f0';
+            msgArea.innerHTML = '💡 Продолжайте захватывать страны и развиваться!';
+        }, 4000);
+    }
+    
+    // Улучшить экономику
+    function improveEconomy() {
+        if (!currentPlayerCountry) {
+            showMessage('Сначала выберите страну на карте!', '#cc6644');
             return;
         }
-        for (let id in countries) {
-            let c = countries[id];
-            // доход от экономики
-            let income = Math.floor(c.economy / 10) + 5;
-            c.gold += income;
-            // естественный рост населения
-            let growth = Math.floor(c.population * 0.005);
-            c.population += growth;
-            // ИИ для других стран: улучшают экономику или армию, если есть золото
-            if (id !== selectedCountryId && c.gold > 30) {
-                if (Math.random() < 0.4 && c.gold >= 15) {
-                    c.economy += 2;
-                    c.gold -= 15;
-                } else if (Math.random() < 0.3 && c.gold >= 20) {
-                    c.army += 5;
-                    c.gold -= 20;
+        const stats = countriesStats[currentPlayerCountry];
+        if (stats.gold >= 10) {
+            stats.gold -= 10;
+            stats.economy += 5;
+            stats.morale += 2;
+            updateInfoPanel();
+            drawMap();
+            showMessage(`📈 Экономика улучшена! +5 экономики`, '#8bc34a');
+        } else {
+            showMessage(`❌ Недостаточно золота! Нужно 10, у вас ${stats.gold}`, '#cc6644');
+        }
+    }
+    
+    // Поднять население
+    function raisePopulation() {
+        if (!currentPlayerCountry) {
+            showMessage('Сначала выберите страну на карте!', '#cc6644');
+            return;
+        }
+        const stats = countriesStats[currentPlayerCountry];
+        if (stats.gold >= 15) {
+            stats.gold -= 15;
+            stats.population += 15000;
+            updateInfoPanel();
+            drawMap();
+            showMessage(`👶 Население выросло на 15,000!`, '#8bc34a');
+        } else {
+            showMessage(`❌ Недостаточно золота! Нужно 15, у вас ${stats.gold}`, '#cc6644');
+        }
+    }
+    
+    // Следующий ход
+    function nextTurn() {
+        if (!currentPlayerCountry) {
+            showMessage('Сначала выберите страну на карте!', '#cc6644');
+            return;
+        }
+        
+        // Доход для всех стран (игрок и ИИ)
+        for (let id in countriesStats) {
+            const stats = countriesStats[id];
+            // Доход от экономики
+            const income = Math.floor(stats.economy / 8) + 8;
+            stats.gold += income;
+            
+            // Естественный рост населения
+            const growth = Math.floor(stats.population * 0.003);
+            stats.population += growth;
+            
+            // Восстановление морали
+            if (stats.morale < 100) stats.morale += 2;
+            if (stats.morale > 100) stats.morale = 100;
+            
+            // ИИ улучшает свои показатели (для независимых стран)
+            if (stats.owner === null && stats.gold > 40) {
+                if (Math.random() < 0.3 && stats.gold >= 15) {
+                    stats.economy += 3;
+                    stats.gold -= 15;
+                }
+                if (Math.random() < 0.2 && stats.gold >= 20) {
+                    stats.army += 4;
+                    stats.gold -= 20;
                 }
             }
-            // мораль постепенно восстанавливается
-            if (c.morale < 100) c.morale += 1;
-            c.morale = Math.min(100, c.morale);
-            c.gold = Math.floor(c.gold);
         }
+        
+        // Обновляем статистику игрока
         updateInfoPanel();
-        renderMap();
-        renderEnemiesList();
-        // Небольшое сообщение
-        const msgDiv = document.getElementById("warMessage");
-        msgDiv.innerHTML = "✅ Новый ход! Получен доход от экономики.";
-        setTimeout(() => {
-            if (msgDiv.innerHTML === "✅ Новый ход! Получен доход от экономики.") msgDiv.innerHTML = "";
-        }, 2000);
+        drawMap();
+        updateEnemiesList();
+        
+        // Подсчёт захваченных стран
+        let captured = 0;
+        for (let id in countriesStats) {
+            if (countriesStats[id].owner === currentPlayerCountry && id !== currentPlayerCountry) {
+                captured++;
+            }
+        }
+        
+        showMessage(`✅ Новый ход! Получен доход. Захвачено стран: ${captured}`, '#8bc34a');
     }
-
+    
+    // Выбор страны игроком
+    function selectPlayerCountry(countryId) {
+        if (currentPlayerCountry === countryId) return;
+        
+        // Нельзя выбрать страну, которая уже захвачена другим игроком
+        const stats = countriesStats[countryId];
+        if (stats.owner !== null && stats.owner !== countryId) {
+            showMessage(`❌ Эта страна уже захвачена! Освободите её войной.`, '#cc6644');
+            return;
+        }
+        
+        currentPlayerCountry = countryId;
+        // Делаем выбранную страну владельцем самой себя
+        countriesStats[countryId].owner = countryId;
+        
+        drawMap();
+        updateInfoPanel();
+        updateEnemiesList();
+        showMessage(`🎉 Вы выбрали ${europeCountries[countryId].name}! Начинайте захват Европы!`, '#ffd966');
+    }
+    
+    // Обработка клика по карте
+    canvas.addEventListener('click', (e) => {
+        const countryId = getCountryAtClick(e.clientX, e.clientY);
+        if (countryId) {
+            if (!currentPlayerCountry) {
+                selectPlayerCountry(countryId);
+            } else {
+                const stats = countriesStats[countryId];
+                if (stats.owner === currentPlayerCountry) {
+                    showMessage(`📊 Это ваша территория (${europeCountries[countryId].name})`, '#ffd966');
+                } else if (stats.owner === null) {
+                    if (confirm(`Начать войну за ${europeCountries[countryId].name}?`)) {
+                        declareWar(countryId);
+                    }
+                } else {
+                    showMessage(`⚔️ ${europeCountries[countryId].name} принадлежит ${europeCountries[stats.owner]?.name}. Нужно победить в войне!`, '#cc6644');
+                }
+            }
+        }
+    });
+    
+    // Привязка кнопок
+    document.getElementById('improveBtn').addEventListener('click', improveEconomy);
+    document.getElementById('populationBtn').addEventListener('click', raisePopulation);
+    document.getElementById('nextTurnBtn').addEventListener('click', nextTurn);
+    
     // Инициализация
-    renderMap();
+    drawMap();
     updateInfoPanel();
-    renderEnemiesList();
-
-    // Кнопки
-    document.getElementById("improveEconomyBtn").addEventListener("click", improveEconomy);
-    document.getElementById("raisePopulationBtn").addEventListener("click", raisePopulation);
-    document.getElementById("nextTurnBtn").addEventListener("click", nextTurn);
+    updateEnemiesList();
+    
+    // Подсказка
+    setTimeout(() => {
+        if (!currentPlayerCountry) {
+            showMessage('👆 КЛИКНИТЕ ПО ЛЮБОЙ СТРАНЕ НА КАРТЕ, ЧТОБЫ НАЧАТЬ ИГРУ!', '#ffd966');
+        }
+    }, 500);
 </script>
 </body>
 </html>
