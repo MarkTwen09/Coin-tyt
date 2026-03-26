@@ -2,138 +2,102 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>WORLD CONQUEST PRO</title>
+    <title>EUROPE CONQUEST: REAL MAP</title>
     <style>
-        :root { --accent: #00ff88; --bg: #0d1117; --panel: #161b22; --border: #30363d; }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh; overflow: hidden; }
+        body { margin: 0; background: #0a0c10; color: white; font-family: sans-serif; display: flex; height: 100vh; overflow: hidden; }
+        #ui { width: 300px; background: #161b22; border-right: 1px solid #30363d; padding: 20px; display: flex; flex-direction: column; }
+        #map-container { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; background: #0d1117; }
         
-        /* ИНТЕРФЕЙС */
-        .sidebar { width: 320px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 25px; box-shadow: 5px 0 20px rgba(0,0,0,0.5); z-index: 10; }
-        .stat-card { background: rgba(0,0,0,0.2); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 15px; }
-        .gold { font-size: 34px; font-weight: 800; color: #f1c40f; text-shadow: 0 0 10px rgba(241,196,15,0.3); }
-        
-        .btn { background: var(--accent); color: #000; border: none; padding: 15px; border-radius: 8px; font-weight: 900; cursor: pointer; width: 100%; transition: 0.2s; text-transform: uppercase; }
-        .btn:hover { filter: brightness(1.2); transform: scale(1.02); }
-        .btn:active { transform: scale(0.98); }
+        /* Стили для реальных стран */
+        path { fill: #21262d; stroke: #30363d; stroke-width: 0.5; transition: 0.2s; cursor: pointer; }
+        path:hover { fill: #30363d; stroke: #58a6ff; }
+        .owned { fill: #238636 !important; stroke: #79c0ff !important; }
 
-        /* КАРТА */
-        .map-view { flex: 1; background: radial-gradient(circle, #1c2128 0%, #05070a 100%); display: flex; align-items: center; justify-content: center; position: relative; }
-        svg { width: 85%; height: auto; filter: drop-shadow(0 0 30px rgba(0,0,0,0.8)); }
-        
-        .land { fill: #2d333b; stroke: #444c56; stroke-width: 1.5; transition: 0.4s; cursor: pointer; }
-        .land:hover { fill: #444c56; stroke: #fff; }
-
-        /* ИСТОРИЯ */
-        #log { flex: 1; margin-top: 20px; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 12px; font-size: 13px; overflow-y: auto; border: 1px solid var(--border); color: #8b949e; }
-        .log-msg { margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; }
+        .stat { background: #0d1117; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #30363d; }
+        .gold { font-size: 28px; color: #f1e05a; font-weight: bold; }
+        #loading { position: absolute; font-size: 20px; color: #58a6ff; }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <h1 style="color:var(--accent); font-size: 22px; margin: 0 0 20px 0;">GLOBAL COMMAND</h1>
-        
-        <div class="stat-card">
-            <div style="font-size: 11px; opacity: 0.6; letter-spacing: 1px;">ЗОЛОТОЙ ЗАПАС</div>
-            <div class="gold" id="gold-display">500</div>
-            <div style="color:var(--accent); font-size: 13px; font-weight: bold;">+<span id="inc-display">5</span> за сек.</div>
+    <div id="ui">
+        <h2>EUROPE STRATEGY</h2>
+        <div class="stat">
+            <div>БЮДЖЕТ:</div>
+            <div class="gold"><span id="gold">500</span> 🪙</div>
+            <div style="font-size: 12px; color: #238636;">Доход: +<span id="income">5</span>/сек</div>
         </div>
-
-        <div class="stat-card">
-            <div>Захвачено земель: <b id="count-display" style="color:var(--accent)">0</b></div>
-            <div style="font-size: 12px; margin-top: 5px; opacity: 0.7;">Цена захвата: <span style="color:#f1c40f">200 🪙</span></div>
+        <button onclick="upgrade()" style="padding:10px; cursor:pointer; background:#238636; color:white; border:none; border-radius:5px;">УЛУЧШИТЬ ЭКОНОМИКУ (300)</button>
+        <div id="log" style="margin-top:20px; font-size: 12px; color: #8b949e; height: 200px; overflow-y: auto;">
+            Кликните на страну Европы для захвата (Цена: 200)
         </div>
+    </div>
 
-        <button class="btn" onclick="buyUpgrade()">Улучшить шахты (300 🪙)</button>
-
-        <div id="log">
-            <div class="log-msg"><b>[СИСТЕМА]:</b> Инициализация... Карта мира загружена. Выберите цель для атаки.</div>
-        </div>
-    </aside>
-
-    <main class="map-view">
-        <svg viewBox="0 0 1000 500">
-            <path class="land" d="M100,60 L380,60 L350,280 L80,250 Z" data-name="Северная Америка"></path>
-            <path class="land" d="M180,300 L320,300 L280,480 L160,450 Z" data-name="Южная Америка"></path>
-            <path class="land" d="M420,60 L580,60 L560,180 L430,190 Z" data-name="Европа"></path>
-            <path class="land" d="M450,210 L620,220 L580,460 L420,430 Z" data-name="Африка"></path>
-            <path class="land" d="M600,40 L960,50 L920,320 L580,300 Z" data-name="Азия"></path>
-            <path class="land" d="M720,350 L920,360 L880,480 L700,460 Z" data-name="Австралия"></path>
-        </svg>
-    </main>
+    <div id="map-container">
+        <div id="loading">ЗАГРУЗКА КАРТЫ...</div>
+        <svg id="europe-map" viewBox="0 0 1000 1000" style="width: 90%; height: 90%; display: none;"></svg>
+    </div>
 
     <script>
-        // ИГРОВЫЕ ПЕРЕМЕННЫЕ
-        let state = {
-            gold: 500,
-            income: 5,
-            captured: 0
-        };// ОБНОВЛЕНИЕ ТЕКСТА
-        function syncUI() {
-            document.getElementById('gold-display').innerText = Math.floor(state.gold);
-            document.getElementById('inc-display').innerText = state.income;
-            document.getElementById('count-display').innerText = state.captured;
-        }
+        let gold = 500;
+        let income = 5;
 
-        function postLog(text) {
-            const log = document.getElementById('log');
-            const div = document.createElement('div');
-            div.className = 'log-msg';
-            div.innerHTML = <b>[${new Date().toLocaleTimeString()}]</b> ${text};
-            log.prepend(div);
-        }
+        // 1. ЗАГРУЗКА НАСТОЯЩЕЙ SVG КАРТЫ
+        fetch('https://raw.githubusercontent.com/leakyMirror/map-of-europe/master/Europe_map.svg')
+            .then(res => res.text())
+            .then(data => {
+                const container = document.getElementById('map-container');
+                const loading = document.getElementById('loading');
+                
+                // Вставляем SVG
+                container.innerHTML = data;
+                loading.style.display = 'none';
+                
+                const svg = container.querySelector('svg');
+                svg.style.width = "90%";
+                svg.style.height = "90%";
 
-        // ДОХОД РАЗ В СЕКУНДУ
+                // Настраиваем клики на все страны
+                const countries = svg.querySelectorAll('path');
+                countries.forEach(c => {
+                    c.onclick = () => claim(c);
+                });
+            })
+            .catch(err => {
+                document.getElementById('loading').innerText = "ОШИБКА ЗАГРУЗКИ. Гитхаб блокирует файл.";
+                console.error(err);
+            });
+
+        // 2. ЛОГИКА ИГРЫ
         setInterval(() => {
-            state.gold += state.income;
-            syncUI();
+            gold += income;
+            document.getElementById('gold').innerText = Math.floor(gold);
         }, 1000);
 
-        // УЛУЧШЕНИЕ ЭКОНОМИКИ
-        function buyUpgrade() {
-            if (state.gold >= 300) {
-                state.gold -= 300;
-                state.income += 10;
-                postLog("Экономика улучшена! Доход вырос на +10.");
-                syncUI();
-            } else {
-                postLog("<span style='color:#ff4444'>Недостаточно золота для шахт!</span>");
+        function upgrade() {
+            if (gold >= 300) {
+                gold -= 300;
+                income += 10;
+                document.getElementById('income').innerText = income;
+                addLog("Экономика улучшена!");
             }
         }
 
-        // ЗАХВАТ ТЕРРИТОРИЙ
-        document.querySelectorAll('.land').forEach(el => {
-            el.addEventListener('click', function() {
-                const name = this.getAttribute('data-name');
-                const cost = 200;
-
-                // Проверка: захвачено ли уже (проверяем цвет заливки)
-                if (this.getAttribute('data-owned') === 'true') {
-                    postLog(Регион ${name} уже принадлежит вам.);
-                    return;
-                }
-
-                if (state.gold >= cost) {
-                    state.gold -= cost;
-                    state.captured++;
-                    state.income += 5;
-                    
-                    // Визуальный эффект захвата
-                    this.setAttribute('data-owned', 'true');
-                    this.style.fill = '#00ff88'; 
-                    this.style.stroke = '#fff';
-                    this.style.strokeWidth = '3px';
-                    
-                    postLog(ПОБЕДА! Регион <b>${name}</b> захвачен. Доход увеличен.);
-                    syncUI();
-                } else {
-                    postLog(<span style='color:#ff4444'>Мало золота для захвата ${name}! Нужно 200.</span>);
-                }
-            });
-        });
-
-        // ПЕРВЫЙ ЗАПУСК
-        syncUI();
+        function claim(el) {
+            if (el.classList.contains('owned')) return;
+            if (gold >= 200) {
+                gold -= 200;
+                income += 5;
+                el.classList.add('owned');
+                document.getElementById('income').innerText = income;
+                addLog("Территория захвачена!");
+            } else {
+                addLog("Мало золота!");
+            }
+        }function addLog(txt) {
+            const log = document.getElementById('log');
+            log.innerHTML = <div>[${new Date().toLocaleTimeString()}] ${txt}</div> + log.innerHTML;
+        }
     </script>
 </body>
 </html>
