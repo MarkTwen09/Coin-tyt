@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌍 Глобальная стратегия | Управляй страной</title>
+    <title>🌍 Простая политическая стратегия</title>
     <style>
         * {
             box-sizing: border-box;
@@ -11,114 +11,110 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c2c, #0a2a1a);
+            background: #1e2f2a;
+            color: #eee;
+            padding: 20px;
             margin: 0;
-            padding: 20px;
-            color: #f5f5f5;
         }
-        .game-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: rgba(0,0,0,0.6);
-            border-radius: 20px;
-            backdrop-filter: blur(2px);
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: #2a3e35;
+            border-radius: 24px;
             padding: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
         h1 {
             text-align: center;
-            margin: 0 0 10px;
+            margin: 0 0 5px;
             font-size: 2rem;
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 0 #1a3f2a;
         }
         .sub {
             text-align: center;
-            margin-top: -10px;
             margin-bottom: 20px;
             font-style: italic;
             color: #ddd;
         }
-        .game-layout {
+        .game-row {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
         }
-        .map-area {
-            flex: 3;
-            min-width: 300px;
-            background: #1f3a2f;
+        .map-section {
+            flex: 2;
+            background: #1f2e26;
+            border-radius: 20px;
+            padding: 15px;
+        }
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .country-card {
+            background: #3a5544;
             border-radius: 16px;
             padding: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        canvas {
-            width: 100%;
-            height: auto;
-            background: #2a5a3a;
-            border-radius: 12px;
+            text-align: center;
             cursor: pointer;
-            box-shadow: 0 0 0 2px #6a9c6e;
+            transition: 0.2s;
+            border: 2px solid #6b8c6f;
+        }
+        .country-card.selected {
+            border: 3px solid gold;
+            background: #4e6b58;
+            box-shadow: 0 0 12px gold;
+        }
+        .country-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .country-stats {
+            font-size: 0.8rem;
+            margin-top: 8px;
         }
         .info-panel {
-            flex: 1.2;
-            background: #1e2a2a;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        .country-header {
-            font-size: 1.8rem;
-            font-weight: bold;
-            border-bottom: 2px solid gold;
-            display: inline-block;
-            margin-bottom: 15px;
+            flex: 1;
+            background: #1f2e26;
+            border-radius: 20px;
+            padding: 15px;
         }
         .stat {
-            background: #2c3e2f;
-            margin: 12px 0;
+            background: #2c4238;
+            margin: 10px 0;
             padding: 8px 12px;
             border-radius: 12px;
             display: flex;
             justify-content: space-between;
-            font-size: 1.1rem;
-        }
-        .stat span:first-child {
-            font-weight: bold;
-        }
-        .stat span:last-child {
-            font-family: monospace;
-            font-size: 1.2rem;
         }
         button {
-            background: #3a6b47;
+            background: #4c7a5e;
             border: none;
             color: white;
-            padding: 10px 15px;
-            margin: 8px 5px 0 0;
+            padding: 8px 14px;
             border-radius: 30px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.2s;
             font-weight: bold;
+            cursor: pointer;
+            margin: 5px 5px 0 0;
+            transition: 0.2s;
         }
         button:hover {
-            background: #2b8c4a;
-            transform: scale(0.98);
+            background: #6c9a7a;
         }
         .war-btn {
-            background: #a53f2b;
+            background: #a54c2c;
         }
         .war-btn:hover {
-            background: #c0452a;
+            background: #c85a34;
         }
         .enemy-list {
             margin-top: 20px;
-            border-top: 1px solid #4a6e4a;
+            border-top: 1px solid #5f7e6b;
             padding-top: 15px;
         }
         .enemy-item {
-            background: #2d3e2d;
+            background: #2c4238;
             margin: 8px 0;
             padding: 8px;
             border-radius: 12px;
@@ -126,213 +122,208 @@
             justify-content: space-between;
             align-items: center;
         }
-        .enemy-name {
-            font-weight: bold;
-        }
-        .attack-btn {
-            background: #b44;
-            padding: 5px 12px;
-            font-size: 0.8rem;
-        }
         .turn-info {
             margin-top: 15px;
-            font-size: 0.9rem;text-align: center;
             background: #00000066;
             padding: 8px;
             border-radius: 20px;
-        }
-        .gold-alert {
-            color: #f9d423;
-            font-weight: bold;
+            text-align: center;
         }
         footer {
-            text-align: center;
             margin-top: 20px;
+            text-align: center;
             font-size: 0.8rem;
             opacity: 0.7;
         }
     </style>
 </head>
 <body>
-<div class="game-container">
-    <h1>🌍 ГЛОБАЛЬНАЯ СТРАТЕГИЯ</h1>
-    <div class="sub">Выберите страну и станьте мировым лидером</div>
-    <div class="game-layout">
-        <div class="map-area">
-            <canvas id="worldCanvas" width="1000" height="600"></canvas>
+<div class="container">
+    <h1>🌍 ПОЛИТИЧЕСКАЯ СТРАТЕГИЯ</h1>
+    <div class="sub">Кликните на страну, чтобы выбрать её. Развивайтесь и захватывайте мир!</div>
+    <div class="game-row"><div class="map-section">
+            <div class="map-grid" id="mapGrid"></div>
             <div class="turn-info">
-                💡 Кликните по любой стране на карте, чтобы выбрать её (если вы ещё не выбрали).<br>
-                🛡️ Улучшайте экономику, поднимайте население, объявляйте войны!
+                ⚡ Действия тратят золото. Каждый ход приносит доход от экономики.<br>
+                💡 Чтобы воевать, нажмите кнопку войны у другой страны в панели справа.
             </div>
         </div>
-        <div class="info-panel" id="infoPanel">
-            <div style="text-align:center;">
-                <div class="country-header" id="countryName">—</div>
-            </div>
+        <div class="info-panel">
+            <h2 id="selectedCountryName">—</h2>
             <div class="stat"><span>💰 Экономика</span><span id="economy">0</span></div>
             <div class="stat"><span>👨‍👩‍👧‍👦 Население</span><span id="population">0</span></div>
             <div class="stat"><span>⚔️ Армия</span><span id="army">0</span></div>
             <div class="stat"><span>🪙 Золото</span><span id="gold">0</span></div>
             <div class="stat"><span>❤️ Мораль</span><span id="morale">0</span></div>
-            <div style="display: flex; flex-wrap: wrap; gap: 5px; margin: 15px 0;">
+            <div style="margin: 15px 0;">
                 <button id="improveEconomyBtn">📈 Улучшить экономику (10⚡)</button>
-                <button id="raisePopulationBtn">👶 Рост населения (15⚡)</button>
+                <button id="raisePopulationBtn">👶 Поднять население (15⚡)</button>
                 <button id="nextTurnBtn">⏩ Следующий ход</button>
             </div>
             <div class="enemy-list">
-                <strong>⚔️ ВОЙНА (другие страны):</strong>
+                <strong>⚔️ ДРУГИЕ СТРАНЫ (нажмите для войны):</strong>
                 <div id="enemiesContainer"></div>
             </div>
-            <div id="warResult" style="margin-top: 10px; font-size: 0.9rem; background:#2d3e2d; padding:6px; border-radius:10px;"></div>
+            <div id="warMessage" style="margin-top: 10px; font-size: 0.9rem;"></div>
         </div>
     </div>
-    <footer>Игра в реальном времени (пошаговая). Управляйте своей страной, захватывайте территории и ресурсы.</footer>
+    <footer>Игра пошаговая. Управляйте своей страной, улучшайте показатели, воюйте с соседями.</footer>
 </div>
 
 <script>
-    // ======================= ДАННЫЕ СТРАН (карта и параметры) =======================
-    const countriesData = {
-        usa: { name: "США", color: "#4a90e2", bounds: [[150,200],[280,300]], economy: 85, population: 331000000, army: 95, gold: 600, morale: 75 },
-        russia: { name: "Россия", color: "#e67e22", bounds: [[350,150],[500,260]], economy: 65, population: 146000000, army: 88, gold: 480, morale: 68 },
-        china: { name: "Китай", color: "#e74c3c", bounds: [[550,200],[720,310]], economy: 80, population: 1441000000, army: 110, gold: 620, morale: 78 },
-        germany: { name: "Германия", color: "#2ecc71", bounds: [[280,280],[380,350]], economy: 88, population: 83000000, army: 70, gold: 570, morale: 82 },
-        france: { name: "Франция", color: "#9b59b6", bounds: [[200,280],[270,350]], economy: 82, population: 67000000, army: 68, gold: 540, morale: 79 },
-        uk: { name: "Великобритания", color: "#f1c40f", bounds: [[120,250],[180,320]], economy: 84, population: 67000000, army: 72, gold: 560, morale: 77 },
-        india: { name: "Индия", color: "#e84393", bounds: [[620,340],[750,440]], economy: 70, population: 1380000000, army: 105, gold: 490, morale: 72 },
-        brazil: { name: "Бразилия", color: "#27ae60", bounds: [[450,470],[590,550]], economy: 68, population: 213000000, army: 60, gold: 420, morale: 70 },
-        australia: { name: "Австралия", color: "#f39c12", bounds: [[800,450],[940,520]], economy: 78, population: 26000000, army: 50, gold: 510, morale: 74 },
-        canada: { name: "Канада", color: "#3498db", bounds: [[80,150],[230,220]], economy: 82, population: 38000000, army: 55, gold: 530, morale: 81 }
-    };// ID текущей выбранной страны игрока (изначально не выбрана)
-    let playerCountryId = null;
-    // Состояние стран (будем хранить копию для модификации)
-    let gameCountries = JSON.parse(JSON.stringify(countriesData));
+    // Данные стран
+    const countries = {
+        usa: { name: "США", economy: 85, population: 331000000, army: 95, gold: 600, morale: 75 },
+        russia: { name: "Россия", economy: 65, population: 146000000, army: 88, gold: 480, morale: 68 },
+        china: { name: "Китай", economy: 80, population: 1441000000, army: 110, gold: 620, morale: 78 },
+        germany: { name: "Германия", economy: 88, population: 83000000, army: 70, gold: 570, morale: 82 },
+        france: { name: "Франция", economy: 82, population: 67000000, army: 68, gold: 540, morale: 79 },
+        uk: { name: "Великобритания", economy: 84, population: 67000000, army: 72, gold: 560, morale: 77 }
+    };
 
-    // DOM элементы
-    const canvas = document.getElementById('worldCanvas');
-    const ctx = canvas.getContext('2d');
+    let selectedCountryId = null; // текущая выбранная страна (игрок)
 
-    // Обновление интерфейса
-    function updateUI() {
-        if (!playerCountryId) {
-            document.getElementById('countryName').innerText = "—";
-            document.getElementById('economy').innerText = "—";
-            document.getElementById('population').innerText = "—";
-            document.getElementById('army').innerText = "—";
-            document.getElementById('gold').innerText = "—";
-            document.getElementById('morale').innerText = "—";
+    // Функция для обновления интерфейса (статистика выбранной страны)
+    function updateInfoPanel() {
+        if (!selectedCountryId) {
+            document.getElementById("selectedCountryName").innerText = "—";
+            document.getElementById("economy").innerText = "0";
+            document.getElementById("population").innerText = "0";
+            document.getElementById("army").innerText = "0";
+            document.getElementById("gold").innerText = "0";
+            document.getElementById("morale").innerText = "0";
             return;
         }
-        const c = gameCountries[playerCountryId];
-        if (!c) return;
-        document.getElementById('countryName').innerText = c.name;
-        document.getElementById('economy').innerText = c.economy;
-        document.getElementById('population').innerText = c.population.toLocaleString();
-        document.getElementById('army').innerText = c.army;
-        document.getElementById('gold').innerText = c.gold;
-        document.getElementById('morale').innerText = c.morale;
+        const c = countries[selectedCountryId];
+        document.getElementById("selectedCountryName").innerText = c.name;
+        document.getElementById("economy").innerText = c.economy;
+        document.getElementById("population").innerText = c.population.toLocaleString();
+        document.getElementById("army").innerText = c.army;
+        document.getElementById("gold").innerText = c.gold;
+        document.getElementById("morale").innerText = c.morale;
     }
 
-    // Отрисовка карты
-    function drawMap() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let id in countriesData) {
-            const cData = countriesData[id]; // исходные данные для цвета и границ
-            const current = gameCountries[id];
-            const [x1, y1] = cData.bounds[0];
-            const [x2, y2] = cData.bounds[1];
-            // цвет: если это страна игрока — золотая обводка
-            ctx.fillStyle = (playerCountryId === id) ? "#f3c26b" : cData.color;
-            ctx.fillRect(x1, y1, x2-x1, y2-y1);
-            ctx.strokeStyle = (playerCountryId === id) ? "#ffd966" : "#2c3e2c";
-            ctx.lineWidth = 2;
-            ctx.strokeRect(x1, y1, x2-x1, y2-y1);
-            ctx.fillStyle = "white";
-            ctx.font = "bold 14px 'Segoe UI'";
-            ctx.fillText(cData.name, x1+5, y1+22);
-            // Показываем экономику и армию
-            ctx.font = "11px monospace";
-            ctx.fillStyle = "#eee";
-            ctx.fillText(💰${current.economy}, x1+5, y1+42);
-            ctx.fillText(⚔️${current.army}, x1+5, y1+58);
+    // Отрисовка карты (сетка стран)
+    function renderMap() {
+        const grid = document.getElementById("mapGrid");
+        grid.innerHTML = "";
+        for (let id in countries) {
+            const c = countries[id];
+            const card = document.createElement("div");
+            card.className = "country-card";
+            if (selectedCountryId === id) card.classList.add("selected");
+            card.innerHTML = `
+                <div class="country-name">${c.name}</div><div class="country-stats">
+                    💰${c.economy} ⚔️${c.army} 🪙${c.gold}
+                </div>
+            ;
+            card.addEventListener("click", () => {
+                selectedCountryId = id;
+                renderMap();
+                updateInfoPanel();
+                renderEnemiesList();
+            });
+            grid.appendChild(card);
         }
     }
 
-    // Функция для определения страны по координатам клика
-    function getCountryByClick(clientX, clientY) {
-        const rect = canvas.getBoundingClientRect();
-        const scaleX = canvas.width / rect.width;
-        const scaleY = canvas.height / rect.height;
-        const x = (clientX - rect.left) * scaleX;
-        const y = (clientY - rect.top) * scaleY;
-        for (let id in countriesData) {
-            const [x1, y1] = countriesData[id].bounds[0];
-            const [x2, y2] = countriesData[id].bounds[1];
-            if (x >= x1 && x <= x2 && y >= y1 && y <= y2) return id;
+    // Список врагов (все страны, кроме выбранной)
+    function renderEnemiesList() {
+        const container = document.getElementById("enemiesContainer");
+        if (!selectedCountryId) {
+            container.innerHTML = "<div>Сначала выберите страну</div>";
+            return;
         }
-        return null;
+        let html = "";
+        for (let id in countries) {
+            if (id !== selectedCountryId) {
+                const c = countries[id];
+                html += 
+                    <div class="enemy-item">
+                        <span><strong>${c.name}</strong> 💰${c.economy} ⚔️${c.army}</span>
+                        <button class="war-btn" data-id="${id}">⚔️ ВОЙНА</button>
+                    </div>
+                ;
+            }
+        }
+        container.innerHTML = html;
+        // Вешаем обработчики
+        document.querySelectorAll(".war-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const targetId = btn.getAttribute("data-id");
+                if (confirm(Начать войну против ${countries[targetId].name}?)) {
+                    declareWar(targetId);
+                }
+            });
+        });
     }
 
-    // Действия игрока
+    // Действия
     function improveEconomy() {
-        if (!playerCountryId) return;
-        const c = gameCountries[playerCountryId];
+        if (!selectedCountryId) {
+            alert("Сначала выберите страну!");
+            return;
+        }
+        const c = countries[selectedCountryId];
         if (c.gold >= 10) {
             c.gold -= 10;
             c.economy += 5;
             c.morale += 2;
-            updateUI();
-            drawMap();
+            updateInfoPanel();
+            renderMap();
         } else {
-            alert("Недостаточно золота! (нужно 10)");
+            alert("Не хватает золота (нужно 10)");
         }
     }
 
     function raisePopulation() {
-        if (!playerCountryId) return;
-        const c = gameCountries[playerCountryId];
+        if (!selectedCountryId) {
+            alert("Сначала выберите страну!");
+            return;
+        }
+        const c = countries[selectedCountryId];
         if (c.gold >= 15) {
             c.gold -= 15;
             c.population += 10000;
-            updateUI();
-            drawMap();
+            updateInfoPanel();
+            renderMap();
         } else {
-            alert("Недостаточно золота! (нужно 15)");
+            alert("Не хватает золота (нужно 15)");
         }
-    }// Объявление войны
-    function declareWar(targetId) {
-        if (!playerCountryId) return;
-        if (playerCountryId === targetId) return;
-        const attacker = gameCountries[playerCountryId];
-        const defender = gameCountries[targetId];
-        if (!attacker || !defender) return;
+    }
 
-        // Простая симуляция войны: шанс победы зависит от армии, морали, экономики
+    // Война
+    function declareWar(targetId) {
+        if (!selectedCountryId) return;
+        const attacker = countries[selectedCountryId];
+        const defender = countries[targetId];
+
+        // Простая формула силы
         let attackerPower = attacker.army * (attacker.morale / 100) * (attacker.economy / 100);
         let defenderPower = defender.army * (defender.morale / 100) * (defender.economy / 100);
-        let attackerWinChance = attackerPower / (attackerPower + defenderPower);
-        let random = Math.random();
+        let winChance = attackerPower / (attackerPower + defenderPower);
+        let rand = Math.random();
         let message = "";
-        if (random < attackerWinChance) {
-            // Победа атакующего
-            let goldGain = Math.floor(defender.gold * 0.5);
-            let popGain = Math.floor(defender.population * 0.2);
-            attacker.gold += goldGain;
-            attacker.population += popGain;
+        if (rand < winChance) {
+            // победа атакующего
+            let goldLoot = Math.floor(defender.gold * 0.5);
+            let popLoot = Math.floor(defender.population * 0.2);
+            attacker.gold += goldLoot;
+            attacker.population += popLoot;
             attacker.morale += 12;
             defender.gold = Math.floor(defender.gold * 0.5);
             defender.population = Math.floor(defender.population * 0.8);
             defender.morale -= 20;
-            message = 🎉 ПОБЕДА! ${attacker.name} захватил ресурсы: +${goldGain} золота, +${popGain} населения. Мораль выросла!;
+            message = 🎉 ПОБЕДА! Захвачено ${goldLoot} золота и ${popLoot} населения. Мораль растёт.`;
         } else {
-            // Поражение
-            let lossGold = Math.floor(attacker.gold * 0.3);
-            attacker.gold -= lossGold;
+            // поражение
+            let goldLost = Math.floor(attacker.gold * 0.3);
+            attacker.gold -= goldLost;
             attacker.army = Math.floor(attacker.army * 0.7);
-            attacker.morale -= 18;
-            defender.morale += 8;
-            message = 💔 ПОРАЖЕНИЕ! ${attacker.name} теряет ${lossGold} золота и часть армии. Мораль падает.;
+            attacker.morale -= 18;defender.morale += 8;
+            message = 💔 ПОРАЖЕНИЕ! Потеряно ${goldLost} золота, армия ослаблена. Мораль падает.;
         }
-        // Ограничения чтобы не уходило в минус
+        // Ограничения
         attacker.gold = Math.max(0, attacker.gold);
         attacker.population = Math.max(1000, attacker.population);
         attacker.army = Math.max(10, attacker.army);
@@ -340,30 +331,32 @@
         defender.morale = Math.min(100, Math.max(0, defender.morale));
         defender.gold = Math.max(0, defender.gold);
         defender.population = Math.max(1000, defender.population);
-        document.getElementById("warResult").innerHTML = message;
-        setTimeout(() => {
-            document.getElementById("warResult").innerHTML = "";
-        }, 4000);
-        updateUI();
-        drawMap();
+
+        const msgDiv = document.getElementById("warMessage");
+        msgDiv.innerHTML = message;
+        setTimeout(() => msgDiv.innerHTML = "", 4000);
+
+        updateInfoPanel();
+        renderMap();
+        renderEnemiesList();
     }
 
-    // Следующий ход: пассивный доход для всех стран, ИИ улучшает свои показатели
+    // Следующий ход: доход для всех, ИИ-улучшения
     function nextTurn() {
-        if (!playerCountryId) {
-            alert("Сначала выберите страну, кликнув по ней на карте.");
+        if (!selectedCountryId) {
+            alert("Сначала выберите страну, кликнув на карту.");
             return;
         }
-        // Доход от экономики для всех стран
-        for (let id in gameCountries) {
-            let c = gameCountries[id];
+        for (let id in countries) {
+            let c = countries[id];
+            // доход от экономики
             let income = Math.floor(c.economy / 10) + 5;
             c.gold += income;
-            // Автоматический рост населения
+            // естественный рост населения
             let growth = Math.floor(c.population * 0.005);
             c.population += growth;
-            // ИИ для других стран: если у них много золота, они улучшают экономику или армию
-            if (id !== playerCountryId && c.gold > 30) {
+            // ИИ для других стран: улучшают экономику или армию, если есть золото
+            if (id !== selectedCountryId && c.gold > 30) {
                 if (Math.random() < 0.4 && c.gold >= 15) {
                     c.economy += 2;
                     c.gold -= 15;
@@ -372,78 +365,31 @@
                     c.gold -= 20;
                 }
             }
-            // Мораль медленно восстанавливается
+            // мораль постепенно восстанавливается
             if (c.morale < 100) c.morale += 1;
             c.morale = Math.min(100, c.morale);
             c.gold = Math.floor(c.gold);
         }
-        updateUI();
-        drawMap();
-        // Обновляем список врагов (перерисовка)
+        updateInfoPanel();
+        renderMap();
         renderEnemiesList();
+        // Небольшое сообщение
+        const msgDiv = document.getElementById("warMessage");
+        msgDiv.innerHTML = "✅ Новый ход! Получен доход от экономики.";
+        setTimeout(() => {
+            if (msgDiv.innerHTML === "✅ Новый ход! Получен доход от экономики.") msgDiv.innerHTML = "";
+        }, 2000);
     }
 
-    // Список стран, доступных для войны (кроме своей)function renderEnemiesList() {
-        const container = document.getElementById("enemiesContainer");
-        if (!playerCountryId) {
-            container.innerHTML = "<div style='padding:5px;'>Сначала выберите страну</div>";
-            return;
-        }
-        let html = "";
-        for (let id in gameCountries) {
-            if (id !== playerCountryId) {
-                const c = gameCountries[id];
-                html += 
-                    <div class="enemy-item">
-                        <div class="enemy-name">${c.name}</div>
-                        <div>💰${c.economy} ⚔️${c.army}</div>
-                        <button class="attack-btn" data-id="${id}">⚔️ ВОЙНА</button>
-                    </div>
-                ;
-            }
-        }
-        container.innerHTML = html;
-        // Привязываем обработчики
-        document.querySelectorAll('.attack-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const targetId = btn.getAttribute('data-id');
-                if (confirm(Начать войну против ${gameCountries[targetId].name}?)) {
-                    declareWar(targetId);
-                }
-            });
-        });
-    }
-
-    // Обработка клика по карте для выбора страны
-    canvas.addEventListener('click', (e) => {
-        const countryId = getCountryByClick(e.clientX, e.clientY);
-        if (countryId) {
-            playerCountryId = countryId;
-            updateUI();
-            drawMap();
-            renderEnemiesList();
-            // Подсветка выбора
-        } else {
-            // Если клик вне страны
-        }
-    });
+    // Инициализация
+    renderMap();
+    updateInfoPanel();
+    renderEnemiesList();
 
     // Кнопки
     document.getElementById("improveEconomyBtn").addEventListener("click", improveEconomy);
     document.getElementById("raisePopulationBtn").addEventListener("click", raisePopulation);
     document.getElementById("nextTurnBtn").addEventListener("click", nextTurn);
-
-    // Инициализация
-    drawMap();
-    updateUI();
-    renderEnemiesList();
-
-    // Подсказка при старте
-    setTimeout(() => {
-        if (!playerCountryId) {
-            alert("Добро пожаловать! Кликните по любой стране на карте, чтобы начать игру.");
-        }
-    }, 300);
 </script>
 </body>
 </html>
