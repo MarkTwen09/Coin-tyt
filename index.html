@@ -9,28 +9,38 @@ const PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-    secret: 'projectx-secret-key-2024',
+    secret: 'projectx-qa-secret-key',
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
 }));
 
 // In‑memory storage
-let messages = [];        // { username, text, timestamp }
-let registeredUsers = []; // { username, registeredAt }
+let users = [];               // { username }
+let questions = [];           // { id, author, text, timestamp, replies: [{ author, text, timestamp }] }
 
-// Helper to check uniqueness
+// Helper to check if username exists
 function isUsernameUnique(username) {
-    return !registeredUsers.some(u => u.username === username);
+    return !users.some(u => u.username === username);
+}
+
+// Helper to escape HTML
+function escapeHtml(str) {
+    return str.replace(/[&<>]/g, (m) => {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
 }
 
 // Helper to format timestamp
 function formatTime(isoString) {
     const date = new Date(isoString);
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleString();
 }
 
-// Home page – main chat
+// Home page
 app.get('/', (req, res) => {
     if (!req.session.username) {
         // Not logged in → show registration form
@@ -40,33 +50,33 @@ app.get('/', (req, res) => {
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Project X – Регистрация</title>
+                <title>Project X – Вход</title>
                 <style>
                     * { margin: 0; padding: 0; box-sizing: border-box; }
                     body {
                         font-family: 'Inter', system-ui, -apple-system, sans-serif;
                         min-height: 100vh;
-                        background: linear-gradient(125deg, #0f0c29, #302b63, #24243e);
+                        background: linear-gradient(125deg, #0f0c29, #302b63, #24243e, #1e1a3a);
                         background-size: 400% 400%;
-                        animation: gradientFlow 12s ease infinite;
+                        animation: liquidMove 14s ease infinite;
                         display: flex;
                         align-items: center;
                         justify-content: center;
                         padding: 20px;
                     }
-                    @keyframes gradientFlow {
+                    @keyframes liquidMove {
                         0% { background-position: 0% 50%; }
                         50% { background-position: 100% 50%; }
                         100% { background-position: 0% 50%; }
                     }
                     .glass-card {
                         background: rgba(20, 30, 55, 0.4);
-                        backdrop-filter: blur(20px) saturate(180%);
+                        backdrop-filter: blur(25px) saturate(180%);
                         border-radius: 32px;
                         padding: 40px;
                         width: 100%;
                         max-width: 420px;
-                        border: 1px solid rgba(255, 255, 255, 0.2);
+                        border: 1px solid rgba(255,255,255,0.2);
                         box-shadow: 0 8px 32px rgba(0,0,0,0.3);
                         text-align: center;
                     }
@@ -119,12 +129,12 @@ app.get('/', (req, res) => {
             </head>
             <body>
                 <div class="glass-card">
-                    <h1><i class="fas fa-bolt"></i> Project X</h1>
+                    <h1><i class="fas fa-question-circle"></i> Project X</h1>
                     <form method="POST" action="/register">
-                        <input type="text" name="username" placeholder="@username" autocomplete="off" required>
-                        <button type="submit">Войти в чат</button>
+                        <input type="text" name="username" placeholder="Ваш никнейм" autocomplete="off" required>
+                        <button type="submit">Войти</button>
                     </form>
-                    ${req.query.error ? `<div class="error">${req.query.error}</div>` : ''}
+                    ${req.query.error ? `<div class="error">${escapeHtml(req.query.error)}</div>` : ''}
                 </div>
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
             </body>
@@ -132,11 +142,10 @@ app.get('/', (req, res) => {
         `);
     }
 
-    // User is logged in – render main chat page
+    // User is logged in – render main Q&A page
     const currentUser = req.session.username;
-    const onlineUsers = registeredUsers.map(u => u.username).filter(u => u !== currentUser);
-    // Limit to last 100 messages
-    const recentMessages = messages.slice(-100).reverse(); // newest last? We'll show chronological in template
+    // Sort questions: newest first
+    const sortedQuestions = [...questions].reverse();
 
     res.send(`
         <!DOCTYPE html>
@@ -144,7 +153,7 @@ app.get('/', (req, res) => {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-            <title>Project X – Liquid Glass Messenger</title>
+            <title>Project X – Вопросы и ответы</title>
             <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
             <style>
@@ -156,277 +165,309 @@ app.get('/', (req, res) => {
                 body {
                     font-family: 'Inter', sans-serif;
                     min-height: 100vh;
-                    background: linear-gradient(125deg, #0f0c29, #302b63, #24243e);
+                    background: linear-gradient(125deg, #0f0c29, #302b63, #24243e, #1e1a3a);
                     background-size: 400% 400%;
                     animation: liquidMove 14s ease infinite;
-                    overflow: hidden;
-                    color: #fff;
+                    padding: 20px;
                 }
                 @keyframes liquidMove {
                     0% { background-position: 0% 50%; }
                     50% { background-position: 100% 50%; }
                     100% { background-position: 0% 50%; }
                 }
-                .app {
-                    display: flex;
-                    height: 100vh;
-                    width: 100%;
-                    padding: 16px;
-                    gap: 16px;
+                .container {
+                    max-width: 800px;
+                    margin: 0 auto;
                 }
-                /* Sidebar – Liquid Glass */
-                .sidebar {
-                    width: 320px;
-                    background: rgba(20, 30, 55, 0.35);
+                /* Profile card */
+                .profile-card {
+                    background: rgba(20, 30, 55, 0.4);
                     backdrop-filter: blur(25px) saturate(180%);
                     border-radius: 32px;
                     border: 1px solid rgba(255,255,255,0.15);
+                    padding: 24px;
+                    margin-bottom: 24px;
                     display: flex;
-                    flex-direction: column;
-                    overflow: hidden;
+                    align-items: center;
+                    justify-content: space-between;
+                    flex-wrap: wrap;
+                    gap: 16px;
                 }
-                .user-profile {
-                    padding: 24px 20px;
-                    border-bottom: 1px solid rgba(255,255,255,0.1);
-                    text-align: center;
+                .user-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 16px;
                 }
                 .avatar {
-                    width: 80px;
-                    height: 80px;
+                    width: 60px;
+                    height: 60px;
                     background: linear-gradient(135deg, #5b8cff, #8b5cf6);
                     border-radius: 50%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-size: 36px;
+                    font-size: 28px;
                     font-weight: 600;
-                    margin: 0 auto 12px;
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
                 }
-                .username {
+                .user-details h3 {
                     font-size: 20px;
                     font-weight: 600;
-                    margin-bottom: 4px;
                 }
-                .user-tag {
+                .user-details p {
                     font-size: 13px;
                     opacity: 0.7;
                 }
-                .online-section {
-                    padding: 16px 20px;
-                    border-bottom: 1px solid rgba(255,255,255,0.1);
-                }
-                .online-title {
-                    font-size: 13px;
-                    font-weight: 500;
-                    margin-bottom: 12px;
+                .change-nick-form {
                     display: flex;
-                    align-items: center;
-                    gap: 6px;
+                    gap: 12px;
                 }
-                .online-list {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 8px;
-                }
-                .online-badge {
+                .change-nick-form input {
+                    padding: 10px 16px;
                     background: rgba(255,255,255,0.1);
-                    padding: 6px 12px;
-                    border-radius: 30px;
-                    font-size: 12px;
-                }
-                .profile-form {
-                    padding: 20px;
-                }
-                .profile-form input {
-                    width: 100%;
-                    padding: 12px;
-                    margin-bottom: 12px;
-                    background: rgba(255,255,255,0.08);
                     border: 1px solid rgba(255,255,255,0.2);
                     border-radius: 30px;
                     color: white;
                     outline: none;
                     font-size: 14px;
                 }
-                .profile-form button {
-                    width: 100%;
+                .change-nick-form button {
                     background: linear-gradient(135deg, #5b8cff, #8b5cf6);
                     border: none;
-                    padding: 10px;
+                    padding: 10px 20px;
                     border-radius: 30px;
                     color: white;
-                    font-weight: 500;
                     cursor: pointer;
-                    transition: 0.2s;
+                    font-weight: 500;
                 }
-                .profile-form button:hover {
-                    transform: scale(1.02);
-                    box-shadow: 0 2px 8px rgba(91,140,255,0.4);
-                }
-                /* Main chat area */
-                .chat-area {
-                    flex: 1;
-                    background: rgba(15, 25, 45, 0.35);
+                /* Ask form */
+                .ask-form {
+                    background: rgba(20, 30, 55, 0.4);
                     backdrop-filter: blur(25px) saturate(180%);
                     border-radius: 32px;
                     border: 1px solid rgba(255,255,255,0.15);
-                    display: flex;
-                    flex-direction: column;
-                    overflow: hidden;
+                    padding: 24px;
+                    margin-bottom: 32px;
                 }
-                .chat-header {
-                    padding: 20px 24px;
-                    border-bottom: 1px solid rgba(255,255,255,0.1);
-                }
-                .chat-header h2 {
-                    font-size: 20px;
-                    font-weight: 600;
-                }
-                .messages-container {
-                    flex: 1;
-                    overflow-y: auto;
-                    padding: 20px 24px;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 12px;
-                }
-                .message {
-                    max-width: 70%;
-                    display: flex;
-                    flex-direction: column;
-                }
-                .message.own {
-                    align-self: flex-end;
-                }
-                .bubble {
-                    padding: 10px 16px;
-                    border-radius: 20px;
-                    font-size: 14px;
-                    line-height: 1.4;
-                    background: rgba(255,255,255,0.12);
-                    backdrop-filter: blur(4px);
-                    border: 1px solid rgba(255,255,255,0.1);
-                }
-                .message.own .bubble {
-                    background: rgba(91,140,255,0.4);
-                    border-color: rgba(91,140,255,0.5);
-                    box-shadow: 0 0 12px rgba(91,140,255,0.2);
-                }
-                .message-meta {
-                    font-size: 10px;
-                    opacity: 0.6;
-                    margin-top: 4px;
-                    margin-left: 12px;
-                }
-                .input-form {
-                    padding: 20px 24px;
-                    border-top: 1px solid rgba(255,255,255,0.1);
-                    display: flex;
-                    gap: 12px;
-                }
-                .input-form input {
-                    flex: 1;
-                    padding: 14px 20px;
+                .ask-form textarea {
+                    width: 100%;
+                    padding: 16px;
                     background: rgba(255,255,255,0.08);
                     border: 1px solid rgba(255,255,255,0.2);
-                    border-radius: 40px;
+                    border-radius: 24px;
                     color: white;
-                    font-size: 14px;
+                    font-size: 15px;
+                    font-family: inherit;
+                    resize: vertical;
                     outline: none;
+                    margin-bottom: 16px;
                 }
-                .input-form input:focus {
+                .ask-form textarea:focus {
                     border-color: #5b8cff;
-                    box-shadow: 0 0 10px rgba(91,140,255,0.3);
+                    box-shadow: 0 0 12px rgba(91,140,255,0.3);
                 }
-                .input-form button {
+                .ask-form button {
                     background: linear-gradient(135deg, #5b8cff, #8b5cf6);
                     border: none;
-                    width: 50px;
-                    height: 50px;
-                    border-radius: 50%;
+                    padding: 12px 28px;
+                    border-radius: 40px;
                     color: white;
+                    font-weight: 600;
                     cursor: pointer;
                     transition: 0.2s;
                 }
-                .input-form button:hover {
-                    transform: scale(1.05);
-                    box-shadow: 0 2px 8px rgba(91,140,255,0.4);
+                .ask-form button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(91,140,255,0.4);
                 }
-                /* Custom scrollbar */
-                .messages-container::-webkit-scrollbar {
-                    width: 5px;
+                /* Question cards */
+                .question-card {
+                    background: rgba(20, 30, 55, 0.4);
+                    backdrop-filter: blur(25px) saturate(180%);
+                    border-radius: 32px;
+                    border: 1px solid rgba(255,255,255,0.15);
+                    padding: 24px;
+                    margin-bottom: 24px;
+                    transition: transform 0.25s ease, box-shadow 0.25s ease;
                 }
-                .messages-container::-webkit-scrollbar-track {
+                .question-card:hover {
+                    transform: scale(1.02);
+                    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+                }
+                .question-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    margin-bottom: 16px;
+                }
+                .question-avatar {
+                    width: 40px;
+                    height: 40px;
+                    background: linear-gradient(135deg, #5b8cff, #8b5cf6);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 18px;
+                    font-weight: 600;
+                }
+                .question-meta {
+                    flex: 1;
+                }
+                .question-author {
+                    font-weight: 600;
+                }
+                .question-time {
+                    font-size: 11px;
+                    opacity: 0.6;
+                }
+                .question-text {
+                    font-size: 16px;
+                    line-height: 1.5;
+                    margin-bottom: 20px;
+                    padding: 8px 0;
+                }
+                /* Replies section */
+                .replies-section {
+                    margin-top: 20px;
+                    border-top: 1px solid rgba(255,255,255,0.1);
+                    padding-top: 20px;
+                }
+                .reply {
+                    margin-bottom: 16px;
+                    padding-left: 48px;
+                    position: relative;
+                }
+                .reply-avatar {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 32px;
+                    height: 32px;
+                    background: rgba(91,140,255,0.3);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+                .reply-content {
                     background: rgba(255,255,255,0.05);
-                    border-radius: 10px;
+                    border-radius: 20px;
+                    padding: 10px 16px;
                 }
-                .messages-container::-webkit-scrollbar-thumb {
-                    background: rgba(91,140,255,0.5);
-                    border-radius: 10px;
+                .reply-author {
+                    font-size: 12px;
+                    font-weight: 500;
+                    margin-bottom: 4px;
+                }
+                .reply-text {
+                    font-size: 13px;
+                    line-height: 1.4;
+                }
+                .reply-time {
+                    font-size: 10px;
+                    opacity: 0.5;
+                    margin-top: 4px;
+                }
+                .reply-form {
+                    margin-top: 16px;
+                    display: flex;
+                    gap: 12px;
+                }
+                .reply-form input {
+                    flex: 1;
+                    padding: 10px 16px;
+                    background: rgba(255,255,255,0.08);
+                    border: 1px solid rgba(255,255,255,0.2);
+                    border-radius: 30px;
+                    color: white;
+                    outline: none;
+                    font-size: 13px;
+                }
+                .reply-form button {
+                    background: linear-gradient(135deg, #5b8cff, #8b5cf6);
+                    border: none;
+                    padding: 8px 20px;
+                    border-radius: 30px;
+                    color: white;
+                    cursor: pointer;
+                    font-size: 13px;
                 }
                 @media (max-width: 768px) {
-                    .app { flex-direction: column; }
-                    .sidebar { width: 100%; max-height: 280px; }
+                    body { padding: 12px; }
+                    .profile-card { flex-direction: column; align-items: stretch; }
+                    .change-nick-form { width: 100%; }
+                    .question-card:hover { transform: none; }
                 }
             </style>
         </head>
         <body>
-            <div class="app">
-                <!-- Sidebar with profile & online -->
-                <div class="sidebar">
-                    <div class="user-profile">
-                        <div class="avatar">${currentUser.charAt(0).toUpperCase()}</div>
-                        <div class="username">${escapeHtml(currentUser)}</div>
-                        <div class="user-tag">@${escapeHtml(currentUser)}</div>
-                    </div>
-                    <div class="online-section">
-                        <div class="online-title">
-                            <i class="fas fa-circle" style="color:#2ecc71; font-size:10px;"></i> Онлайн
-                        </div>
-                        <div class="online-list">
-                            ${registeredUsers.map(u => `<span class="online-badge">@${escapeHtml(u.username)}</span>`).join('')}
+            <div class="container">
+                <!-- Profile card -->
+                <div class="profile-card">
+                    <div class="user-info">
+                        <div class="avatar">${escapeHtml(currentUser.charAt(0).toUpperCase())}</div>
+                        <div class="user-details">
+                            <h3>${escapeHtml(currentUser)}</h3>
+                            <p>Ваш публичный профиль</p>
                         </div>
                     </div>
-                    <div class="profile-form">
-                        <form method="POST" action="/update-profile">
-                            <input type="text" name="newUsername" placeholder="Новый @username" required>
-                            <button type="submit">Сменить ник</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Main chat area -->
-                <div class="chat-area">
-                    <div class="chat-header">
-                        <h2><i class="fas fa-hashtag"></i> Project X Community</h2>
-                    </div>
-                    <div class="messages-container" id="messages">
-                        ${messages.map(msg => `
-                            <div class="message ${msg.username === currentUser ? 'own' : ''}">
-                                <div class="bubble">${escapeHtml(msg.text)}</div>
-                                <div class="message-meta">${escapeHtml(msg.username)} • ${formatTime(msg.timestamp)}</div>
-                            </div>
-                        `).join('')}
-                        ${messages.length === 0 ? '<div style="text-align:center; opacity:0.5; padding:20px;">Нет сообщений. Напишите первое!</div>' : ''}
-                    </div>
-                    <form class="input-form" method="POST" action="/send">
-                        <input type="text" name="message" placeholder="Сообщение..." autocomplete="off" required>
-                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    <form class="change-nick-form" method="POST" action="/change-nick">
+                        <input type="text" name="newUsername" placeholder="Новый никнейм" required>
+                        <button type="submit">Сменить</button>
                     </form>
                 </div>
+
+                <!-- Form to ask a question -->
+                <div class="ask-form">
+                    <form method="POST" action="/ask">
+                        <textarea name="question" rows="3" placeholder="Задайте вопрос сообществу..." required></textarea>
+                        <button type="submit"><i class="fas fa-paper-plane"></i> Опубликовать вопрос</button>
+                    </form>
+                </div>
+
+                <!-- Questions list -->
+                ${sortedQuestions.map(q => `
+                    <div class="question-card">
+                        <div class="question-header">
+                            <div class="question-avatar">${escapeHtml(q.author.charAt(0).toUpperCase())}</div>
+                            <div class="question-meta">
+                                <div class="question-author">${escapeHtml(q.author)}</div>
+                                <div class="question-time">${formatTime(q.timestamp)}</div>
+                            </div>
+                        </div>
+                        <div class="question-text">${escapeHtml(q.text)}</div>
+
+                        <!-- Replies section -->
+                        <div class="replies-section">
+                            ${q.replies && q.replies.length ? q.replies.map(r => `
+                                <div class="reply">
+                                    <div class="reply-avatar">${escapeHtml(r.author.charAt(0).toUpperCase())}</div>
+                                    <div class="reply-content">
+                                        <div class="reply-author">${escapeHtml(r.author)}</div>
+                                        <div class="reply-text">${escapeHtml(r.text)}</div>
+                                        <div class="reply-time">${formatTime(r.timestamp)}</div>
+                                    </div>
+                                </div>
+                            `).join('') : '<div style="opacity:0.5; font-size:12px; margin-bottom:12px;">Нет ответов. Будьте первым!</div>'}
+
+                            <!-- Form to add a reply -->
+                            <form class="reply-form" method="POST" action="/reply/${q.id}">
+                                <input type="text" name="reply" placeholder="Ваш ответ..." required>
+                                <button type="submit">Ответить</button>
+                            </form>
+                        </div>
+                    </div>
+                `).join('')}
+                ${questions.length === 0 ? '<div style="text-align:center; opacity:0.6; margin-top:40px;">Пока нет вопросов. Задайте первый!</div>' : ''}
             </div>
-            <script>
-                // Auto-scroll to bottom
-                const container = document.getElementById('messages');
-                if (container) container.scrollTop = container.scrollHeight;
-            </script>
         </body>
         </html>
     `);
 });
 
-// Registration
+// Register new user
 app.post('/register', (req, res) => {
     const username = req.body.username.trim();
     if (!username) {
@@ -435,64 +476,74 @@ app.post('/register', (req, res) => {
     if (!isUsernameUnique(username)) {
         return res.redirect('/?error=Этот+никнейм+уже+занят');
     }
-    registeredUsers.push({ username, registeredAt: new Date().toISOString() });
+    users.push({ username });
     req.session.username = username;
     res.redirect('/');
 });
 
-// Send message
-app.post('/send', (req, res) => {
+// Change nickname
+app.post('/change-nick', (req, res) => {
     if (!req.session.username) return res.redirect('/');
-    const text = req.body.message?.trim();
-    if (!text) return res.redirect('/');
-    messages.push({
-        username: req.session.username,
-        text: text,
-        timestamp: new Date().toISOString()
-    });
-    // Keep last 100 messages
-    if (messages.length > 100) messages.shift();
-    res.redirect('/');
-});
-
-// Update profile (change nickname)
-app.post('/update-profile', (req, res) => {
-    if (!req.session.username) return res.redirect('/');
-    const newUsername = req.body.newUsername?.trim();
+    const newUsername = req.body.newUsername.trim();
     if (!newUsername) return res.redirect('/');
-    // Cannot change to an already existing username (except own)
-    if (newUsername !== req.session.username && !isUsernameUnique(newUsername)) {
+    // Check uniqueness (excluding current user)
+    const currentUser = req.session.username;
+    if (newUsername !== currentUser && !isUsernameUnique(newUsername)) {
         return res.redirect('/?error=Никнейм+уже+занят');
     }
-    // Update in registeredUsers
-    const userIndex = registeredUsers.findIndex(u => u.username === req.session.username);
-    if (userIndex !== -1) registeredUsers[userIndex].username = newUsername;
-    // Update session
+    // Update in users array
+    const userIndex = users.findIndex(u => u.username === currentUser);
+    if (userIndex !== -1) users[userIndex].username = newUsername;
+    // Update in questions and replies
+    questions.forEach(q => {
+        if (q.author === currentUser) q.author = newUsername;
+        q.replies.forEach(r => {
+            if (r.author === currentUser) r.author = newUsername;
+        });
+    });
     req.session.username = newUsername;
     res.redirect('/');
 });
 
-// Helper function for escaping
-function escapeHtml(str) {
-    return str.replace(/[&<>]/g, (m) => {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
-}
-
-// Format time helper used in template
-function formatTime(isoString) {
-    const date = new Date(isoString);
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-}
-// Expose helper to template via res.locals? We'll pass it manually in render.
-// In the res.send we used a function; we need to make it available.
-// Since we are using string concatenation, we have to pass the function as a variable in the string.
-// In the above I used formatTime inside the map, but it's not defined in the browser – it's used on server side.
-// The template is built on server, so formatTime is a server function and works.
-
-app.listen(PORT, () => {
-    console.log(`🚀 Project X server running at http://localhost:${PORT}`);
+// Ask a question
+app.post('/ask', (req, res) => {
+    if (!req.session.username) return res.redirect('/');
+    const text = req.body.question.trim();
+    if (!text) return res.redirect('/');
+    const newQuestion = {
+        id: Date.now().toString(),
+        author: req.session.username,
+        text: text,
+        timestamp: new Date().toISOString(),
+        replies: []
+    };
+    questions.push(newQuestion);
+    // Keep last 100 questions
+    if (questions.length > 100) questions.shift();
+    res.redirect('/');
 });
+
+// Reply to a question
+app.post('/reply/:questionId', (req, res) => {
+    if (!req.session.username) return res.redirect('/');
+    const questionId = req.params.questionId;
+    const replyText = req.body.reply.trim();
+    if (!replyText) return res.redirect('/');
+    const question = questions.find(q => q.id === questionId);
+    if (question) {
+        question.replies.push({
+            author: req.session.username,
+            text: replyText,
+            timestamp: new Date().toISOString()
+        });
+        // Keep only last 20 replies per question to avoid bloating
+        if (question.replies.length > 20) question.replies.shift();
+    }
+    res.redirect('/');
+});
+
+// Start server
+app.listen(PORT, () => {
+    console.log(`🚀 Project X Q&A server running at http://localhost:${PORT}`);
+});
+            
