@@ -8,8 +8,8 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 // Хранилище данных
-let users = [];          // { socketId, username, isOnline }
-let messages = [];       // { username, text, timestamp }
+let users = [];          // { socketId, username, displayName, isOnline }
+let messages = [];       // { username, displayName, text, timestamp }
 
 // Раздача статики
 app.use(express.static(path.join(__dirname)));
@@ -19,36 +19,76 @@ io.on('connection', (socket) => {
     console.log(`🔌 Новое подключение: ${socket.id}`);
 
     // Регистрация пользователя
-    socket.on('register', (username) => {
-        // Проверка уникальности
+    socket.on('register', (data) => {
+        const { username, displayName } = data;
+        // Проверка уникальности username
         const existing = users.find(u => u.username === username);
         if (existing) {
-            socket.emit('register_error', 'Этот никнейм уже занят');
+            socket.emit('register_error', 'Этот юзернейм уже занят');
             return;
         }
         // Добавляем пользователя
-        const newUser = { socketId: socket.id, username: username, isOnline: true };
+        const newUser = { 
+            socketId: socket.id, 
+            username, 
+            displayName: displayName || username,
+            isOnline: true 
+        };
         users.push(newUser);
         socket.username = username;
 
         // Отправляем историю сообщений и список пользователей новичку
         socket.emit('history', messages);
-        socket.emit('users_list', users.filter(u => u.isOnline).map(u => u.username));
+        socket.emit('users_list', users.filter(u => u.isOnline).map(u => ({ username: u.username, displayName: u.displayName })));
 
         // Оповещаем всех об обновлении списка онлайн
-        io.emit('users_list', users.filter(u => u.isOnline).map(u => u.username));
-        socket.broadcast.emit('user_joined', username);
-        console.log(`✅ Пользователь ${username} зарегистрирован`);
+        io.emit('users_list', users.filter(u => u.isOnline).map(u => ({ username: u.username, displayName: u.displayName })));
+        socket.broadcast.emit('user_joined', { username: newUser.username, displayName: newUser.displayName });
+        console.log(`✅ Пользователь ${newUser.username} (${newUser.displayName}) зарегистрирован`);
+    });
+
+    // Обновление профиля
+    socket.on('update_user', (data, callback) => {
+        const { newUsername, newDisplayName } = data;
+        const user = users.find(u => u.socketId === socket.id);
+        if (!user) {
+            callback({ success: false, error: 'Пользователь не найден' });
+            return;
+        }
+
+        // Проверяем уникальность нового юзернейма, если он меняется
+        if (newUsername && newUsername !== user.username) {
+            const taken = users.some(u => u.username === newUsername && u.socketId !== socket.id);
+            if (taken) {
+                callback({ success: false, error: 'Юзернейм уже занят' });
+                return;
+            }
+            user.username = newUsername;
+        }
+
+        if (newDisplayName) {
+            user.displayName = newDisplayName;
+        }
+
+        // Сохраняем обновлённые данные
+        callback({ success: true, user: { username: user.username, displayName: user.displayName } });
+
+        // Рассылаем обновлённый список пользователей
+        io.emit('users_list', users.filter(u => u.isOnline).map(u => ({ username: u.username, displayName: u.displayName })));
+        // Оповещаем всех, что пользователь обновил профиль (опционально)
+        socket.broadcast.emit('user_updated', { username: user.username, displayName: user.displayName });
+        console.log(`✏️ Пользователь ${user.username} обновил профиль`);
     });
 
     // Получение нового сообщения
     socket.on('new_message', (data) => {
         const { text } = data;
-        const username = socket.username;
-        if (!username) return;
+        const user = users.find(u => u.socketId === socket.id);
+        if (!user) return;
 
         const message = {
-            username,
+            username: user.username,
+            displayName: user.displayName,
             text,
             timestamp: new Date().toISOString(),
         };
@@ -62,25 +102,27 @@ io.on('connection', (socket) => {
 
     // Индикатор "печатает"
     socket.on('typing_start', () => {
-        if (socket.username) {
-            socket.broadcast.emit('user_typing', socket.username);
+        const user = users.find(u => u.socketId === socket.id);
+        if (user) {
+            socket.broadcast.emit('user_typing', user.displayName);
         }
     });
 
     socket.on('typing_stop', () => {
-        if (socket.username) {
-            socket.broadcast.emit('user_stop_typing', socket.username);
+        const user = users.find(u => u.socketId === socket.id);
+        if (user) {
+            socket.broadcast.emit('user_stop_typing', user.displayName);
         }
     });
 
     // Отключение
     socket.on('disconnect', () => {
-        if (socket.username) {
-            // Удаляем из списка
+        const user = users.find(u => u.socketId === socket.id);
+        if (user) {
             users = users.filter(u => u.socketId !== socket.id);
-            io.emit('users_list', users.filter(u => u.isOnline).map(u => u.username));
-            io.emit('user_left', socket.username);
-            console.log(`❌ Пользователь ${socket.username} отключился`);
+            io.emit('users_list', users.filter(u => u.isOnline).map(u => ({ username: u.username, displayName: u.displayName })));
+            io.emit('user_left', { username: user.username, displayName: user.displayName });
+            console.log(`❌ Пользователь ${user.username} (${user.displayName}) отключился`);
         }
     });
 });
@@ -110,7 +152,6 @@ server.listen(PORT, () => {
             overflow: hidden;
             color: #fff;
         }
-        /* Telegram‑like цветовая схема */
         :root {
             --bg-page: #0a0a12;
             --sidebar-bg: #1f1f2b;
@@ -123,14 +164,12 @@ server.listen(PORT, () => {
             --hover: rgba(255,255,255,0.05);
             --online: #2ecc71;
         }
-        /* Layout */
         .app {
             display: flex;
             height: 100vh;
             width: 100%;
             overflow: hidden;
         }
-        /* Левая панель (чаты) */
         .sidebar {
             width: 360px;
             background: var(--sidebar-bg);
@@ -143,8 +182,13 @@ server.listen(PORT, () => {
             padding: 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: space-between;
             border-bottom: 1px solid var(--border);
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         .avatar {
             width: 48px;
@@ -164,6 +208,20 @@ server.listen(PORT, () => {
         .user-info p {
             font-size: 12px;
             color: var(--text-secondary);
+        }
+        .settings-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: 0.2s;
+        }
+        .settings-btn:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
         }
         .online-list {
             padding: 12px 20px;
@@ -244,13 +302,11 @@ server.listen(PORT, () => {
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        /* Правая панель (чат) */
         .main-area {
             flex: 1;
             display: flex;
             flex-direction: column;
             background: var(--main-bg);
-            position: relative;
         }
         .chat-header {
             padding: 12px 20px;
@@ -335,7 +391,6 @@ server.listen(PORT, () => {
         .input-area button:active {
             transform: scale(0.95);
         }
-        /* Регистрационная форма */
         .auth-overlay {
             position: fixed;
             inset: 0;
@@ -378,6 +433,52 @@ server.listen(PORT, () => {
             font-size: 12px;
             margin-top: 8px;
         }
+        /* Модальное окно профиля */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal-card {
+            background: var(--sidebar-bg);
+            border-radius: 28px;
+            padding: 28px;
+            width: 340px;
+        }
+        .modal-card h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        .modal-card input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            color: white;
+            outline: none;
+        }
+        .modal-card button {
+            background: var(--bubble-own);
+            border: none;
+            padding: 10px;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
+        }
+        .modal-card .cancel-btn {
+            background: rgba(255,255,255,0.1);
+            margin-top: 12px;
+        }
         @media (max-width: 768px) {
             .sidebar {
                 position: absolute;
@@ -411,7 +512,10 @@ server.listen(PORT, () => {
 <body>
 <div class="app" id="app" style="display: none;">
     <div class="sidebar" id="sidebar">
-        <div class="user-header" id="userHeader"></div>
+        <div class="user-header">
+            <div class="user-info" id="userInfo"></div>
+            <button class="settings-btn" id="profileBtn"><i class="fas fa-user-cog"></i></button>
+        </div>
         <div class="online-list">
             <span><i class="fas fa-circle" style="color:#2ecc71; font-size:10px;"></i> Онлайн</span>
             <div class="online-users" id="onlineUsersList"></div>
@@ -419,16 +523,14 @@ server.listen(PORT, () => {
         <div class="search-box">
             <input type="text" id="searchChats" placeholder="Поиск">
         </div>
-        <div class="chats-list" id="chatsList">
-            <!-- список чатов (динамический) -->
-        </div>
+        <div class="chats-list" id="chatsList"></div>
     </div>
     <div class="main-area">
-        <div class="chat-header" id="chatHeader">
+        <div class="chat-header">
             <div style="display:flex; align-items:center; gap:12px;">
-                <div class="avatar" style="width:44px;height:44px;">Г</div>
+                <div class="avatar" style="width:44px;height:44px;">#</div>
                 <div>
-                    <h3>Общий чат</h3>
+                    <h3>Project X Community</h3>
                     <div class="typing-indicator" id="typingIndicator"></div>
                 </div>
             </div>
@@ -443,8 +545,9 @@ server.listen(PORT, () => {
 <div class="auth-overlay" id="authOverlay">
     <div class="auth-card">
         <h2 style="margin-bottom: 20px;"><i class="fas fa-bolt"></i> Project X</h2>
-        <input type="text" id="usernameInput" placeholder="Ваш никнейм" autocomplete="off">
-        <button id="registerBtn">Войти в чат</button>
+        <input type="text" id="usernameInput" placeholder="Ваш @username (уникальный)" autocomplete="off">
+        <input type="text" id="displayNameInput" placeholder="Отображаемое имя" autocomplete="off">
+        <button id="registerBtn">Войти</button>
         <div id="authError" class="error-msg"></div>
     </div>
 </div>
@@ -452,21 +555,23 @@ server.listen(PORT, () => {
 <script src="/socket.io/socket.io.js"></script>
 <script>
     let socket = null;
-    let currentUsername = null;
+    let currentUser = null; // { username, displayName }
     let typingTimeout = null;
 
     // DOM элементы
     const authOverlay = document.getElementById('authOverlay');
     const app = document.getElementById('app');
     const usernameInput = document.getElementById('usernameInput');
+    const displayNameInput = document.getElementById('displayNameInput');
     const registerBtn = document.getElementById('registerBtn');
     const authError = document.getElementById('authError');
-    const userHeader = document.getElementById('userHeader');
+    const userInfo = document.getElementById('userInfo');
     const onlineUsersList = document.getElementById('onlineUsersList');
     const messagesContainer = document.getElementById('messagesContainer');
     const messageInput = document.getElementById('messageInput');
     const sendBtn = document.getElementById('sendBtn');
     const typingIndicator = document.getElementById('typingIndicator');
+    const profileBtn = document.getElementById('profileBtn');
     const sidebar = document.getElementById('sidebar');
     const menuToggle = document.createElement('div');
     menuToggle.className = 'menu-toggle';
@@ -485,11 +590,13 @@ server.listen(PORT, () => {
 
         socket.on('connect', () => {
             console.log('✅ Соединение установлено');
-            socket.emit('register', currentUsername);
+            socket.emit('register', { username: currentUser.username, displayName: currentUser.displayName });
         });
 
         socket.on('register_error', (msg) => {
             authError.textContent = msg;
+            authOverlay.style.display = 'flex';
+            app.style.display = 'none';
         });
 
         socket.on('history', (msgs) => {
@@ -504,26 +611,30 @@ server.listen(PORT, () => {
             renderOnlineUsers(users);
         });
 
-        socket.on('user_joined', (username) => {
-            showSystemMessage(`${username} присоединился`);
+        socket.on('user_joined', (user) => {
+            showSystemMessage(`${user.displayName} (@${user.username}) присоединился`);
         });
 
-        socket.on('user_left', (username) => {
-            showSystemMessage(`${username} покинул чат`);
+        socket.on('user_left', (user) => {
+            showSystemMessage(`${user.displayName} (@${user.username}) покинул чат`);
         });
 
-        socket.on('user_typing', (username) => {
-            typingIndicator.textContent = `${username} печатает...`;
+        socket.on('user_updated', (user) => {
+            showSystemMessage(`${user.displayName} обновил профиль`);
+        });
+
+        socket.on('user_typing', (displayName) => {
+            typingIndicator.textContent = `${displayName} печатает...`;
             clearTimeout(typingTimeout);
             typingTimeout = setTimeout(() => {
-                if (typingIndicator.textContent.includes(username)) {
+                if (typingIndicator.textContent.includes(displayName)) {
                     typingIndicator.textContent = '';
                 }
             }, 3000);
         });
 
-        socket.on('user_stop_typing', (username) => {
-            if (typingIndicator.textContent.includes(username)) {
+        socket.on('user_stop_typing', (displayName) => {
+            if (typingIndicator.textContent.includes(displayName)) {
                 typingIndicator.textContent = '';
             }
         });
@@ -531,15 +642,15 @@ server.listen(PORT, () => {
 
     // Отрисовка списка онлайн-пользователей
     function renderOnlineUsers(users) {
-        onlineUsersList.innerHTML = users.map(u => `<span class="online-user">${escapeHtml(u)}</span>`).join('');
-        // Обновляем список чатов (пока просто общий чат)
+        onlineUsersList.innerHTML = users.map(u => `<span class="online-user">${escapeHtml(u.displayName)} (@${escapeHtml(u.username)})</span>`).join('');
+        // Обновляем список чатов (просто один глобальный чат)
         const chatsList = document.getElementById('chatsList');
         chatsList.innerHTML = `
             <div class="chat-item active">
                 <div class="chat-avatar">#</div>
                 <div class="chat-info">
-                    <div class="chat-name">Общий чат</div>
-                    <div class="chat-preview">Все участники</div>
+                    <div class="chat-name">Project X Community</div>
+                    <div class="chat-preview">Общий чат</div>
                 </div>
             </div>
         `;
@@ -548,11 +659,12 @@ server.listen(PORT, () => {
     // Добавление сообщения в UI
     function addMessageToUI(msg) {
         const div = document.createElement('div');
-        div.className = `message ${msg.username === currentUsername ? 'own' : ''}`;
+        const isOwn = msg.username === currentUser.username;
+        div.className = `message ${isOwn ? 'own' : ''}`;
         const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         div.innerHTML = `
             <div class="bubble">${escapeHtml(msg.text)}</div>
-            <div class="message-meta">${escapeHtml(msg.username)} • ${time}</div>
+            <div class="message-meta">${escapeHtml(msg.displayName)} • ${time}</div>
         `;
         messagesContainer.appendChild(div);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -580,7 +692,6 @@ server.listen(PORT, () => {
         if (!text) return;
         socket.emit('new_message', { text });
         messageInput.value = '';
-        // Остановка индикатора печатания
         if (socket) socket.emit('typing_stop');
     }
 
@@ -593,17 +704,75 @@ server.listen(PORT, () => {
         }, 2000);
     }
 
+    // Обновление профиля
+    function openProfileModal() {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-card">
+                <h3>Настройки профиля</h3>
+                <input type="text" id="modalUsername" placeholder="@username" value="${escapeHtml(currentUser.username)}">
+                <input type="text" id="modalDisplayName" placeholder="Отображаемое имя" value="${escapeHtml(currentUser.displayName)}">
+                <button id="saveProfileBtn">Сохранить</button>
+                <button class="cancel-btn" id="closeModalBtn">Отмена</button>
+                <div id="modalError" class="error-msg"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        const saveBtn = modal.querySelector('#saveProfileBtn');
+        const closeBtn = modal.querySelector('#closeModalBtn');
+        const modalUsername = modal.querySelector('#modalUsername');
+        const modalDisplayName = modal.querySelector('#modalDisplayName');
+        const modalError = modal.querySelector('#modalError');
+
+        saveBtn.addEventListener('click', () => {
+            const newUsername = modalUsername.value.trim();
+            const newDisplayName = modalDisplayName.value.trim();
+            if (!newUsername || !newDisplayName) {
+                modalError.textContent = 'Все поля обязательны';
+                return;
+            }
+            // Отправляем обновление на сервер
+            socket.emit('update_user', { newUsername, newDisplayName }, (response) => {
+                if (response.success) {
+                    // Обновляем локальные данные
+                    currentUser.username = response.user.username;
+                    currentUser.displayName = response.user.displayName;
+                    updateUserHeader();
+                    modal.remove();
+                    showSystemMessage('Профиль обновлён');
+                } else {
+                    modalError.textContent = response.error;
+                }
+            });
+        });
+
+        closeBtn.addEventListener('click', () => modal.remove());
+    }
+
+    function updateUserHeader() {
+        userInfo.innerHTML = `
+            <div class="avatar">${currentUser.displayName[0].toUpperCase()}</div>
+            <div>
+                <h4>${escapeHtml(currentUser.displayName)}</h4>
+                <p>@${escapeHtml(currentUser.username)}</p>
+            </div>
+        `;
+    }
+
     // Регистрация
     registerBtn.addEventListener('click', () => {
         const username = usernameInput.value.trim();
+        const displayName = displayNameInput.value.trim() || username;
         if (!username) {
-            authError.textContent = 'Введите никнейм';
+            authError.textContent = 'Введите @username';
             return;
         }
-        currentUsername = username;
+        currentUser = { username, displayName };
         authOverlay.style.display = 'none';
         app.style.display = 'flex';
-        userHeader.innerHTML = `<div class="avatar">${username[0].toUpperCase()}</div><div><h4>${escapeHtml(username)}</h4><p>@${escapeHtml(username)}</p></div>`;
+        updateUserHeader();
         initSocket();
     });
 
@@ -614,6 +783,7 @@ server.listen(PORT, () => {
         onTyping();
     });
     messageInput.addEventListener('input', onTyping);
+    profileBtn.addEventListener('click', openProfileModal);
 
     function escapeHtml(str) {
         return str.replace(/[&<>]/g, (m) => {
@@ -624,10 +794,8 @@ server.listen(PORT, () => {
         });
     }
 
-    // Добавляем поиск по чатам (пока заглушка)
-    document.getElementById('searchChats').addEventListener('input', (e) => {
-        // не реализовано, можно добавить фильтрацию
-    });
+    // Поиск (заглушка)
+    document.getElementById('searchChats').addEventListener('input', () => {});
 </script>
 </body>
 </html>
