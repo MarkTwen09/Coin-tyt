@@ -2,230 +2,677 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project X | Глобальный чат</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Нефтяной Магнат · Кликер в Старне</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
         body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
+            background: linear-gradient(145deg, #0a1f1a 0%, #07130f 100%);
+            font-family: 'Segoe UI', 'Montserrat', 'Poppins', system-ui, -apple-system, 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            padding: 20px;
-            color: #f1f5f9;
-        }
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 32px;
-            padding: 24px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-        .auth-card {
-            text-align: center;
+            margin: 0;
             padding: 20px;
         }
-        input, textarea, button {
+
+        /* главная карта игры */
+        .game-container {
+            max-width: 650px;
             width: 100%;
-            padding: 12px 16px;
-            margin: 8px 0;
-            border: none;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(3px);
+            border-radius: 3rem;
+            padding: 1.5rem;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 215, 120, 0.3);
+            transition: all 0.2s;
+        }
+
+        /* шапка месторождения */
+        .header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .header h1 {
+            font-size: 1.9rem;
+            margin: 0;
+            background: linear-gradient(135deg, #FFD966, #FFB347);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            color: #b9e6d9;
+            margin: 0.2rem 0 0;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: #1f3d35a0;
+            display: inline-block;
+            padding: 0.2rem 1rem;
             border-radius: 40px;
-            font-size: 16px;
-            background: rgba(255,255,255,0.1);
-            color: white;
+            backdrop-filter: blur(2px);
+        }
+
+        /* ресурсные панели */
+        .resources {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+            margin-bottom: 1.8rem;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: #0c241f;
+            flex: 1;
+            border-radius: 2rem;
+            padding: 0.9rem 0.5rem;
+            text-align: center;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.5), 0 5px 10px rgba(0,0,0,0.3);
+            border-bottom: 2px solid #f5b04260;
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #cddcd7;
+        }
+
+        .card .value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 0.25rem 0;
+            color: #FFE0A3;
+            text-shadow: 0 2px 3px black;
+        }
+
+        .card small {
+            color: #7f9f95;
+            font-size: 0.7rem;
+        }
+
+        /* кликер-зона */
+        .click-zone {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0 1.2rem;
+        }
+
+        .oil-btn {
+            background: radial-gradient(circle at 30% 20%, #2c2112, #1c1409);
+            border: none;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            font-size: 5rem;
+            cursor: pointer;
+            transition: 0.07s linear;
+            box-shadow: 0 15px 0 #0a0500, 0 8px 25px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f3c26b;
+            background-image: radial-gradient(circle at 35% 35%, #5e4a2e, #1f170b);
+        }
+
+        .oil-btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 8px 0 #0a0500;
+        }
+
+        .click-info {
+            text-align: center;
+            margin-top: 0.3rem;
+            font-weight: bold;
+            color: #dbb872;
+            background: #1a2b2480;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0.2rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+        }
+
+        /* секции улучшений и обмена */
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 1.2rem 0 0.8rem 0;
+            color: #ffcd7e;
+            border-left: 4px solid #f5a623;
+            padding-left: 12px;
+        }
+
+        .upgrades-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .upgrade-item {
+            background: #0f2922cc;
+            backdrop-filter: blur(4px);
+            border-radius: 2rem;
+            padding: 0.7rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border: 1px solid #f5b64240;
+        }
+
+        .upgrade-info {
+            flex: 2;
+        }
+
+        .upgrade-name {
+            font-weight: bold;
+            color: #ffdd99;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .upgrade-desc {
+            font-size: 0.7rem;
+            color: #bdd4cd;
+        }
+
+        .upgrade-cost {
+            font-family: monospace;
+            font-weight: bold;
+            background: #00000066;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+        }
+
+        button {
+            background: #2f423a;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            color: #f5eace;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 2px 5px black;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        button.buy-btn {
+            background: #d48d2b;
+            color: #1f2a24;
+            font-weight: bold;
+            min-width: 85px;
+        }
+
+        button.buy-btn:disabled {
+            background: #5a5a4a;
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
+        }
+
+        .exchange-panel {
+            background: #09211c;
+            border-radius: 2rem;
+            padding: 1rem;
+            margin-top: 0.3rem;
+        }
+
+        .rate-info {
+            background: #00000055;
+            border-radius: 2rem;
+            padding: 0.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .exchange-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .exchange-controls input {
+            background: #1e3a32;
+            border: 1px solid #f5b642;
+            padding: 10px 12px;
+            border-radius: 3rem;
+            color: #fff3cf;
+            font-weight: bold;
+            width: 120px;
+            text-align: center;
             outline: none;
         }
-        button {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-        button:hover {
-            transform: scale(1.02);
-        }
-        .chat {
-            height: 60vh;
-            overflow-y: auto;
-            padding: 10px;
-            margin-bottom: 20px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 24px;
-        }
-        .message {
-            margin-bottom: 16px;
-            padding: 10px 14px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 20px;
-            word-break: break-word;
-        }
-        .user {
-            font-weight: bold;
-            color: #60a5fa;
-            margin-bottom: 4px;
-        }
-        .time {
-            font-size: 10px;
-            opacity: 0.6;
-            margin-left: 8px;
-        }
-        .input-group {
+
+        .btn-group {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
-        .input-group input {
-            flex: 1;
+
+        .action-btn {
+            background: #365f53;
         }
-        .input-group button {
-            width: auto;
-            padding: 12px 24px;
+
+        .reset-btn {
+            background: #692c2c;
+            margin-top: 1rem;
+            width: 100%;
+            padding: 0.7rem;
+            font-size: 1rem;
         }
-        @media (max-width: 600px) {
-            .container { padding: 16px; }
+
+        footer {
+            font-size: 0.65rem;
+            text-align: center;
+            color: #558077;
+            margin-top: 1.2rem;
         }
     </style>
 </head>
 <body>
-<div class="container" id="app">
-    <div id="authScreen">
-        <div class="auth-card">
-            <h2>✧ Project X ✧</h2>
-            <input type="text" id="nickname" placeholder="Ваш никнейм">
-            <button id="joinBtn">Войти в чат</button>
+<div class="game-container">
+    <div class="header">
+        <h1>🛢️ НЕФТЯНОЙ МАГНАТ 🛢️</h1>
+        <p>⭐ СТАРНЕ · ЧЁРНОЕ ЗОЛОТО ⭐</p>
+    </div>
+
+    <div class="resources">
+        <div class="card">
+            <h3>🛢️ НЕФТЬ</h3>
+            <div class="value" id="oilAmount">0</div>
+            <small>баррелей</small>
+        </div>
+        <div class="card">
+            <h3>💰 РУБЛИ</h3>
+            <div class="value" id="rublesAmount">0</div>
+            <small>₽ капитал</small>
         </div>
     </div>
-    <div id="chatScreen" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-            <h2>✧ Общий чат ✧</h2>
-            <button id="logoutBtn" style="width: auto; background: rgba(255,255,255,0.2); padding: 6px 16px;">Выйти</button>
+
+    <div class="click-zone">
+        <button class="oil-btn" id="clickOilBtn">⛽</button>
+    </div>
+    <div class="click-info">
+        ⚡ +<span id="clickPowerVal">1</span> нефти за клик
+    </div>
+
+    <!-- СЕКЦИЯ УЛУЧШЕНИЙ (МАГНАТ) -->
+    <div class="section-title">📈 ИНВЕСТИЦИИ МАГНАТА</div>
+    <div class="upgrades-grid">
+        <!-- Улучшение клика -->
+        <div class="upgrade-item">
+            <div class="upgrade-info">
+                <div class="upgrade-name">🔧 Буровая установка</div>
+                <div class="upgrade-desc">+1 нефти за клик &nbsp;&nbsp;| Уровень: <span id="clickLvl">0</span></div>
+            </div>
+            <div class="upgrade-cost">💰 <span id="clickCost">10</span> ₽</div>
+            <button class="buy-btn" id="buyClickUpgrade">Купить</button>
         </div>
-        <div class="chat" id="messages"></div>
-        <div class="input-group">
-            <input type="text" id="messageInput" placeholder="Напишите сообщение..." autocomplete="off">
-            <button id="sendBtn">Отправить</button>
+        <!-- Улучшение курса обмена -->
+        <div class="upgrade-item">
+            <div class="upgrade-info">
+                <div class="upgrade-name">🏦 Нефте-трейдер</div>
+                <div class="upgrade-desc">↑ курс обмена +0.1 ₽ за баррель &nbsp;| Уровень: <span id="exchangeLvl">0</span></div>
+            </div>
+            <div class="upgrade-cost">💰 <span id="exchangeCost">15</span> ₽</div>
+            <button class="buy-btn" id="buyExchangeUpgrade">Купить</button>
+        </div>
+        <!-- Автодобыча -->
+        <div class="upgrade-item">
+            <div class="upgrade-info">
+                <div class="upgrade-name">⚙️ Автоматическая вышка</div>
+                <div class="upgrade-desc">+1 нефть/сек (пассивно) &nbsp;| Уровень: <span id="autoLvl">0</span></div>
+            </div>
+            <div class="upgrade-cost">💰 <span id="autoCost">20</span> ₽</div>
+            <button class="buy-btn" id="buyAutoUpgrade">Купить</button>
         </div>
     </div>
+
+    <!-- СЕКЦИЯ ОБМЕНА НЕФТИ НА РУБЛИ (ЦЕНТРАЛЬНАЯ ФУНКЦИЯ) -->
+    <div class="section-title">💱 ОБМЕННИК · НЕФТЬ → РУБЛИ</div>
+    <div class="exchange-panel">
+        <div class="rate-info">
+            💹 ТЕКУЩИЙ КУРС: 1 баррель = <span id="exchangeRate">1.00</span> ₽
+        </div>
+        <div class="exchange-controls">
+            <input type="number" id="exchangeAmount" placeholder="Кол-во нефти" value="10" min="1" step="1">
+            <div class="btn-group">
+                <button class="action-btn" id="exchangeBtn">🔄 ОБМЕНЯТЬ</button>
+                <button class="action-btn" id="exchangeAllBtn">💸 ВСЮ НЕФТЬ</button>
+            </div>
+        </div>
+        <div style="margin-top: 12px; font-size: 0.7rem; text-align: center; color: #e4c48b;">
+            ⚡ Меняй нефть на рубли и становись нефтяным королём Старне!
+        </div>
+    </div>
+
+    <!-- Доп. статистика -->
+    <div class="resources" style="margin-top: 1rem; margin-bottom: 0.5rem;">
+        <div class="card" style="background:#071e19;">
+            <h3>📊 ДОБЫТО ВСЕГО</h3>
+            <div class="value" id="totalOilProduced" style="font-size:1.5rem;">0</div>
+        </div>
+        <div class="card" style="background:#071e19;">
+            <h3>🏆 ЗАРАБОТАНО</h3>
+            <div class="value" id="totalRublesEarned" style="font-size:1.5rem;">0</div>
+        </div>
+    </div>
+
+    <button class="reset-btn" id="resetGameBtn">⛔ ПЕРЕЗАПУСК ИМПЕРИИ ⛔</button>
+    <footer>⚡ Автосохранение в браузере | Старне ждёт своего магната!</footer>
 </div>
 
 <script>
-    // ========== ВСЁ НАСТРОЕНО! НИЧЕГО МЕНЯТЬ НЕ НУЖНО ==========
-    // Это публичное хранилище, все сообщения видны всем.
-    const BIN_ID = "67e52de48a456b79667967b7";   // уже готово
-    const API_KEY = "$2a$10$vU.Ya5KUpq.T6JYF6YhPMeP0tGEnSntTUXyHnS1zOqK7gJ9YVwJqK";   // уже готово
-    // ============================================================
+    // ---------- ИГРОВОЕ СОСТОЯНИЕ ----------
+    let oil = 0;
+    let rubles = 0;
+    let clickUpgradeLevel = 0;
+    let exchangeUpgradeLevel = 0;
+    let autoUpgradeLevel = 0;
+    let totalOilProduced = 0;
+    let totalRublesEarned = 0;
 
-    const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-    let currentUser = null;
-    let messages = [];
-    let updateTimer = null;
+    // Производные величины (обновляются через функцию)
+    let clickPower = 1;
+    let exchangeRate = 1.0;
+    let autoOilPerSec = 0;
 
-    async function loadMessages() {
-        try {
-            const res = await fetch(API_URL, {
-                headers: { 'X-Master-Key': API_KEY }
-            });
-            const data = await res.json();
-            messages = data.record?.messages || [];
-            renderMessages();
-        } catch (err) {
-            console.error(err);
-        }
+    // ID интервала
+    let autoInterval = null;
+
+    // DOM элементы
+    const oilSpan = document.getElementById('oilAmount');
+    const rublesSpan = document.getElementById('rublesAmount');
+    const clickPowerSpan = document.getElementById('clickPowerVal');
+    const exchangeRateSpan = document.getElementById('exchangeRate');
+    const clickLvlSpan = document.getElementById('clickLvl');
+    const exchangeLvlSpan = document.getElementById('exchangeLvl');
+    const autoLvlSpan = document.getElementById('autoLvl');
+    const clickCostSpan = document.getElementById('clickCost');
+    const exchangeCostSpan = document.getElementById('exchangeCost');
+    const autoCostSpan = document.getElementById('autoCost');
+    const totalOilSpan = document.getElementById('totalOilProduced');
+    const totalRublesSpan = document.getElementById('totalRublesEarned');
+
+    // Кнопки
+    const clickBtn = document.getElementById('clickOilBtn');
+    const buyClickBtn = document.getElementById('buyClickUpgrade');
+    const buyExchangeBtn = document.getElementById('buyExchangeUpgrade');
+    const buyAutoBtn = document.getElementById('buyAutoUpgrade');
+    const exchangeBtn = document.getElementById('exchangeBtn');
+    const exchangeAllBtn = document.getElementById('exchangeAllBtn');
+    const resetBtn = document.getElementById('resetGameBtn');
+    const exchangeAmountInput = document.getElementById('exchangeAmount');
+
+    // ----- Вспомогательные функции пересчёта -----
+    function recalcDerivedStats() {
+        clickPower = 1 + clickUpgradeLevel;
+        exchangeRate = 1 + (exchangeUpgradeLevel * 0.1);
+        autoOilPerSec = autoUpgradeLevel;
     }
 
-    async function saveMessages() {
-        if (updateTimer) clearTimeout(updateTimer);
-        updateTimer = setTimeout(async () => {
-            try {
-                await fetch(API_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': API_KEY
-                    },
-                    body: JSON.stringify({ messages })
-                });
-            } catch (err) {
-                console.error(err);
-            }
-        }, 300);
+    // Стоимости улучшений (динамические)
+    function getClickUpgradeCost() {
+        return Math.floor(10 * (clickUpgradeLevel + 1));
+    }
+    function getExchangeUpgradeCost() {
+        return Math.floor(15 * (exchangeUpgradeLevel + 1));
+    }
+    function getAutoUpgradeCost() {
+        return Math.floor(20 * (autoUpgradeLevel + 1));
     }
 
-    function renderMessages() {
-        const container = document.getElementById('messages');
-        if (!container) return;
-        container.innerHTML = '';
-        messages.forEach(msg => {
-            const div = document.createElement('div');
-            div.className = 'message';
-            const date = new Date(msg.timestamp);
-            const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            div.innerHTML = `<div class="user">${escapeHtml(msg.user)} <span class="time">${timeStr}</span></div>
-                             <div>${escapeHtml(msg.text)}</div>`;
-            container.appendChild(div);
-        });
-        container.scrollTop = container.scrollHeight;
+    // Обновление UI (цифры, стоимости, активные кнопки)
+    function updateUI() {
+        // Основные ресурсы
+        oilSpan.innerText = Math.floor(oil);  // нефть целым числом, но храним точно
+        rublesSpan.innerText = rubles.toFixed(2);
+        clickPowerSpan.innerText = clickPower;
+        exchangeRateSpan.innerText = exchangeRate.toFixed(2);
+        clickLvlSpan.innerText = clickUpgradeLevel;
+        exchangeLvlSpan.innerText = exchangeUpgradeLevel;
+        autoLvlSpan.innerText = autoUpgradeLevel;
+        
+        // стоимости
+        clickCostSpan.innerText = getClickUpgradeCost();
+        exchangeCostSpan.innerText = getExchangeUpgradeCost();
+        autoCostSpan.innerText = getAutoUpgradeCost();
+        
+        // статистика
+        totalOilSpan.innerText = Math.floor(totalOilProduced);
+        totalRublesSpan.innerText = totalRublesEarned.toFixed(2);
+        
+        // Состояние кнопок (достаточно ли рублей)
+        buyClickBtn.disabled = (rubles < getClickUpgradeCost());
+        buyExchangeBtn.disabled = (rubles < getExchangeUpgradeCost());
+        buyAutoBtn.disabled = (rubles < getAutoUpgradeCost());
+        
+        // Если нефти нет, обмен по кнопке всё равно проверит логикой, но визуально не блокируем сильно
     }
 
-    function addMessage(text) {
-        if (!text.trim()) return;
-        const newMsg = {
-            user: currentUser,
-            text: text.trim(),
-            timestamp: new Date().toISOString()
+    // Сохранение в localStorage
+    function saveGame() {
+        const saveData = {
+            oil: oil,
+            rubles: rubles,
+            clickUpgradeLevel: clickUpgradeLevel,
+            exchangeUpgradeLevel: exchangeUpgradeLevel,
+            autoUpgradeLevel: autoUpgradeLevel,
+            totalOilProduced: totalOilProduced,
+            totalRublesEarned: totalRublesEarned
         };
-        messages.push(newMsg);
-        saveMessages();
-        renderMessages();
+        localStorage.setItem('oilMagnatStarne', JSON.stringify(saveData));
     }
 
-    function escapeHtml(str) {
-        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+    // Загрузка игры
+    function loadGame() {
+        const raw = localStorage.getItem('oilMagnatStarne');
+        if (!raw) return false;
+        try {
+            const data = JSON.parse(raw);
+            oil = data.oil ?? 0;
+            rubles = data.rubles ?? 0;
+            clickUpgradeLevel = data.clickUpgradeLevel ?? 0;
+            exchangeUpgradeLevel = data.exchangeUpgradeLevel ?? 0;
+            autoUpgradeLevel = data.autoUpgradeLevel ?? 0;
+            totalOilProduced = data.totalOilProduced ?? 0;
+            totalRublesEarned = data.totalRublesEarned ?? 0;
+            recalcDerivedStats();
+            return true;
+        } catch(e) { return false; }
     }
 
-    function showAuth() {
-        document.getElementById('authScreen').style.display = 'block';
-        document.getElementById('chatScreen').style.display = 'none';
-    }
-    function showChat() {
-        document.getElementById('authScreen').style.display = 'none';
-        document.getElementById('chatScreen').style.display = 'block';
-        loadMessages();
-        setInterval(loadMessages, 4000); // автообновление
+    // Полная перезагрузка интерфейса после любых изменений
+    function fullRefresh() {
+        recalcDerivedStats();
+        updateUI();
+        saveGame();
     }
 
-    document.getElementById('joinBtn').addEventListener('click', () => {
-        const nick = document.getElementById('nickname').value.trim();
-        if (nick) {
-            currentUser = nick;
-            localStorage.setItem('projectx_user', currentUser);
-            showChat();
+    // ----- ИГРОВЫЕ МЕХАНИКИ -----
+    function addOil(amount) {
+        if (amount > 0) {
+            oil += amount;
+            totalOilProduced += amount;
+            fullRefresh();
+        }
+    }
+
+    // Обмен нефти на рубли (главная функция)
+    function exchangeOilToRubles(amount) {
+        if (amount <= 0) return false;
+        let oilToExchange = Math.min(amount, oil);
+        if (oilToExchange <= 0) return false;
+        
+        const gainedRubles = oilToExchange * exchangeRate;
+        oil -= oilToExchange;
+        rubles += gainedRubles;
+        totalRublesEarned += gainedRubles;
+        
+        fullRefresh();
+        return true;
+    }
+
+    // Покупка улучшений
+    function buyClickUpgrade() {
+        const cost = getClickUpgradeCost();
+        if (rubles >= cost) {
+            rubles -= cost;
+            clickUpgradeLevel++;
+            recalcDerivedStats();
+            fullRefresh();
+        }
+    }
+    
+    function buyExchangeUpgrade() {
+        const cost = getExchangeUpgradeCost();
+        if (rubles >= cost) {
+            rubles -= cost;
+            exchangeUpgradeLevel++;
+            recalcDerivedStats();
+            fullRefresh();
+        }
+    }
+    
+    function buyAutoUpgrade() {
+        const cost = getAutoUpgradeCost();
+        if (rubles >= cost) {
+            rubles -= cost;
+            autoUpgradeLevel++;
+            recalcDerivedStats();
+            fullRefresh();
+        }
+    }
+
+    // Сброс игры
+    function resetGame() {
+        // Останавливаем старый интервал
+        if (autoInterval) {
+            clearInterval(autoInterval);
+            autoInterval = null;
+        }
+        // Сброс значений
+        oil = 0;
+        rubles = 0;
+        clickUpgradeLevel = 0;
+        exchangeUpgradeLevel = 0;
+        autoUpgradeLevel = 0;
+        totalOilProduced = 0;
+        totalRublesEarned = 0;
+        recalcDerivedStats();
+        fullRefresh();
+        // Перезапускаем автодобычу
+        startAutoInterval();
+        // Удаляем сохранение через saveGame уже вызван в fullRefresh
+        localStorage.removeItem('oilMagnatStarne'); // полный чистый сброс
+        saveGame(); // сохраняем чистое состояние
+    }
+
+    // Интервал автодобычи
+    function startAutoInterval() {
+        if (autoInterval) clearInterval(autoInterval);
+        autoInterval = setInterval(() => {
+            if (autoOilPerSec > 0) {
+                // добавляем нефть автоматически
+                oil += autoOilPerSec;
+                totalOilProduced += autoOilPerSec;
+                fullRefresh();  // обновит UI и сохранит
+            } else {
+                // всё равно тик для возможных будущих обновлений
+                if (autoOilPerSec !== (autoUpgradeLevel)) {
+                    recalcDerivedStats();
+                }
+            }
+        }, 1000);
+    }
+
+    // ----- Обработчики событий -----
+    clickBtn.addEventListener('click', () => {
+        addOil(clickPower);
+    });
+    
+    buyClickBtn.addEventListener('click', buyClickUpgrade);
+    buyExchangeBtn.addEventListener('click', buyExchangeUpgrade);
+    buyAutoBtn.addEventListener('click', buyAutoUpgrade);
+    
+    // Обмен по количеству из поля
+    exchangeBtn.addEventListener('click', () => {
+        let rawAmount = exchangeAmountInput.value;
+        let amount = parseInt(rawAmount, 10);
+        if (isNaN(amount) || amount <= 0) {
+            amount = 1;
+            exchangeAmountInput.value = 1;
+        }
+        exchangeOilToRubles(amount);
+    });
+    
+    // Обмен всей нефти
+    exchangeAllBtn.addEventListener('click', () => {
+        if (oil > 0) {
+            exchangeOilToRubles(Math.floor(oil)); // обмениваем всё, что есть
         }
     });
-    document.getElementById('sendBtn').addEventListener('click', () => {
-        const input = document.getElementById('messageInput');
-        if (input.value.trim()) {
-            addMessage(input.value);
-            input.value = '';
+    
+    resetBtn.addEventListener('click', () => {
+        if (confirm('Сбросить империю? Вся нефть, рубли и улучшения исчезнут.')) {
+            resetGame();
         }
     });
-    document.getElementById('messageInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') document.getElementById('sendBtn').click();
+    
+    // Дополнительная валидация поля ввода
+    exchangeAmountInput.addEventListener('change', () => {
+        let v = parseInt(exchangeAmountInput.value, 10);
+        if (isNaN(v) || v < 1) exchangeAmountInput.value = 1;
     });
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-        localStorage.removeItem('projectx_user');
-        currentUser = null;
-        showAuth();
-    });
-
-    const savedUser = localStorage.getItem('projectx_user');
-    if (savedUser) {
-        currentUser = savedUser;
-        showChat();
-    } else {
-        showAuth();
+    
+    // Инициализация игры
+    function init() {
+        const loaded = loadGame();
+        if (!loaded) {
+            // Стартовый бонус: 0 нефти, 3 рубля для первого рывка? Но лучше дать маленький бонус, чтобы не было скучно
+            // Для комфорта дадим 5 рублей и 0 нефти, игрок кликает сам.
+            rubles = 5;
+            oil = 0;
+            clickUpgradeLevel = 0;
+            exchangeUpgradeLevel = 0;
+            autoUpgradeLevel = 0;
+            totalOilProduced = 0;
+            totalRublesEarned = 0;
+            recalcDerivedStats();
+        }
+        recalcDerivedStats();
+        fullRefresh();
+        startAutoInterval();
     }
+    
+    // Запуск
+    init();
 </script>
 </body>
 </html>
