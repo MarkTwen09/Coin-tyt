@@ -3,17 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Project X | Hyper-Liquid 8.0</title>
+    <title>Project X | Cyber Glass Q&A</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
@@ -22,8 +16,6 @@
             padding: 20px;
             position: relative;
         }
-
-        /* Тема по умолчанию (Dark Nebula) */
         body.theme-dark {
             background: #0a0a12;
             --bg-glass: rgba(20, 30, 55, 0.2);
@@ -57,614 +49,131 @@
             --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
             --bg-rain: rgba(44,125,160,0.6);
         }
-
-        /* Анимированный фон */
-        .animated-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-        }
-        .circle {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.5;
-            animation: float 20s infinite ease-in-out;
-        }
+        .animated-bg { position: fixed; inset: 0; z-index: -2; }
+        .circle { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; animation: float 20s infinite ease-in-out; }
         body.theme-dark .circle1 { background: radial-gradient(circle, rgba(91,140,255,0.3), transparent); }
         body.theme-cyber .circle1 { background: radial-gradient(circle, rgba(255,107,157,0.4), transparent); }
         body.theme-arctic .circle1 { background: radial-gradient(circle, rgba(44,125,160,0.2), transparent); }
         .circle1 { width: 50vw; height: 50vw; top: -20%; left: -10%; animation-duration: 18s; }
         .circle2 { width: 60vw; height: 60vw; bottom: -20%; right: -10%; animation-duration: 22s; }
         .circle3 { width: 40vw; height: 40vw; top: 40%; left: 50%; animation-duration: 25s; }
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(5%, 5%) scale(1.1); }
-        }
-        .rain-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            overflow: hidden;
-        }
-        .rain-line {
-            position: absolute;
-            width: 2px;
-            height: 60px;
-            background: linear-gradient(180deg, rgba(91,140,255,0), var(--bg-rain), var(--bg-rain), rgba(91,140,255,0));
-            top: -60px;
-            animation: fall linear infinite;
-        }
-        @keyframes fall {
-            to { transform: translateY(100vh); }
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
+        @keyframes float { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(5%,5%) scale(1.1); } }
+        .rain-bg { position: fixed; inset: 0; z-index: -2; overflow: hidden; }
+        .rain-line { position: absolute; width: 2px; height: 60px; background: linear-gradient(180deg, rgba(91,140,255,0), var(--bg-rain), var(--bg-rain), rgba(91,140,255,0)); top: -60px; animation: fall linear infinite; }
+        @keyframes fall { to { transform: translateY(100vh); } }
+        .container { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
         .glass-panel {
-            background: var(--bg-glass);
-            backdrop-filter: blur(35px) saturate(180%);
-            border: 0.5px solid var(--border-glass);
-            border-radius: 32px;
-            padding: 28px;
-            margin-bottom: 28px;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow);
+            background: var(--bg-glass); backdrop-filter: blur(35px) saturate(180%);
+            border: 0.5px solid var(--border-glass); border-radius: 32px;
+            padding: 28px; margin-bottom: 28px;
+            transition: all 0.3s ease; box-shadow: var(--shadow);
             color: var(--text-primary);
         }
         .auth-card {
-            background: var(--bg-glass);
-            backdrop-filter: blur(40px);
-            border: 0.5px solid var(--border-glass);
-            border-radius: 32px;
-            padding: 40px;
-            width: 100%;
-            max-width: 400px;
-            margin: 40px auto;
-            text-align: center;
-            box-shadow: var(--shadow);
+            background: var(--bg-glass); backdrop-filter: blur(40px);
+            border: 0.5px solid var(--border-glass); border-radius: 32px;
+            padding: 40px; width: 100%; max-width: 400px; margin: 40px auto;
+            text-align: center; box-shadow: var(--shadow);
             color: var(--text-primary);
         }
         .auth-card input {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid var(--border-glass);
-            color: var(--text-primary);
-            width: 100%;
-            padding: 14px 18px;
-            border-radius: 40px;
-            margin-bottom: 20px;
+            background: rgba(255,255,255,0.1); border: 1px solid var(--border-glass);
+            color: var(--text-primary); width: 100%; padding: 14px 18px;
+            border-radius: 40px; margin-bottom: 20px;
         }
         .auth-card button {
-            background: var(--accent-gradient);
-            border: none;
-            padding: 14px 28px;
-            border-radius: 40px;
-            font-weight: 600;
-            color: white;
-            width: 100%;
-            cursor: pointer;
+            background: var(--accent-gradient); border: none; padding: 14px 28px;
+            border-radius: 40px; font-weight: 600; color: white; width: 100%; cursor: pointer;
         }
-
-        /* Profile section */
-        .profile-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            flex-wrap: wrap;
-        }
-        .avatar {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            background-size: cover;
-            background-position: center;
-        }
-        .user-details h3 {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        .online-status {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            margin-bottom: 6px;
-        }
-        .online-dot {
-            width: 8px;
-            height: 8px;
-            background: #2ecc71;
-            border-radius: 50%;
-            display: inline-block;
-        }
-        .stats {
-            display: flex;
-            gap: 16px;
-        }
-        .stat-item {
-            background: rgba(255,255,255,0.1);
-            border-radius: 30px;
-            padding: 4px 12px;
-            font-size: 12px;
-        }
-        .settings-icon {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            color: white;
-            transition: all 0.2s;
-            font-size: 18px;
-        }
-        .settings-icon:hover {
-            background: rgba(255,255,255,0.2);
-            transform: rotate(30deg);
-        }
-
-        /* Ask form */
-        .ask-form {
-            padding: 24px;
-        }
-        .ask-form textarea {
-            width: 100%;
-            padding: 14px 16px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid var(--border-glass);
-            border-radius: 24px;
-            color: var(--text-primary);
-            font-family: inherit;
-            resize: vertical;
-            outline: none;
-            margin-bottom: 16px;
-            font-size: 14px;
-        }
-        .ask-form textarea:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 12px rgba(91,140,255,0.3);
-        }
-        .ask-buttons {
-            display: flex;
-            gap: 12px;
-        }
-        .ask-buttons button {
-            flex: 1;
-            background: var(--accent-gradient);
-            border: none;
-            padding: 12px;
-            border-radius: 40px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.1s;
-            font-size: 14px;
-        }
-        .ask-buttons button:active {
-            transform: translateY(1px);
-        }
-
-        /* Question cards */
-        .question-card {
-            background: var(--bg-glass);
-            backdrop-filter: blur(35px);
-            border: 0.5px solid var(--border-glass);
-            border-radius: 32px;
-            padding: 24px;
-            margin-bottom: 28px;
-            transition: all 0.25s ease;
-            box-shadow: var(--shadow);
-        }
-        .question-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px 0 rgba(0, 0, 0, 0.8);
-        }
-        .question-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        .question-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: 600;
-            background-size: cover;
-            background-position: center;
-            flex-shrink: 0;
-        }
-        .question-meta {
-            flex: 1;
-        }
-        .question-author {
-            font-weight: 600;
-        }
-        .question-time {
-            font-size: 11px;
-            opacity: 0.6;
-        }
-        .question-content {
-            margin: 12px 0 20px;
-            word-break: break-word;
-            overflow-wrap: break-word;
-        }
-        .question-text {
-            font-size: 16px;
-            line-height: 1.5;
-        }
-        .edit-input {
-            width: 100%;
-            padding: 10px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid var(--border-glass);
-            border-radius: 20px;
-            color: var(--text-primary);
-            font-size: 16px;
-            margin-bottom: 8px;
-        }
-        .reactions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin: 12px 0 20px;
-        }
-        .like-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 14px;
-            padding: 6px 12px;
-            border-radius: 30px;
-            transition: 0.2s;
-        }
-        .like-btn:hover {
-            background: rgba(255,255,255,0.1);
-        }
-        .like-btn.liked {
-            color: #ff3b6f;
-        }
-
-        /* Replies */
-        .replies-section {
-            margin-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 20px;
-        }
-        .replies-list {
-            margin-bottom: 16px;
-        }
-        .reply {
-            margin-bottom: 16px;
-            padding-left: 48px;
-            position: relative;
-            word-break: break-word;
-            overflow-wrap: break-word;
-        }
-        .reply-avatar {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 600;
-            background-size: cover;
-            background-position: center;
-        }
-        .reply-content {
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            padding: 10px 16px;
-        }
-        .reply-author {
-            font-size: 12px;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-        .reply-text {
-            font-size: 13px;
-            line-height: 1.4;
-        }
-        .reply-time {
-            font-size: 10px;
-            opacity: 0.5;
-            margin-top: 4px;
-        }
-        .reply-form {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-            flex-wrap: wrap;
-        }
-        .reply-form input {
-            flex: 1;
-            padding: 10px 16px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid var(--border-glass);
-            border-radius: 30px;
-            color: var(--text-primary);
-            outline: none;
-            font-size: 13px;
-        }
-        .reply-form input:focus {
-            border-color: var(--accent);
-        }
-        .reply-form button {
-            background: var(--accent-gradient);
-            border: none;
-            padding: 8px 20px;
-            border-radius: 30px;
-            color: white;
-            cursor: pointer;
-            font-size: 13px;
-        }
-        .reply-voice-btn {
-            background: var(--accent-gradient);
-            border: none;
-            padding: 8px;
-            border-radius: 30px;
-            width: 40px;
-            cursor: pointer;
-        }
-        .typing-indicator {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .typing-dots {
-            display: inline-flex;
-            gap: 3px;
-        }
-        .typing-dots span {
-            width: 4px;
-            height: 4px;
-            background: var(--accent);
-            border-radius: 50%;
-            animation: typing 1.4s infinite;
-        }
+        .profile-section { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .user-info { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+        .avatar { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.3); background-size: cover; background-position: center; }
+        .user-details h3 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+        .online-status { display: flex; align-items: center; gap: 6px; font-size: 12px; margin-bottom: 6px; }
+        .online-dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; display: inline-block; }
+        .stats { display: flex; gap: 16px; }
+        .stat-item { background: rgba(255,255,255,0.1); border-radius: 30px; padding: 4px 12px; font-size: 12px; }
+        .settings-icon { background: rgba(255,255,255,0.1); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; color: white; transition: all 0.2s; font-size: 18px; }
+        .settings-icon:hover { background: rgba(255,255,255,0.2); transform: rotate(30deg); }
+        .ask-form { padding: 24px; }
+        .ask-form textarea { width: 100%; padding: 14px 16px; background: rgba(255,255,255,0.08); border: 1px solid var(--border-glass); border-radius: 24px; color: var(--text-primary); font-family: inherit; resize: vertical; outline: none; margin-bottom: 16px; font-size: 14px; }
+        .ask-form textarea:focus { border-color: var(--accent); box-shadow: 0 0 12px rgba(91,140,255,0.3); }
+        .ask-buttons { display: flex; gap: 12px; }
+        .ask-buttons button { flex: 1; background: var(--accent-gradient); border: none; padding: 12px; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; transition: transform 0.1s; font-size: 14px; }
+        .ask-buttons button:active { transform: translateY(1px); }
+        .question-card { background: var(--bg-glass); backdrop-filter: blur(35px); border: 0.5px solid var(--border-glass); border-radius: 32px; padding: 24px; margin-bottom: 28px; transition: all 0.25s ease; box-shadow: var(--shadow); }
+        .question-card:hover { transform: translateY(-4px); }
+        .question-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .question-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; background-size: cover; background-position: center; flex-shrink: 0; }
+        .question-meta { flex: 1; }
+        .question-author { font-weight: 600; }
+        .question-time { font-size: 11px; opacity: 0.6; }
+        .question-content { margin: 12px 0 20px; word-break: break-word; overflow-wrap: break-word; }
+        .question-text { font-size: 16px; line-height: 1.5; }
+        .edit-input { width: 100%; padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid var(--border-glass); border-radius: 20px; color: var(--text-primary); font-size: 16px; margin-bottom: 8px; }
+        .reactions { display: flex; align-items: center; gap: 16px; margin: 12px 0 20px; }
+        .like-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 14px; padding: 6px 12px; border-radius: 30px; transition: 0.2s; }
+        .like-btn:hover { background: rgba(255,255,255,0.1); }
+        .like-btn.liked { color: #ff3b6f; }
+        .replies-section { margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        .replies-list { margin-bottom: 16px; }
+        .reply { margin-bottom: 16px; padding-left: 48px; position: relative; word-break: break-word; overflow-wrap: break-word; }
+        .reply-avatar { position: absolute; left: 0; top: 0; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; background-size: cover; background-position: center; }
+        .reply-content { background: rgba(255,255,255,0.05); border-radius: 20px; padding: 10px 16px; }
+        .reply-author { font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+        .reply-text { font-size: 13px; line-height: 1.4; }
+        .reply-time { font-size: 10px; opacity: 0.5; margin-top: 4px; }
+        .reply-form { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+        .reply-form input { flex: 1; padding: 10px 16px; background: rgba(255,255,255,0.08); border: 1px solid var(--border-glass); border-radius: 30px; color: var(--text-primary); outline: none; font-size: 13px; }
+        .reply-form input:focus { border-color: var(--accent); }
+        .reply-form button { background: var(--accent-gradient); border: none; padding: 8px 20px; border-radius: 30px; color: white; cursor: pointer; font-size: 13px; }
+        .reply-voice-btn { background: var(--accent-gradient); border: none; padding: 8px; border-radius: 30px; width: 40px; cursor: pointer; }
+        .typing-indicator { font-size: 11px; color: var(--text-secondary); margin-top: 8px; display: flex; align-items: center; gap: 4px; }
+        .typing-dots { display: inline-flex; gap: 3px; }
+        .typing-dots span { width: 4px; height: 4px; background: var(--accent); border-radius: 50%; animation: typing 1.4s infinite; }
         .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
         .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-            30% { transform: translateY(-4px); opacity: 1; }
-        }
-
-        /* Voice player */
-        .voice-player {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 40px;
-            padding: 8px 16px;
-            width: 100%;
-            max-width: 100%;
-        }
-        .play-btn {
-            background: var(--accent-gradient);
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            color: white;
-            flex-shrink: 0;
-        }
-        .progress-bar {
-            flex: 1;
-            height: 4px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 4px;
-            cursor: pointer;
-            position: relative;
-        }
-        .progress-fill {
-            height: 100%;
-            background: var(--accent);
-            border-radius: 4px;
-            width: 0%;
-        }
-        .time {
-            font-size: 11px;
-            opacity: 0.7;
-            white-space: nowrap;
-        }
-
-        /* Modal */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(20px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            animation: modalFade 0.2s ease;
-        }
-        @keyframes modalFade {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .modal-card {
-            background: var(--bg-glass);
-            backdrop-filter: blur(40px);
-            border: 0.5px solid var(--border-glass);
-            border-radius: 32px;
-            padding: 28px;
-            width: 360px;
-            max-width: 90%;
-            box-shadow: var(--shadow);
-        }
-        .modal-card h3 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .avatar-preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            font-weight: 600;
-        }
-        .modal-card input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 12px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid var(--border-glass);
-            border-radius: 40px;
-            color: var(--text-primary);
-            outline: none;
-        }
-        .theme-selector {
-            display: flex;
-            gap: 12px;
-            margin: 16px 0;
-        }
-        .theme-btn {
-            flex: 1;
-            padding: 8px;
-            border-radius: 30px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid var(--border-glass);
-            cursor: pointer;
-            text-align: center;
-            transition: 0.2s;
-        }
-        .theme-btn.active {
-            background: var(--accent-gradient);
-            border-color: transparent;
-        }
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-            margin: 20px 0 12px;
-        }
-        .modal-buttons button {
-            flex: 1;
-            background: var(--accent-gradient);
-            border: none;
-            padding: 12px;
-            border-radius: 40px;
-            color: white;
-            cursor: pointer;
-        }
-        .modal-buttons .danger-btn {
-            background: #ef4444;
-        }
-        .delete-file-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            padding: 8px;
-            border-radius: 40px;
-            width: 100%;
-            margin-bottom: 16px;
-            cursor: pointer;
-            color: var(--text-primary);
-        }
-
-        @media (max-width: 600px) {
-            body { padding: 12px; }
-            .glass-panel { padding: 20px; }
-            .profile-section { flex-direction: column; align-items: stretch; }
-            .user-info { justify-content: center; }
-            .ask-buttons { flex-direction: column; }
-            .reply-form { flex-wrap: wrap; }
-            .reply-form input { width: 100%; }
-        }
+        @keyframes typing { 0%,60%,100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
+        .voice-player { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.08); border-radius: 40px; padding: 8px 16px; width: 100%; max-width: 100%; }
+        .play-btn { background: var(--accent-gradient); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: white; flex-shrink: 0; }
+        .progress-bar { flex: 1; height: 4px; background: rgba(255,255,255,0.3); border-radius: 4px; cursor: pointer; position: relative; }
+        .progress-fill { height: 100%; background: var(--accent); border-radius: 4px; width: 0%; }
+        .time { font-size: 11px; opacity: 0.7; white-space: nowrap; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: center; z-index: 2000; animation: modalFade 0.2s ease; }
+        @keyframes modalFade { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        .modal-card { background: var(--bg-glass); backdrop-filter: blur(40px); border: 0.5px solid var(--border-glass); border-radius: 32px; padding: 28px; width: 360px; max-width: 90%; box-shadow: var(--shadow); }
+        .modal-card h3 { margin-bottom: 20px; text-align: center; }
+        .avatar-preview { width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 20px; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 600; }
+        .modal-card input { width: 100%; padding: 12px; margin-bottom: 12px; background: rgba(255,255,255,0.1); border: 1px solid var(--border-glass); border-radius: 40px; color: var(--text-primary); outline: none; }
+        .theme-selector { display: flex; gap: 12px; margin: 16px 0; }
+        .theme-btn { flex: 1; padding: 8px; border-radius: 30px; background: rgba(255,255,255,0.1); border: 1px solid var(--border-glass); cursor: pointer; text-align: center; transition: 0.2s; }
+        .theme-btn.active { background: var(--accent-gradient); border-color: transparent; }
+        .modal-buttons { display: flex; gap: 12px; margin: 20px 0 12px; }
+        .modal-buttons button { flex: 1; background: var(--accent-gradient); border: none; padding: 12px; border-radius: 40px; color: white; cursor: pointer; }
+        .modal-buttons .danger-btn { background: #ef4444; }
+        .delete-file-btn { background: rgba(255,255,255,0.1); border: none; padding: 8px; border-radius: 40px; width: 100%; margin-bottom: 16px; cursor: pointer; color: var(--text-primary); }
+        @media (max-width: 600px) { body { padding: 12px; } .glass-panel { padding: 20px; } .profile-section { flex-direction: column; align-items: stretch; } .user-info { justify-content: center; } .ask-buttons { flex-direction: column; } .reply-form { flex-wrap: wrap; } .reply-form input { width: 100%; } }
     </style>
 </head>
 <body class="theme-dark">
 <div class="rain-bg" id="rainBg"></div>
-<div class="animated-bg">
-    <div class="circle circle1"></div>
-    <div class="circle circle2"></div>
-    <div class="circle circle3"></div>
-</div>
-
-<div id="authContainer" class="container" style="display: block;"></div>
+<div class="animated-bg"><div class="circle circle1"></div><div class="circle circle2"></div><div class="circle circle3"></div></div>
+<div id="authContainer" class="container"></div>
 <div id="mainContainer" class="container" style="display: none;"></div>
 
 <script>
-    // ---------- Генерация дождя ----------
-    function createRain() {
-        const rainContainer = document.getElementById('rainBg');
-        if (!rainContainer) return;
-        rainContainer.innerHTML = '';
-        const count = 50;
-        for (let i = 0; i < count; i++) {
-            const line = document.createElement('div');
-            line.className = 'rain-line';
-            line.style.left = Math.random() * 100 + '%';
-            line.style.animationDuration = Math.random() * 2 + 1 + 's';
-            line.style.animationDelay = Math.random() * 5 + 's';
-            line.style.opacity = Math.random() * 0.4 + 0.2;
-            rainContainer.appendChild(line);
-        }
-    }
-    createRain();
-
-    // ---------- Глобальные данные ----------
+    // ---------- ГЛОБАЛЬНЫЕ ДАННЫЕ (localStorage) ----------
     let currentUser = null;
-    let questions = [];
+    let questions = [];    // каждый элемент: { id, author, text?, audio?, type, timestamp, replies, likes }
     let userSettings = {
         avatarType: 'color',
         avatarColor: '#5b8cff',
         avatarImage: null,
         theme: 'dark'
     };
-    let typingTimeouts = {};
+    let activeMenu = null;
 
+    // Загрузка / сохранение
     function loadData() {
         const storedUser = localStorage.getItem('projectx_user');
         if (storedUser) currentUser = storedUser;
@@ -682,8 +191,7 @@
         const storedSettings = localStorage.getItem('projectx_settings');
         if (storedSettings) {
             try {
-                const s = JSON.parse(storedSettings);
-                userSettings = { ...userSettings, ...s };
+                userSettings = JSON.parse(storedSettings);
             } catch(e) { }
         }
         if (!questions) questions = [];
@@ -696,6 +204,7 @@
         localStorage.setItem('projectx_settings', JSON.stringify(userSettings));
     }
 
+    // Тема и фон
     function applyTheme(theme) {
         document.body.classList.remove('theme-dark', 'theme-cyber', 'theme-arctic');
         if (theme === 'cyber') document.body.classList.add('theme-cyber');
@@ -703,7 +212,27 @@
         else document.body.classList.add('theme-dark');
         createRain();
     }
+    function createRain() {
+        const rainContainer = document.getElementById('rainBg');
+        if (!rainContainer) return;
+        rainContainer.innerHTML = '';
+        const count = 50;
+        for (let i = 0; i < count; i++) {
+            const line = document.createElement('div');
+            line.className = 'rain-line';
+            line.style.left = Math.random() * 100 + '%';
+            line.style.animationDuration = Math.random() * 2 + 1 + 's';
+            line.style.animationDelay = Math.random() * 5 + 's';
+            line.style.opacity = Math.random() * 0.4 + 0.2;
+            rainContainer.appendChild(line);
+        }
+    }
 
+    // Вспомогательные
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+    }
     function timeAgo(isoString) {
         const date = new Date(isoString);
         const now = new Date();
@@ -714,10 +243,6 @@
         if (diff < 86400) return `${Math.floor(diff / 3600)} ч назад`;
         if (diff < 2592000) return `${Math.floor(diff / 86400)} дн назад`;
         return date.toLocaleDateString();
-    }
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
     }
     function getUserAvatarStyle(username) {
         if (username === currentUser) {
@@ -741,7 +266,7 @@
     }
     function getStats() {
         const totalQuestions = questions.length;
-        const myReplies = questions.reduce((sum, q) => sum + q.replies.filter(r => r.author === currentUser).length, 0);
+        const myReplies = questions.reduce((sum, q) => sum + (q.replies ? q.replies.filter(r => r.author === currentUser).length : 0), 0);
         return { totalQuestions, myReplies };
     }
     function toggleLike(questionId) {
@@ -760,7 +285,7 @@
         renderMain();
     }
 
-    // ---------- Аудиозапись ----------
+    // ---------- АУДИОЗАПИСЬ ----------
     let mediaRecorder = null;
     let audioChunks = [];
     let isRecording = false;
@@ -787,33 +312,6 @@
         if (mediaRecorder && isRecording) {
             mediaRecorder.stop();
             isRecording = false;
-        }
-    }
-    function createVoiceMessage(type, parentId, audioBase64) {
-        if (type === 'question') {
-            questions.push({
-                id: Date.now().toString(),
-                author: currentUser,
-                type: 'voice',
-                audio: audioBase64,
-                timestamp: new Date().toISOString(),
-                replies: [],
-                likes: { count: 0, users: [] }
-            });
-            saveData();
-            renderMain();
-        } else if (type === 'reply') {
-            const q = questions.find(q => q.id === parentId);
-            if (q) {
-                q.replies.push({
-                    author: currentUser,
-                    type: 'voice',
-                    audio: audioBase64,
-                    timestamp: new Date().toISOString()
-                });
-                saveData();
-                renderMain();
-            }
         }
     }
     function createAudioPlayer(audioBase64) {
@@ -869,9 +367,35 @@
         return container;
     }
 
-    // ---------- Управление постами ----------
-    let activeMenu = null;
-    function closeMenu() { if (activeMenu) { activeMenu.remove(); activeMenu = null; } }
+    // ---------- РЕДАКТИРОВАНИЕ / УДАЛЕНИЕ ----------
+    function editQuestion(questionId) {
+        const q = questions.find(q => q.id === questionId);
+        if (!q || q.author !== currentUser || q.type !== 'text') return;
+        const newText = prompt('Введите новый текст вопроса:', q.text);
+        if (newText && newText.trim()) {
+            q.text = newText.trim();
+            saveData();
+            renderMain();
+        }
+    }
+    function deleteQuestion(questionId) {
+        const idx = questions.findIndex(q => q.id === questionId);
+        if (idx !== -1 && questions[idx].author === currentUser) {
+            questions.splice(idx, 1);
+            saveData();
+            renderMain();
+        }
+    }
+    function deleteAllMyQuestions() {
+        questions = questions.filter(q => q.author !== currentUser);
+        saveData();
+        renderMain();
+    }
+
+    // ---------- КОНТЕКСТНОЕ МЕНЮ (правый клик / долгое нажатие) ----------
+    function closeMenu() {
+        if (activeMenu) { activeMenu.remove(); activeMenu = null; }
+    }
     function showContextMenu(x, y, questionId) {
         const q = questions.find(q => q.id === questionId);
         if (!q || q.author !== currentUser) return;
@@ -899,49 +423,226 @@
             document.addEventListener('contextmenu', closeHandler);
         }, 0);
     }
-    function editQuestion(questionId) {
-        const q = questions.find(q => q.id === questionId);
-        if (!q || q.author !== currentUser || q.type !== 'text') return;
-        const card = document.querySelector(`.question-card[data-id="${questionId}"]`);
-        if (!card) return;
-        const textDiv = card.querySelector('.question-text');
-        const originalText = q.text;
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'edit-input';
-        input.value = originalText;
-        const saveBtn = document.createElement('button');
-        saveBtn.textContent = 'Сохранить';
-        saveBtn.style.cssText = 'background: var(--accent-gradient); border:none; padding:6px 16px; border-radius:30px; cursor:pointer; margin-top:8px;';
-        textDiv.style.display = 'none';
-        textDiv.parentNode.insertBefore(input, textDiv.nextSibling);
-        input.parentNode.insertBefore(saveBtn, input.nextSibling);
-        const finish = () => {
-            const newText = input.value.trim();
-            if (newText && newText !== originalText) { q.text = newText; saveData(); }
-            textDiv.style.display = 'block';
-            input.remove(); saveBtn.remove();
-            textDiv.innerText = escapeHtml(q.text);
-            renderMain();
-        };
-        saveBtn.addEventListener('click', finish);
-        input.addEventListener('keypress', e => { if (e.key === 'Enter') finish(); });
-    }
-    function deleteQuestion(questionId) {
-        const idx = questions.findIndex(q => q.id === questionId);
-        if (idx !== -1 && questions[idx].author === currentUser) {
-            questions.splice(idx, 1);
+
+    // ---------- ОСНОВНОЙ РЕНДЕР ----------
+    function renderMain() {
+        const mainDiv = document.getElementById('mainContainer');
+        const sorted = [...questions].reverse(); // новые сверху
+        const stats = getStats();
+        mainDiv.innerHTML = `
+            <div class="glass-panel">
+                <div class="profile-section">
+                    <div class="user-info">
+                        <div class="avatar" id="userAvatar"></div>
+                        <div class="user-details">
+                            <h3>${escapeHtml(currentUser)}</h3>
+                            <div class="online-status"><span class="online-dot"></span> В сети</div>
+                            <div class="stats">
+                                <div class="stat-item"><i class="fas fa-question-circle"></i> Всего: ${stats.totalQuestions}</div>
+                                <div class="stat-item"><i class="fas fa-reply"></i> Моих ответов: ${stats.myReplies}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="settings-icon" id="settingsBtn"><i class="fas fa-cog"></i></button>
+                </div>
+            </div>
+            <div class="glass-panel ask-form">
+                <textarea id="questionText" rows="3" placeholder="Задайте вопрос сообществу..."></textarea>
+                <div class="ask-buttons">
+                    <button id="askBtn"><i class="fas fa-paper-plane"></i> Опубликовать</button>
+                    <button id="askVoiceBtn"><i class="fas fa-microphone"></i> Голосом</button>
+                </div>
+            </div>
+            <div id="feedContainer"></div>
+        `;
+        const userAvatar = document.getElementById('userAvatar');
+        renderAvatarElement(userAvatar, currentUser, currentUser);
+        const feedDiv = document.getElementById('feedContainer');
+        if (sorted.length === 0) {
+            feedDiv.innerHTML = '<div class="glass-panel" style="text-align:center;">Пока нет вопросов. Задайте первый!</div>';
+        } else {
+            feedDiv.innerHTML = sorted.map(q => {
+                const liked = q.likes && q.likes.users.includes(currentUser);
+                const likeClass = liked ? 'liked' : '';
+                return `
+                    <div class="question-card" data-id="${q.id}">
+                        <div class="question-header">
+                            <div class="question-avatar" data-username="${q.author}"></div>
+                            <div class="question-meta">
+                                <div class="question-author">${escapeHtml(q.author)}</div>
+                                <div class="question-time">${timeAgo(q.timestamp)}</div>
+                            </div>
+                        </div>
+                        <div class="question-content">
+                            ${q.type === 'voice' ? '<div class="voice-container"></div>' : `<div class="question-text">${escapeHtml(q.text)}</div>`}
+                        </div>
+                        <div class="reactions">
+                            <button class="like-btn ${likeClass}" data-id="${q.id}"><i class="fas fa-heart"></i> <span>${q.likes ? q.likes.count : 0}</span></button>
+                        </div>
+                        <div class="replies-section">
+                            <div class="replies-list"></div>
+                            <div class="reply-form" data-id="${q.id}">
+                                <input type="text" class="reply-input" placeholder="Ваш ответ...">
+                                <button class="reply-btn">Ответить</button>
+                                <button class="reply-voice-btn"><i class="fas fa-microphone"></i></button>
+                            </div>
+                            <div class="typing-indicator" id="typing-${q.id}" style="display:none;">Кто-то набирает ответ<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        // Аватарки вопросов
+        document.querySelectorAll('.question-avatar').forEach(el => {
+            const username = el.getAttribute('data-username');
+            renderAvatarElement(el, username, username);
+        });
+        // Голосовые плееры для вопросов
+        sorted.forEach(q => {
+            const card = document.querySelector(`.question-card[data-id="${q.id}"]`);
+            if (card && q.type === 'voice') {
+                const container = card.querySelector('.voice-container');
+                if (container) container.appendChild(createAudioPlayer(q.audio));
+            }
+        });
+        // Лайки
+        document.querySelectorAll('.like-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => { e.stopPropagation(); toggleLike(btn.dataset.id); });
+        });
+        // Ответы
+        document.querySelectorAll('.reply-form').forEach(form => {
+            const qid = form.getAttribute('data-id');
+            const input = form.querySelector('.reply-input');
+            const textBtn = form.querySelector('.reply-btn');
+            const voiceBtn = form.querySelector('.reply-voice-btn');
+            const typingDiv = document.getElementById(`typing-${qid}`);
+            let typingTimer = null;
+            const showTyping = () => {
+                if (typingDiv) typingDiv.style.display = 'flex';
+                if (typingTimer) clearTimeout(typingTimer);
+                typingTimer = setTimeout(() => { if (typingDiv) typingDiv.style.display = 'none'; }, 2000);
+            };
+            input.addEventListener('input', showTyping);
+            textBtn.addEventListener('click', () => {
+                const replyText = input.value.trim();
+                if (!replyText) return;
+                const q = questions.find(q => q.id === qid);
+                if (q) {
+                    q.replies.push({
+                        author: currentUser,
+                        type: 'text',
+                        text: replyText,
+                        timestamp: new Date().toISOString()
+                    });
+                    saveData();
+                    renderMain();
+                }
+            });
+            voiceBtn.addEventListener('click', () => {
+                startRecording((audioBase64) => {
+                    const q = questions.find(q => q.id === qid);
+                    if (q) {
+                        q.replies.push({
+                            author: currentUser,
+                            type: 'voice',
+                            audio: audioBase64,
+                            timestamp: new Date().toISOString()
+                        });
+                        saveData();
+                        renderMain();
+                    }
+                });
+                setTimeout(() => stopRecording(), 3000);
+                alert('Запись началась (3 сек)');
+            });
+        });
+        // Рендер ответов
+        sorted.forEach(q => {
+            const repliesDiv = document.querySelector(`.question-card[data-id="${q.id}"] .replies-list`);
+            if (repliesDiv && q.replies && q.replies.length) {
+                repliesDiv.innerHTML = q.replies.map(r => {
+                    if (r.type === 'voice') {
+                        return `<div class="reply"><div class="reply-avatar" data-username="${r.author}"></div><div class="reply-content"></div></div>`;
+                    } else {
+                        return `<div class="reply">
+                                    <div class="reply-avatar" data-username="${r.author}"></div>
+                                    <div class="reply-content">
+                                        <div class="reply-author">${escapeHtml(r.author)}</div>
+                                        <div class="reply-text">${escapeHtml(r.text)}</div>
+                                        <div class="reply-time">${timeAgo(r.timestamp)}</div>
+                                    </div>
+                                </div>`;
+                    }
+                }).join('');
+                q.replies.forEach((r, idx) => {
+                    if (r.type === 'voice') {
+                        const replyDiv = repliesDiv.children[idx];
+                        const contentDiv = replyDiv.querySelector('.reply-content');
+                        if (contentDiv) contentDiv.appendChild(createAudioPlayer(r.audio));
+                    }
+                });
+                repliesDiv.querySelectorAll('.reply-avatar').forEach(el => {
+                    const uname = el.getAttribute('data-username');
+                    renderAvatarElement(el, uname, uname);
+                });
+            }
+        });
+        // Контекстное меню (правый клик / долгое нажатие)
+        document.querySelectorAll('.question-card').forEach(card => {
+            const qid = card.getAttribute('data-id');
+            const question = sorted.find(q => q.id === qid);
+            if (question && question.author === currentUser) {
+                card.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    showContextMenu(e.clientX, e.clientY, qid);
+                });
+                let timer = null;
+                card.addEventListener('touchstart', (e) => {
+                    timer = setTimeout(() => {
+                        showContextMenu(e.touches[0].clientX, e.touches[0].clientY, qid);
+                    }, 800);
+                });
+                card.addEventListener('touchend', () => clearTimeout(timer));
+                card.addEventListener('touchmove', () => clearTimeout(timer));
+            }
+        });
+        // Кнопки публикации
+        document.getElementById('settingsBtn').addEventListener('click', openSettingsModal);
+        document.getElementById('askBtn').addEventListener('click', () => {
+            const text = document.getElementById('questionText').value.trim();
+            if (!text) return;
+            questions.push({
+                id: Date.now().toString(),
+                author: currentUser,
+                type: 'text',
+                text: text,
+                timestamp: new Date().toISOString(),
+                replies: [],
+                likes: { count: 0, users: [] }
+            });
             saveData();
             renderMain();
-        }
-    }
-    function deleteAllMyHistory() {
-        questions = questions.filter(q => q.author !== currentUser);
-        saveData();
-        renderMain();
+        });
+        document.getElementById('askVoiceBtn').addEventListener('click', () => {
+            startRecording((audioBase64) => {
+                questions.push({
+                    id: Date.now().toString(),
+                    author: currentUser,
+                    type: 'voice',
+                    audio: audioBase64,
+                    timestamp: new Date().toISOString(),
+                    replies: [],
+                    likes: { count: 0, users: [] }
+                });
+                saveData();
+                renderMain();
+            });
+            setTimeout(() => stopRecording(), 3000);
+            alert('Запись началась (3 сек)');
+        });
     }
 
-    // ---------- Настройки ----------
+    // ---------- НАСТРОЙКИ (модальное окно) ----------
     function openSettingsModal() {
         const modal = document.createElement('div');
         modal.className = 'modal';
@@ -1009,6 +710,7 @@
             const newColor = modal.querySelector('#settingsAvatarColor').value.trim();
             const newImage = modal.querySelector('#settingsAvatarImage').value.trim();
             if (newNick && newNick !== currentUser) {
+                // обновляем автора во всех вопросах и ответах
                 questions.forEach(q => {
                     if (q.author === currentUser) q.author = newNick;
                     q.replies.forEach(r => { if (r.author === currentUser) r.author = newNick; });
@@ -1018,6 +720,8 @@
                     }
                 });
                 currentUser = newNick;
+                saveData();
+                renderMain();
             }
             if (newColor && /^#[0-9A-Fa-f]{6}$/.test(newColor)) {
                 userSettings.avatarColor = newColor;
@@ -1036,14 +740,16 @@
             renderMain();
         });
         modal.querySelector('#deleteHistoryBtn').addEventListener('click', () => {
-            if (confirm('Удалить все ваши вопросы и ответы?')) deleteAllMyHistory();
-            modal.remove();
+            if (confirm('Удалить все ваши вопросы и ответы?')) {
+                deleteAllMyQuestions();
+                modal.remove();
+            }
         });
         modal.querySelector('#deleteAccountBtn').addEventListener('click', () => {
-            if (confirm('Удалить аккаунт? Все данные исчезнут.')) {
-                questions = [];
+            if (confirm('Удалить аккаунт? Все ваши данные будут удалены.')) {
                 localStorage.clear();
                 currentUser = null;
+                questions = [];
                 showAuth();
                 modal.remove();
             }
@@ -1051,198 +757,7 @@
         modal.querySelector('#closeModalBtn').addEventListener('click', () => modal.remove());
     }
 
-    // ---------- Рендер ----------
-    function renderMain() {
-        const mainDiv = document.getElementById('mainContainer');
-        const sorted = [...questions].reverse();
-        const stats = getStats();
-        mainDiv.innerHTML = `
-            <div class="glass-panel">
-                <div class="profile-section">
-                    <div class="user-info">
-                        <div class="avatar" id="userAvatar"></div>
-                        <div class="user-details">
-                            <h3>${escapeHtml(currentUser)}</h3>
-                            <div class="online-status"><span class="online-dot"></span> В сети</div>
-                            <div class="stats">
-                                <div class="stat-item"><i class="fas fa-question-circle"></i> Всего: ${stats.totalQuestions}</div>
-                                <div class="stat-item"><i class="fas fa-reply"></i> Моих ответов: ${stats.myReplies}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="settings-icon" id="settingsBtn"><i class="fas fa-cog"></i></button>
-                </div>
-            </div>
-            <div class="glass-panel ask-form">
-                <textarea id="questionText" rows="3" placeholder="Задайте вопрос сообществу..."></textarea>
-                <div class="ask-buttons">
-                    <button id="askBtn"><i class="fas fa-paper-plane"></i> Опубликовать</button>
-                    <button id="askVoiceBtn"><i class="fas fa-microphone"></i> Голосом</button>
-                </div>
-            </div>
-            <div id="feedContainer"></div>
-        `;
-        const userAvatar = document.getElementById('userAvatar');
-        renderAvatarElement(userAvatar, currentUser, currentUser);
-        const feedDiv = document.getElementById('feedContainer');
-        if (sorted.length === 0) feedDiv.innerHTML = '<div class="glass-panel" style="text-align:center;">Пока нет вопросов. Задайте первый!</div>';
-        else {
-            feedDiv.innerHTML = sorted.map(q => {
-                const liked = q.likes && q.likes.users.includes(currentUser);
-                const likeClass = liked ? 'liked' : '';
-                return `
-                    <div class="question-card" data-id="${q.id}">
-                        <div class="question-header">
-                            <div class="question-avatar" data-username="${q.author}"></div>
-                            <div class="question-meta">
-                                <div class="question-author">${escapeHtml(q.author)}</div>
-                                <div class="question-time">${timeAgo(q.timestamp)}</div>
-                            </div>
-                        </div>
-                        <div class="question-content">
-                            ${q.type === 'voice' ? '<div class="voice-container"></div>' : `<div class="question-text">${escapeHtml(q.text)}</div>`}
-                        </div>
-                        <div class="reactions">
-                            <button class="like-btn ${likeClass}" data-id="${q.id}"><i class="fas fa-heart"></i> <span>${q.likes ? q.likes.count : 0}</span></button>
-                        </div>
-                        <div class="replies-section">
-                            <div class="replies-list"></div>
-                            <div class="reply-form" data-id="${q.id}">
-                                <input type="text" class="reply-input" placeholder="Ваш ответ...">
-                                <button class="reply-btn">Ответить</button>
-                                <button class="reply-voice-btn"><i class="fas fa-microphone"></i></button>
-                            </div>
-                            <div class="typing-indicator" id="typing-${q.id}" style="display:none;">Кто-то набирает ответ<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span></div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        // аватарки вопросов
-        document.querySelectorAll('.question-avatar').forEach(el => {
-            const username = el.getAttribute('data-username');
-            renderAvatarElement(el, username, username);
-        });
-        // голосовые плееры
-        questions.forEach(q => {
-            const card = document.querySelector(`.question-card[data-id="${q.id}"]`);
-            if (card && q.type === 'voice') {
-                const container = card.querySelector('.voice-container');
-                if (container) container.appendChild(createAudioPlayer(q.audio));
-            }
-        });
-        // лайки
-        document.querySelectorAll('.like-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => { e.stopPropagation(); toggleLike(btn.dataset.id); });
-        });
-        // ответы
-        document.querySelectorAll('.reply-form').forEach(form => {
-            const qid = form.getAttribute('data-id');
-            const input = form.querySelector('.reply-input');
-            const textBtn = form.querySelector('.reply-btn');
-            const voiceBtn = form.querySelector('.reply-voice-btn');
-            const typingDiv = document.getElementById(`typing-${qid}`);
-            let typingTimer = null;
-            const showTyping = () => {
-                if (typingDiv) typingDiv.style.display = 'flex';
-                if (typingTimer) clearTimeout(typingTimer);
-                typingTimer = setTimeout(() => { if (typingDiv) typingDiv.style.display = 'none'; }, 2000);
-            };
-            input.addEventListener('input', showTyping);
-            textBtn.addEventListener('click', () => {
-                const replyText = input.value.trim();
-                if (!replyText) return;
-                const q = questions.find(q => q.id === qid);
-                if (q) {
-                    q.replies.push({ author: currentUser, type: 'text', text: replyText, timestamp: new Date().toISOString() });
-                    saveData();
-                    renderMain();
-                }
-            });
-            voiceBtn.addEventListener('click', () => {
-                startRecording((audioBase64) => {
-                    const q = questions.find(q => q.id === qid);
-                    if (q) {
-                        q.replies.push({ author: currentUser, type: 'voice', audio: audioBase64, timestamp: new Date().toISOString() });
-                        saveData();
-                        renderMain();
-                    }
-                });
-                setTimeout(() => stopRecording(), 3000);
-                alert('Запись началась (3 сек)');
-            });
-        });
-        // рендер ответов
-        questions.forEach(q => {
-            const repliesDiv = document.querySelector(`.question-card[data-id="${q.id}"] .replies-list`);
-            if (repliesDiv && q.replies.length) {
-                repliesDiv.innerHTML = q.replies.map(r => {
-                    if (r.type === 'voice') return `<div class="reply"><div class="reply-avatar" data-username="${r.author}"></div><div class="reply-content"></div></div>`;
-                    return `<div class="reply">
-                                <div class="reply-avatar" data-username="${r.author}"></div>
-                                <div class="reply-content">
-                                    <div class="reply-author">${escapeHtml(r.author)}</div>
-                                    <div class="reply-text">${escapeHtml(r.text)}</div>
-                                    <div class="reply-time">${timeAgo(r.timestamp)}</div>
-                                </div>
-                            </div>`;
-                }).join('');
-                q.replies.forEach((r, idx) => {
-                    if (r.type === 'voice') {
-                        const replyDiv = repliesDiv.children[idx];
-                        const contentDiv = replyDiv.querySelector('.reply-content');
-                        if (contentDiv) contentDiv.appendChild(createAudioPlayer(r.audio));
-                    }
-                });
-                repliesDiv.querySelectorAll('.reply-avatar').forEach(el => {
-                    const uname = el.getAttribute('data-username');
-                    renderAvatarElement(el, uname, uname);
-                });
-            }
-        });
-        // контекстное меню
-        document.querySelectorAll('.question-card').forEach(card => {
-            const qid = card.getAttribute('data-id');
-            card.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                const q = questions.find(q => q.id === qid);
-                if (q && q.author === currentUser) showContextMenu(e.clientX, e.clientY, qid);
-            });
-            let timer = null;
-            card.addEventListener('touchstart', (e) => {
-                timer = setTimeout(() => {
-                    const q = questions.find(q => q.id === qid);
-                    if (q && q.author === currentUser) showContextMenu(e.touches[0].clientX, e.touches[0].clientY, qid);
-                }, 800);
-            });
-            card.addEventListener('touchend', () => clearTimeout(timer));
-            card.addEventListener('touchmove', () => clearTimeout(timer));
-        });
-        document.getElementById('settingsBtn').addEventListener('click', openSettingsModal);
-        document.getElementById('askBtn').addEventListener('click', () => {
-            const text = document.getElementById('questionText').value.trim();
-            if (!text) return;
-            questions.push({
-                id: Date.now().toString(), author: currentUser, type: 'text', text,
-                timestamp: new Date().toISOString(), replies: [], likes: { count: 0, users: [] }
-            });
-            saveData();
-            renderMain();
-        });
-        document.getElementById('askVoiceBtn').addEventListener('click', () => {
-            startRecording((audioBase64) => {
-                questions.push({
-                    id: Date.now().toString(), author: currentUser, type: 'voice', audio: audioBase64,
-                    timestamp: new Date().toISOString(), replies: [], likes: { count: 0, users: [] }
-                });
-                saveData();
-                renderMain();
-            });
-            setTimeout(() => stopRecording(), 3000);
-            alert('Запись началась (3 сек)');
-        });
-    }
-
+    // ---------- АВТОРИЗАЦИЯ ----------
     function renderAuth() {
         const authDiv = document.getElementById('authContainer');
         authDiv.innerHTML = `
@@ -1258,10 +773,10 @@
             currentUser = name;
             userSettings = { avatarType: 'color', avatarColor: '#5b8cff', avatarImage: null, theme: 'dark' };
             saveData();
-            showMain();
+            startApp();
         });
     }
-    function showMain() {
+    function startApp() {
         document.getElementById('authContainer').style.display = 'none';
         document.getElementById('mainContainer').style.display = 'block';
         renderMain();
@@ -1271,8 +786,11 @@
         document.getElementById('mainContainer').style.display = 'none';
         renderAuth();
     }
+
+    // ---------- СТАРТ ----------
     loadData();
-    if (currentUser) showMain();
+    createRain();
+    if (currentUser) startApp();
     else showAuth();
 </script>
 </body>
