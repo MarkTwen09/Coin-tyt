@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Project X | Prime Glass Q&A</title>
+    <title>Project X | Hyper-Liquid Q&A</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -24,15 +24,29 @@
             position: relative;
         }
 
-        /* Анимированные неоновые круги */
-        .animated-bg {
+        /* Анимированный фон с падающими линиями */
+        .rain-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -2;
+            overflow: hidden;
         }
+        .rain-line {
+            position: absolute;
+            width: 2px;
+            height: 60px;
+            background: linear-gradient(180deg, rgba(91,140,255,0), rgba(91,140,255,0.6), rgba(139,92,246,0.6), rgba(91,140,255,0));
+            top: -60px;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            to { transform: translateY(100vh); }
+        }
+
+        /* Неоновые круги */
         .circle {
             position: absolute;
             border-radius: 50%;
@@ -76,7 +90,7 @@
             z-index: 1;
         }
 
-        /* Glass panel ultra premium */
+        /* Glass panel */
         .glass-panel {
             background: rgba(20, 30, 55, 0.2);
             backdrop-filter: blur(35px) saturate(180%);
@@ -85,11 +99,10 @@
             padding: 28px;
             margin-bottom: 28px;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
         }
-
         .glass-panel:hover {
-            box-shadow: 0 8px 32px rgba(100, 255, 218, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(100, 255, 218, 0.2);
         }
 
         /* Auth card */
@@ -103,13 +116,12 @@
             max-width: 400px;
             margin: 40px auto;
             text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
         }
-
         .auth-card h2 {
             font-size: 32px;
             margin-bottom: 24px;
         }
-
         .auth-card input {
             width: 100%;
             padding: 14px 18px;
@@ -136,10 +148,16 @@
             color: white;
             cursor: pointer;
             width: 100%;
-            transition: transform 0.1s;
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: pulseGlow 2s infinite;
         }
-        .auth-card button:active {
-            transform: scale(0.98);
+        .auth-card button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(91,140,255,0.5);
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(91,140,255,0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(91,140,255,0); }
         }
 
         /* Profile section */
@@ -158,7 +176,6 @@
         .avatar {
             width: 64px;
             height: 64px;
-            background: linear-gradient(135deg, #5b8cff, #8b5cf6);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -166,6 +183,8 @@
             font-size: 30px;
             font-weight: 600;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            background-size: cover;
+            background-position: center;
         }
         .user-details h3 {
             font-size: 22px;
@@ -175,33 +194,31 @@
             font-size: 13px;
             opacity: 0.7;
         }
-        .change-nick-form {
+        .stats {
             display: flex;
-            gap: 12px;
+            gap: 20px;
+            margin-top: 8px;
         }
-        .change-nick-form input {
-            padding: 10px 18px;
+        .stat-item {
             background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 40px;
-            color: white;
-            outline: none;
+            border-radius: 30px;
+            padding: 4px 12px;
+            font-size: 12px;
         }
-        .change-nick-form input:focus {
-            border-color: #5b8cff;
-            box-shadow: 0 0 12px rgba(91,140,255,0.4);
-        }
-        .change-nick-form button {
-            background: linear-gradient(135deg, #5b8cff, #8b5cf6);
+        .settings-icon {
+            background: rgba(255,255,255,0.1);
             border: none;
-            padding: 10px 24px;
-            border-radius: 40px;
-            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             cursor: pointer;
-            transition: transform 0.1s;
+            color: white;
+            transition: all 0.2s;
+            font-size: 18px;
         }
-        .change-nick-form button:active {
-            transform: translateY(1px);
+        .settings-icon:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(30deg);
         }
 
         /* Ask form */
@@ -229,10 +246,11 @@
             color: white;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: transform 0.1s, background 0.3s;
         }
-        .ask-form button:active {
-            transform: translateY(1px);
+        .ask-form button:hover {
+            background: linear-gradient(135deg, #6b9cff, #9b6cf6);
+            transform: translateY(-2px);
         }
 
         /* Question cards */
@@ -243,32 +261,24 @@
             border-radius: 32px;
             padding: 24px;
             margin-bottom: 28px;
-            transition: all 0.25s ease;
+            transition: all 0.3s ease;
             position: relative;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+            animation: fadeUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         .question-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
-        }
-        .delete-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.08);
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            color: rgba(255,255,255,0.6);
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .delete-btn:hover {
-            background: rgba(239,68,68,0.8);
-            color: white;
+            box-shadow: 0 12px 32px 0 rgba(0, 0, 0, 0.8);
         }
         .question-header {
             display: flex;
@@ -279,13 +289,14 @@
         .question-avatar {
             width: 44px;
             height: 44px;
-            background: linear-gradient(135deg, #5b8cff, #8b5cf6);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
             font-weight: 600;
+            background-size: cover;
+            background-position: center;
         }
         .question-author {
             font-weight: 600;
@@ -298,7 +309,46 @@
             font-size: 16px;
             line-height: 1.5;
             margin: 12px 0 20px;
-            padding-right: 40px;
+            word-break: break-word;
+        }
+        .edit-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .reactions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .like-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+            padding: 6px 12px;
+            border-radius: 30px;
+        }
+        .like-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: scale(1.05);
+        }
+        .like-btn.liked {
+            color: #ff3b6f;
+        }
+        .like-btn i {
+            font-size: 18px;
         }
         .replies-section {
             margin-top: 20px;
@@ -323,6 +373,8 @@
             justify-content: center;
             font-size: 14px;
             font-weight: 600;
+            background-size: cover;
+            background-position: center;
         }
         .reply-content {
             background: rgba(255,255,255,0.05);
@@ -372,6 +424,37 @@
             transform: translateY(1px);
         }
 
+        /* Контекстное меню */
+        .context-menu {
+            position: fixed;
+            background: rgba(20, 30, 55, 0.8);
+            backdrop-filter: blur(30px) saturate(180%);
+            border-radius: 20px;
+            padding: 8px 0;
+            min-width: 180px;
+            border: 0.5px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            z-index: 3000;
+            animation: menuFade 0.1s ease;
+        }
+        @keyframes menuFade {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .context-menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.1s;
+            color: white;
+            font-size: 14px;
+        }
+        .context-menu-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
         /* Modal */
         .modal {
             position: fixed;
@@ -385,248 +468,636 @@
             align-items: center;
             justify-content: center;
             z-index: 2000;
+            animation: modalFade 0.2s ease;
+        }
+        @keyframes modalFade {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
         .modal-card {
-            background: rgba(20,30,55,0.7);
+            background: rgba(20, 30, 55, 0.7);
             backdrop-filter: blur(40px);
             border-radius: 32px;
             padding: 32px;
-            width: 320px;
-            text-align: center;
+            width: 360px;
             border: 0.5px solid rgba(255,255,255,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+        .modal-card h3 {
+            margin-bottom: 20px;
+        }
+        .modal-card p {
+            margin-bottom: 24px;
         }
         .modal-buttons {
             display: flex;
             gap: 12px;
-            justify-content: center;
-            margin-top: 20px;
         }
-        .modal-confirm {
+        .modal-buttons button {
+            flex: 1;
+            background: linear-gradient(135deg, #5b8cff, #8b5cf6);
+            border: none;
+            padding: 12px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .modal-buttons button:active {
+            transform: translateY(1px);
+        }
+        .modal-buttons .danger-btn {
             background: #ef4444;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-        }
-        .modal-cancel {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 30px;
-            cursor: pointer;
         }
 
         @media (max-width: 768px) {
             body { padding: 12px; }
             .profile-section { flex-direction: column; align-items: stretch; }
-            .change-nick-form { width: 100%; }
-        }
-
-        .fade-enter {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        .fade-enter-active {
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            .stats { justify-content: center; }
+            .modal-card { width: 90%; padding: 24px; }
         }
     </style>
 </head>
 <body>
+<div class="rain-bg" id="rainBg"></div>
 <div class="animated-bg">
     <div class="circle circle1"></div>
     <div class="circle circle2"></div>
     <div class="circle circle3"></div>
 </div>
 
-<div class="container" id="appContainer"></div>
+<div id="authContainer" class="container" style="display: block;"></div>
+<div id="mainContainer" class="container" style="display: none;"></div>
 
 <script>
+    // ---------- Генерация неонового дождя ----------
+    function createRain() {
+        const rainContainer = document.getElementById('rainBg');
+        if (!rainContainer) return;
+        const count = 60;
+        for (let i = 0; i < count; i++) {
+            const line = document.createElement('div');
+            line.className = 'rain-line';
+            line.style.left = Math.random() * 100 + '%';
+            line.style.animationDuration = Math.random() * 2 + 1 + 's';
+            line.style.animationDelay = Math.random() * 5 + 's';
+            line.style.opacity = Math.random() * 0.4 + 0.2;
+            rainContainer.appendChild(line);
+        }
+    }
+    createRain();
+
+    // ---------- Глобальные данные ----------
     let currentUser = null;
-    let questions = [];
+    let questions = [];    // { id, author, text, timestamp, replies, likes: { count, users: [] } }
+    let userSettings = {
+        avatarType: 'color',
+        avatarColor: '#5b8cff',
+        avatarImage: null
+    };
 
-    async function checkAuth() {
-        try {
-            const res = await fetch('/api/data');
-            if (res.status === 401) {
-                showAuth();
-                return;
-            }
-            const data = await res.json();
-            currentUser = data.currentUser;
-            questions = data.questions;
-            renderMain();
-        } catch (err) {
-            showAuth();
-        }
-    }
-
-    function showAuth() {
-        const container = document.getElementById('appContainer');
-        container.innerHTML = `
-            <div class="auth-card">
-                <h2><i class="fas fa-bolt"></i> Project X</h2>
-                <form id="loginForm" method="POST" action="/login">
-                    <input type="text" name="username" placeholder="Ваш никнейм" autocomplete="off" required>
-                    <button type="submit">Войти</button>
-                </form>
-            </div>
-        `;
-        // No error messages – simple direct form submission
-    }
-
-    function renderMain() {
-        const container = document.getElementById('appContainer');
-        container.innerHTML = `
-            <div class="glass-panel">
-                <div class="profile-section">
-                    <div class="user-info">
-                        <div class="avatar">${escapeHtml(currentUser.charAt(0).toUpperCase())}</div>
-                        <div class="user-details">
-                            <h3>${escapeHtml(currentUser)}</h3>
-                            <p>Ваш публичный профиль</p>
-                        </div>
-                    </div>
-                    <form id="changeNickForm" class="change-nick-form">
-                        <input type="text" id="newNickname" placeholder="Новый никнейм" autocomplete="off">
-                        <button type="submit">Сменить ник</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="glass-panel ask-form">
-                <form id="askForm">
-                    <textarea id="questionText" rows="3" placeholder="Задайте вопрос сообществу..." required></textarea>
-                    <button type="submit"><i class="fas fa-paper-plane"></i> Опубликовать вопрос</button>
-                </form>
-            </div>
-
-            <div id="feedContainer"></div>
-        `;
-
-        const feed = document.getElementById('feedContainer');
-        if (questions.length === 0) {
-            feed.innerHTML = '<div class="glass-panel" style="text-align:center; opacity:0.6;">Пока нет вопросов. Задайте первый!</div>';
-        } else {
-            feed.innerHTML = questions.map(q => `
-                <div class="question-card" data-id="${q.id}">
-                    <button class="delete-btn" data-id="${q.id}" title="Удалить вопрос"><i class="fas fa-trash-alt"></i></button>
-                    <div class="question-header">
-                        <div class="question-avatar">${escapeHtml(q.author.charAt(0).toUpperCase())}</div>
-                        <div class="question-meta">
-                            <div class="question-author">${escapeHtml(q.author)}</div>
-                            <div class="question-time">${formatTime(q.timestamp)}</div>
-                        </div>
-                    </div>
-                    <div class="question-text">${escapeHtml(q.text)}</div>
-                    <div class="replies-section">
-                        <div class="replies-list">
-                            ${q.replies && q.replies.length ? q.replies.map(r => `
-                                <div class="reply">
-                                    <div class="reply-avatar">${escapeHtml(r.author.charAt(0).toUpperCase())}</div>
-                                    <div class="reply-content">
-                                        <div class="reply-author">${escapeHtml(r.author)}</div>
-                                        <div class="reply-text">${escapeHtml(r.text)}</div>
-                                        <div class="reply-time">${formatTime(r.timestamp)}</div>
-                                    </div>
-                                </div>
-                            `).join('') : '<div style="opacity:0.5; font-size:12px; margin-bottom:12px;">Нет ответов. Будьте первым!</div>'}
-                        </div>
-                        <form class="reply-form" data-id="${q.id}">
-                            <input type="text" class="reply-input" placeholder="Ваш ответ..." autocomplete="off" required>
-                            <button type="submit">Ответить</button>
-                        </form>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Attach event listeners
-        document.getElementById('changeNickForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const newNick = document.getElementById('newNickname').value.trim();
-            if (!newNick) return;
-            const res = await fetch('/change-nick', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ newUsername: newNick })
-            });
-            if (res.redirected) window.location.href = res.url;
-        });
-
-        document.getElementById('askForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const text = document.getElementById('questionText').value.trim();
-            if (!text) return;
-            const res = await fetch('/ask', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ question: text })
-            });
-            if (res.redirected) window.location.href = res.url;
-        });
-
-        document.querySelectorAll('.reply-form').forEach(form => {
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const qid = form.getAttribute('data-id');
-                const reply = form.querySelector('.reply-input').value.trim();
-                if (!reply) return;
-                const res = await fetch(`/reply/${qid}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({ reply })
+    // Загрузка из localStorage
+    function loadData() {
+        const storedUser = localStorage.getItem('projectx_user');
+        if (storedUser) currentUser = storedUser;
+        const storedQuestions = localStorage.getItem('projectx_questions');
+        if (storedQuestions) {
+            try {
+                questions = JSON.parse(storedQuestions);
+                // ensure each question has likes structure
+                questions.forEach(q => {
+                    if (!q.likes) q.likes = { count: 0, users: [] };
+                    if (!q.replies) q.replies = [];
                 });
-                if (res.redirected) window.location.href = res.url;
-            });
-        });
+            } catch(e) { questions = []; }
+        }
+        const storedSettings = localStorage.getItem('projectx_settings');
+        if (storedSettings) {
+            try {
+                userSettings = JSON.parse(storedSettings);
+            } catch(e) { }
+        }
+        if (!questions) questions = [];
+        if (!userSettings) userSettings = { avatarType: 'color', avatarColor: '#5b8cff', avatarImage: null };
+    }
 
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = btn.getAttribute('data-id');
-                showDeleteConfirm(id);
-            });
+    function saveData() {
+        if (currentUser) localStorage.setItem('projectx_user', currentUser);
+        else localStorage.removeItem('projectx_user');
+        localStorage.setItem('projectx_questions', JSON.stringify(questions));
+        localStorage.setItem('projectx_settings', JSON.stringify(userSettings));
+    }
+
+    // Вспомогательные функции
+    function timeAgo(isoString) {
+        const date = new Date(isoString);
+        const now = new Date();
+        const diff = Math.floor((now - date) / 1000);
+        if (diff < 5) return 'только что';
+        if (diff < 60) return `${diff} сек назад`;
+        if (diff < 3600) return `${Math.floor(diff / 60)} мин назад`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)} ч назад`;
+        if (diff < 2592000) return `${Math.floor(diff / 86400)} дн назад`;
+        return date.toLocaleDateString();
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+    }
+
+    function getUserAvatarStyle(username) {
+        if (username === currentUser) {
+            if (userSettings.avatarType === 'image' && userSettings.avatarImage) {
+                return `background-image: url('${userSettings.avatarImage}'); background-size: cover;`;
+            } else {
+                return `background: ${userSettings.avatarColor};`;
+            }
+        } else {
+            let hash = 0;
+            for (let i = 0; i < username.length; i++) hash = ((hash << 5) - hash) + username.charCodeAt(i);
+            const color = `hsl(${Math.abs(hash % 360)}, 70%, 60%)`;
+            return `background: ${color};`;
+        }
+    }
+
+    function renderAvatarElement(element, username, text) {
+        const style = getUserAvatarStyle(username);
+        element.style.cssText = style;
+        if (style.includes('background-image')) {
+            element.innerHTML = '';
+        } else {
+            element.innerHTML = escapeHtml(text.charAt(0).toUpperCase());
+        }
+    }
+
+    // Статистика
+    function getStats() {
+        const totalQuestions = questions.length;
+        const myReplies = questions.reduce((sum, q) => sum + q.replies.filter(r => r.author === currentUser).length, 0);
+        return { totalQuestions, myReplies };
+    }
+
+    // Лайк
+    function toggleLike(questionId) {
+        const q = questions.find(q => q.id === questionId);
+        if (!q) return;
+        if (!q.likes) q.likes = { count: 0, users: [] };
+        const likedIndex = q.likes.users.indexOf(currentUser);
+        if (likedIndex === -1) {
+            q.likes.users.push(currentUser);
+            q.likes.count++;
+        } else {
+            q.likes.users.splice(likedIndex, 1);
+            q.likes.count--;
+        }
+        saveData();
+        renderMain(); // обновить UI
+    }
+
+    // Массовое удаление
+    function deleteAllMyQuestions() {
+        const before = questions.length;
+        questions = questions.filter(q => q.author !== currentUser);
+        saveData();
+        renderMain();
+        return before - questions.length;
+    }
+
+    // ---------- Контекстное меню ----------
+    let activeMenu = null;
+    function closeMenu() {
+        if (activeMenu) {
+            activeMenu.remove();
+            activeMenu = null;
+        }
+    }
+    function showContextMenu(x, y, questionId) {
+        closeMenu();
+        const question = questions.find(q => q.id === questionId);
+        if (!question || question.author !== currentUser) return;
+        const menu = document.createElement('div');
+        menu.className = 'context-menu';
+        menu.style.left = x + 'px';
+        menu.style.top = y + 'px';
+        menu.innerHTML = `
+            <div class="context-menu-item" data-action="edit"><i class="fas fa-edit"></i> Редактировать</div>
+            <div class="context-menu-item" data-action="delete"><i class="fas fa-trash-alt"></i> Удалить</div>
+        `;
+        document.body.appendChild(menu);
+        activeMenu = menu;
+        const handleClick = (e) => {
+            const action = e.currentTarget.getAttribute('data-action');
+            if (action === 'edit') {
+                editQuestion(questionId);
+            } else if (action === 'delete') {
+                deleteQuestion(questionId);
+            }
+            closeMenu();
+        };
+        menu.querySelectorAll('.context-menu-item').forEach(item => {
+            item.addEventListener('click', handleClick);
+        });
+        setTimeout(() => {
+            const closeHandler = (e) => {
+                if (!menu.contains(e.target)) {
+                    closeMenu();
+                    document.removeEventListener('click', closeHandler);
+                    document.removeEventListener('contextmenu', closeHandler);
+                }
+            };
+            document.addEventListener('click', closeHandler);
+            document.addEventListener('contextmenu', closeHandler);
+        }, 0);
+    }
+
+    function editQuestion(questionId) {
+        const question = questions.find(q => q.id === questionId);
+        if (!question || question.author !== currentUser) return;
+        const card = document.querySelector(`.question-card[data-id="${questionId}"]`);
+        if (!card) return;
+        const textDiv = card.querySelector('.question-text');
+        const originalText = question.text;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'edit-input';
+        input.value = originalText;
+        const saveBtn = document.createElement('button');
+        saveBtn.textContent = 'Сохранить';
+        saveBtn.style.cssText = 'background: linear-gradient(135deg, #5b8cff, #8b5cf6); border: none; padding: 6px 16px; border-radius: 30px; color: white; cursor: pointer; margin-top: 8px;';
+        textDiv.style.display = 'none';
+        textDiv.parentNode.insertBefore(input, textDiv.nextSibling);
+        input.parentNode.insertBefore(saveBtn, input.nextSibling);
+        const finishEdit = () => {
+            const newText = input.value.trim();
+            if (newText && newText !== originalText) {
+                question.text = newText;
+                saveData();
+            }
+            textDiv.style.display = 'block';
+            input.remove();
+            saveBtn.remove();
+            textDiv.innerText = escapeHtml(question.text);
+            renderMain();
+        };
+        saveBtn.addEventListener('click', finishEdit);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') finishEdit();
         });
     }
 
-    function showDeleteConfirm(id) {
+    function deleteQuestion(questionId) {
+        const idx = questions.findIndex(q => q.id === questionId);
+        if (idx !== -1 && questions[idx].author === currentUser) {
+            questions.splice(idx, 1);
+            saveData();
+            renderMain();
+        }
+    }
+
+    // Долгое нажатие
+    let longPressTimer = null;
+    function startLongPress(card, questionId, e) {
+        longPressTimer = setTimeout(() => {
+            e.preventDefault();
+            const rect = card.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            showContextMenu(x, y, questionId);
+        }, 800);
+    }
+    function cancelLongPress() {
+        if (longPressTimer) {
+            clearTimeout(longPressTimer);
+            longPressTimer = null;
+        }
+    }
+
+    // ---------- Настройки профиля ----------
+    function openSettingsModal() {
         const modal = document.createElement('div');
         modal.className = 'modal';
         modal.innerHTML = `
             <div class="modal-card">
-                <p>Вы уверены? Это удалит вопрос и все ответы.</p>
+                <h3>Настройки профиля</h3>
+                <div class="avatar-preview" id="avatarPreview" style="width:100px;height:100px;border-radius:50%;margin:0 auto 20px;"></div>
+                <input type="text" id="settingsNickname" placeholder="Новый никнейм" value="${escapeHtml(currentUser)}">
+                <input type="text" id="settingsAvatarColor" placeholder="Цвет аватарки (hex)" value="${userSettings.avatarColor}">
+                <input type="text" id="settingsAvatarImage" placeholder="URL изображения" value="${userSettings.avatarImage || ''}">
+                <button id="deleteFileBtn" style="background:rgba(255,255,255,0.1); border:none; padding:8px; border-radius:40px; margin-bottom:16px; width:100%;">Удалить файл</button>
+                <div class="modal-buttons" style="margin-bottom:12px;">
+                    <button id="saveSettingsBtn">Сохранить</button>
+                    <button id="deleteAllBtn" class="danger-btn">Удалить все мои вопросы</button>
+                </div>
                 <div class="modal-buttons">
-                    <button class="modal-confirm" id="confirmDelete">Да, удалить</button>
-                    <button class="modal-cancel" id="cancelDelete">Отмена</button>
+                    <button id="deleteAccountBtn" class="danger-btn">Удалить аккаунт</button>
+                    <button id="closeModalBtn" style="background:rgba(255,255,255,0.2);">Отмена</button>
                 </div>
             </div>
         `;
         document.body.appendChild(modal);
-        const confirmBtn = modal.querySelector('#confirmDelete');
-        const cancelBtn = modal.querySelector('#cancelDelete');
-        confirmBtn.addEventListener('click', async () => {
-            const res = await fetch('/delete', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id })
-            });
-            if (res.ok) window.location.reload();
-            else modal.remove();
+        const previewDiv = modal.querySelector('#avatarPreview');
+        const updatePreview = () => {
+            const color = modal.querySelector('#settingsAvatarColor').value;
+            const image = modal.querySelector('#settingsAvatarImage').value;
+            if (image && image.trim()) {
+                previewDiv.style.backgroundImage = `url('${image}')`;
+                previewDiv.style.backgroundSize = 'cover';
+                previewDiv.innerHTML = '';
+            } else {
+                previewDiv.style.background = color;
+                previewDiv.innerHTML = currentUser.charAt(0).toUpperCase();
+                previewDiv.style.display = 'flex';
+                previewDiv.style.alignItems = 'center';
+                previewDiv.style.justifyContent = 'center';
+                previewDiv.style.fontSize = '48px';
+            }
+        };
+        modal.querySelector('#settingsAvatarColor').addEventListener('input', updatePreview);
+        modal.querySelector('#settingsAvatarImage').addEventListener('input', updatePreview);
+        updatePreview();
+
+        modal.querySelector('#deleteFileBtn').addEventListener('click', () => {
+            modal.querySelector('#settingsAvatarImage').value = '';
+            updatePreview();
         });
-        cancelBtn.addEventListener('click', () => modal.remove());
+
+        modal.querySelector('#saveSettingsBtn').addEventListener('click', () => {
+            const newNick = modal.querySelector('#settingsNickname').value.trim();
+            const newColor = modal.querySelector('#settingsAvatarColor').value.trim();
+            const newImage = modal.querySelector('#settingsAvatarImage').value.trim();
+            if (newNick && newNick !== currentUser) {
+                questions.forEach(q => {
+                    if (q.author === currentUser) q.author = newNick;
+                    q.replies.forEach(r => { if (r.author === currentUser) r.author = newNick; });
+                    if (q.likes && q.likes.users) {
+                        const idx = q.likes.users.indexOf(currentUser);
+                        if (idx !== -1) q.likes.users[idx] = newNick;
+                    }
+                });
+                currentUser = newNick;
+            }
+            if (newColor && /^#[0-9A-Fa-f]{6}$/.test(newColor)) {
+                userSettings.avatarColor = newColor;
+                userSettings.avatarType = 'color';
+                if (newImage) {
+                    userSettings.avatarImage = newImage;
+                    userSettings.avatarType = 'image';
+                } else {
+                    userSettings.avatarImage = null;
+                }
+            } else if (newImage) {
+                userSettings.avatarImage = newImage;
+                userSettings.avatarType = 'image';
+            } else {
+                userSettings.avatarImage = null;
+                userSettings.avatarType = 'color';
+            }
+            saveData();
+            modal.remove();
+            renderMain();
+        });
+
+        modal.querySelector('#deleteAllBtn').addEventListener('click', () => {
+            const confirmModal = document.createElement('div');
+            confirmModal.className = 'modal';
+            confirmModal.innerHTML = `
+                <div class="modal-card">
+                    <h3>Удалить все вопросы?</h3>
+                    <p>Это действие удалит все ваши вопросы. Отменить будет невозможно.</p>
+                    <div class="modal-buttons">
+                        <button id="confirmDeleteAll" class="danger-btn">Да, удалить</button>
+                        <button id="cancelDeleteAll">Отмена</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmModal);
+            confirmModal.querySelector('#confirmDeleteAll').addEventListener('click', () => {
+                deleteAllMyQuestions();
+                confirmModal.remove();
+                modal.remove();
+            });
+            confirmModal.querySelector('#cancelDeleteAll').addEventListener('click', () => confirmModal.remove());
+        });
+
+        modal.querySelector('#deleteAccountBtn').addEventListener('click', () => {
+            if (confirm('Вы уверены? Аккаунт будет удалён, все ваши вопросы и ответы исчезнут.')) {
+                questions = questions.filter(q => q.author !== currentUser);
+                questions.forEach(q => q.replies = q.replies.filter(r => r.author !== currentUser));
+                if (q.likes && q.likes.users) q.likes.users = q.likes.users.filter(u => u !== currentUser);
+                localStorage.clear();
+                currentUser = null;
+                questions = [];
+                userSettings = { avatarType: 'color', avatarColor: '#5b8cff', avatarImage: null };
+                showAuth();
+                modal.remove();
+            }
+        });
+
+        modal.querySelector('#closeModalBtn').addEventListener('click', () => modal.remove());
     }
 
-    function formatTime(iso) {
-        return new Date(iso).toLocaleString();
-    }
-    function escapeHtml(str) {
-        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+    // ---------- Рендер ----------
+    function renderAuth() {
+        const authDiv = document.getElementById('authContainer');
+        authDiv.innerHTML = `
+            <div class="auth-card">
+                <h2><i class="fas fa-bolt"></i> Project X</h2>
+                <div>
+                    <input type="text" id="authUsername" placeholder="Ваш никнейм" autocomplete="off">
+                    <button id="loginButton">Войти</button>
+                </div>
+            </div>
+        `;
+        const loginBtn = document.getElementById('loginButton');
+        const usernameInput = document.getElementById('authUsername');
+        loginBtn.addEventListener('click', () => {
+            const username = usernameInput.value.trim();
+            if (!username) return;
+            currentUser = username;
+            userSettings = { avatarType: 'color', avatarColor: '#5b8cff', avatarImage: null };
+            saveData();
+            showMain();
+        });
+        usernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') loginBtn.click();
+        });
     }
 
-    checkAuth();
+    function showMain() {
+        document.getElementById('authContainer').style.display = 'none';
+        document.getElementById('mainContainer').style.display = 'block';
+        renderMain();
+    }
+
+    function showAuth() {
+        document.getElementById('authContainer').style.display = 'block';
+        document.getElementById('mainContainer').style.display = 'none';
+        renderAuth();
+    }
+
+    function renderMain() {
+        const mainDiv = document.getElementById('mainContainer');
+        const sorted = [...questions].reverse();
+        const stats = getStats();
+        mainDiv.innerHTML = `
+            <div class="glass-panel">
+                <div class="profile-section">
+                    <div class="user-info">
+                        <div class="avatar" id="userAvatar"></div>
+                        <div class="user-details">
+                            <h3>${escapeHtml(currentUser)}</h3>
+                            <div class="stats">
+                                <div class="stat-item"><i class="fas fa-question-circle"></i> Всего: ${stats.totalQuestions}</div>
+                                <div class="stat-item"><i class="fas fa-reply"></i> Моих ответов: ${stats.myReplies}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="settings-icon" id="settingsBtn"><i class="fas fa-cog"></i></button>
+                </div>
+            </div>
+            <div class="glass-panel ask-form">
+                <textarea id="questionText" rows="3" placeholder="Задайте вопрос сообществу..." required></textarea>
+                <button id="askBtn"><i class="fas fa-paper-plane"></i> Опубликовать вопрос</button>
+            </div>
+            <div id="feedContainer"></div>
+        `;
+        const userAvatar = document.getElementById('userAvatar');
+        renderAvatarElement(userAvatar, currentUser, currentUser);
+        const feedDiv = document.getElementById('feedContainer');
+        if (sorted.length === 0) {
+            feedDiv.innerHTML = '<div class="glass-panel" style="text-align:center; opacity:0.6;">Пока нет вопросов. Задайте первый!</div>';
+        } else {
+            feedDiv.innerHTML = sorted.map(q => {
+                const liked = q.likes && q.likes.users.includes(currentUser);
+                const likeClass = liked ? 'liked' : '';
+                return `
+                    <div class="question-card" data-id="${q.id}">
+                        <div class="question-header">
+                            <div class="question-avatar" data-username="${q.author}"></div>
+                            <div class="question-meta">
+                                <div class="question-author">${escapeHtml(q.author)}</div>
+                                <div class="question-time">${timeAgo(q.timestamp)}</div>
+                            </div>
+                        </div>
+                        <div class="question-text">${escapeHtml(q.text)}</div>
+                        <div class="reactions">
+                            <button class="like-btn ${likeClass}" data-id="${q.id}">
+                                <i class="fas fa-heart"></i> <span>${q.likes ? q.likes.count : 0}</span>
+                            </button>
+                        </div>
+                        <div class="replies-section">
+                            <div class="replies-list">
+                                ${q.replies && q.replies.length ? q.replies.map(r => `
+                                    <div class="reply">
+                                        <div class="reply-avatar" data-username="${r.author}"></div>
+                                        <div class="reply-content">
+                                            <div class="reply-author">${escapeHtml(r.author)}</div>
+                                            <div class="reply-text">${escapeHtml(r.text)}</div>
+                                            <div class="reply-time">${timeAgo(r.timestamp)}</div>
+                                        </div>
+                                    </div>
+                                `).join('') : '<div style="opacity:0.5; font-size:12px; margin-bottom:12px;">Нет ответов. Будьте первым!</div>'}
+                            </div>
+                            <div class="reply-form" data-id="${q.id}">
+                                <input type="text" class="reply-input" placeholder="Ваш ответ..." autocomplete="off" required>
+                                <button class="reply-btn">Ответить</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        // Аватарки
+        document.querySelectorAll('.question-avatar').forEach(el => {
+            const username = el.getAttribute('data-username');
+            renderAvatarElement(el, username, username);
+        });
+        document.querySelectorAll('.reply-avatar').forEach(el => {
+            const username = el.getAttribute('data-username');
+            renderAvatarElement(el, username, username);
+        });
+        // События
+        document.getElementById('settingsBtn').addEventListener('click', openSettingsModal);
+        document.getElementById('askBtn').addEventListener('click', () => {
+            const text = document.getElementById('questionText').value.trim();
+            if (!text) return;
+            questions.push({
+                id: Date.now().toString(),
+                author: currentUser,
+                text,
+                timestamp: new Date().toISOString(),
+                replies: [],
+                likes: { count: 0, users: [] }
+            });
+            saveData();
+            renderMain();
+        });
+        // Лайки
+        document.querySelectorAll('.like-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const qid = btn.getAttribute('data-id');
+                toggleLike(qid);
+            });
+        });
+        // Ответы
+        document.querySelectorAll('.reply-form').forEach(form => {
+            const qid = form.getAttribute('data-id');
+            const input = form.querySelector('.reply-input');
+            const btn = form.querySelector('.reply-btn');
+            btn.addEventListener('click', () => {
+                const replyText = input.value.trim();
+                if (!replyText) return;
+                const question = questions.find(q => q.id === qid);
+                if (question) {
+                    question.replies.push({
+                        author: currentUser,
+                        text: replyText,
+                        timestamp: new Date().toISOString()
+                    });
+                    saveData();
+                    renderMain();
+                }
+            });
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') btn.click();
+            });
+        });
+        // Контекстное меню
+        document.querySelectorAll('.question-card').forEach(card => {
+            const qid = card.getAttribute('data-id');
+            card.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                const question = questions.find(q => q.id === qid);
+                if (question && question.author === currentUser) {
+                    showContextMenu(e.clientX, e.clientY, qid);
+                }
+            });
+            card.addEventListener('touchstart', (e) => {
+                const question = questions.find(q => q.id === qid);
+                if (question && question.author === currentUser) {
+                    startLongPress(card, qid, e);
+                }
+            });
+            card.addEventListener('touchend', cancelLongPress);
+            card.addEventListener('touchmove', cancelLongPress);
+            card.addEventListener('touchcancel', cancelLongPress);
+        });
+    }
+
+    loadData();
+    if (currentUser) {
+        document.getElementById('authContainer').style.display = 'none';
+        document.getElementById('mainContainer').style.display = 'block';
+        renderMain();
+    } else {
+        document.getElementById('authContainer').style.display = 'block';
+        document.getElementById('mainContainer').style.display = 'none';
+        renderAuth();
+    }
 </script>
 </body>
 </html>
