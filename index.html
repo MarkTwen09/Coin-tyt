@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Нефтяной Магнат | Хардкор + Бусты + Артефакты</title>
+    <title>Нефтяной Магнат | Локации + Бусты + Артефакты</title>
     <style>
         * {
             margin: 0;
@@ -327,109 +327,31 @@
             margin-top: 1rem;
             border: 1px solid #ff44ff;
         }
-        .skin-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin-top: 10px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .skin-card {
-            background: rgba(0,20,30,0.8);
-            border-radius: 32px;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-            border: 1px solid rgba(0,255,200,0.4);
-        }
-        .skin-card:hover {
-            transform: scale(1.02);
-            border-color: cyan;
-            box-shadow: 0 0 12px cyan;
-        }
-        .skin-card.active {
-            border: 2px solid #ff44ff;
-            box-shadow: 0 0 15px magenta;
-        }
-        .skin-preview {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin: 0 auto 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-        }
-        .skin-name {
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: #ffdd99;
-            text-shadow: 0 0 3px #ffaa33;
-        }
-        .skin-price {
-            font-size: 0.7rem;
-            color: #0ff;
-        }
-        .buy-skin-btn {
-            margin-top: 6px;
-            background: #2a6b5a;
-            font-size: 0.7rem;
-            padding: 4px 12px;
-        }
-
-        /* Стили для магазина бустов */
-        .boost-grid {
+        .skin-grid, .boost-grid, .artifact-grid, .location-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 12px;
             margin-top: 10px;
         }
-        .boost-card {
+        .skin-card, .boost-card, .artifact-card, .location-card {
             background: rgba(0,20,30,0.8);
             border-radius: 32px;
             padding: 12px;
             text-align: center;
             border: 1px solid #0ff;
         }
-        .boost-card h4 {
-            color: #ffdd99;
-            margin-bottom: 5px;
+        .location-card {
+            border: 1px solid #ff44ff;
         }
-        .boost-card p {
-            font-size: 0.7rem;
-            color: #0ff;
-        }
-        .boost-btn {
+        .location-card button {
             margin-top: 8px;
             background: #2a6b5a;
         }
-
-        /* Стили для артефактов */
-        .artifact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin-top: 10px;
-        }
-        .artifact-card {
-            background: rgba(0,20,30,0.8);
-            border-radius: 32px;
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #ff44ff;
-        }
-        .artifact-name {
+        .location-name {
             font-weight: bold;
             color: #ffdd99;
         }
-        .artifact-level {
-            font-size: 0.7rem;
-            color: #0ff;
-        }
-        .artifact-bonus {
+        .location-bonus {
             font-size: 0.7rem;
             color: #aaffaa;
         }
@@ -543,7 +465,7 @@
             button { padding: 5px 14px; }
             .panel { padding: 0.8rem; }
             .flex-row { flex-direction: column; align-items: stretch; }
-            .skin-grid, .boost-grid, .artifact-grid { grid-template-columns: 1fr; }
+            .skin-grid, .boost-grid, .artifact-grid, .location-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -555,7 +477,7 @@
 <div class="splash" id="splash" style="position:fixed; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle at center, #0a0f1a, #010105); display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:10000; gap:20px; transition:opacity 0.8s;">
     <div style="font-size:5rem; filter:drop-shadow(0 0 20px #0ff); animation: bounce 1s infinite alternate;">🛢️</div>
     <h1 style="font-size:2.2rem; background:linear-gradient(135deg,#FFE0A3,#FFA559,#0ff); -webkit-background-clip:text; background-clip:text; color:transparent;">НЕФТЯНОЙ МАГНАТ</h1>
-    <p style="color:#0ff; text-shadow:0 0 5px cyan;">ХАРДКОР + БУСТЫ + АРТЕФАКТЫ</p>
+    <p style="color:#0ff; text-shadow:0 0 5px cyan;">ЛОКАЦИИ · БУСТЫ · АРТЕФАКТЫ</p>
     <div style="width:200px; height:2px; background:rgba(0,255,255,0.3); border-radius:3px;"><div style="width:0%; height:100%; background:#0ff; animation:fillProgress 1.5s forwards;"></div></div>
 </div>
 <style>
@@ -566,7 +488,7 @@
 <div class="game" id="game">
     <div class="title">
         <h1>🛢️ НЕФТЯНОЙ МАГНАТ 🛢️</h1>
-        <p>⭐ КИБЕРПАНК · ХАРДКОР · БУСТЫ · АРТЕФАКТЫ ⭐</p>
+        <p>⭐ КИБЕРПАНК · ЛОКАЦИИ · ЭЛИТНЫЕ СКИНЫ ⭐</p>
     </div>
 
     <div class="stats">
@@ -590,6 +512,18 @@
             <input type="number" id="amount" value="10" style="width:70px; background:#0a2a2a; border:1px solid #0ff; border-radius:40px; padding:6px; color:#0ff;">
             <button id="exchangeBtn">Обменять</button>
             <button id="exchangeAll">Всё</button>
+        </div>
+    </div>
+
+    <!-- НОВЫЙ РАЗДЕЛ: ЛОКАЦИИ (НЕФТЯНЫЕ ВЫШКИ) -->
+    <div class="shop-panel">
+        <div class="flex-row">
+            <strong style="text-shadow:0 0 3px magenta;">🏭 НЕФТЯНЫЕ ВЫШКИ (ЛОКАЦИИ)</strong>
+            <button id="openLocationBtn" style="background:#8a2be2;">🗺️ Карта регионов</button>
+        </div>
+        <div id="locationModal" style="display: none; margin-top: 12px;">
+            <div id="locationList" class="location-grid"></div>
+            <button id="closeLocationBtn" style="margin-top: 10px; background:#a0452f;">Закрыть</button>
         </div>
     </div>
 
@@ -674,14 +608,14 @@
         <button id="resetStatsBtn">Сбросить статистику</button>
     </div>
     <button class="reset-btn" id="reset">⛔ ПОЛНЫЙ СБРОС ⛔</button>
-    <footer>✨ Бусты + Артефакты | 10 скинов | Мини-игра | События</footer>
+    <footer>✨ 5 нефтяных вышек | Бусты | Артефакты | 10 скинов | Мини-игра</footer>
 </div>
 
 <script>
     // ==================== СОСТОЯНИЕ ====================
     let state = {
         oil: 0,
-        rubles: 50,        // увеличен стартовый капитал, чтобы можно было купить первое улучшение
+        rubles: 50,
         clickLvl: 0,
         exchLvl: 0,
         autoLvl: 0,
@@ -713,25 +647,46 @@
         pendingInvestment: null,
         currentSkin: "default",
         ownedSkins: ["default"],
-        // Бусты
         boosts: {
             drill: { active: false, endTime: 0 },
             crit: { active: false, endTime: 0 },
             exchange: { active: false, endTime: 0 }
         },
-        // Артефакты
         artifacts: {
-            hammer: { level: 0, bonus: 0 },     // +1 к силе клика за уровень
-            barrel: { level: 0, bonus: 0 },      // +2% к курсу за уровень
-            pickaxe: { level: 0, bonus: 0 },     // +1% к критическому урону за уровень
-            gear: { level: 0, bonus: 0 }         // +0.5 нефти/сек за уровень
+            hammer: { level: 0, bonus: 0 },
+            barrel: { level: 0, bonus: 0 },
+            pickaxe: { level: 0, bonus: 0 },
+            gear: { level: 0, bonus: 0 }
+        },
+        // НОВЫЕ ЛОКАЦИИ
+        locations: {
+            siberia: { owned: false, bonus: { auto: 0.1, exchange: 0.05, critChance: 0.01 }, price: 500000, name: "Сибирь", emoji: "🌲" },
+            texas: { owned: false, bonus: { auto: 0.1, exchange: 0.05, critChance: 0.01 }, price: 1000000, name: "Техас", emoji: "🤠" },
+            middleEast: { owned: false, bonus: { auto: 0.1, exchange: 0.05, critChance: 0.01 }, price: 2500000, name: "Ближний Восток", emoji: "🐪" },
+            northSea: { owned: false, bonus: { auto: 0.1, exchange: 0.05, critChance: 0.01 }, price: 5000000, name: "Северное море", emoji: "🌊" },
+            arctic: { owned: false, bonus: { auto: 0.1, exchange: 0.05, critChance: 0.01 }, price: 10000000, name: "Арктика", emoji: "❄️" }
         }
     };
 
     let soundEnabled = true;
     let marketUpdateInterval = null;
 
-    // ==================== ОСНОВНЫЕ ФУНКЦИИ (ХАРДКОР) ====================
+    // ==================== БОНУСЫ ОТ ЛОКАЦИЙ ====================
+    function getLocationBonuses() {
+        let autoBonus = 0;
+        let exchangeBonus = 0;
+        let critBonus = 0;
+        for (let loc of Object.values(state.locations)) {
+            if (loc.owned) {
+                autoBonus += loc.bonus.auto;
+                exchangeBonus += loc.bonus.exchange;
+                critBonus += loc.bonus.critChance;
+            }
+        }
+        return { autoBonus, exchangeBonus, critBonus };
+    }
+
+    // ==================== ОСНОВНЫЕ ФУНКЦИИ (ХАРДКОР + ЛОКАЦИИ) ====================
     function upgradeCost(type) {
         if(type === 'click') return 15 * (state.clickLvl + 1);
         if(type === 'exch') return 25 * (state.exchLvl + 1);
@@ -743,7 +698,7 @@
     function getArtifactBonuses() {
         let clickBonus = state.artifacts.hammer.level;
         let exchangeBonus = state.artifacts.barrel.level * 0.02;
-        let critDamageBonus = state.artifacts.pickaxe.level * 0.01; // +1% к множителю крита
+        let critDamageBonus = state.artifacts.pickaxe.level * 0.01;
         let autoBonus = state.artifacts.gear.level * 0.5;
         return { clickBonus, exchangeBonus, critDamageBonus, autoBonus };
     }
@@ -756,8 +711,9 @@
     function baseExchangeRate() {
         let base = 1 + state.exchLvl * 0.1;
         let artifactBonus = getArtifactBonuses().exchangeBonus;
+        let locationBonus = getLocationBonuses().exchangeBonus;
         let mult = (1 + state.prestigeBonus/100);
-        return (base + artifactBonus) * mult;
+        return (base + artifactBonus + locationBonus) * mult;
     }
     function exchangeRate() {
         let rate = baseExchangeRate() * state.marketMultiplier;
@@ -768,15 +724,17 @@
     function autoIncome() {
         let base = state.autoLvl;
         let artifactBonus = getArtifactBonuses().autoBonus;
-        let inc = (base + artifactBonus) * (1 + state.prestigeBonus/100);
+        let locationBonus = getLocationBonuses().autoBonus * (state.autoLvl + artifactBonus);
+        let inc = (base + artifactBonus + locationBonus) * (1 + state.prestigeBonus/100);
         if (state.activeEvent && state.activeEvent.type === 'boom') inc = inc * 1.5;
         if (state.boosts.drill.active && Date.now() < state.boosts.drill.endTime) inc = inc * 2;
         return inc;
     }
     function critChance() {
         let base = 10 + state.critLvl * 3;
+        let locationBonus = getLocationBonuses().critBonus * 100;
         if (state.boosts.crit.active && Date.now() < state.boosts.crit.endTime) base += 30;
-        return Math.min(base, 80);
+        return Math.min(base + locationBonus, 80);
     }
     function critMultiplier() {
         let base = 1.5;
@@ -803,7 +761,6 @@
         showToast(`Буст ${boost.name} активирован!`);
         playSound('achievement');
         updateUI();
-        // Автоматически деактивировать через время
         setTimeout(() => {
             if (state.boosts[type].active && Date.now() >= state.boosts[type].endTime) {
                 state.boosts[type].active = false;
@@ -849,11 +806,10 @@
     };
     function tryDropArtifact(source) {
         let chance = 0;
-        if (source === 'click') chance = 0.02;      // 2%
-        if (source === 'exchange') chance = 0.03;    // 3%
-        if (source === 'drill') chance = 0.05;       // 5%
+        if (source === 'click') chance = 0.02;
+        if (source === 'exchange') chance = 0.03;
+        if (source === 'drill') chance = 0.05;
         if (Math.random() > chance) return;
-        // Выбираем случайный артефакт
         let types = ['hammer', 'barrel', 'pickaxe', 'gear'];
         let type = types[Math.floor(Math.random() * types.length)];
         let art = state.artifacts[type];
@@ -888,7 +844,50 @@
         }
     }
 
-    // ==================== СКИНЫ (10 штук) ====================
+    // ==================== ЛОКАЦИИ (НЕФТЯНЫЕ ВЫШКИ) ====================
+    function buyLocation(locId) {
+        let loc = state.locations[locId];
+        if (loc.owned) {
+            showToast("Вы уже владеете этой вышкой!");
+            return;
+        }
+        if (state.rubles < loc.price) {
+            showToast(`Не хватает ${loc.price} ₽ для покупки ${loc.name}!`);
+            return;
+        }
+        state.rubles -= loc.price;
+        loc.owned = true;
+        addLog(`🏭 Куплена нефтяная вышка: ${loc.name} за ${loc.price} ₽!`);
+        showToast(`Вышка ${loc.name} теперь ваша!`);
+        playSound('achievement');
+        updateUI();
+        renderLocations();
+    }
+    function renderLocations() {
+        let container = document.getElementById('locationList');
+        if (!container) return;
+        container.innerHTML = '';
+        for (let [id, loc] of Object.entries(state.locations)) {
+            let div = document.createElement('div');
+            div.className = 'location-card';
+            let bonusText = `+${loc.bonus.auto*100}% добычи, +${loc.bonus.exchange*100}% курса, +${loc.bonus.critChance*100}% шанс крита`;
+            div.innerHTML = `
+                <div class="location-name">${loc.emoji} ${loc.name}</div>
+                <div class="location-bonus">${bonusText}</div>
+                <div>Цена: ${loc.price.toLocaleString()} ₽</div>
+                ${loc.owned ? '<p style="color:#aaffaa;">✅ Владеете</p>' : `<button class="buy-location-btn" data-loc="${id}">Купить</button>`}
+            `;
+            container.appendChild(div);
+        }
+        document.querySelectorAll('.buy-location-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                let locId = btn.getAttribute('data-loc');
+                buyLocation(locId);
+            });
+        });
+    }
+
+    // ==================== СКИНЫ ====================
     const skins = {
         default: { name: "Классическая", emoji: "⛽", gradient: "radial-gradient(circle at 35% 35%, #7a582a, #2c1f0c)", color: "#ffd48a", price: 0, effect: null },
         gold: { name: "Золотая", emoji: "🏆", gradient: "radial-gradient(circle at 35% 35%, #f5c542, #b8860b)", color: "#ffd700", price: 10000, effect: "gold" },
@@ -1509,16 +1508,17 @@
         updateDrillButton();
         renderBoostShop();
         renderArtifacts();
+        renderLocations();
         saveGame();
     }
 
     // ==================== СОХРАНЕНИЕ ====================
     function saveGame() {
-        let data = { oil: state.oil, rubles: state.rubles, clickLvl: state.clickLvl, exchLvl: state.exchLvl, autoLvl: state.autoLvl, critLvl: state.critLvl, managerLvl: state.managerLvl, prestigeBonus: state.prestigeBonus, quests: state.quests, achievements: state.achievements, stats: state.stats, dailyBonusLastClaim: state.dailyBonusLastClaim, dailyBonusStreak: state.dailyBonusStreak, marketMultiplier: state.marketMultiplier, leaderboard: state.leaderboard, critStreak: state.critStreak, lastDrillTime: state.lastDrillTime, pendingInvestment: state.pendingInvestment, currentSkin: state.currentSkin, ownedSkins: state.ownedSkins, boosts: state.boosts, artifacts: state.artifacts };
-        localStorage.setItem('oilHardcoreNeonUltra', JSON.stringify(data));
+        let data = { oil: state.oil, rubles: state.rubles, clickLvl: state.clickLvl, exchLvl: state.exchLvl, autoLvl: state.autoLvl, critLvl: state.critLvl, managerLvl: state.managerLvl, prestigeBonus: state.prestigeBonus, quests: state.quests, achievements: state.achievements, stats: state.stats, dailyBonusLastClaim: state.dailyBonusLastClaim, dailyBonusStreak: state.dailyBonusStreak, marketMultiplier: state.marketMultiplier, leaderboard: state.leaderboard, critStreak: state.critStreak, lastDrillTime: state.lastDrillTime, pendingInvestment: state.pendingInvestment, currentSkin: state.currentSkin, ownedSkins: state.ownedSkins, boosts: state.boosts, artifacts: state.artifacts, locations: state.locations };
+        localStorage.setItem('oilLocations', JSON.stringify(data));
     }
     function loadGame() {
-        let raw = localStorage.getItem('oilHardcoreNeonUltra');
+        let raw = localStorage.getItem('oilLocations');
         if(raw) {
             try {
                 let data = JSON.parse(raw);
@@ -1535,6 +1535,15 @@
                 if(!state.currentSkin) state.currentSkin = "default";
                 if(!state.boosts) state.boosts = { drill: { active: false, endTime: 0 }, crit: { active: false, endTime: 0 }, exchange: { active: false, endTime: 0 } };
                 if(!state.artifacts) state.artifacts = { hammer: { level: 0, bonus: 0 }, barrel: { level: 0, bonus: 0 }, pickaxe: { level: 0, bonus: 0 }, gear: { level: 0, bonus: 0 } };
+                if(!state.locations) {
+                    state.locations = {
+                        siberia: { owned: false, bonus: { auto: 0.1, exchange: 0.05, critChance: 0.01 }, price: 500000, name: "Сибирь", emoji: "🌲" },
+                        texas: { owned: false, bonus: { auto: 0.1, exchange: 0.05, critChance: 0.01 }, price: 1000000, name: "Техас", emoji: "🤠" },
+                        middleEast: { owned: false, bonus: { auto: 0.1, exchange: 0.05, critChance: 0.01 }, price: 2500000, name: "Ближний Восток", emoji: "🐪" },
+                        northSea: { owned: false, bonus: { auto: 0.1, exchange: 0.05, critChance: 0.01 }, price: 5000000, name: "Северное море", emoji: "🌊" },
+                        arctic: { owned: false, bonus: { auto: 0.1, exchange: 0.05, critChance: 0.01 }, price: 10000000, name: "Арктика", emoji: "❄️" }
+                    };
+                }
                 checkAchievements();
             } catch(e) { generateQuests(); }
         } else generateQuests();
@@ -1553,8 +1562,7 @@
         marketUpdateInterval = setInterval(updateMarketRate, 60000);
         updateMarketRate();
         setInterval(() => updateDrillButton(), 1000);
-        // Проверка активности бустов (обновление UI)
-        setInterval(() => { updateUI(); }, 1000);
+        setInterval(() => updateUI(), 1000);
     }
 
     // ==================== ОБРАБОТЧИКИ ====================
@@ -1564,7 +1572,7 @@
         document.getElementById('exchangeBtn').onclick = () => { let amt = parseInt(document.getElementById('amount').value); if(isNaN(amt)) amt = 1; exchange(amt); };
         document.getElementById('exchangeAll').onclick = () => exchange(state.oil);
         document.getElementById('prestigeBtn').onclick = prestige;
-        document.getElementById('reset').onclick = () => { if(confirm('Сбросить весь прогресс?')) { localStorage.removeItem('oilHardcoreNeonUltra'); location.reload(); } };
+        document.getElementById('reset').onclick = () => { if(confirm('Сбросить весь прогресс?')) { localStorage.removeItem('oilLocations'); location.reload(); } };
         document.getElementById('reroll').onclick = () => { generateQuests(); updateUI(); };
         document.getElementById('soundToggle').onclick = toggleSound;
         document.getElementById('resetStatsBtn').onclick = () => { if(confirm('Сбросить статистику?')) { state.stats = { totalClicks:0, totalOilProduced:0, totalRublesEarned:0, startTime: Date.now() }; updateUI(); addLog('📊 Статистика сброшена'); } };
@@ -1578,6 +1586,8 @@
         document.getElementById('closeBoostBtn').onclick = () => { document.getElementById('boostShopModal').style.display = 'none'; };
         document.getElementById('openArtifactBtn').onclick = () => { renderArtifacts(); document.getElementById('artifactModal').style.display = 'block'; };
         document.getElementById('closeArtifactBtn').onclick = () => { document.getElementById('artifactModal').style.display = 'none'; };
+        document.getElementById('openLocationBtn').onclick = () => { renderLocations(); document.getElementById('locationModal').style.display = 'block'; };
+        document.getElementById('closeLocationBtn').onclick = () => { document.getElementById('locationModal').style.display = 'none'; };
     }
 
     // ==================== ФОН И ЗАСТАВКА ====================
