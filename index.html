@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Нефтяной Магнат | Хардкор + Элитные скины</title>
+    <title>Нефтяной Магнат | Хардкор + Бусты + Артефакты</title>
     <style>
         * {
             margin: 0;
@@ -380,6 +380,60 @@
             padding: 4px 12px;
         }
 
+        /* Стили для магазина бустов */
+        .boost-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .boost-card {
+            background: rgba(0,20,30,0.8);
+            border-radius: 32px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #0ff;
+        }
+        .boost-card h4 {
+            color: #ffdd99;
+            margin-bottom: 5px;
+        }
+        .boost-card p {
+            font-size: 0.7rem;
+            color: #0ff;
+        }
+        .boost-btn {
+            margin-top: 8px;
+            background: #2a6b5a;
+        }
+
+        /* Стили для артефактов */
+        .artifact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .artifact-card {
+            background: rgba(0,20,30,0.8);
+            border-radius: 32px;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ff44ff;
+        }
+        .artifact-name {
+            font-weight: bold;
+            color: #ffdd99;
+        }
+        .artifact-level {
+            font-size: 0.7rem;
+            color: #0ff;
+        }
+        .artifact-bonus {
+            font-size: 0.7rem;
+            color: #aaffaa;
+        }
+
         .modal {
             position: fixed;
             top: 0;
@@ -489,7 +543,7 @@
             button { padding: 5px 14px; }
             .panel { padding: 0.8rem; }
             .flex-row { flex-direction: column; align-items: stretch; }
-            .skin-grid { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
+            .skin-grid, .boost-grid, .artifact-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -501,7 +555,7 @@
 <div class="splash" id="splash" style="position:fixed; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle at center, #0a0f1a, #010105); display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:10000; gap:20px; transition:opacity 0.8s;">
     <div style="font-size:5rem; filter:drop-shadow(0 0 20px #0ff); animation: bounce 1s infinite alternate;">🛢️</div>
     <h1 style="font-size:2.2rem; background:linear-gradient(135deg,#FFE0A3,#FFA559,#0ff); -webkit-background-clip:text; background-clip:text; color:transparent;">НЕФТЯНОЙ МАГНАТ</h1>
-    <p style="color:#0ff; text-shadow:0 0 5px cyan;">ХАРДКОР + ЭЛИТНЫЕ СКИНЫ</p>
+    <p style="color:#0ff; text-shadow:0 0 5px cyan;">ХАРДКОР + БУСТЫ + АРТЕФАКТЫ</p>
     <div style="width:200px; height:2px; background:rgba(0,255,255,0.3); border-radius:3px;"><div style="width:0%; height:100%; background:#0ff; animation:fillProgress 1.5s forwards;"></div></div>
 </div>
 <style>
@@ -512,7 +566,7 @@
 <div class="game" id="game">
     <div class="title">
         <h1>🛢️ НЕФТЯНОЙ МАГНАТ 🛢️</h1>
-        <p>⭐ КИБЕРПАНК · ХАРДКОР · ЭКСКЛЮЗИВ ⭐</p>
+        <p>⭐ КИБЕРПАНК · ХАРДКОР · БУСТЫ · АРТЕФАКТЫ ⭐</p>
     </div>
 
     <div class="stats">
@@ -536,6 +590,30 @@
             <input type="number" id="amount" value="10" style="width:70px; background:#0a2a2a; border:1px solid #0ff; border-radius:40px; padding:6px; color:#0ff;">
             <button id="exchangeBtn">Обменять</button>
             <button id="exchangeAll">Всё</button>
+        </div>
+    </div>
+
+    <!-- Магазин бустов -->
+    <div class="shop-panel">
+        <div class="flex-row">
+            <strong style="text-shadow:0 0 3px magenta;">⚡ МАГАЗИН ВРЕМЕННЫХ БУСТОВ</strong>
+            <button id="openBoostBtn" style="background:#8a2be2;">🚀 Открыть бусты</button>
+        </div>
+        <div id="boostShopModal" style="display: none; margin-top: 12px;">
+            <div id="boostList" class="boost-grid"></div>
+            <button id="closeBoostBtn" style="margin-top: 10px; background:#a0452f;">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Коллекция артефактов -->
+    <div class="shop-panel">
+        <div class="flex-row">
+            <strong style="text-shadow:0 0 3px magenta;">📦 НЕФТЯНЫЕ АРТЕФАКТЫ</strong>
+            <button id="openArtifactBtn" style="background:#8a2be2;">🗿 Посмотреть артефакты</button>
+        </div>
+        <div id="artifactModal" style="display: none; margin-top: 12px;">
+            <div id="artifactList" class="artifact-grid"></div>
+            <button id="closeArtifactBtn" style="margin-top: 10px; background:#a0452f;">Закрыть</button>
         </div>
     </div>
 
@@ -571,7 +649,7 @@
 
     <div class="shop-panel">
         <div class="flex-row">
-            <strong style="text-shadow:0 0 3px magenta;">🎨 МАГАЗИН СКИНОВ (ЭКСКЛЮЗИВНЫЕ ЭФФЕКТЫ)</strong>
+            <strong style="text-shadow:0 0 3px magenta;">🎨 МАГАЗИН СКИНОВ ДЛЯ КНОПКИ</strong>
             <button id="openShopBtn" style="background:#8a2be2;">🛒 Открыть магазин</button>
         </div>
         <div id="skinShopModal" style="display: none; margin-top: 12px;">
@@ -596,14 +674,14 @@
         <button id="resetStatsBtn">Сбросить статистику</button>
     </div>
     <button class="reset-btn" id="reset">⛔ ПОЛНЫЙ СБРОС ⛔</button>
-    <footer>✨ 10 уникальных скинов | Эффекты при клике | Хардкорный баланс</footer>
+    <footer>✨ Бусты + Артефакты | 10 скинов | Мини-игра | События</footer>
 </div>
 
 <script>
     // ==================== СОСТОЯНИЕ ====================
     let state = {
         oil: 0,
-        rubles: 5,
+        rubles: 50,        // увеличен стартовый капитал, чтобы можно было купить первое улучшение
         clickLvl: 0,
         exchLvl: 0,
         autoLvl: 0,
@@ -634,7 +712,20 @@
         activeEvent: null,
         pendingInvestment: null,
         currentSkin: "default",
-        ownedSkins: ["default"]
+        ownedSkins: ["default"],
+        // Бусты
+        boosts: {
+            drill: { active: false, endTime: 0 },
+            crit: { active: false, endTime: 0 },
+            exchange: { active: false, endTime: 0 }
+        },
+        // Артефакты
+        artifacts: {
+            hammer: { level: 0, bonus: 0 },     // +1 к силе клика за уровень
+            barrel: { level: 0, bonus: 0 },      // +2% к курсу за уровень
+            pickaxe: { level: 0, bonus: 0 },     // +1% к критическому урону за уровень
+            gear: { level: 0, bonus: 0 }         // +0.5 нефти/сек за уровень
+        }
     };
 
     let soundEnabled = true;
@@ -649,22 +740,155 @@
         if(type === 'manager') return 120 * (state.managerLvl + 1);
         return 0;
     }
-    function clickPower() { return (1 + state.clickLvl) * (1 + state.prestigeBonus/100); }
-    function baseExchangeRate() { return (1 + state.exchLvl * 0.1) * (1 + state.prestigeBonus/100); }
+    function getArtifactBonuses() {
+        let clickBonus = state.artifacts.hammer.level;
+        let exchangeBonus = state.artifacts.barrel.level * 0.02;
+        let critDamageBonus = state.artifacts.pickaxe.level * 0.01; // +1% к множителю крита
+        let autoBonus = state.artifacts.gear.level * 0.5;
+        return { clickBonus, exchangeBonus, critDamageBonus, autoBonus };
+    }
+    function clickPower() {
+        let base = 1 + state.clickLvl;
+        let artifactBonus = getArtifactBonuses().clickBonus;
+        let mult = (1 + state.prestigeBonus/100);
+        return (base + artifactBonus) * mult;
+    }
+    function baseExchangeRate() {
+        let base = 1 + state.exchLvl * 0.1;
+        let artifactBonus = getArtifactBonuses().exchangeBonus;
+        let mult = (1 + state.prestigeBonus/100);
+        return (base + artifactBonus) * mult;
+    }
     function exchangeRate() {
         let rate = baseExchangeRate() * state.marketMultiplier;
         if (state.activeEvent && state.activeEvent.type === 'exchangeCrash') rate = rate * 0.5;
+        if (state.boosts.exchange.active && Date.now() < state.boosts.exchange.endTime) rate = rate * 2;
         return rate;
     }
     function autoIncome() {
-        let inc = state.autoLvl * (1 + state.prestigeBonus/100);
+        let base = state.autoLvl;
+        let artifactBonus = getArtifactBonuses().autoBonus;
+        let inc = (base + artifactBonus) * (1 + state.prestigeBonus/100);
         if (state.activeEvent && state.activeEvent.type === 'boom') inc = inc * 1.5;
+        if (state.boosts.drill.active && Date.now() < state.boosts.drill.endTime) inc = inc * 2;
         return inc;
     }
-    function critChance() { return Math.min(10 + state.critLvl * 3, 50); }
-    function critMultiplier() { return 1.5; }
+    function critChance() {
+        let base = 10 + state.critLvl * 3;
+        if (state.boosts.crit.active && Date.now() < state.boosts.crit.endTime) base += 30;
+        return Math.min(base, 80);
+    }
+    function critMultiplier() {
+        let base = 1.5;
+        let artifactBonus = getArtifactBonuses().critDamageBonus;
+        return base + artifactBonus;
+    }
 
-    // ==================== СКИНЫ (10 штук с эффектами) ====================
+    // ==================== БУСТЫ ====================
+    const boostsList = {
+        drill: { name: "Ускорение бурения", price: 5000, duration: 3600000, desc: "x2 добычи на 1 час" },
+        crit: { name: "Критический импульс", price: 10000, duration: 1800000, desc: "+30% к шансу крита на 30 мин" },
+        exchange: { name: "Золотая лихорадка", price: 20000, duration: 900000, desc: "x2 к курсу на 15 мин" }
+    };
+    function buyBoost(type) {
+        let boost = boostsList[type];
+        if (state.rubles < boost.price) {
+            showToast(`Не хватает ${boost.price} ₽!`);
+            return;
+        }
+        state.rubles -= boost.price;
+        state.boosts[type].active = true;
+        state.boosts[type].endTime = Date.now() + boost.duration;
+        addLog(`🚀 Активирован буст: ${boost.name} на ${boost.duration/60000} минут!`);
+        showToast(`Буст ${boost.name} активирован!`);
+        playSound('achievement');
+        updateUI();
+        // Автоматически деактивировать через время
+        setTimeout(() => {
+            if (state.boosts[type].active && Date.now() >= state.boosts[type].endTime) {
+                state.boosts[type].active = false;
+                addLog(`⏰ Буст ${boost.name} закончился.`);
+                updateUI();
+            }
+        }, boost.duration);
+    }
+    function renderBoostShop() {
+        let container = document.getElementById('boostList');
+        if (!container) return;
+        container.innerHTML = '';
+        for (let [id, boost] of Object.entries(boostsList)) {
+            let active = state.boosts[id].active && Date.now() < state.boosts[id].endTime;
+            let remaining = active ? Math.ceil((state.boosts[id].endTime - Date.now()) / 1000) : 0;
+            let timeStr = active ? ` (активен ещё ${Math.floor(remaining/60)} мин ${remaining%60} сек)` : '';
+            let div = document.createElement('div');
+            div.className = 'boost-card';
+            div.innerHTML = `
+                <h4>${boost.name}</h4>
+                <p>${boost.desc}</p>
+                <p>Цена: ${boost.price} ₽</p>
+                ${active ? `<p style="color:#ffaa33;">✅ АКТИВЕН${timeStr}</p>` : `<button class="boost-btn" data-boost="${id}">Активировать</button>`}
+            `;
+            container.appendChild(div);
+        }
+        document.querySelectorAll('.boost-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                let boostId = btn.getAttribute('data-boost');
+                buyBoost(boostId);
+                renderBoostShop();
+                updateUI();
+            });
+        });
+    }
+
+    // ==================== АРТЕФАКТЫ ====================
+    const artifactsData = {
+        hammer: { name: "Геологический молоток", baseBonus: 1, unit: "+1 к силе клика", maxLevel: 10 },
+        barrel: { name: "Бочка удачи", baseBonus: 0.02, unit: "+2% к курсу", maxLevel: 10 },
+        pickaxe: { name: "Острый отбойник", baseBonus: 0.01, unit: "+1% к критическому урону", maxLevel: 10 },
+        gear: { name: "Нефтяная шестерня", baseBonus: 0.5, unit: "+0.5 нефти/сек", maxLevel: 10 }
+    };
+    function tryDropArtifact(source) {
+        let chance = 0;
+        if (source === 'click') chance = 0.02;      // 2%
+        if (source === 'exchange') chance = 0.03;    // 3%
+        if (source === 'drill') chance = 0.05;       // 5%
+        if (Math.random() > chance) return;
+        // Выбираем случайный артефакт
+        let types = ['hammer', 'barrel', 'pickaxe', 'gear'];
+        let type = types[Math.floor(Math.random() * types.length)];
+        let art = state.artifacts[type];
+        if (art.level >= artifactsData[type].maxLevel) return;
+        art.level++;
+        art.bonus = art.level * artifactsData[type].baseBonus;
+        addLog(`✨ Вам выпал артефакт: ${artifactsData[type].name} (уровень ${art.level})!`);
+        showToast(`📦 Найден артефакт: ${artifactsData[type].name}!`);
+        playSound('achievement');
+        updateUI();
+        renderArtifacts();
+    }
+    function renderArtifacts() {
+        let container = document.getElementById('artifactList');
+        if (!container) return;
+        container.innerHTML = '';
+        for (let [id, data] of Object.entries(artifactsData)) {
+            let art = state.artifacts[id];
+            let bonusValue = art.bonus;
+            let unit = data.unit;
+            if (id === 'barrel') bonusValue = (art.bonus * 100).toFixed(1) + '%';
+            if (id === 'pickaxe') bonusValue = (art.bonus * 100).toFixed(1) + '%';
+            if (id === 'gear') bonusValue = art.bonus.toFixed(1);
+            let div = document.createElement('div');
+            div.className = 'artifact-card';
+            div.innerHTML = `
+                <div class="artifact-name">${data.name}</div>
+                <div class="artifact-level">Уровень: ${art.level} / ${data.maxLevel}</div>
+                <div class="artifact-bonus">Бонус: ${bonusValue} ${unit}</div>
+            `;
+            container.appendChild(div);
+        }
+    }
+
+    // ==================== СКИНЫ (10 штук) ====================
     const skins = {
         default: { name: "Классическая", emoji: "⛽", gradient: "radial-gradient(circle at 35% 35%, #7a582a, #2c1f0c)", color: "#ffd48a", price: 0, effect: null },
         gold: { name: "Золотая", emoji: "🏆", gradient: "radial-gradient(circle at 35% 35%, #f5c542, #b8860b)", color: "#ffd700", price: 10000, effect: "gold" },
@@ -677,16 +901,12 @@
         rainbow: { name: "Радужная", emoji: "🌈", gradient: "linear-gradient(135deg, red, orange, yellow, green, cyan, blue, violet)", color: "#ffffff", price: 1000000, effect: "rainbow" },
         angelic: { name: "Ангельская", emoji: "👼", gradient: "radial-gradient(circle at 35% 35%, #ffdd88, #ffaa33)", color: "#ffffcc", price: 2000000, effect: "angelic" }
     };
-
     function applySkin() {
         let btn = document.getElementById('clickBtn');
         let skin = skins[state.currentSkin];
         if (!skin) return;
-        if (skin.gradient.includes('linear-gradient')) {
-            btn.style.background = skin.gradient;
-        } else {
-            btn.style.background = skin.gradient;
-        }
+        if (skin.gradient.includes('linear-gradient')) btn.style.background = skin.gradient;
+        else btn.style.background = skin.gradient;
         btn.style.color = skin.color;
         btn.innerText = skin.emoji;
         btn.style.transform = 'scale(1.1)';
@@ -696,7 +916,6 @@
             showSkinEffect(rect.left + rect.width/2, rect.top + rect.height/2, skin.effect);
         }
     }
-
     function showSkinEffect(x, y, effect) {
         let count = 20;
         let color;
@@ -736,7 +955,6 @@
         document.body.appendChild(flash);
         setTimeout(() => flash.remove(), 400);
     }
-
     function renderSkinShop() {
         let container = document.getElementById('skinList');
         if (!container) return;
@@ -854,6 +1072,7 @@
         if(fromClick) {
             state.stats.totalClicks++;
             if(soundEnabled) playSound('click');
+            tryDropArtifact('click');
         }
         if(fromClick && clientX && clientY) {
             showFloatingNumber(clientX, clientY, final.toFixed(1), isCrit);
@@ -873,6 +1092,7 @@
         state.stats.totalRublesEarned += gain;
         addLog(`💱 Обмен ${toEx.toFixed(0)} нефти → +${gain.toFixed(2)} ₽`);
         updateQuests('rubles', gain);
+        tryDropArtifact('exchange');
         checkAchievements();
         updateUI();
     }
@@ -999,7 +1219,7 @@
         if (!ach.patientInvestor && state.dailyBonusStreak >= 7) { ach.patientInvestor = true; giveAchievementReward("Терпеливый инвестор (7 дней подряд)", 3000); }
         if (!ach.masterClick && state.stats.totalClicks >= 20000) { ach.masterClick = true; giveAchievementReward("Мастер клика (20 000 кликов)", 5000); }
         if (!ach.billionaire && state.stats.totalRublesEarned >= 2000000000) { ach.billionaire = true; giveAchievementReward("Магнат-миллиардер (2 000 000 000 ₽)", 50000); }
-        let autoPerSec = state.autoLvl * (1 + state.prestigeBonus/100);
+        let autoPerSec = autoIncome();
         if (!ach.eternalEngine && autoPerSec >= 100) { ach.eternalEngine = true; giveAchievementReward("Вечный двигатель (100 нефти/сек)", 10000); }
     }
 
@@ -1112,6 +1332,7 @@
                 state.lastDrillTime = Date.now();
                 addLog(`⛏️ Мини-игра «Бурение»: вы добыли ${reward} нефти!`);
                 showToast(`⛏️ +${reward} нефти`);
+                tryDropArtifact('drill');
                 updateUI();
                 modal.remove();
             }
@@ -1192,7 +1413,7 @@
         checkAchievements();
     }
 
-    // ==================== ЛИДЕРБОРД ====================
+    // ==================== ТАБЛИЦА ЛИДЕРОВ ====================
     function saveLeaderboardEntry(name, score) {
         if (!name || name.trim() === '') name = "Аноним";
         state.leaderboard.push({ name: name.trim(), score: score, date: Date.now() });
@@ -1286,16 +1507,18 @@
         renderLeaderboard();
         checkDailyBonus();
         updateDrillButton();
+        renderBoostShop();
+        renderArtifacts();
         saveGame();
     }
 
     // ==================== СОХРАНЕНИЕ ====================
     function saveGame() {
-        let data = { oil: state.oil, rubles: state.rubles, clickLvl: state.clickLvl, exchLvl: state.exchLvl, autoLvl: state.autoLvl, critLvl: state.critLvl, managerLvl: state.managerLvl, prestigeBonus: state.prestigeBonus, quests: state.quests, achievements: state.achievements, stats: state.stats, dailyBonusLastClaim: state.dailyBonusLastClaim, dailyBonusStreak: state.dailyBonusStreak, marketMultiplier: state.marketMultiplier, leaderboard: state.leaderboard, critStreak: state.critStreak, lastDrillTime: state.lastDrillTime, pendingInvestment: state.pendingInvestment, currentSkin: state.currentSkin, ownedSkins: state.ownedSkins };
-        localStorage.setItem('oilHardcoreNeon', JSON.stringify(data));
+        let data = { oil: state.oil, rubles: state.rubles, clickLvl: state.clickLvl, exchLvl: state.exchLvl, autoLvl: state.autoLvl, critLvl: state.critLvl, managerLvl: state.managerLvl, prestigeBonus: state.prestigeBonus, quests: state.quests, achievements: state.achievements, stats: state.stats, dailyBonusLastClaim: state.dailyBonusLastClaim, dailyBonusStreak: state.dailyBonusStreak, marketMultiplier: state.marketMultiplier, leaderboard: state.leaderboard, critStreak: state.critStreak, lastDrillTime: state.lastDrillTime, pendingInvestment: state.pendingInvestment, currentSkin: state.currentSkin, ownedSkins: state.ownedSkins, boosts: state.boosts, artifacts: state.artifacts };
+        localStorage.setItem('oilHardcoreNeonUltra', JSON.stringify(data));
     }
     function loadGame() {
-        let raw = localStorage.getItem('oilHardcoreNeon');
+        let raw = localStorage.getItem('oilHardcoreNeonUltra');
         if(raw) {
             try {
                 let data = JSON.parse(raw);
@@ -1310,6 +1533,8 @@
                 if(state.pendingInvestment === undefined) state.pendingInvestment = null;
                 if(!state.ownedSkins) state.ownedSkins = ["default"];
                 if(!state.currentSkin) state.currentSkin = "default";
+                if(!state.boosts) state.boosts = { drill: { active: false, endTime: 0 }, crit: { active: false, endTime: 0 }, exchange: { active: false, endTime: 0 } };
+                if(!state.artifacts) state.artifacts = { hammer: { level: 0, bonus: 0 }, barrel: { level: 0, bonus: 0 }, pickaxe: { level: 0, bonus: 0 }, gear: { level: 0, bonus: 0 } };
                 checkAchievements();
             } catch(e) { generateQuests(); }
         } else generateQuests();
@@ -1328,6 +1553,8 @@
         marketUpdateInterval = setInterval(updateMarketRate, 60000);
         updateMarketRate();
         setInterval(() => updateDrillButton(), 1000);
+        // Проверка активности бустов (обновление UI)
+        setInterval(() => { updateUI(); }, 1000);
     }
 
     // ==================== ОБРАБОТЧИКИ ====================
@@ -1337,7 +1564,7 @@
         document.getElementById('exchangeBtn').onclick = () => { let amt = parseInt(document.getElementById('amount').value); if(isNaN(amt)) amt = 1; exchange(amt); };
         document.getElementById('exchangeAll').onclick = () => exchange(state.oil);
         document.getElementById('prestigeBtn').onclick = prestige;
-        document.getElementById('reset').onclick = () => { if(confirm('Сбросить весь прогресс?')) { localStorage.removeItem('oilHardcoreNeon'); location.reload(); } };
+        document.getElementById('reset').onclick = () => { if(confirm('Сбросить весь прогресс?')) { localStorage.removeItem('oilHardcoreNeonUltra'); location.reload(); } };
         document.getElementById('reroll').onclick = () => { generateQuests(); updateUI(); };
         document.getElementById('soundToggle').onclick = toggleSound;
         document.getElementById('resetStatsBtn').onclick = () => { if(confirm('Сбросить статистику?')) { state.stats = { totalClicks:0, totalOilProduced:0, totalRublesEarned:0, startTime: Date.now() }; updateUI(); addLog('📊 Статистика сброшена'); } };
@@ -1347,6 +1574,10 @@
         document.getElementById('drillGameBtn').onclick = showDrillGame;
         document.getElementById('openShopBtn').onclick = () => { renderSkinShop(); document.getElementById('skinShopModal').style.display = 'block'; };
         document.getElementById('closeShopBtn').onclick = () => { document.getElementById('skinShopModal').style.display = 'none'; };
+        document.getElementById('openBoostBtn').onclick = () => { renderBoostShop(); document.getElementById('boostShopModal').style.display = 'block'; };
+        document.getElementById('closeBoostBtn').onclick = () => { document.getElementById('boostShopModal').style.display = 'none'; };
+        document.getElementById('openArtifactBtn').onclick = () => { renderArtifacts(); document.getElementById('artifactModal').style.display = 'block'; };
+        document.getElementById('closeArtifactBtn').onclick = () => { document.getElementById('artifactModal').style.display = 'none'; };
     }
 
     // ==================== ФОН И ЗАСТАВКА ====================
