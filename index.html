@@ -2,280 +2,1839 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>X-CHANGE | DIGITAL EMPIRE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Нефтяной Магнат | Скины + Цепочки</title>
     <style>
-        :root {
-            --bg: #030303;
-            --card: rgba(20, 20, 20, 0.8);
-            --neon: #00f2ff;
-            --gold: #ffcc00;
-            --red: #ff3c3c;
-            --text: #ffffff;
-            --border: 1px solid rgba(0, 242, 255, 0.2);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Rajdhani', sans-serif;
-            height: 100vh;
-            overflow: hidden;
-            background-image: radial-gradient(circle at 50% 50%, #0a1114 0%, #030303 100%);
-        }
-
-        /* HEADER */
-        header {
-            padding: 20px;
+            font-family: 'Inter', 'Poppins', system-ui, sans-serif;
+            min-height: 100vh;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            border-bottom: var(--border);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+            padding: 16px;
+            position: relative;
+            overflow-x: hidden;
+            background: #050a0f;
         }
 
-        .brand { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 3px; }
-        .brand span { color: var(--neon); }
-
-        .balance-box { text-align: right; }
-        .balance-label { font-size: 0.7rem; color: #777; text-transform: uppercase; }
-        .balance-val { color: var(--neon); font-size: 1.4rem; font-weight: 700; text-shadow: 0 0 10px rgba(0, 242, 255, 0.5); }
-
-        /* SCROLL AREA */
-        main {
-            height: calc(100vh - 150px);
-            overflow-y: auto;
-            padding: 15px;
-            padding-bottom: 30px;
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 30% 40%, #0a1a25, #010a0f);
+        }
+        .particle-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .bg-particle {
+            position: absolute;
+            background: rgba(0, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: floatParticle linear infinite;
+        }
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+        .neon-wave {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, cyan, magenta, cyan, transparent);
+            filter: blur(3px);
+            animation: waveMove 6s linear infinite;
+            z-index: -1;
+        }
+        @keyframes waveMove {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
-        .section-header {
-            font-size: 0.8rem;
-            color: #555;
-            text-transform: uppercase;
+        .game {
+            max-width: 1300px;
+            width: 100%;
+            background: rgba(10, 15, 30, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 64px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 1.8rem;
+            animation: fadeInDown 0.6s;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .title h1 {
+            font-size: clamp(1.8rem, 6vw, 2.8rem);
+            background: linear-gradient(135deg, #fff0c0, #ff66cc, #0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(0,255,255,0.8);
             letter-spacing: 2px;
-            margin: 20px 0 10px 5px;
         }
-
-        /* CREATE PANEL */
-        .create-form {
-            background: var(--card);
-            border: var(--border);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-
-        input {
-            width: 100%;
-            background: #000;
-            border: 1px solid #333;
-            padding: 12px;
+        .title p {
             color: #fff;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            text-shadow: 0 0 5px cyan, 0 0 3px magenta;
         }
 
-        input:focus { border-color: var(--neon); }
+        .stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            flex: 1;
+            min-width: 100px;
+            background: rgba(0, 20, 30, 0.8);
+            backdrop-filter: blur(8px);
+            border-radius: 40px;
+            padding: 0.8rem 0.5rem;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-bottom: 3px solid #0ff;
+            box-shadow: 0 0 10px rgba(0,255,255,0.4);
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(0,255,255,0.7);
+        }
+        .stat-card h3 {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #fff;
+            text-shadow: 0 0 5px cyan;
+        }
+        .stat-card .value {
+            font-size: clamp(1.6rem, 5vw, 2.2rem);
+            font-weight: 800;
+            color: #ffffaa;
+            text-shadow: 0 0 8px #ffaa33, 0 0 3px cyan;
+        }
 
-        button.main-btn {
-            width: 100%;
-            padding: 12px;
-            background: var(--neon);
-            color: #000;
+        .click-area {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0 2rem;
+        }
+        .oil-btn {
+            width: clamp(150px, 30vw, 210px);
+            height: clamp(150px, 30vw, 210px);
+            border-radius: 50%;
             border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            text-transform: uppercase;
+            font-size: clamp(3rem, 8vw, 5rem);
             cursor: pointer;
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+            transition: transform 0.07s linear, box-shadow 0.2s;
+            animation: pulseNeon 2s infinite, float 3s infinite ease-in-out;
+            box-shadow: 0 0 0 3px rgba(0,255,255,0.5), 0 0 15px rgba(255,0,255,0.3);
+        }
+        @keyframes pulseNeon {
+            0% { box-shadow: 0 0 0 0 rgba(0,255,255,0.4), 0 0 0 0 rgba(255,0,255,0.2); }
+            70% { box-shadow: 0 0 0 15px rgba(0,255,255,0), 0 0 0 10px rgba(255,0,255,0); }
+            100% { box-shadow: 0 0 0 0 rgba(0,255,255,0), 0 0 0 0 rgba(255,0,255,0); }
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        .oil-btn:active {
+            transform: scale(0.96);
+        }
+        .crit-glow {
+            animation: critFlash 0.2s ease-out;
+        }
+        @keyframes critFlash {
+            0% { box-shadow: 0 0 0 0 #ffaa33; }
+            100% { box-shadow: 0 0 40px 20px #ffaa33; }
         }
 
-        /* MARKET ITEMS */
-        .market-list { display: flex; flex-direction: column; gap: 12px; }
-
-        .item {
-            background: var(--card);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 15px;
+        .upgrades {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+            margin: 1.5rem 0;
+        }
+        .upgrade {
+            background: rgba(0, 25, 30, 0.9);
+            backdrop-filter: blur(8px);
+            border-radius: 48px;
+            padding: 12px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: 0.3s;
+            flex-wrap: wrap;
+            gap: 8px;
+            border: 1px solid rgba(0, 255, 200, 0.6);
+            transition: all 0.2s;
+        }
+        .upgrade:hover {
+            transform: translateX(5px);
+            border-color: #0ff;
+            box-shadow: 0 0 15px cyan;
+        }
+        .upgrade span:first-child {
+            font-weight: 600;
+            color: #fff0c0;
+            text-shadow: 0 0 5px #ffaa33;
+        }
+        button {
+            border: none;
+            padding: 6px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #1a4a3a;
+            color: #f5e6cf;
+        }
+        .buy {
+            background: linear-gradient(135deg, #e08e34, #b3621a);
+            color: white;
+            box-shadow: 0 0 8px #ffaa33;
+        }
+        .buy:hover:not(:disabled) {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px #ffaa33;
+        }
+        .buy:disabled {
+            background: #5a5a4a;
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
-        .item:hover { border-color: var(--neon); }
+        .panel {
+            background: rgba(0, 20, 25, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 1rem 1.2rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(0, 255, 200, 0.5);
+            transition: all 0.3s;
+        }
+        .flex-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .market-indicator {
+            font-size: 0.9rem;
+            background: rgba(0,0,0,0.6);
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .positive { color: #6fcf97; text-shadow: 0 0 3px #00ff00; }
+        .negative { color: #ff8c42; text-shadow: 0 0 3px #ff4400; }
 
-        .coin-meta { display: flex; align-items: center; gap: 15px; }
-        .coin-icon {
-            width: 45px; height: 45px; border-radius: 50%;
-            background: #111; border: 1px solid #333;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 700; color: var(--neon); font-size: 1.2rem;
+        .event-log {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 32px;
+            padding: 8px 14px;
+            max-height: 100px;
+            overflow-y: auto;
+            font-size: 0.7rem;
+            font-family: monospace;
+            margin-top: 1rem;
+            color: #ccffcc;
+            border: 1px solid rgba(0,255,200,0.4);
+            text-shadow: 0 0 2px #00ff00;
+        }
+        canvas {
+            background: rgba(0, 20, 25, 0.8);
+            border-radius: 32px;
+            width: 100%;
+            height: 90px;
+            margin-top: 12px;
+        }
+        .leaderboard {
+            margin-top: 0.5rem;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .leaderboard-entry {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.7);
+            padding: 6px 14px;
+            border-radius: 40px;
+            margin: 4px 0;
+            border-left: 3px solid #0ff;
+            color: #ffffcc;
+            text-shadow: 0 0 2px cyan;
+        }
+        .daily-badge {
+            background: linear-gradient(135deg, #ffb347, #ff8c1a);
+            color: #1f2a1c;
+            border-radius: 40px;
+            padding: 2px 12px;
+            font-weight: bold;
+        }
+        .reset-btn {
+            background: #a0452f;
+            width: 100%;
+            margin-top: 1.2rem;
+            padding: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+        }
+        .reset-btn:hover {
+            background: #c2543a;
+            box-shadow: 0 0 15px #ff4422;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.65rem;
+            margin-top: 1rem;
+            color: #ffffff;
+            text-shadow: 0 0 3px cyan;
         }
 
-        .coin-name { font-weight: 700; font-size: 1.1rem; }
-        .coin-owner { font-size: 0.75rem; color: #666; }
-
-        .price-data { text-align: right; }
-        .price { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: var(--text); }
-        .change { font-size: 0.8rem; font-weight: 700; }
-        .up { color: var(--neon); }
-        .down { color: var(--red); }
-
-        .trade-btns { display: flex; gap: 5px; margin-top: 10px; }
-        .trade-btns button {
-            flex: 1; padding: 6px; border-radius: 5px; border: 1px solid #333;
-            background: transparent; color: #fff; font-size: 0.7rem; cursor: pointer;
+        .shop-panel, .boost-panel, .artifact-panel, .rigs-panel {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(16px);
+            border-radius: 48px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid #ff44ff;
         }
-        .btn-buy:active { background: var(--neon); color: #000; }
-
-        /* NAV */
-        nav {
-            position: fixed; bottom: 0; width: 100%; height: 70px;
-            background: rgba(10,10,10,0.9); border-top: var(--border);
-            display: flex; justify-content: space-around; align-items: center;
+        .skin-grid, .boost-grid, .artifact-grid, .rigs-grid, .chain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+            max-height: 400px;
+            overflow-y: auto;
         }
-        .nav-link { color: #555; text-decoration: none; font-size: 0.7rem; text-align: center; }
-        .nav-link.active { color: var(--neon); }
-
-        /* ANIMATION */
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        .skin-card, .boost-card, .artifact-card, .rig-card, .chain-card {
+            background: rgba(0,20,30,0.8);
+            border-radius: 32px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(0,255,200,0.4);
         }
-        .live-dot { width: 8px; height: 8px; background: var(--neon); border-radius: 50%; display: inline-block; margin-right: 5px; animation: pulse 1.5s infinite; }
+        .skin-card:hover, .boost-card:hover, .artifact-card:hover, .rig-card:hover, .chain-card:hover {
+            transform: scale(1.02);
+            border-color: cyan;
+            box-shadow: 0 0 12px cyan;
+        }
+        .skin-card.active {
+            border: 2px solid #ff44ff;
+            box-shadow: 0 0 15px magenta;
+        }
+        .skin-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        .skin-name, .rig-name {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #ffdd99;
+            text-shadow: 0 0 3px #ffaa33;
+        }
+        .skin-price, .rig-price {
+            font-size: 0.7rem;
+            color: #0ff;
+        }
+        .buy-skin-btn, .buy-rig-btn {
+            margin-top: 6px;
+            background: #2a6b5a;
+            font-size: 0.7rem;
+            padding: 4px 12px;
+        }
+        .boost-card h4 {
+            color: #ffdd99;
+            margin-bottom: 5px;
+        }
+        .boost-card p {
+            font-size: 0.7rem;
+            color: #0ff;
+        }
+        .artifact-name {
+            font-weight: bold;
+            color: #ffdd99;
+        }
+        .artifact-level {
+            font-size: 0.7rem;
+            color: #0ff;
+        }
+        .artifact-bonus {
+            font-size: 0.7rem;
+            color: #aaffaa;
+        }
+        .chain-progress {
+            font-size: 0.7rem;
+            color: #aaffaa;
+            margin-top: 5px;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeInModal 0.3s ease;
+        }
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-content {
+            background: linear-gradient(145deg, #0a2a2a, #021010);
+            border-radius: 64px;
+            padding: 2rem;
+            text-align: center;
+            max-width: 90vw;
+            width: 400px;
+            border: 2px solid #0ff;
+            box-shadow: 0 0 40px rgba(0,255,255,0.5);
+            animation: slideUp 0.3s;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .drill-btn {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #7a582a, #2c1f0c);
+            font-size: 4rem;
+            cursor: pointer;
+            margin: 1rem auto;
+            transition: 0.05s linear;
+            color: #ffd48a;
+            box-shadow: 0 0 15px #ffaa33;
+        }
+        .drill-btn:active {
+            transform: scale(0.96);
+        }
+        .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #0ff;
+            text-shadow: 0 0 5px cyan;
+            margin: 1rem 0;
+        }
+        .close-modal {
+            background: #a0452f;
+            margin-top: 1rem;
+        }
+
+        .particle-effect {
+            position: fixed;
+            pointer-events: none;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, #ffcc66, #ff9933);
+            border-radius: 50%;
+            animation: particleFly 0.6s forwards;
+            z-index: 1001;
+        }
+        @keyframes particleFly {
+            0% { opacity: 0.9; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-40px) scale(0.5); }
+        }
+        .floating-number {
+            position: fixed;
+            pointer-events: none;
+            font-weight: bold;
+            font-size: 1.3rem;
+            text-shadow: 0 0 5px cyan;
+            animation: floatUp 0.7s forwards;
+            z-index: 1000;
+        }
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-60px); }
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(12px);
+            color: #ffffaa;
+            padding: 10px 20px;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            text-align: center;
+            border-left: 4px solid #0ff;
+            animation: fadeOut 3s forwards;
+            z-index: 2000;
+            max-width: 300px;
+            margin: 0 auto;
+            box-shadow: 0 0 10px cyan;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: translateY(0); }
+            70% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(10px); display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .game { padding: 1rem; }
+            .stat-card { padding: 0.5rem; }
+            .upgrade { padding: 8px 14px; }
+            button { padding: 5px 14px; }
+            .panel { padding: 0.8rem; }
+            .flex-row { flex-direction: column; align-items: stretch; }
+            .skin-grid, .boost-grid, .artifact-grid, .rigs-grid, .chain-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
+<div class="animated-bg"></div>
+<div class="particle-field" id="particleField"></div>
+<div class="neon-wave"></div>
 
-<header>
-    <div class="brand">X-<span>EMPIRE</span></div>
-    <div class="balance-box">
-        <div class="balance-label">Global Funds</div>
-        <div class="balance-val" id="balanceDisplay">1000.00</div>
+<div class="splash" id="splash" style="position:fixed; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle at center, #0a0f1a, #010105); display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:10000; gap:20px; transition:opacity 0.8s;">
+    <div style="font-size:5rem; filter:drop-shadow(0 0 20px #0ff); animation: bounce 1s infinite alternate;">🛢️</div>
+    <h1 style="font-size:2.2rem; background:linear-gradient(135deg,#FFE0A3,#FFA559,#0ff); -webkit-background-clip:text; background-clip:text; color:transparent;">НЕФТЯНОЙ МАГНАТ</h1>
+    <p style="color:#0ff; text-shadow:0 0 5px cyan;">ИСПРАВЛЕННЫЙ МАГАЗИН СКИНОВ</p>
+    <div style="width:200px; height:2px; background:rgba(0,255,255,0.3); border-radius:3px;"><div style="width:0%; height:100%; background:#0ff; animation:fillProgress 1.5s forwards;"></div></div>
+</div>
+<style>
+    @keyframes bounce { 0%{transform:translateY(0);} 100%{transform:translateY(-10px);} }
+    @keyframes fillProgress { to { width:100%; } }
+</style>
+
+<div class="game" id="game">
+    <div class="title">
+        <h1>🛢️ НЕФТЯНОЙ МАГНАТ 🛢️</h1>
+        <p>⭐ КИБЕРПАНК · СКИНЫ · ЦЕПОЧКИ ⭐</p>
     </div>
-</header>
 
-<main>
-    <div class="section-header"><span class="live-dot"></span> Mint Your Currency</div>
-    <div class="create-form">
-        <input type="text" id="cName" placeholder="Coin Name">
-        <input type="text" id="cTicker" placeholder="Ticker (3-4 Letters)">
-        <button class="main-btn" onclick="createToken()">Deploy to Market</button>
+    <div class="stats">
+        <div class="stat-card"><h3>НЕФТЬ</h3><div class="value" id="oil">0</div></div>
+        <div class="stat-card"><h3>РУБЛИ</h3><div class="value" id="rub">0</div></div>
+        <div class="stat-card"><h3>МНОЖИТЕЛЬ</h3><div class="value" id="mult">1.00x</div></div>
     </div>
 
-    <div class="section-header">Live Trading Floor</div>
-    <div class="market-list" id="marketList">
+    <div class="click-area">
+        <button class="oil-btn" id="clickBtn">⛽</button>
+    </div>
+
+    <div class="upgrades" id="upgrades"></div>
+
+    <div class="panel flex-row">
+        <div>
+            💱 КУРС: <strong id="rate">1.00</strong> ₽/барр
+            <span id="marketChange" class="market-indicator"></span>
         </div>
-</main>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <input type="number" id="amount" value="10" style="width:70px; background:#0a2a2a; border:1px solid #0ff; border-radius:40px; padding:6px; color:#0ff;">
+            <button id="exchangeBtn">Обменять</button>
+            <button id="exchangeAll">Всё</button>
+        </div>
+    </div>
 
-<nav>
-    <a href="#" class="nav-link active">MARKET</a>
-    <a href="#" class="nav-link">WALLETS</a>
-    <a href="#" class="nav-link">HISTORY</a>
-    <a href="#" class="nav-link">SYSTEM</a>
-</nav>
+    <!-- ЕЖЕДНЕВНЫЕ ЦЕПОЧКИ -->
+    <div class="shop-panel">
+        <div class="flex-row">
+            <strong style="text-shadow:0 0 3px magenta;">📅 ЕЖЕДНЕВНЫЕ ЦЕПОЧКИ</strong>
+            <button id="openChainBtn" style="background:#8a2be2;">🔗 Открыть цепочку</button>
+        </div>
+        <div id="chainModal" style="display: none; margin-top: 12px;">
+            <div id="chainList" class="chain-grid"></div>
+            <button id="closeChainBtn" style="margin-top: 10px; background:#a0452f;">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Магазин бустов -->
+    <div class="shop-panel">
+        <div class="flex-row">
+            <strong style="text-shadow:0 0 3px magenta;">⚡ МАГАЗИН БУСТОВ</strong>
+            <button id="openBoostBtn" style="background:#8a2be2;">🚀 Открыть</button>
+        </div>
+        <div id="boostShopModal" style="display: none; margin-top: 12px;">
+            <div id="boostList" class="boost-grid"></div>
+            <button id="closeBoostBtn" style="margin-top: 10px; background:#a0452f;">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Коллекция артефактов -->
+    <div class="shop-panel">
+        <div class="flex-row">
+            <strong style="text-shadow:0 0 3px magenta;">📦 АРТЕФАКТЫ</strong>
+            <button id="openArtifactBtn" style="background:#8a2be2;">🗿 Посмотреть</button>
+        </div>
+        <div id="artifactModal" style="display: none; margin-top: 12px;">
+            <div id="artifactList" class="artifact-grid"></div>
+            <button id="closeArtifactBtn" style="margin-top: 10px; background:#a0452f;">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- НЕФТЯНЫЕ ВЫШКИ -->
+    <div class="shop-panel">
+        <div class="flex-row">
+            <strong style="text-shadow:0 0 3px magenta;">🏗️ ВЫШКИ (ЛОКАЦИИ)</strong>
+            <button id="openRigsBtn" style="background:#8a2be2;">🗺️ Карта</button>
+        </div>
+        <div id="rigsModal" style="display: none; margin-top: 12px;">
+            <div id="rigsList" class="rigs-grid"></div>
+            <button id="closeRigsBtn" style="margin-top: 10px; background:#a0452f;">Закрыть</button>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="flex-row">
+            <strong style="text-shadow:0 0 3px cyan;">📅 ЕЖЕДНЕВНЫЙ БОНУС</strong>
+            <button id="dailyBonusBtn" style="background:#f5a623;">🎁 Забрать</button>
+            <span id="dailyInfo" class="daily-badge"></span>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="flex-row"><strong style="text-shadow:0 0 3px cyan;">📜 ЗАДАНИЯ</strong> <button id="reroll">⟳ Обновить</button></div>
+        <div id="quests" style="margin-top: 8px;"></div>
+    </div>
+
+    <div class="panel">
+        <div class="flex-row">
+            <span style="text-shadow:0 0 3px cyan;">💎 ПРЕСТИЖ: +5% за 20 000 ₽ (бонус: <span id="prestigeBonus">0</span>%)</span>
+            <button id="prestigeBtn" style="background:#b8860b;">Возродить</button>
+        </div>
+        <div class="flex-row" style="margin-top: 8px;">
+            <span>📊 СТАТИСТИКА: кликов: <span id="totalClicks">0</span> | добыто: <span id="totalOilStat">0</span> | заработано: <span id="totalRubStat">0</span> ₽ | время: <span id="playTime">0</span> сек</span>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="flex-row"><strong style="text-shadow:0 0 3px cyan;">🏆 ТАБЛИЦА ЛИДЕРОВ</strong> 
+            <div style="display: flex; gap: 8px;"><button id="saveScoreBtn">💾 Сохранить</button><button id="clearLeaderboardBtn">🗑️ Очистить</button></div>
+        </div>
+        <div id="leaderboardList" class="leaderboard"></div>
+    </div>
+
+    <!-- МАГАЗИН СКИНОВ (ИСПРАВЛЕН) -->
+    <div class="shop-panel">
+        <div class="flex-row">
+            <strong style="text-shadow:0 0 3px magenta;">🎨 МАГАЗИН СКИНОВ ДЛЯ КНОПКИ</strong>
+            <button id="openShopBtn" style="background:#8a2be2;">🛒 Открыть магазин</button>
+        </div>
+        <div id="skinShopModal" style="display: none; margin-top: 12px;">
+            <div id="skinList" class="skin-grid"></div>
+            <button id="closeShopBtn" style="margin-top: 10px; background:#a0452f;">Закрыть</button>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="flex-row">
+            <strong style="text-shadow:0 0 3px cyan;">⛏️ МИНИ-ИГРА «БУРЕНИЕ»</strong>
+            <button id="drillGameBtn" style="background:#b8860b;">🔨 БУРИТЬ (раз в 20 мин)</button>
+        </div>
+        <div id="drillCooldown" style="font-size:0.7rem; text-align:center; margin-top:5px; color:#0ff;"></div>
+    </div>
+
+    <div class="event-log" id="log"></div>
+    <canvas id="graph" width="400" height="80"></canvas>
+
+    <div class="flex-row" style="margin-top: 12px; gap: 8px;">
+        <button id="soundToggle">🔊 Звук вкл</button>
+        <button id="resetStatsBtn">Сбросить статистику</button>
+    </div>
+    <button class="reset-btn" id="reset">⛔ ПОЛНЫЙ СБРОС ⛔</button>
+    <footer>✨ 10 скинов | Бусты | Артефакты | Вышки | Мини-игра | Ежедневные цепочки</footer>
+</div>
 
 <script>
-    // ИГРОВАЯ ДАТА
+    // ==================== СОСТОЯНИЕ ====================
     let state = {
-        balance: parseFloat(localStorage.getItem('ex_bal')) || 1000.00,
-        tokens: JSON.parse(localStorage.getItem('ex_tokens')) || [
-            { id: 1, name: "Brawl Static", ticker: "BST", price: 10.5, change: 1.2, owner: "System" },
-            { id: 2, name: "Baza Shop", ticker: "BAZA", price: 2.1, change: -0.5, owner: "System" }
-        ]
+        oil: 0,
+        rubles: 50,
+        clickLvl: 0,
+        exchLvl: 0,
+        autoLvl: 0,
+        critLvl: 0,
+        managerLvl: 0,
+        prestigeBonus: 0,
+        quests: [],
+        achievements: {
+            oil100: false, oil1000: false, oil10000: false,
+            rub500: false, rub5000: false,
+            clicks100: false, clicks1000: false,
+            prestige1: false,
+            syncCrit: false,
+            millionaire: false,
+            lordOfWells: false,
+            patientInvestor: false,
+            masterClick: false,
+            billionaire: false,
+            eternalEngine: false
+        },
+        stats: { totalClicks: 0, totalOilProduced: 0, totalRublesEarned: 0, startTime: Date.now() },
+        dailyBonusLastClaim: 0,
+        dailyBonusStreak: 0,
+        marketMultiplier: 1.0,
+        leaderboard: [],
+        critStreak: 0,
+        lastDrillTime: 0,
+        activeEvent: null,
+        pendingInvestment: null,
+        currentSkin: "default",
+        ownedSkins: ["default"],
+        boosts: {
+            drill: { active: false, endTime: 0 },
+            crit: { active: false, endTime: 0 },
+            exchange: { active: false, endTime: 0 }
+        },
+        artifacts: {
+            hammer: { level: 0, bonus: 0 },
+            barrel: { level: 0, bonus: 0 },
+            pickaxe: { level: 0, bonus: 0 },
+            gear: { level: 0, bonus: 0 }
+        },
+        rigs: {
+            siberia: { owned: false, bonus: { auto: 0.1, exchange: 0.05, crit: 0.01 }, price: 500000 },
+            texas: { owned: false, bonus: { auto: 0.15, exchange: 0.02, crit: 0.02 }, price: 1000000 },
+            middleEast: { owned: false, bonus: { auto: 0.2, exchange: 0.1, crit: 0.01 }, price: 2000000 },
+            northSea: { owned: false, bonus: { auto: 0.25, exchange: 0.03, crit: 0.03 }, price: 4000000 },
+            arctic: { owned: false, bonus: { auto: 0.4, exchange: 0.08, crit: 0.04 }, price: 8000000 }
+        },
+        dailyChain: {
+            lastCheckDay: 0,
+            currentDay: 1,
+            completedToday: false,
+            progress: 0,
+            target: 0
+        }
     };
 
-    function save() {
-        localStorage.setItem('ex_bal', state.balance);
-        localStorage.setItem('ex_tokens', JSON.stringify(state.tokens));
-    }
+    let soundEnabled = true;
+    let marketUpdateInterval = null;
 
-    function createToken() {
-        const n = document.getElementById('cName').value;
-        const t = document.getElementById('cTicker').value.toUpperCase();
-        if(!n || !t) return alert("Fill data!");
-        
-        state.tokens.unshift({
-            id: Date.now(),
-            name: n,
-            ticker: t,
-            price: 1.00,
-            change: 0,
-            owner: "You"
-        });
-        save();
-        render();
-        document.getElementById('cName').value = '';
-        document.getElementById('cTicker').value = '';
+    // ==================== ОСНОВНЫЕ ФУНКЦИИ ====================
+    function upgradeCost(type) {
+        if(type === 'click') return 15 * (state.clickLvl + 1);
+        if(type === 'exch') return 25 * (state.exchLvl + 1);
+        if(type === 'auto') return 35 * (state.autoLvl + 1);
+        if(type === 'crit') return 60 * (state.critLvl + 1);
+        if(type === 'manager') return 120 * (state.managerLvl + 1);
+        return 0;
     }
-
-    function trade(id, type) {
-        const t = state.tokens.find(x => x.id === id);
-        if(type === 'buy') {
-            if(state.balance >= t.price) {
-                state.balance -= t.price;
-                t.price *= 1.02; // Рост 2% при покупке
-                t.change += 0.5;
+    function getArtifactBonuses() {
+        return {
+            clickBonus: state.artifacts.hammer.level,
+            exchangeBonus: state.artifacts.barrel.level * 0.02,
+            critDamageBonus: state.artifacts.pickaxe.level * 0.01,
+            autoBonus: state.artifacts.gear.level * 0.5
+        };
+    }
+    function getRigBonuses() {
+        let autoBonus = 0, exchangeBonus = 0, critBonus = 0;
+        for (let rig of Object.values(state.rigs)) {
+            if (rig.owned) {
+                autoBonus += rig.bonus.auto;
+                exchangeBonus += rig.bonus.exchange;
+                critBonus += rig.bonus.crit;
             }
-        } else {
-            state.balance += t.price * 0.98; // 2% налог при продаже
-            t.price *= 0.98; // Падение при продаже
-            t.change -= 0.5;
         }
-        save();
-        render();
+        return { autoBonus, exchangeBonus, critBonus };
+    }
+    function clickPower() {
+        let base = 1 + state.clickLvl;
+        let artifactBonus = getArtifactBonuses().clickBonus;
+        let mult = (1 + state.prestigeBonus/100);
+        return (base + artifactBonus) * mult;
+    }
+    function baseExchangeRate() {
+        let base = 1 + state.exchLvl * 0.1;
+        let artifactBonus = getArtifactBonuses().exchangeBonus;
+        let rigBonus = getRigBonuses().exchangeBonus;
+        let mult = (1 + state.prestigeBonus/100);
+        return (base + artifactBonus + rigBonus) * mult;
+    }
+    function exchangeRate() {
+        let rate = baseExchangeRate() * state.marketMultiplier;
+        if (state.activeEvent && state.activeEvent.type === 'exchangeCrash') rate = rate * 0.5;
+        if (state.boosts.exchange.active && Date.now() < state.boosts.exchange.endTime) rate = rate * 2;
+        return rate;
+    }
+    function autoIncome() {
+        let base = state.autoLvl;
+        let artifactBonus = getArtifactBonuses().autoBonus;
+        let rigBonus = getRigBonuses().autoBonus;
+        let inc = (base + artifactBonus + rigBonus) * (1 + state.prestigeBonus/100);
+        if (state.activeEvent && state.activeEvent.type === 'boom') inc = inc * 1.5;
+        if (state.boosts.drill.active && Date.now() < state.boosts.drill.endTime) inc = inc * 2;
+        return inc;
+    }
+    function critChance() {
+        let base = 10 + state.critLvl * 3;
+        let rigBonus = getRigBonuses().critBonus * 100;
+        base += rigBonus;
+        if (state.boosts.crit.active && Date.now() < state.boosts.crit.endTime) base += 30;
+        return Math.min(base, 80);
+    }
+    function critMultiplier() {
+        let base = 1.5;
+        let artifactBonus = getArtifactBonuses().critDamageBonus;
+        return base + artifactBonus;
     }
 
-    function render() {
-        document.getElementById('balanceDisplay').innerText = state.balance.toFixed(2);
-        const list = document.getElementById('marketList');
-        list.innerHTML = '';
-
-        state.tokens.forEach(t => {
-            const el = document.createElement('div');
-            el.className = 'item';
-            el.innerHTML = `
-                <div class="coin-meta">
-                    <div class="coin-icon">${t.ticker[0]}</div>
-                    <div>
-                        <div class="coin-name">${t.name}</div>
-                        <div class="coin-owner">${t.owner} • ${t.ticker}</div>
-                    </div>
-                </div>
-                <div class="price-data">
-                    <div class="price">${t.price.toFixed(2)}</div>
-                    <div class="change ${t.change >= 0 ? 'up' : 'down'}">
-                        ${t.change >= 0 ? '▲' : '▼'} ${Math.abs(t.change).toFixed(1)}%
-                    </div>
-                    <div class="trade-btns">
-                        <button class="btn-buy" onclick="trade(${t.id}, 'buy')">BUY</button>
-                        <button onclick="trade(${t.id}, 'sell')">SELL</button>
-                    </div>
-                </div>
+    // ==================== БУСТЫ ====================
+    const boostsList = {
+        drill: { name: "Ускорение бурения", price: 5000, duration: 3600000, desc: "x2 добычи на 1 час" },
+        crit: { name: "Критический импульс", price: 10000, duration: 1800000, desc: "+30% к шансу крита на 30 мин" },
+        exchange: { name: "Золотая лихорадка", price: 20000, duration: 900000, desc: "x2 к курсу на 15 мин" }
+    };
+    function buyBoost(type) {
+        let boost = boostsList[type];
+        if (state.rubles < boost.price) { showToast(`Не хватает ${boost.price} ₽!`); return; }
+        state.rubles -= boost.price;
+        state.boosts[type].active = true;
+        state.boosts[type].endTime = Date.now() + boost.duration;
+        addLog(`🚀 Активирован буст: ${boost.name} на ${boost.duration/60000} минут!`);
+        showToast(`Буст ${boost.name} активирован!`);
+        playSound('achievement');
+        updateUI();
+        setTimeout(() => {
+            if (state.boosts[type].active && Date.now() >= state.boosts[type].endTime) {
+                state.boosts[type].active = false;
+                addLog(`⏰ Буст ${boost.name} закончился.`);
+                updateUI();
+            }
+        }, boost.duration);
+    }
+    function renderBoostShop() {
+        let container = document.getElementById('boostList');
+        if (!container) return;
+        container.innerHTML = '';
+        for (let [id, boost] of Object.entries(boostsList)) {
+            let active = state.boosts[id].active && Date.now() < state.boosts[id].endTime;
+            let remaining = active ? Math.ceil((state.boosts[id].endTime - Date.now()) / 1000) : 0;
+            let timeStr = active ? ` (активен ещё ${Math.floor(remaining/60)} мин ${remaining%60} сек)` : '';
+            let div = document.createElement('div');
+            div.className = 'boost-card';
+            div.innerHTML = `
+                <h4>${boost.name}</h4>
+                <p>${boost.desc}</p>
+                <p>Цена: ${boost.price} ₽</p>
+                ${active ? `<p style="color:#ffaa33;">✅ АКТИВЕН${timeStr}</p>` : `<button class="boost-btn" data-boost="${id}">Активировать</button>`}
             `;
-            list.appendChild(el);
+            container.appendChild(div);
+        }
+        document.querySelectorAll('.boost-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                let boostId = btn.getAttribute('data-boost');
+                buyBoost(boostId);
+                renderBoostShop();
+                updateUI();
+            });
         });
     }
 
-    // ЖИВОЙ РЫНОК (РАНДОМНЫЕ ДВИЖЕНИЯ)
-    setInterval(() => {
-        state.tokens.forEach(t => {
-            const move = (Math.random() * 0.2 - 0.1); 
-            t.price += move;
-            if(t.price < 0.1) t.price = 0.1;
-            t.change = (Math.random() * 5 - 2.5).toFixed(1);
-        });
-        render();
-    }, 3000);
+    // ==================== АРТЕФАКТЫ ====================
+    const artifactsData = {
+        hammer: { name: "Геологический молоток", baseBonus: 1, unit: "+1 к силе клика", maxLevel: 10 },
+        barrel: { name: "Бочка удачи", baseBonus: 0.02, unit: "+2% к курсу", maxLevel: 10 },
+        pickaxe: { name: "Острый отбойник", baseBonus: 0.01, unit: "+1% к критическому урону", maxLevel: 10 },
+        gear: { name: "Нефтяная шестерня", baseBonus: 0.5, unit: "+0.5 нефти/сек", maxLevel: 10 }
+    };
+    function tryDropArtifact(source) {
+        let chance = 0;
+        if (source === 'click') chance = 0.02;
+        if (source === 'exchange') chance = 0.03;
+        if (source === 'drill') chance = 0.05;
+        if (Math.random() > chance) return;
+        let types = ['hammer', 'barrel', 'pickaxe', 'gear'];
+        let type = types[Math.floor(Math.random() * types.length)];
+        let art = state.artifacts[type];
+        if (art.level >= artifactsData[type].maxLevel) return;
+        art.level++;
+        art.bonus = art.level * artifactsData[type].baseBonus;
+        addLog(`✨ Вам выпал артефакт: ${artifactsData[type].name} (уровень ${art.level})!`);
+        showToast(`📦 Найден артефакт: ${artifactsData[type].name}!`);
+        playSound('achievement');
+        updateUI();
+        renderArtifacts();
+    }
+    function renderArtifacts() {
+        let container = document.getElementById('artifactList');
+        if (!container) return;
+        container.innerHTML = '';
+        for (let [id, data] of Object.entries(artifactsData)) {
+            let art = state.artifacts[id];
+            let bonusValue = art.bonus;
+            let unit = data.unit;
+            if (id === 'barrel') bonusValue = (art.bonus * 100).toFixed(1) + '%';
+            if (id === 'pickaxe') bonusValue = (art.bonus * 100).toFixed(1) + '%';
+            if (id === 'gear') bonusValue = art.bonus.toFixed(1);
+            let div = document.createElement('div');
+            div.className = 'artifact-card';
+            div.innerHTML = `
+                <div class="artifact-name">${data.name}</div>
+                <div class="artifact-level">Уровень: ${art.level} / ${data.maxLevel}</div>
+                <div class="artifact-bonus">Бонус: ${bonusValue} ${unit}</div>
+            `;
+            container.appendChild(div);
+        }
+    }
 
-    render();
+    // ==================== ВЫШКИ ====================
+    const rigsData = {
+        siberia: { name: "Сибирь", icon: "❄️", price: 500000, bonusDesc: "+10% добычи, +5% курс, +1% крит" },
+        texas: { name: "Техас", icon: "🤠", price: 1000000, bonusDesc: "+15% добычи, +2% курс, +2% крит" },
+        middleEast: { name: "Ближний Восток", icon: "🐪", price: 2000000, bonusDesc: "+20% добычи, +10% курс, +1% крит" },
+        northSea: { name: "Северное море", icon: "🌊", price: 4000000, bonusDesc: "+25% добычи, +3% курс, +3% крит" },
+        arctic: { name: "Арктика", icon: "🧊", price: 8000000, bonusDesc: "+40% добычи, +8% курс, +4% крит" }
+    };
+    function buyRig(rigId) {
+        let rig = state.rigs[rigId];
+        if (rig.owned) return;
+        let price = rig.price;
+        if (state.rubles < price) { showToast(`Не хватает ${price} ₽!`); return; }
+        state.rubles -= price;
+        rig.owned = true;
+        addLog(`🏗️ Приобретена вышка: ${rigsData[rigId].name} за ${price} ₽!`);
+        showToast(`Вышка ${rigsData[rigId].name} куплена!`);
+        playSound('achievement');
+        updateUI();
+        renderRigs();
+    }
+    function renderRigs() {
+        let container = document.getElementById('rigsList');
+        if (!container) return;
+        container.innerHTML = '';
+        for (let [id, data] of Object.entries(rigsData)) {
+            let rig = state.rigs[id];
+            let owned = rig.owned;
+            let div = document.createElement('div');
+            div.className = 'rig-card';
+            div.innerHTML = `
+                <div style="font-size: 2rem;">${data.icon}</div>
+                <div class="rig-name">${data.name}</div>
+                <div style="font-size:0.7rem; color:#aaffaa;">${data.bonusDesc}</div>
+                <div class="rig-price">Цена: ${data.price.toLocaleString()} ₽</div>
+                ${!owned ? `<button class="buy-rig-btn" data-rig="${id}">Купить</button>` : `<div style="color:#0ff;">✅ Владеете</div>`}
+            `;
+            container.appendChild(div);
+        }
+        document.querySelectorAll('.buy-rig-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                let rigId = btn.getAttribute('data-rig');
+                buyRig(rigId);
+                renderRigs();
+                updateUI();
+            });
+        });
+    }
+
+    // ==================== СКИНЫ (10 штук, ИСПРАВЛЕНО) ====================
+    const skins = {
+        default: { name: "Классическая", emoji: "⛽", gradient: "radial-gradient(circle at 35% 35%, #7a582a, #2c1f0c)", color: "#ffd48a", price: 0, effect: null },
+        gold: { name: "Золотая", emoji: "🏆", gradient: "radial-gradient(circle at 35% 35%, #f5c542, #b8860b)", color: "#ffd700", price: 10000, effect: "gold" },
+        diamond: { name: "Алмазная", emoji: "💎", gradient: "radial-gradient(circle at 35% 35%, #a0f0ff, #2fa0ff)", color: "#e0ffff", price: 40000, effect: "diamond" },
+        plasma: { name: "Плазменная", emoji: "⚡", gradient: "radial-gradient(circle at 35% 35%, #ff44ff, #8800ff)", color: "#ffaaff", price: 100000, effect: "plasma" },
+        cosmic: { name: "Космическая", emoji: "🌌", gradient: "radial-gradient(circle at 35% 35%, #000033, #330066)", color: "#cc88ff", price: 200000, effect: "cosmic" },
+        neon: { name: "Неоновая", emoji: "💚", gradient: "radial-gradient(circle at 35% 35%, #00ff88, #00aa44)", color: "#aaffaa", price: 250000, effect: "neon" },
+        fire: { name: "Огненная", emoji: "🔥", gradient: "radial-gradient(circle at 35% 35%, #ff4400, #aa2200)", color: "#ffaa66", price: 500000, effect: "fire" },
+        ice: { name: "Ледяная", emoji: "❄️", gradient: "radial-gradient(circle at 35% 35%, #88ccff, #2266aa)", color: "#ccffff", price: 750000, effect: "ice" },
+        rainbow: { name: "Радужная", emoji: "🌈", gradient: "linear-gradient(135deg, red, orange, yellow, green, cyan, blue, violet)", color: "#ffffff", price: 1000000, effect: "rainbow" },
+        angelic: { name: "Ангельская", emoji: "👼", gradient: "radial-gradient(circle at 35% 35%, #ffdd88, #ffaa33)", color: "#ffffcc", price: 2000000, effect: "angelic" }
+    };
+    function applySkin() {
+        let btn = document.getElementById('clickBtn');
+        let skin = skins[state.currentSkin];
+        if (!skin) return;
+        if (skin.gradient.includes('linear-gradient')) btn.style.background = skin.gradient;
+        else btn.style.background = skin.gradient;
+        btn.style.color = skin.color;
+        btn.innerText = skin.emoji;
+        btn.style.transform = 'scale(1.1)';
+        setTimeout(() => { btn.style.transform = ''; }, 200);
+        if (skin.effect) {
+            let rect = btn.getBoundingClientRect();
+            showSkinEffect(rect.left + rect.width/2, rect.top + rect.height/2, skin.effect);
+        }
+    }
+    function showSkinEffect(x, y, effect) {
+        let count = 20;
+        let color;
+        switch(effect) {
+            case 'gold': color = '#ffd700'; break;
+            case 'diamond': color = '#a0f0ff'; break;
+            case 'plasma': color = '#ff44ff'; break;
+            case 'cosmic': color = '#8800ff'; break;
+            case 'neon': color = '#00ff88'; break;
+            case 'fire': color = '#ff4400'; break;
+            case 'ice': color = '#88ccff'; break;
+            case 'rainbow': color = '#ff00ff'; break;
+            case 'angelic': color = '#ffffaa'; break;
+            default: color = '#ffcc66';
+        }
+        for (let i = 0; i < count; i++) {
+            let p = document.createElement('div');
+            p.className = 'particle-effect';
+            p.style.width = Math.random() * 8 + 4 + 'px';
+            p.style.height = p.style.width;
+            p.style.background = `radial-gradient(circle, ${color}, ${color}aa)`;
+            p.style.left = (x + (Math.random() - 0.5) * 80) + 'px';
+            p.style.top = (y + (Math.random() - 0.5) * 80) + 'px';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 600);
+        }
+        let flash = document.createElement('div');
+        flash.style.position = 'fixed';
+        flash.style.top = y - 50 + 'px';
+        flash.style.left = x - 50 + 'px';
+        flash.style.width = '100px';
+        flash.style.height = '100px';
+        flash.style.borderRadius = '50%';
+        flash.style.background = `radial-gradient(circle, ${color}80, transparent)`;
+        flash.style.pointerEvents = 'none';
+        flash.style.zIndex = '1001';
+        document.body.appendChild(flash);
+        setTimeout(() => flash.remove(), 400);
+    }
+    function renderSkinShop() {
+        let container = document.getElementById('skinList');
+        if (!container) return;
+        container.innerHTML = '';
+        for (let [id, skin] of Object.entries(skins)) {
+            let owned = state.ownedSkins.includes(id);
+            let active = state.currentSkin === id;
+            let div = document.createElement('div');
+            div.className = `skin-card ${active ? 'active' : ''}`;
+            div.innerHTML = `
+                <div class="skin-preview" style="background:${skin.gradient}; color:${skin.color};">${skin.emoji}</div>
+                <div class="skin-name">${skin.name}</div>
+                <div class="skin-price">${owned ? (active ? "✓ Активен" : "Владеете") : skin.price + " ₽"}</div>
+                ${!owned ? `<button class="buy-skin-btn" data-skin="${id}">Купить</button>` : (owned && !active ? `<button class="buy-skin-btn" data-skin="${id}">Надеть</button>` : '')}
+            `;
+            container.appendChild(div);
+        }
+        document.querySelectorAll('.buy-skin-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                let skinId = btn.getAttribute('data-skin');
+                if (!state.ownedSkins.includes(skinId)) {
+                    let price = skins[skinId].price;
+                    if (state.rubles >= price) {
+                        state.rubles -= price;
+                        state.ownedSkins.push(skinId);
+                        addLog(`🎨 Куплен скин "${skins[skinId].name}" за ${price} ₽`);
+                        showToast(`Скин "${skins[skinId].name}" куплен!`);
+                        playSound('achievement');
+                        renderSkinShop();
+                        updateUI();
+                    } else showToast(`Не хватает ${price} ₽!`);
+                } else {
+                    state.currentSkin = skinId;
+                    applySkin();
+                    renderSkinShop();
+                    addLog(`🎨 Надет скин "${skins[skinId].name}"`);
+                    showToast(`Скин "${skins[skinId].name}" надет!`);
+                    updateUI();
+                }
+            });
+        });
+    }
+
+    // ==================== ЕЖЕДНЕВНЫЕ ЦЕПОЧКИ ====================
+    const chainData = [
+        { day: 1, desc: "Добыть 500 нефти", target: 500, type: "oil", rewardRub: 500, rewardArtifact: null, rewardSkin: null },
+        { day: 2, desc: "Сделать 100 кликов", target: 100, type: "clicks", rewardRub: 800, rewardArtifact: null, rewardSkin: null },
+        { day: 3, desc: "Продать менеджером 200 нефти", target: 200, type: "autoSell", rewardRub: 1200, rewardArtifact: null, rewardSkin: null },
+        { day: 4, desc: "Заработать 3000 рублей", target: 3000, type: "rubles", rewardRub: 2000, rewardArtifact: null, rewardSkin: null },
+        { day: 5, desc: "Добыть 2000 нефти", target: 2000, type: "oil", rewardRub: 3000, rewardArtifact: null, rewardSkin: null },
+        { day: 6, desc: "Сделать 300 кликов", target: 300, type: "clicks", rewardRub: 5000, rewardArtifact: null, rewardSkin: null },
+        { day: 7, desc: "Добыть 5000 нефти", target: 5000, type: "oil", rewardRub: 10000, rewardArtifact: "gear", rewardSkin: "angelic" }
+    ];
+    function initDailyChain() {
+        let now = new Date();
+        let today = now.toDateString();
+        let lastDay = state.dailyChain.lastCheckDay ? new Date(state.dailyChain.lastCheckDay).toDateString() : null;
+        if (lastDay !== today) {
+            if (!state.dailyChain.completedToday && state.dailyChain.currentDay > 1 && state.dailyChain.currentDay <= 7) {
+                state.dailyChain.currentDay = 1;
+                state.dailyChain.progress = 0;
+                state.dailyChain.completedToday = false;
+                addLog("📅 Вы пропустили день! Цепочка заданий сброшена до 1 дня.");
+                showToast("Цепочка заданий сброшена! Начните сначала.");
+            }
+            state.dailyChain.completedToday = false;
+            state.dailyChain.progress = 0;
+            let idx = state.dailyChain.currentDay - 1;
+            if (idx >= 0 && idx < chainData.length) {
+                state.dailyChain.target = chainData[idx].target;
+            }
+            state.dailyChain.lastCheckDay = now.getTime();
+            updateUI();
+        }
+    }
+    function updateChainProgress(trigger, value) {
+        if (state.dailyChain.completedToday) return;
+        let idx = state.dailyChain.currentDay - 1;
+        if (idx < 0 || idx >= chainData.length) return;
+        let task = chainData[idx];
+        if (task.type === trigger) {
+            state.dailyChain.progress += value;
+            if (state.dailyChain.progress >= task.target) {
+                state.dailyChain.completedToday = true;
+                state.rubles += task.rewardRub;
+                state.stats.totalRublesEarned += task.rewardRub;
+                addLog(`🎁 Ежедневная цепочка: день ${task.day} выполнен! +${task.rewardRub} ₽`);
+                showToast(`День ${task.day} выполнен! +${task.rewardRub} ₽`);
+                if (task.rewardArtifact) {
+                    let artId = task.rewardArtifact;
+                    if (state.artifacts[artId].level < artifactsData[artId].maxLevel) {
+                        state.artifacts[artId].level++;
+                        state.artifacts[artId].bonus = state.artifacts[artId].level * artifactsData[artId].baseBonus;
+                        addLog(`🎁 Награда цепочки: артефакт ${artifactsData[artId].name} +1 уровень!`);
+                        showToast(`Артефакт ${artifactsData[artId].name} улучшен!`);
+                    }
+                }
+                if (task.rewardSkin) {
+                    if (!state.ownedSkins.includes(task.rewardSkin)) {
+                        state.ownedSkins.push(task.rewardSkin);
+                        addLog(`🎁 Награда цепочки: скин "${skins[task.rewardSkin].name}"!`);
+                        showToast(`Получен скин "${skins[task.rewardSkin].name}"!`);
+                    }
+                }
+                if (state.dailyChain.currentDay < 7) {
+                    state.dailyChain.currentDay++;
+                    state.dailyChain.progress = 0;
+                    state.dailyChain.completedToday = false;
+                    let nextIdx = state.dailyChain.currentDay - 1;
+                    if (nextIdx < chainData.length) {
+                        state.dailyChain.target = chainData[nextIdx].target;
+                        addLog(`📅 Открыт день ${state.dailyChain.currentDay} цепочки! Задание: ${chainData[nextIdx].desc}`);
+                        showToast(`Новое задание цепочки: день ${state.dailyChain.currentDay}`);
+                    }
+                } else {
+                    addLog("🏆 ПОЗДРАВЛЯЕМ! Вы завершили 7-дневную цепочку! Завтра начнётся новая.");
+                    showToast("Цепочка завершена! Завтра начнётся новая.");
+                    state.dailyChain.currentDay = 1;
+                    state.dailyChain.progress = 0;
+                    state.dailyChain.completedToday = false;
+                    state.dailyChain.target = chainData[0].target;
+                }
+                updateUI();
+            }
+        }
+    }
+    function renderChain() {
+        let container = document.getElementById('chainList');
+        if (!container) return;
+        let idx = state.dailyChain.currentDay - 1;
+        if (idx < 0) idx = 0;
+        let currentTask = chainData[idx];
+        let progressPercent = (state.dailyChain.progress / currentTask.target * 100).toFixed(0);
+        container.innerHTML = `
+            <div class="chain-card">
+                <div style="font-size:1.5rem;">📅</div>
+                <div class="skin-name">День ${state.dailyChain.currentDay} из 7</div>
+                <div>${currentTask.desc}</div>
+                <div class="chain-progress">Прогресс: ${state.dailyChain.progress} / ${currentTask.target} (${progressPercent}%)</div>
+                <div>Награда: ${currentTask.rewardRub} ₽ ${currentTask.rewardArtifact ? '+ артефакт' : ''} ${currentTask.rewardSkin ? '+ скин' : ''}</div>
+                ${state.dailyChain.completedToday ? '<div style="color:#6fcf97;">✅ Задание выполнено! Завтра новый день.</div>' : ''}
+            </div>
+        `;
+    }
+
+    // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
+    function showToast(msg) {
+        let toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+    function addLog(msg) {
+        let logDiv = document.getElementById('log');
+        let div = document.createElement('div');
+        div.innerText = msg;
+        logDiv.prepend(div);
+        while(logDiv.children.length > 8) logDiv.removeChild(logDiv.lastChild);
+    }
+    function playSound(type) {
+        if (!soundEnabled) return;
+        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let osc = audioCtx.createOscillator();
+        let gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        if (type === 'click') { osc.frequency.value = 800; gain.gain.value = 0.2; osc.type = 'sine'; }
+        else if (type === 'buy') { osc.frequency.value = 400; gain.gain.value = 0.15; osc.type = 'triangle'; }
+        else if (type === 'achievement') { osc.frequency.value = 1200; gain.gain.value = 0.25; osc.type = 'sine'; }
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
+        osc.stop(audioCtx.currentTime + 0.3);
+        setTimeout(() => audioCtx.close(), 400);
+    }
+    function spawnParticles(x, y, count, isCrit = false) {
+        for (let i = 0; i < count; i++) {
+            let p = document.createElement('div');
+            p.className = 'particle-effect';
+            let size = Math.random() * 8 + 4;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.background = isCrit ? `radial-gradient(circle, #ffaa44, #ff6600)` : `radial-gradient(circle, #ffcc66, #ff9933)`;
+            p.style.left = (x + (Math.random() - 0.5) * 40) + 'px';
+            p.style.top = (y + (Math.random() - 0.5) * 40) + 'px';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 600);
+        }
+    }
+    function showFloatingNumber(x, y, val, isCrit) {
+        let el = document.createElement('div');
+        el.className = 'floating-number';
+        el.innerText = isCrit ? `💥 ${val}` : `+${val}`;
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.color = isCrit ? '#ffaa44' : '#ffd966';
+        el.style.fontSize = isCrit ? '1.6rem' : '1.3rem';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 700);
+    }
+    function addOil(amount, fromClick, clientX, clientY) {
+        if(amount <= 0) return;
+        let final = amount;
+        let isCrit = false;
+        if(fromClick && Math.random()*100 < critChance()) {
+            final = amount * critMultiplier();
+            isCrit = true;
+            state.critStreak++;
+            addLog(`💥 КРИТ! +${final.toFixed(1)} нефти (серия: ${state.critStreak})`);
+            let btn = document.getElementById('clickBtn');
+            btn.classList.add('crit-glow');
+            setTimeout(() => btn.classList.remove('crit-glow'), 200);
+        } else if (fromClick) state.critStreak = 0;
+        state.oil += final;
+        state.stats.totalOilProduced += final;
+        if(fromClick) {
+            state.stats.totalClicks++;
+            if(soundEnabled) playSound('click');
+            tryDropArtifact('click');
+            updateChainProgress('clicks', 1);
+        }
+        updateChainProgress('oil', final);
+        if(fromClick && clientX && clientY) {
+            showFloatingNumber(clientX, clientY, final.toFixed(1), isCrit);
+            spawnParticles(clientX, clientY, isCrit ? 12 : 6, isCrit);
+        }
+        updateQuests('oil', final);
+        checkAchievements();
+        updateUI();
+    }
+    function exchange(amount) {
+        if(amount <= 0) return;
+        let toEx = Math.min(amount, state.oil);
+        if(toEx <= 0) return;
+        let gain = toEx * exchangeRate();
+        state.oil -= toEx;
+        state.rubles += gain;
+        state.stats.totalRublesEarned += gain;
+        addLog(`💱 Обмен ${toEx.toFixed(0)} нефти → +${gain.toFixed(2)} ₽`);
+        updateQuests('rubles', gain);
+        updateChainProgress('rubles', gain);
+        tryDropArtifact('exchange');
+        checkAchievements();
+        updateUI();
+    }
+    function buy(type) {
+        let cost = upgradeCost(type);
+        if(state.rubles < cost) return;
+        state.rubles -= cost;
+        if(type === 'click') state.clickLvl++;
+        else if(type === 'exch') state.exchLvl++;
+        else if(type === 'auto') state.autoLvl++;
+        else if(type === 'crit') state.critLvl++;
+        else if(type === 'manager') state.managerLvl++;
+        addLog(`🔧 ${type} улучшен!`);
+        if(soundEnabled) playSound('buy');
+        checkAchievements();
+        updateUI();
+    }
+    function managerTick() {
+        if(state.managerLvl > 0 && state.oil > 0) {
+            let sell = Math.max(1, Math.floor(state.oil * 0.05));
+            let gain = sell * exchangeRate();
+            state.oil -= sell;
+            state.rubles += gain;
+            state.stats.totalRublesEarned += gain;
+            addLog(`🤖 Менеджер продал ${sell} нефти → +${gain.toFixed(2)} ₽`);
+            updateQuests('autoSell', sell);
+            updateChainProgress('autoSell', sell);
+            updateUI();
+        }
+    }
+    function prestige() {
+        if(state.rubles < 20000) { addLog(`❌ Нужно 20 000 ₽ для престижа`); return; }
+        state.prestigeBonus += 5;
+        state.oil = 0;
+        state.rubles = 0;
+        state.clickLvl = 0;
+        state.exchLvl = 0;
+        state.autoLvl = 0;
+        state.critLvl = 0;
+        state.managerLvl = 0;
+        state.critStreak = 0;
+        addLog(`✨ ПРЕСТИЖ! Бонус дохода +${state.prestigeBonus}% навсегда.`);
+        checkAchievements();
+        updateUI();
+    }
+
+    // ==================== ЗАДАНИЯ ====================
+    function generateQuests() {
+        let templates = [
+            { desc: "Добыть {0} нефти", type: 'oil', target: () => 80 + Math.floor(Math.random()*300), reward: () => 25 + Math.floor(Math.random()*80) },
+            { desc: "Заработать {0} рублей", type: 'rubles', target: () => 60 + Math.floor(Math.random()*200), reward: () => 20 + Math.floor(Math.random()*60) },
+            { desc: "Сделать {0} кликов", type: 'clicks', target: () => 25 + Math.floor(Math.random()*80), reward: () => 15 + Math.floor(Math.random()*50) },
+            { desc: "Продать менеджером {0} нефти", type: 'autoSell', target: () => 40 + Math.floor(Math.random()*150), reward: () => 30 + Math.floor(Math.random()*70) }
+        ];
+        let newQuests = [];
+        for(let i=0; i<3; i++) {
+            let t = templates[Math.floor(Math.random() * templates.length)];
+            let target = t.target();
+            newQuests.push({
+                desc: t.desc.replace("{0}", target),
+                targetVal: target,
+                cur: 0,
+                reward: t.reward(),
+                type: t.type,
+                done: false
+            });
+        }
+        state.quests = newQuests;
+        renderQuests();
+    }
+    function updateQuests(trigger, val) {
+        let changed = false;
+        for(let q of state.quests) {
+            if(q.done) continue;
+            if(q.type === trigger) {
+                q.cur += val;
+                if(q.cur >= q.targetVal) {
+                    q.done = true;
+                    state.rubles += q.reward;
+                    state.stats.totalRublesEarned += q.reward;
+                    addLog(`🎉 Задание: ${q.desc} выполнено! +${q.reward} ₽`);
+                    changed = true;
+                }
+            }
+        }
+        if(changed) { renderQuests(); updateUI(); }
+    }
+    function renderQuests() {
+        let container = document.getElementById('quests');
+        if(!container) return;
+        container.innerHTML = state.quests.map(q => {
+            let status = q.done ? '✅ Готово' : `${q.cur}/${q.targetVal}`;
+            return `<div style="background:rgba(0,0,0,0.4); margin:6px 0; padding:8px 12px; border-radius:28px; border-left:3px solid #0ff;">
+                        <div style="font-weight:500; text-shadow:0 0 3px cyan;">${q.desc}</div>
+                        <div style="font-size:0.7rem; color:#aaffdd;">${status} | награда: ${q.reward} ₽</div>
+                        ${!q.done ? `<progress value="${q.cur}" max="${q.targetVal}" style="width:100%; height:3px;"></progress>` : ''}
+                    </div>`;
+        }).join('');
+    }
+
+    // ==================== ДОСТИЖЕНИЯ ====================
+    function giveAchievementReward(title, bonusRub) {
+        state.rubles += bonusRub;
+        state.stats.totalRublesEarned += bonusRub;
+        addLog(`🏆 ДОСТИЖЕНИЕ: ${title}! +${bonusRub} ₽`);
+        playSound('achievement');
+        showToast(`🏆 ${title} +${bonusRub} ₽`);
+        updateUI();
+    }
+    function checkAchievements() {
+        let ach = state.achievements;
+        if (!ach.oil100 && state.stats.totalOilProduced >= 500) { ach.oil100 = true; giveAchievementReward("500 нефти", 50); }
+        if (!ach.oil1000 && state.stats.totalOilProduced >= 5000) { ach.oil1000 = true; giveAchievementReward("5000 нефти", 200); }
+        if (!ach.oil10000 && state.stats.totalOilProduced >= 50000) { ach.oil10000 = true; giveAchievementReward("50 000 нефти", 1000); }
+        if (!ach.rub500 && state.stats.totalRublesEarned >= 2000) { ach.rub500 = true; giveAchievementReward("2000 рублей", 150); }
+        if (!ach.rub5000 && state.stats.totalRublesEarned >= 25000) { ach.rub5000 = true; giveAchievementReward("25 000 рублей", 800); }
+        if (!ach.clicks100 && state.stats.totalClicks >= 500) { ach.clicks100 = true; giveAchievementReward("500 кликов", 80); }
+        if (!ach.clicks1000 && state.stats.totalClicks >= 5000) { ach.clicks1000 = true; giveAchievementReward("5000 кликов", 500); }
+        if (!ach.prestige1 && state.prestigeBonus >= 5) { ach.prestige1 = true; giveAchievementReward("Первый престиж", 2000); }
+        if (!ach.syncCrit && state.critStreak >= 10) { ach.syncCrit = true; giveAchievementReward("Синхронный клик (10 критов подряд)", 500); }
+        if (!ach.millionaire && state.stats.totalRublesEarned >= 2000000) { ach.millionaire = true; giveAchievementReward("Миллионер (2 000 000 ₽)", 5000); }
+        if (!ach.lordOfWells && (state.clickLvl>0 && state.exchLvl>0 && state.autoLvl>0 && state.critLvl>0 && state.managerLvl>0)) {
+            ach.lordOfWells = true; giveAchievementReward("Властелин скважин", 1000);
+        }
+        if (!ach.patientInvestor && state.dailyBonusStreak >= 7) { ach.patientInvestor = true; giveAchievementReward("Терпеливый инвестор (7 дней подряд)", 3000); }
+        if (!ach.masterClick && state.stats.totalClicks >= 20000) { ach.masterClick = true; giveAchievementReward("Мастер клика (20 000 кликов)", 5000); }
+        if (!ach.billionaire && state.stats.totalRublesEarned >= 2000000000) { ach.billionaire = true; giveAchievementReward("Магнат-миллиардер (2 000 000 000 ₽)", 50000); }
+        let autoPerSec = autoIncome();
+        if (!ach.eternalEngine && autoPerSec >= 100) { ach.eternalEngine = true; giveAchievementReward("Вечный двигатель (100 нефти/сек)", 10000); }
+    }
+
+    // ==================== РЫНОК И СОБЫТИЯ ====================
+    function updateMarketRate() {
+        let change = (Math.random() * 0.3) - 0.15;
+        state.marketMultiplier = 1 + change;
+        let percent = (change * 100).toFixed(1);
+        let sign = change >= 0 ? '+' : '';
+        let indicator = document.getElementById('marketChange');
+        if (indicator) {
+            indicator.innerHTML = `${sign}${percent}%`;
+            indicator.className = `market-indicator ${change >= 0 ? 'positive' : 'negative'}`;
+        }
+        addLog(`📈 Рыночный курс изменился: ${sign}${percent}%`);
+        updateUI();
+    }
+    function triggerRandomEvent() {
+        if (state.activeEvent) return;
+        let r = Math.random();
+        if (r < 0.2) {
+            let events = [
+                { name: "Нефтяной бум", type: "boom", duration: 30, text: "Добыча +50% на 30 секунд!" },
+                { name: "Сбой на бирже", type: "exchangeCrash", duration: 60, text: "Курс обмена упал на 50% на 1 минуту! После кризиса компенсация." },
+                { name: "Инвестиционный фонд", type: "investment", duration: 0, text: "Выбор: 3000 ₽ сейчас или 10000 ₽ через час." }
+            ];
+            let ev = events[Math.floor(Math.random() * events.length)];
+            if (ev.type === "investment") {
+                let choice = confirm(`${ev.text}\n\nНажмите OK — получить 3000 ₽ сейчас\nОтмена — получить 10000 ₽ через час`);
+                if (choice) {
+                    state.rubles += 3000;
+                    state.stats.totalRublesEarned += 3000;
+                    addLog(`💰 Инвестфонд: +3000 ₽ сейчас`);
+                    updateUI();
+                } else {
+                    state.pendingInvestment = { promiseTime: Date.now() + 3600000, reward: 10000 };
+                    addLog(`📈 Инвестфонд: 10000 ₽ через час`);
+                }
+            } else {
+                state.activeEvent = { type: ev.type, endTime: Date.now() + ev.duration * 1000 };
+                addLog(`✨ СОБЫТИЕ: ${ev.name} — ${ev.text}`);
+                if (ev.type === "exchangeCrash") {
+                    setTimeout(() => {
+                        if (state.activeEvent && state.activeEvent.type === "exchangeCrash") {
+                            state.activeEvent = null;
+                            let comp = 1500;
+                            state.rubles += comp;
+                            state.stats.totalRublesEarned += comp;
+                            addLog(`💰 Компенсация после сбоя: +${comp} ₽`);
+                            updateUI();
+                        }
+                    }, ev.duration * 1000);
+                } else if (ev.type === "boom") {
+                    setTimeout(() => {
+                        if (state.activeEvent && state.activeEvent.type === "boom") {
+                            state.activeEvent = null;
+                            addLog(`⏰ Нефтяной бум закончился.`);
+                            updateUI();
+                        }
+                    }, ev.duration * 1000);
+                }
+                updateUI();
+            }
+        }
+    }
+    function checkPendingInvestment() {
+        if (state.pendingInvestment && Date.now() >= state.pendingInvestment.promiseTime) {
+            state.rubles += state.pendingInvestment.reward;
+            state.stats.totalRublesEarned += state.pendingInvestment.reward;
+            addLog(`💰 Инвестфонд: +${state.pendingInvestment.reward} ₽ (прошёл час)!`);
+            state.pendingInvestment = null;
+            updateUI();
+        }
+    }
+
+    // ==================== МИНИ-ИГРА ====================
+    function showDrillGame() {
+        let now = Date.now();
+        let cooldown = 20 * 60 * 1000;
+        if (now - state.lastDrillTime < cooldown) {
+            let remain = Math.ceil((cooldown - (now - state.lastDrillTime)) / 1000);
+            let minutes = Math.floor(remain / 60);
+            let seconds = remain % 60;
+            showToast(`Мини-игра доступна через ${minutes} мин ${seconds} сек`);
+            return;
+        }
+        let modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <h2 style="color:#0ff;">⛏️ БУРЕНИЕ</h2>
+                <p style="color:#ccffcc;">Кликай по буру, чтобы добыть нефть!</p>
+                <div class="drill-btn" id="drillClick">🔨</div>
+                <div class="timer" id="drillTimer">12</div>
+                <div style="color:#ffdd99;">Добыто: <span id="drillReward">0</span> нефти</div>
+                <button class="close-modal" id="closeDrill">Закрыть</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        let timeLeft = 12;
+        let reward = 0;
+        let timerInterval = setInterval(() => {
+            timeLeft--;
+            let timerDiv = document.getElementById('drillTimer');
+            if (timerDiv) timerDiv.innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                state.oil += reward;
+                state.stats.totalOilProduced += reward;
+                state.lastDrillTime = Date.now();
+                addLog(`⛏️ Мини-игра «Бурение»: вы добыли ${reward} нефти!`);
+                showToast(`⛏️ +${reward} нефти`);
+                updateChainProgress('oil', reward);
+                tryDropArtifact('drill');
+                updateUI();
+                modal.remove();
+            }
+        }, 1000);
+        let drillBtn = document.getElementById('drillClick');
+        if (drillBtn) {
+            drillBtn.addEventListener('click', () => {
+                let add = Math.floor(Math.random() * 7) + 3;
+                reward += add;
+                let rewardSpan = document.getElementById('drillReward');
+                if (rewardSpan) rewardSpan.innerText = reward;
+                let rect = drillBtn.getBoundingClientRect();
+                spawnParticles(rect.left + rect.width/2, rect.top + rect.height/2, 5);
+                playSound('click');
+            });
+        }
+        let closeBtn = document.getElementById('closeDrill');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                clearInterval(timerInterval);
+                modal.remove();
+                showToast("Бурение прервано.");
+            });
+        }
+    }
+    function updateDrillButton() {
+        let now = Date.now();
+        let cooldown = 20 * 60 * 1000;
+        let btn = document.getElementById('drillGameBtn');
+        let info = document.getElementById('drillCooldown');
+        if (now - state.lastDrillTime >= cooldown) {
+            btn.disabled = false;
+            btn.style.background = "#b8860b";
+            if (info) info.innerText = "✅ Доступно!";
+        } else {
+            btn.disabled = true;
+            btn.style.background = "#5a5a4a";
+            let remain = Math.ceil((cooldown - (now - state.lastDrillTime)) / 1000);
+            let minutes = Math.floor(remain / 60);
+            let seconds = remain % 60;
+            if (info) info.innerText = `⏳ Доступно через ${minutes} мин ${seconds} сек`;
+        }
+    }
+
+    // ==================== ЕЖЕДНЕВНЫЙ БОНУС ====================
+    function checkDailyBonus() {
+        let last = state.dailyBonusLastClaim || 0;
+        let now = Date.now();
+        let day = 24 * 60 * 60 * 1000;
+        if (now - last >= day) {
+            document.getElementById('dailyBonusBtn').disabled = false;
+            document.getElementById('dailyInfo').innerHTML = "🎁 Доступен!";
+        } else {
+            let next = new Date(last + day);
+            let hours = Math.ceil((next - now) / (60 * 60 * 1000));
+            document.getElementById('dailyInfo').innerHTML = `⏳ через ${hours} ч`;
+            document.getElementById('dailyBonusBtn').disabled = true;
+        }
+    }
+    function claimDailyBonus() {
+        let last = state.dailyBonusLastClaim || 0;
+        let now = Date.now();
+        let day = 24 * 60 * 60 * 1000;
+        if (now - last < day) { showToast("Бонус уже получен! Возвращайтесь завтра."); return; }
+        let streak = state.dailyBonusStreak;
+        if (now - last > day * 2) streak = 0;
+        streak = Math.min(streak + 1, 7);
+        let bonus = 50 * streak;
+        state.rubles += bonus;
+        state.stats.totalRublesEarned += bonus;
+        state.dailyBonusStreak = streak;
+        state.dailyBonusLastClaim = now;
+        addLog(`🎁 Ежедневный бонус! День ${streak}: +${bonus} ₽`);
+        showToast(`Бонус дня ${streak}: +${bonus} ₽`);
+        playSound('achievement');
+        updateUI();
+        checkDailyBonus();
+        checkAchievements();
+    }
+
+    // ==================== ТАБЛИЦА ЛИДЕРОВ ====================
+    function saveLeaderboardEntry(name, score) {
+        if (!name || name.trim() === '') name = "Аноним";
+        state.leaderboard.push({ name: name.trim(), score: score, date: Date.now() });
+        state.leaderboard.sort((a,b) => b.score - a.score);
+        state.leaderboard = state.leaderboard.slice(0, 10);
+        renderLeaderboard();
+        saveGame();
+        showToast(`Результат ${score.toFixed(0)} ₽ сохранён!`);
+    }
+    function renderLeaderboard() {
+        let container = document.getElementById('leaderboardList');
+        if (!container) return;
+        if (!state.leaderboard.length) {
+            container.innerHTML = '<div class="leaderboard-entry">Пока никого нет. Стань первым!</div>';
+            return;
+        }
+        container.innerHTML = state.leaderboard.map(entry => `
+            <div class="leaderboard-entry">
+                <span>${entry.name}</span>
+                <span>💰 ${entry.score.toFixed(0)} ₽</span>
+            </div>
+        `).join('');
+    }
+    function clearLeaderboard() {
+        if (confirm('Очистить таблицу лидеров?')) {
+            state.leaderboard = [];
+            renderLeaderboard();
+            saveGame();
+            addLog('🏆 Таблица лидеров очищена');
+        }
+    }
+
+    // ==================== ГРАФИК ====================
+    let history = new Array(120).fill(0);
+    function updateGraph() {
+        history.push(state.oil);
+        if(history.length > 120) history.shift();
+        let canvas = document.getElementById('graph');
+        let ctx = canvas.getContext('2d');
+        let w = canvas.clientWidth, h = canvas.clientHeight;
+        canvas.width = w; canvas.height = h;
+        ctx.fillStyle = '#0c2a23';
+        ctx.fillRect(0,0,w,h);
+        if(history.length < 2) return;
+        let maxOil = Math.max(...history, 10);
+        let minOil = Math.min(...history, 0);
+        let range = maxOil - minOil;
+        if(range < 1) range = 1;
+        ctx.beginPath();
+        ctx.strokeStyle = '#0ff';
+        ctx.lineWidth = 2.5;
+        for(let i=0; i<history.length; i++) {
+            let x = (i / (history.length-1)) * w;
+            let y = h - ((history[i] - minOil) / range) * h;
+            if(i===0) ctx.moveTo(x,y);
+            else ctx.lineTo(x,y);
+        }
+        ctx.stroke();
+    }
+
+    // ==================== UI ОБНОВЛЕНИЕ ====================
+    function updateStatsDisplay() {
+        document.getElementById('totalClicks').innerText = state.stats.totalClicks;
+        document.getElementById('totalOilStat').innerText = Math.floor(state.stats.totalOilProduced);
+        document.getElementById('totalRubStat').innerText = state.stats.totalRublesEarned.toFixed(0);
+        let elapsed = Math.floor((Date.now() - state.stats.startTime) / 1000);
+        document.getElementById('playTime').innerText = elapsed;
+    }
+    function updateUI() {
+        document.getElementById('oil').innerText = Math.floor(state.oil);
+        document.getElementById('rub').innerText = state.rubles.toFixed(2);
+        document.getElementById('mult').innerText = (1 + state.prestigeBonus/100).toFixed(2) + 'x';
+        document.getElementById('rate').innerText = exchangeRate().toFixed(2);
+        document.getElementById('prestigeBonus').innerText = state.prestigeBonus;
+        let upgradesDiv = document.getElementById('upgrades');
+        upgradesDiv.innerHTML = `
+            <div class="upgrade"><span>🔧 Буровая (+1 клик) ур.${state.clickLvl}</span><span>${upgradeCost('click')}₽</span><button class="buy" data-up="click">Купить</button></div>
+            <div class="upgrade"><span>🏦 Трейдер (+0.1 курс) ур.${state.exchLvl}</span><span>${upgradeCost('exch')}₽</span><button class="buy" data-up="exch">Купить</button></div>
+            <div class="upgrade"><span>⚙️ Автовышка (+1/сек) ур.${state.autoLvl}</span><span>${upgradeCost('auto')}₽</span><button class="buy" data-up="auto">Купить</button></div>
+            <div class="upgrade"><span>💥 Крит (+3% шанс) ур.${state.critLvl}</span><span>${upgradeCost('crit')}₽</span><button class="buy" data-up="crit">Купить</button></div>
+            <div class="upgrade"><span>🤖 Менеджер (продажа 5%) ур.${state.managerLvl}</span><span>${upgradeCost('manager')}₽</span><button class="buy" data-up="manager">Купить</button></div>
+        `;
+        document.querySelectorAll('[data-up]').forEach(btn => {
+            let type = btn.getAttribute('data-up');
+            let cost = upgradeCost(type);
+            if(state.rubles < cost) btn.disabled = true;
+            btn.onclick = () => buy(type);
+        });
+        renderQuests();
+        updateStatsDisplay();
+        renderLeaderboard();
+        checkDailyBonus();
+        updateDrillButton();
+        renderBoostShop();
+        renderArtifacts();
+        renderRigs();
+        renderChain();
+        saveGame();
+    }
+
+    // ==================== СОХРАНЕНИЕ ====================
+    function saveGame() {
+        let data = { oil: state.oil, rubles: state.rubles, clickLvl: state.clickLvl, exchLvl: state.exchLvl, autoLvl: state.autoLvl, critLvl: state.critLvl, managerLvl: state.managerLvl, prestigeBonus: state.prestigeBonus, quests: state.quests, achievements: state.achievements, stats: state.stats, dailyBonusLastClaim: state.dailyBonusLastClaim, dailyBonusStreak: state.dailyBonusStreak, marketMultiplier: state.marketMultiplier, leaderboard: state.leaderboard, critStreak: state.critStreak, lastDrillTime: state.lastDrillTime, pendingInvestment: state.pendingInvestment, currentSkin: state.currentSkin, ownedSkins: state.ownedSkins, boosts: state.boosts, artifacts: state.artifacts, rigs: state.rigs, dailyChain: state.dailyChain };
+        localStorage.setItem('oilPremiumFinal', JSON.stringify(data));
+    }
+    function loadGame() {
+        let raw = localStorage.getItem('oilPremiumFinal');
+        if(raw) {
+            try {
+                let data = JSON.parse(raw);
+                Object.assign(state, data);
+                if(!state.quests) generateQuests();
+                if(!state.stats) state.stats = { totalClicks:0, totalOilProduced:0, totalRublesEarned:0, startTime: Date.now() };
+                if(!state.achievements) state.achievements = {};
+                if(state.marketMultiplier === undefined) state.marketMultiplier = 1.0;
+                if(!state.leaderboard) state.leaderboard = [];
+                if(state.critStreak === undefined) state.critStreak = 0;
+                if(state.lastDrillTime === undefined) state.lastDrillTime = 0;
+                if(state.pendingInvestment === undefined) state.pendingInvestment = null;
+                if(!state.ownedSkins) state.ownedSkins = ["default"];
+                if(!state.currentSkin) state.currentSkin = "default";
+                if(!state.boosts) state.boosts = { drill: { active: false, endTime: 0 }, crit: { active: false, endTime: 0 }, exchange: { active: false, endTime: 0 } };
+                if(!state.artifacts) state.artifacts = { hammer: { level: 0, bonus: 0 }, barrel: { level: 0, bonus: 0 }, pickaxe: { level: 0, bonus: 0 }, gear: { level: 0, bonus: 0 } };
+                if(!state.rigs) state.rigs = {
+                    siberia: { owned: false, bonus: { auto: 0.1, exchange: 0.05, crit: 0.01 }, price: 500000 },
+                    texas: { owned: false, bonus: { auto: 0.15, exchange: 0.02, crit: 0.02 }, price: 1000000 },
+                    middleEast: { owned: false, bonus: { auto: 0.2, exchange: 0.1, crit: 0.01 }, price: 2000000 },
+                    northSea: { owned: false, bonus: { auto: 0.25, exchange: 0.03, crit: 0.03 }, price: 4000000 },
+                    arctic: { owned: false, bonus: { auto: 0.4, exchange: 0.08, crit: 0.04 }, price: 8000000 }
+                };
+                if(!state.dailyChain) state.dailyChain = { lastCheckDay: 0, currentDay: 1, completedToday: false, progress: 0, target: chainData[0].target };
+                checkAchievements();
+            } catch(e) { generateQuests(); }
+        } else generateQuests();
+        applySkin();
+        updateUI();
+    }
+
+    // ==================== АНИМАЦИИ ====================
+    function showModalWithParticles(modalElement) {
+        let rect = modalElement.getBoundingClientRect();
+        for (let i = 0; i < 30; i++) {
+            let p = document.createElement('div');
+            p.className = 'particle-effect';
+            p.style.width = Math.random() * 10 + 4 + 'px';
+            p.style.height = p.style.width;
+            p.style.background = `radial-gradient(circle, cyan, magenta)`;
+            p.style.left = (rect.left + rect.width/2 + (Math.random() - 0.5) * 200) + 'px';
+            p.style.top = (rect.top + rect.height/2 + (Math.random() - 0.5) * 200) + 'px';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 600);
+        }
+    }
+
+    // ==================== ИНТЕРВАЛЫ ====================
+    function startIntervals() {
+        setInterval(() => { let inc = autoIncome(); if(inc > 0) { state.oil += inc; state.stats.totalOilProduced += inc; updateQuests('oil', inc); checkAchievements(); updateUI(); } }, 1000);
+        setInterval(managerTick, 10000);
+        setInterval(() => triggerRandomEvent(), 75000);
+        setInterval(() => checkPendingInvestment(), 10000);
+        setInterval(updateGraph, 1000);
+        setInterval(updateStatsDisplay, 1000);
+        marketUpdateInterval = setInterval(updateMarketRate, 60000);
+        updateMarketRate();
+        setInterval(() => updateDrillButton(), 1000);
+        setInterval(() => { initDailyChain(); updateUI(); }, 60000);
+        initDailyChain();
+    }
+
+    // ==================== ОБРАБОТЧИКИ ====================
+    function toggleSound() { soundEnabled = !soundEnabled; document.getElementById('soundToggle').innerHTML = soundEnabled ? '🔊 Звук вкл' : '🔇 Звук выкл'; localStorage.setItem('oilSound', soundEnabled); }
+    function bindEvents() {
+        document.getElementById('clickBtn').addEventListener('click', (e) => { const rect = e.target.getBoundingClientRect(); addOil(clickPower(), true, e.clientX, e.clientY); updateUI(); });
+        document.getElementById('exchangeBtn').onclick = () => { let amt = parseInt(document.getElementById('amount').value); if(isNaN(amt)) amt = 1; exchange(amt); };
+        document.getElementById('exchangeAll').onclick = () => exchange(state.oil);
+        document.getElementById('prestigeBtn').onclick = prestige;
+        document.getElementById('reset').onclick = () => { if(confirm('Сбросить весь прогресс?')) { localStorage.removeItem('oilPremiumFinal'); location.reload(); } };
+        document.getElementById('reroll').onclick = () => { generateQuests(); updateUI(); };
+        document.getElementById('soundToggle').onclick = toggleSound;
+        document.getElementById('resetStatsBtn').onclick = () => { if(confirm('Сбросить статистику?')) { state.stats = { totalClicks:0, totalOilProduced:0, totalRublesEarned:0, startTime: Date.now() }; updateUI(); addLog('📊 Статистика сброшена'); } };
+        document.getElementById('dailyBonusBtn').onclick = claimDailyBonus;
+        document.getElementById('saveScoreBtn').onclick = () => { let name = prompt("Введите имя для таблицы лидеров:", "Магнат"); if(name !== null) saveLeaderboardEntry(name, state.stats.totalRublesEarned); };
+        document.getElementById('clearLeaderboardBtn').onclick = clearLeaderboard;
+        document.getElementById('drillGameBtn').onclick = showDrillGame;
+        document.getElementById('openShopBtn').onclick = () => { let modal = document.getElementById('skinShopModal'); renderSkinShop(); modal.style.display = 'block'; showModalWithParticles(modal); };
+        document.getElementById('closeShopBtn').onclick = () => { document.getElementById('skinShopModal').style.display = 'none'; };
+        document.getElementById('openBoostBtn').onclick = () => { let modal = document.getElementById('boostShopModal'); modal.style.display = 'block'; showModalWithParticles(modal); };
+        document.getElementById('closeBoostBtn').onclick = () => { document.getElementById('boostShopModal').style.display = 'none'; };
+        document.getElementById('openArtifactBtn').onclick = () => { let modal = document.getElementById('artifactModal'); modal.style.display = 'block'; showModalWithParticles(modal); };
+        document.getElementById('closeArtifactBtn').onclick = () => { document.getElementById('artifactModal').style.display = 'none'; };
+        document.getElementById('openRigsBtn').onclick = () => { let modal = document.getElementById('rigsModal'); modal.style.display = 'block'; showModalWithParticles(modal); };
+        document.getElementById('closeRigsBtn').onclick = () => { document.getElementById('rigsModal').style.display = 'none'; };
+        document.getElementById('openChainBtn').onclick = () => { let modal = document.getElementById('chainModal'); renderChain(); modal.style.display = 'block'; showModalWithParticles(modal); };
+        document.getElementById('closeChainBtn').onclick = () => { document.getElementById('chainModal').style.display = 'none'; };
+    }
+
+    // ==================== ФОН И ЗАСТАВКА ====================
+    function createParticleField() {
+        let container = document.getElementById('particleField');
+        for (let i = 0; i < 60; i++) {
+            let p = document.createElement('div');
+            p.className = 'bg-particle';
+            let size = Math.random() * 4 + 2;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.animationDuration = Math.random() * 15 + 8 + 's';
+            p.style.animationDelay = Math.random() * 10 + 's';
+            container.appendChild(p);
+        }
+    }
+    function hideSplash() {
+        let splash = document.getElementById('splash');
+        let game = document.getElementById('game');
+        splash.style.opacity = '0';
+        setTimeout(() => { splash.style.display = 'none'; game.classList.add('visible'); }, 700);
+    }
+    function init() {
+        loadGame();
+        bindEvents();
+        startIntervals();
+        updateGraph();
+        setTimeout(hideSplash, 2100);
+        let savedSound = localStorage.getItem('oilSound');
+        if (savedSound !== null) soundEnabled = savedSound === 'true';
+        document.getElementById('soundToggle').innerHTML = soundEnabled ? '🔊 Звук вкл' : '🔇 Звук выкл';
+        checkDailyBonus();
+        createParticleField();
+    }
+    init();
 </script>
 </body>
 </html>
