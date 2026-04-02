@@ -3,138 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AURA INTELLIGENCE</title>
+    <title>AURA OMNI</title>
     <style>
         :root {
-            --bg: #0b0b0d;
-            --glass: rgba(30, 30, 35, 0.6);
+            --bg: #08080a;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-intense: rgba(255, 255, 255, 0.07);
             --accent: #4e8cff;
-            --text: #f0f0f0;
-            --border: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
         body, html {
             margin: 0; padding: 0; height: 100%; width: 100%;
-            background: var(--bg); color: var(--text);
+            background: var(--bg); color: #fff;
             font-family: -apple-system, system-ui, sans-serif;
             overflow: hidden; position: fixed;
         }
 
-        /* ФОН В СТИЛЕ GEMINI */
-        .aura-bg {
+        .visual-effects {
             position: absolute; width: 100%; height: 100%; z-index: -1;
-            background: radial-gradient(circle at 50% -10%, rgba(78, 140, 255, 0.12) 0%, transparent 60%);
+            background: radial-gradient(circle at 50% -10%, rgba(78, 140, 255, 0.15) 0%, transparent 60%);
         }
 
-        .main { display: flex; flex-direction: column; height: 100vh; padding-top: env(safe-area-inset-top); }
+        .app-container { display: flex; flex-direction: column; height: 100vh; padding-top: env(safe-area-inset-top); }
 
-        .header { padding: 30px 25px 10px; }
-        .header h1 {
-            font-size: 2.2rem; margin: 0; font-weight: 500; letter-spacing: -0.5px;
-            background: linear-gradient(90deg, #4e8cff, #b573f9);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        .header { 
+            padding: 20px 25px; display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
         }
+        .header h1 { font-size: 1.8rem; margin: 0; font-weight: 600; background: linear-gradient(90deg, #4e8cff, #b573f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .controls { display: flex; gap: 10px; }
+        .btn-sm { background: var(--glass); border: 1px solid var(--border); color: #ccc; padding: 6px 12px; border-radius: 12px; font-size: 12px; backdrop-filter: blur(20px); }
 
         #chat {
-            flex: 1; overflow-y: auto; padding: 20px;
-            display: flex; flex-direction: column; gap: 30px;
+            flex: 1; overflow-y: auto; padding: 25px;
+            display: flex; flex-direction: column; gap: 25px;
             padding-bottom: 180px; -webkit-overflow-scrolling: touch;
         }
 
-        /* СООБЩЕНИЯ */
-        .msg { max-width: 85%; font-size: 16px; line-height: 1.6; animation: slideUp 0.5s ease; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } }
+        .msg { max-width: 85%; font-size: 16px; line-height: 1.6; animation: slideUp 0.4s ease-out; position: relative; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } }
 
-        .ai { align-self: flex-start; display: flex; gap: 15px; }
-        .ai::before { content: '✦'; color: var(--accent); font-size: 22px; font-weight: bold; }
+        .ai { align-self: flex-start; padding-left: 30px; }
+        .ai::before { content: '✦'; position: absolute; left: 0; color: var(--accent); font-weight: bold; font-size: 20px; }
 
         .user { 
-            align-self: flex-end; background: var(--glass); 
-            padding: 12px 18px; border-radius: 20px;
+            align-self: flex-end; background: var(--glass-intense); 
+            padding: 14px 20px; border-radius: 22px;
             border: 1px solid var(--border);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
         }
 
-        /* ПАНЕЛЬ ВВОДА */
-        .input-zone {
+        .input-area {
             position: fixed; bottom: 0; left: 0; right: 0;
             padding: 20px 20px calc(40px + env(safe-area-inset-bottom));
-            background: linear-gradient(to top, var(--bg) 70%, transparent);
+            background: linear-gradient(to top, var(--bg) 80%, transparent);
         }
 
-        .input-pill {
+        .glass-pill {
             max-width: 650px; margin: 0 auto;
-            background: var(--glass); border: 1px solid var(--border);
-            border-radius: 35px; padding: 6px 6px 6px 20px;
+            background: var(--glass-intense); border: 1px solid var(--border);
+            border-radius: 35px; padding: 8px 8px 8px 22px;
             display: flex; align-items: center; gap: 10px;
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
         }
 
-        input {
-            flex: 1; background: transparent; border: none;
-            color: #fff; font-size: 17px; outline: none; padding: 14px 0;
-        }
+        input { flex: 1; background: transparent; border: none; color: #fff; font-size: 17px; outline: none; padding: 12px 0; }
 
-        .send-btn {
-            width: 46px; height: 46px; border-radius: 23px;
+        .send {
+            width: 44px; height: 44px; border-radius: 22px;
             background: #fff; border: none; color: #000;
             font-size: 20px; cursor: pointer; font-weight: bold;
+            transition: 0.2s;
         }
+        .send:active { transform: scale(0.9); background: var(--accent); color: #fff; }
 
-        .loader { display: none; margin-left: 40px; font-size: 12px; color: var(--accent); letter-spacing: 1px; }
+        .status { display: none; margin: 0 auto 10px; font-size: 11px; color: var(--accent); text-align: center; text-transform: uppercase; letter-spacing: 2px; }
     </style>
 </head>
 <body>
-    <div class="aura-bg"></div>
-    <div class="main">
-        <div class="header"><h1>AURA</h1></div>
-        <div id="chat">
-            <div class="msg ai">Привет! Я — AURA. Мой разум теперь подключен к глобальной сети. Спрашивай о чем угодно, я готова.</div>
+    <div class="visual-effects"></div>
+    <div class="app-container">
+        <div class="header">
+            <h1>AURA</h1>
+            <div class="controls">
+                <button class="btn-sm" onclick="saveChat()">Сохранить</button>
+                <button class="btn-sm" onclick="clearChat()">Очистить</button>
+            </div>
         </div>
-        <div class="input-zone">
-            <div id="ldr" class="loader">ДУМАЮ...</div>
-            <div class="input-pill">
-                <input type="text" id="in" placeholder="Спроси меня о чем угодно..." autocomplete="off">
-                <button id="go" class="send-btn">↑</button>
+        <div id="chat">
+            <div class="msg ai">Привет! Я AURA. Теперь я использую ультра-стеклянный интерфейс и расширенный интеллект. О чем поговорим?</div>
+        </div>
+        <div class="input-area">
+            <div id="st" class="status">Синхронизация...</div>
+            <div class="glass-pill">
+                <input type="text" id="in" placeholder="Спроси о чем угодно..." autocomplete="off">
+                <button id="go" class="send">↑</button>
             </div>
         </div>
     </div>
 
     <script>
-        const chat = document.getElementById('chat'), input = document.getElementById('in'), btn = document.getElementById('go'), ldr = document.getElementById('ldr');
+        const chat = document.getElementById('chat'), input = document.getElementById('in'), btn = document.getElementById('go'), st = document.getElementById('st');
 
         async function ask() {
             const val = input.value.trim(); if(!val) return;
             
-            const u = document.createElement('div'); u.className = 'msg user'; u.textContent = val;
-            chat.appendChild(u); input.value = ''; chat.scrollTop = chat.scrollHeight;
-            ldr.style.display = 'block';
+            addMsg(val, 'user');
+            input.value = '';
+            st.style.display = 'block';
 
             try {
-                // ИСПОЛЬЗУЕМ СУПЕР-ОБХОД ЧЕРЕЗ ОТКРЫТЫЙ ШЛЮЗ
-                const r = await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ru&dt=t&q=' + encodeURIComponent(val));
-                // Это хитрый способ заставить систему думать, что это запрос к переводчику (они никогда не блокируются)
-                // Но мы добавим сюда реальный AI-процессинг через свободный API
-                const res = await fetch('https://api.pawan.krd/v1/chat/completions', {
+                // Прямой запрос к мощному открытому API (GPT-3.5/4 Turbo)
+                const r = await fetch('https://api.pawan.krd/v1/chat/completions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer pk-null' },
                     body: JSON.stringify({ model: 'gpt-3.5-turbo', messages: [{role: 'user', content: val}] })
                 });
-                
-                const d = await res.json();
-                const reply = d.choices[0].message.content;
-
-                const a = document.createElement('div'); a.className = 'msg ai';
-                a.textContent = reply;
-                chat.appendChild(a);
+                const d = await r.json();
+                addMsg(d.choices[0].message.content, 'ai');
             } catch (e) {
-                const a = document.createElement('div'); a.className = 'msg ai';
-                a.textContent = "Бро, сигнал прервался. Попробуй еще раз или выключи VPN!";
-                chat.appendChild(a);
+                addMsg("Бро, произошла ошибка связи. Попробуй еще раз!", 'ai');
             } finally {
-                ldr.style.display = 'none';
-                chat.scrollTop = chat.scrollHeight;
+                st.style.display = 'none';
             }
+        }
+
+        function addMsg(text, type) {
+            const m = document.createElement('div');
+            m.className = `msg ${type}`;
+            m.textContent = text;
+            chat.appendChild(m);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function clearChat() {
+            if(confirm("Удалить всю переписку?")) {
+                chat.innerHTML = '<div class="msg ai">Чат очищен. Я готова к новым вопросам!</div>';
+            }
+        }
+
+        function saveChat() {
+            const content = Array.from(chat.children).map(m => `${m.classList.contains('ai') ? 'AURA' : 'Я'}: ${m.textContent}`).join('\n');
+            const blob = new Blob([content], {type: 'text/plain'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'aura_chat.txt';
+            a.click();
         }
 
         btn.onclick = ask;
