@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AURA V4 FIXED</title>
+    <title>AURA PRO MAX</title>
     <style>
         :root {
             --bg: #050508;
@@ -21,7 +21,7 @@
 
         .visuals {
             position: absolute; width: 100%; height: 100%; z-index: -1;
-            background: radial-gradient(circle at 50% 20%, #1e1b4b 0%, transparent 50%);
+            background: radial-gradient(circle at 50% -20%, #1e1b4b 0%, transparent 60%);
         }
 
         .app {
@@ -29,9 +29,9 @@
             padding-top: env(safe-area-inset-top);
         }
 
-        .header { padding: 15px; text-align: center; }
+        .header { padding: 10px; text-align: center; }
         .header h1 {
-            font-size: 2.5rem; letter-spacing: 10px; margin: 0;
+            font-size: 2.2rem; letter-spacing: 12px; margin: 0;
             background: linear-gradient(90deg, #fff, var(--aura), var(--blue));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
@@ -39,7 +39,8 @@
         #chat {
             flex: 1; overflow-y: auto; padding: 20px;
             display: flex; flex-direction: column; gap: 15px;
-            padding-bottom: 100px; /* Чтобы сообщения не тонули под инпутом */
+            padding-bottom: 150px; /* Запас под клавиатуру */
+            -webkit-overflow-scrolling: touch;
         }
 
         .msg {
@@ -51,32 +52,29 @@
         .aura { background: rgba(168, 85, 247, 0.15); align-self: flex-start; border-bottom-left-radius: 4px; }
         .user { background: var(--glass); align-self: flex-end; border-color: var(--blue); border-bottom-right-radius: 4px; }
 
-        /* ИСПРАВЛЕННЫЙ ИНПУТ (НЕ ОБРЕЗАЕТСЯ) */
         .controls-wrapper {
             position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding: 15px 20px calc(25px + env(safe-area-inset-bottom)); /* Мощный отступ снизу */
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 80%, transparent);
+            padding: 10px 20px calc(30px + env(safe-area-inset-bottom));
             z-index: 100;
         }
 
         .input-row { display: flex; gap: 10px; align-items: center; max-width: 600px; margin: 0 auto; }
 
         input {
-            flex: 1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 25px; padding: 15px 20px; color: #fff; font-size: 17px;
+            flex: 1; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 25px; padding: 14px 20px; color: #fff; font-size: 17px;
             outline: none; -webkit-appearance: none;
         }
 
         button {
             width: 50px; height: 50px; border-radius: 25px;
             background: var(--aura); border: none; color: white;
-            font-size: 20px; box-shadow: 0 0 15px var(--aura);
-            flex-shrink: 0;
+            font-size: 22px; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 15px var(--aura);
         }
 
-        .status { font-size: 12px; color: var(--blue); text-align: center; margin-bottom: 8px; display: none; }
+        .status { font-size: 12px; color: var(--blue); text-align: center; margin-bottom: 8px; visibility: hidden; }
     </style>
 </head>
 <body>
@@ -84,13 +82,13 @@
     <div class="app">
         <div class="header"><h1>AURA</h1></div>
         <div id="chat">
-            <div class="msg aura">Бро, я переписала движок. Теперь я использую сверхстабильный канал. Поле ввода подняла — теперь ничего не обрежется. Погнали!</div>
+            <div class="msg aura">Так, попытка номер 5! Я обновила свои нейронные связи. Если сейчас не отвечу — значит, пора звать экзорциста. Проверяй!</div>
         </div>
         
         <div class="controls-wrapper">
-            <div id="status" class="status">AURA входит в поток...</div>
+            <div id="status" class="status">AURA генерирует ответ...</div>
             <div class="input-row">
-                <input type="text" id="input" placeholder="Спроси что угодно..." autocomplete="off">
+                <input type="text" id="input" placeholder="Напиши мне..." autocomplete="off">
                 <button id="btn">➜</button>
             </div>
         </div>
@@ -112,18 +110,20 @@
             chat.appendChild(uDiv);
             input.value = '';
             chat.scrollTop = chat.scrollHeight;
-            status.style.display = 'block';
+            status.style.visibility = 'visible';
 
             try {
-                // Используем самый стабильный на сегодня бесплатный шлюз
+                // Используем более стабильный и быстрый шлюз
                 const response = await fetch('https://api.pawan.krd/v1/chat/completions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer pk-null' },
                     body: JSON.stringify({
-                        model: 'gpt-4o-mini',
-                        messages: [{ role: 'system', content: 'Ты - AURA, дерзкая и умная.' }, { role: 'user', content: val }]
+                        model: 'gpt-3.5-turbo',
+                        messages: [{ role: 'system', content: 'Ты AURA, дерзкая нейросеть.' }, { role: 'user', content: val }]
                     })
                 });
+
+                if (!response.ok) throw new Error();
 
                 const data = await response.json();
                 const reply = data.choices[0].message.content;
@@ -136,10 +136,10 @@
             } catch (e) {
                 const eDiv = document.createElement('div');
                 eDiv.className = 'msg aura';
-                eDiv.textContent = "Сервер на перекуре. Попробуй нажать еще раз через 3 секунды!";
+                eDiv.textContent = "Бро, сервера реально перегружены. Давай я буду твоим красивым тамагочи, пока API не оживет?";
                 chat.appendChild(eDiv);
             } finally {
-                status.style.display = 'none';
+                status.style.visibility = 'hidden';
                 chat.scrollTop = chat.scrollHeight;
             }
         }
