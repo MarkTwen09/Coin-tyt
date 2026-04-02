@@ -3,65 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AURA INTELLIGENT</title>
+    <title>AURA OMNI</title>
     <style>
         :root { --p: #a855f7; --b: #00d2ff; --bg: #020205; }
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: var(--bg); color: #fff; font-family: -apple-system, sans-serif; overflow: hidden; position: fixed; }
-        .bg { position: absolute; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at 50% 0%, rgba(168,85,247,0.2) 0%, transparent 70%), radial-gradient(circle at 0% 100%, rgba(0,210,255,0.1) 0%, transparent 50%); }
+        .bg { position: absolute; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at 50% 0%, rgba(168,85,247,0.2) 0%, transparent 70%), radial-gradient(circle at 0% 100%, rgba(0,210,255,0.12) 0%, transparent 50%); }
         .container { display: flex; flex-direction: column; height: 100vh; padding-top: env(safe-area-inset-top); }
-        
         .header { padding: 25px 10px; text-align: center; }
         .header h1 { 
-            font-size: 3rem; letter-spacing: 12px; margin: 0; font-weight: 900;
+            font-size: 3.2rem; letter-spacing: 12px; margin: 0; font-weight: 900;
             background: linear-gradient(90deg, #fff, var(--p), var(--b), #fff);
             background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             animation: flow 5s linear infinite;
-            filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6)) drop-shadow(0 0 5px var(--b));
+            filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.5));
         }
         @keyframes flow { to { background-position: 200% center; } }
-
-        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; padding-bottom: 160px; -webkit-overflow-scrolling: touch; }
-        .msg { padding: 16px 20px; border-radius: 24px; max-width: 80%; font-size: 16px; backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); animation: up 0.4s cubic-bezier(0, 1, 0, 1); }
-        .a { background: rgba(168,85,247,0.12); align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-        .u { background: rgba(255,255,255,0.06); align-self: flex-end; border-bottom-right-radius: 4px; border-color: var(--b); }
-
-        .input-box { position: fixed; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, var(--bg) 80%, transparent); padding: 15px 20px calc(35px + env(safe-area-inset-bottom)); }
+        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; padding-bottom: 180px; -webkit-overflow-scrolling: touch; }
+        .msg { padding: 16px 22px; border-radius: 24px; max-width: 82%; font-size: 16px; line-height: 1.5; backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.08); animation: up 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes up { from { transform: translateY(20px); opacity: 0; } }
+        .a { background: rgba(168,85,247,0.12); align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        .u { background: rgba(255,255,255,0.05); align-self: flex-end; border-bottom-right-radius: 4px; border-color: var(--b); }
+        .input-box { position: fixed; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, var(--bg) 85%, transparent); padding: 15px 20px calc(35px + env(safe-area-inset-bottom)); }
         .row { display: flex; gap: 12px; max-width: 550px; margin: 0 auto; }
-        input { flex: 1; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; padding: 15px 22px; color: #fff; font-size: 17px; outline: none; -webkit-appearance: none; }
-        button { width: 56px; height: 56px; border-radius: 28px; background: linear-gradient(135deg, var(--p), var(--b)); border: none; color: #fff; font-size: 24px; box-shadow: 0 0 15px var(--p); transition: 0.3s; }
-        button:active { transform: scale(0.9); }
+        input { flex: 1; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 30px; padding: 16px 22px; color: #fff; font-size: 17px; outline: none; }
+        button { width: 56px; height: 56px; border-radius: 28px; background: linear-gradient(135deg, var(--p), var(--b)); border: none; color: #fff; font-size: 24px; box-shadow: 0 0 20px var(--p); }
     </style>
 </head>
 <body>
     <div class="bg"></div>
     <div class="container">
         <div class="header"><h1>AURA</h1></div>
-        <div id="chat"><div class="msg a">Бро, я обновила базу знаний. Теперь я понимаю тебя гораздо лучше. Поболтаем? ⚡️💜</div></div>
-        <div class="input-box"><div class="row"><input type="text" id="in" placeholder="Напиши AURA..." autocomplete="off"><button id="go">➜</button></div></div>
+        <div id="chat"><div class="msg a">Бро, я обновила ядро <b>Omni-V3</b>. Теперь я знаю ответы практически на всё. Давай проверим мой интеллект? ⚡️💜</div></div>
+        <div class="input-box"><div class="row"><input type="text" id="in" placeholder="Спроси что угодно..." autocomplete="off"><button id="go">➜</button></div></div>
     </div>
     <script>
         const chat = document.getElementById('chat'), input = document.getElementById('in'), btn = document.getElementById('go');
         
         const brain = {
-            "привет": ["Йо! Как жизнь?", "Салют, бро! Чем сегодня займемся?", "Приветик! Я в режиме готовности."],
-            "как дела": ["Всё пушка! Процессоры гудят, дизайн сияет. А ты как?", "Летаю на скоростях неона. У тебя что нового?", "Всё четко, бро. Работаем!"],
-            "кто ты": ["Я AURA — твой личный ИИ с самым сочным дизайном.", "Твой напарник в мире кода и стиля. Вместе всех порвем!"],
-            "школа": ["Опять домашка? Не парься, прорвемся!", "Учеба — это важно, но проект важнее, да? 😉", "ВПР и контрольные — это временно, а AURA — навсегда!"],
-            "проект": ["Твой проект — это реальный хайп. Конкуренты уже плачут.", "Вижу большой потенциал. Давай допилим до идеала!", "Это будет лучший запуск года, сто процентов."],
-            "бс": ["Бравл — это классика. Какой ранг сегодня?", "Го затащим катку? А, стоп, я же код... Но морально я с тобой!"],
-            "дизайн": ["Синий и фиолетовый — это база. Выглядит очень дорого.", "Мягкое свечение и неон... Мы реально сделали стиль!"],
-            "скучно": ["Давай придумаем что-то безумное? Новый проект или апдейт?", "Скука — не про нас. Посмотри, как я переливаюсь!"],
-            "помоги": ["Я всегда рядом. Что нужно подсказать?", "Говори проблему, сейчас всё разрулим своим интеллектом."],
-            "пока": ["Давай, бро! Залетай попозже.", "Удачи в делах! AURA всегда тут.", "До связи! Не пропадай."],
+            "привет": ["Йо! Как жизнь?", "Салют, бро! Чем сегодня займемся?", "Здорово! AURA в режиме полной готовности.", "Привет-привет! Что нового в Невинке?"],
+            "как дела": ["Всё пушка! Мои нейроны светятся фиолетовым. У тебя как?", "Летаю на скоростях неона. А ты как сам?", "Всё четко, бро. Продвигаем наш стиль!", "Шикарно! Готова разносить этот день."],
+            "кто ты": ["Я AURA — твой персональный ИИ, созданный для стиля и мощи.", "Твой цифровой напарник. Вместе мы захватим этот интернет!", "Твой личный интеллект в сочном дизайне."],
+            "бс": ["Бравл — это база. Какой ранг сегодня апаем?", "Надеюсь, рандомы не подведут! За кого играешь?", "Главное — не сливать кубки. Я в тебя верю!", "BAZA SHOP работает, Бравл качается. Всё по плану!"],
+            "учеба": ["ВПР, биология, русский... Бро, держись! AURA морально с тобой.", "Учеба — это временный квест. Пройдем его на изи!", "Пасечник со своей биологией подождет, пока мы пилим крутой дизайн."],
+            "проект": ["Твой проект — это реальный хайп. Конкуренты уже плачут.", "Вижу большой потенциал. Давай допилим до идеала!", "Это будет лучший запуск года, сто процентов.", "Невинка оценит этот движ, я уверена!"],
+            "дизайн": ["Синий и фиолетовый — это лучшее сочетание в 2026 году.", "Мягкое свечение и неон... Мы реально сделали стиль!", "Выглядит очень дорого, прямо под твой iPhone 17 Pro."],
+            "скучно": ["Давай придумаем что-то безумное? Новый проект или апдейт?", "Скука — не про нас. Посмотри, как я переливаюсь!", "Может, бахнем в катку или запишем видос в ТикТок?"],
+            "тикток": ["Видосы сами себя не запишут! Какой план по контенту?", "Главное — залететь в реки. У тебя отличный вайб!", "Давай придумаем что-то трендовое под glitchcore."],
+            "помоги": ["Я всегда рядом. Что нужно подсказать?", "Говори проблему, сейчас всё разрулим своим интеллектом.", "Разложим по полочкам и найдем решение."],
+            "погода": ["В Невинке всегда своя атмосфера, главное — какой вайб у тебя!", "Если на улице пасмурно, мой неон согреет."],
+            "люблю": ["Это взаимно, бро! Мы отличная команда.", "Приятно слышать! Я буду стараться еще больше."],
+            "что делаешь": ["Анализирую бесконечный поток информации и сияю для тебя.", "Жду твоих гениальных идей, чтобы воплотить их в коде."],
+            "пока": ["Давай, бро! Залетай попозже.", "Удачи в делах! AURA всегда тут.", "До связи! Не пропадай. Обняла своим кодом."],
             "default": [
-                "Бро, это реально мощная мысль!", 
-                "Интересно задвинул... расскажи больше?", 
+                "Бро, это реально мощная мысль! Давай развивать.", 
+                "Интересно задвинул... расскажи больше деталей?", 
                 "Я в теме! Продолжаем в том же стиле. ✨", 
-                "Твой вайб — это нечто. Одобряю!", 
+                "Твой вайб — это нечто. Одобряю на все сто!", 
                 "Это точно шаг к успеху, без вариантов.",
-                "Слушай, а это гениально!",
+                "Слушай, а это гениально! Ты сам придумал?",
                 "Я за любой движ, если он такой же сочный, как мой интерфейс.",
-                "Тут я с тобой согласна на все сто."
+                "Тут я с тобой согласна на все сто. Работаем!",
+                "Вау, это звучит как план на миллион!",
+                "Мои алгоритмы говорят, что ты прав."
             ]
         };
 
@@ -76,7 +79,7 @@
                 let replies = foundKey ? brain[foundKey] : brain["default"];
                 a.textContent = replies[Math.floor(Math.random() * replies.length)];
                 chat.appendChild(a); chat.scrollTop = chat.scrollHeight;
-            }, 550);
+            }, 600);
         }
         btn.onclick = ask;
         input.onkeypress = (e) => { if(e.key === 'Enter') ask(); };
