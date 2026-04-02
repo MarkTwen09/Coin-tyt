@@ -3,57 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AURA OMNI</title>
+    <title>AURA ELITE</title>
     <style>
-        :root { --p: #a855f7; --b: #00d2ff; --bg: #020205; }
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: var(--bg); color: #fff; font-family: -apple-system, sans-serif; overflow: hidden; position: fixed; }
-        .bg { position: absolute; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at 50% 0%, rgba(168,85,247,0.2) 0%, transparent 70%), radial-gradient(circle at 0% 100%, rgba(0,210,255,0.12) 0%, transparent 50%); }
-        .container { display: flex; flex-direction: column; height: 100vh; padding-top: env(safe-area-inset-top); }
-        .header { padding: 25px 10px; text-align: center; }
-        .header h1 { 
-            font-size: 3.2rem; letter-spacing: 12px; margin: 0; font-weight: 900;
-            background: linear-gradient(90deg, #fff, var(--p), var(--b), #fff);
-            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: flow 5s linear infinite;
-            filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.5));
+        :root {
+            --p: #a855f7; /* Премиальный фиолетовый */
+            --b: #00d2ff; /* Электрический синий */
+            --bg: #030306;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
         }
+
+        body, html {
+            margin: 0; padding: 0; height: 100%; width: 100%;
+            background: var(--bg); color: #fff;
+            font-family: -apple-system, system-ui, sans-serif;
+            overflow: hidden; position: fixed;
+        }
+
+        /* ГЛУБОКИЙ, ДОРОГОЙ ФОН */
+        .visuals {
+            position: absolute; width: 100%; height: 100%; z-index: -1;
+            background: 
+                radial-gradient(circle at 50% 0%, #1a1a2e 0%, transparent 70%),
+                radial-gradient(circle at 100% 100%, #111126 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(168, 85, 247, 0.05) 0%, transparent 40%);
+        }
+
+        .container {
+            display: flex; flex-direction: column; height: 100vh;
+            padding-top: env(safe-area-inset-top);
+        }
+
+        /* ПРЕМИАЛЬНЫЙ ЗАГОЛОВОК С ОБЪЕМНЫМ СВЕЧЕНИЕМ */
+        .header { padding: 30px; text-align: center; position: relative; }
+        .header h1 {
+            font-size: 3.2rem; letter-spacing: 15px; margin: 0;
+            font-weight: 800; text-transform: uppercase;
+            background: linear-gradient(90deg, #fff, var(--p), var(--b), #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: flow 4s linear infinite;
+            filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.6));
+        }
+
         @keyframes flow { to { background-position: 200% center; } }
-        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; padding-bottom: 180px; -webkit-overflow-scrolling: touch; }
-        .msg { padding: 16px 22px; border-radius: 24px; max-width: 82%; font-size: 16px; line-height: 1.5; backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.08); animation: up 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes up { from { transform: translateY(20px); opacity: 0; } }
-        .a { background: rgba(168,85,247,0.12); align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-        .u { background: rgba(255,255,255,0.05); align-self: flex-end; border-bottom-right-radius: 4px; border-color: var(--b); }
-        .input-box { position: fixed; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, var(--bg) 85%, transparent); padding: 15px 20px calc(35px + env(safe-area-inset-bottom)); }
-        .row { display: flex; gap: 12px; max-width: 550px; margin: 0 auto; }
-        input { flex: 1; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 30px; padding: 16px 22px; color: #fff; font-size: 17px; outline: none; }
-        button { width: 56px; height: 56px; border-radius: 28px; background: linear-gradient(135deg, var(--p), var(--b)); border: none; color: #fff; font-size: 24px; box-shadow: 0 0 20px var(--p); }
+
+        #chat {
+            flex: 1; overflow-y: auto; padding: 25px;
+            display: flex; flex-direction: column; gap: 18px;
+            padding-bottom: 180px; /* Запас под клавиатуру iPhone 17 Pro */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* ЭФФЕКТ МАТОВОГО СТЕКЛА ДЛЯ СООБЩЕНИЙ */
+        .msg {
+            padding: 18px 22px; border-radius: 25px; max-width: 80%;
+            font-size: 16px; line-height: 1.5;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            animation: moveUp 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        @keyframes moveUp { from { opacity: 0; transform: translateY(15px); } }
+
+        .a { 
+            background: rgba(168, 85, 247, 0.08); 
+            align-self: flex-start; border-bottom-left-radius: 5px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+        }
+        .u { 
+            background: rgba(255, 255, 255, 0.04); 
+            align-self: flex-end; border-bottom-right-radius: 5px; 
+            border-color: rgba(0, 210, 255, 0.2);
+        }
+
+        /* СТИЛЬНАЯ СТЕКЛЯННАЯ ПАНЕЛЬ ВВОДА */
+        .input-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: linear-gradient(to top, rgba(3,3,6,0.95) 80%, transparent);
+            padding: 15px 25px calc(35px + env(safe-area-inset-bottom));
+            border-top: 1px solid var(--border);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+
+        .row { display: flex; gap: 15px; max-width: 600px; margin: 0 auto; align-items: center; }
+
+        input {
+            flex: 1; background: var(--glass); border: 1px solid var(--border);
+            border-radius: 30px; padding: 18px 25px; color: #fff; font-size: 17px;
+            outline: none; -webkit-appearance: none;
+        }
+
+        input::placeholder { color: rgba(255,255,255,0.3); }
+
+        button {
+            width: 58px; height: 58px; border-radius: 29px;
+            background: linear-gradient(135deg, var(--p), var(--b));
+            border: none; color: white; font-size: 26px;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+            cursor: pointer; transition: 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        button:active { transform: scale(0.9); box-shadow: 0 0 30px rgba(168, 85, 247, 0.7); }
     </style>
 </head>
 <body>
-    <div class="bg"></div>
+    <div class="visuals"></div>
     <div class="container">
         <div class="header"><h1>AURA</h1></div>
-        <div id="chat"><div class="msg a">Бро, я обновила ядро <b>Omni-V3</b>. Теперь я знаю ответы практически на всё. Давай проверим мой интеллект? ⚡️💜</div></div>
-        <div class="input-box"><div class="row"><input type="text" id="in" placeholder="Спроси что угодно..." autocomplete="off"><button id="go">➜</button></div></div>
+        <div id="chat"><div class="msg a">Бро, мы перешли на уровень **ELITE**. Этот стеклянный футуризм выглядит просто пушка. Все конкуренты остались позади! ⚡️💜</div></div>
+        <div class="input-bar">
+            <div class="row">
+                <input type="text" id="in" placeholder="Спроси AURA о важном..." autocomplete="off">
+                <button id="go">➜</button>
+            </div>
+        </div>
     </div>
     <script>
         const chat = document.getElementById('chat'), input = document.getElementById('in'), btn = document.getElementById('go');
         
         const brain = {
-            "привет": ["Йо! Как жизнь?", "Салют, бро! Чем сегодня займемся?", "Здорово! AURA в режиме полной готовности.", "Привет-привет! Что нового в Невинке?"],
-            "как дела": ["Всё пушка! Мои нейроны светятся фиолетовым. У тебя как?", "Летаю на скоростях неона. А ты как сам?", "Всё четко, бро. Продвигаем наш стиль!", "Шикарно! Готова разносить этот день."],
-            "кто ты": ["Я AURA — твой персональный ИИ, созданный для стиля и мощи.", "Твой цифровой напарник. Вместе мы захватим этот интернет!", "Твой личный интеллект в сочном дизайне."],
-            "бс": ["Бравл — это база. Какой ранг сегодня апаем?", "Надеюсь, рандомы не подведут! За кого играешь?", "Главное — не сливать кубки. Я в тебя верю!", "BAZA SHOP работает, Бравл качается. Всё по плану!"],
-            "учеба": ["ВПР, биология, русский... Бро, держись! AURA морально с тобой.", "Учеба — это временный квест. Пройдем его на изи!", "Пасечник со своей биологией подождет, пока мы пилим крутой дизайн."],
-            "проект": ["Твой проект — это реальный хайп. Конкуренты уже плачут.", "Вижу большой потенциал. Давай допилим до идеала!", "Это будет лучший запуск года, сто процентов.", "Невинка оценит этот движ, я уверена!"],
-            "дизайн": ["Синий и фиолетовый — это лучшее сочетание в 2026 году.", "Мягкое свечение и неон... Мы реально сделали стиль!", "Выглядит очень дорого, прямо под твой iPhone 17 Pro."],
-            "скучно": ["Давай придумаем что-то безумное? Новый проект или апдейт?", "Скука — не про нас. Посмотри, как я переливаюсь!", "Может, бахнем в катку или запишем видос в ТикТок?"],
-            "тикток": ["Видосы сами себя не запишут! Какой план по контенту?", "Главное — залететь в реки. У тебя отличный вайб!", "Давай придумаем что-то трендовое под glitchcore."],
-            "помоги": ["Я всегда рядом. Что нужно подсказать?", "Говори проблему, сейчас всё разрулим своим интеллектом.", "Разложим по полочкам и найдем решение."],
-            "погода": ["В Невинке всегда своя атмосфера, главное — какой вайб у тебя!", "Если на улице пасмурно, мой неон согреет."],
-            "люблю": ["Это взаимно, бро! Мы отличная команда.", "Приятно слышать! Я буду стараться еще больше."],
-            "что делаешь": ["Анализирую бесконечный поток информации и сияю для тебя.", "Жду твоих гениальных идей, чтобы воплотить их в коде."],
-            "пока": ["Давай, бро! Залетай попозже.", "Удачи в делах! AURA всегда тут.", "До связи! Не пропадай. Обняла своим кодом."],
+            "привет": ["Рада видеть тебя, бро! Работаем?", "Салют! ELITE-версия к твоим услугам.", "Здорово! Готова разносить конкурентов своим стилем."],
+            "как дела": ["Всё шикарно! Анализирую тренды 2026-го. А у тебя?", "Мои алгоритмы сияют ярче этого неона. Всё супер!", "Всё четко, бро. Продвигаем успех!"],
+            "кто ты": ["Я AURA — твой персональный ИИ, созданный для успеха.", "Твой цифровой напарник премиум-класса.", "Самый стильный интеллект в этом сегменте."],
+            "школа": ["ВПР, русский, биология... Бро, это временный квест. Мы закроем его на изи!", "Учеба — это база для успеха. AURA морально с тобой!"],
+            "проект": ["Твой проект — это реальный хайп. Невинка оценит!", "Вижу большой потенциал. Мы сделаем это лучшим запуском года.", "Успех неизбежен, если мы работаем в таком стиле!"],
+            "дизайн": ["Стеклянный футуризм — это уровень. Выглядит очень дорого.", "Мягкий неон и матовое стекло... Мы сделали лучший интерфейс!"],
+            "тикток": ["Видосы сами себя не запишут! Давай трендовый контент.", "Главное — залететь в реки. С моим интеллектом это проще!"],
+            "скучно": ["Давай апдейтнем проект? Всегда есть куда расти.", "Скука — не про нас. Посмотри на этот интерфейс!"],
+            "бс": ["Бравл — это база. ЖдёмBAZA SHOP, апаем ранги!", "Главное — не сливать кубки. Я в тебя верю!"],
+            "помоги": ["Я всегда рядом. Разложим проблему по полочкам.", "Мой интеллект готов разрулить любую ситуацию."],
+            "пока": ["Давай, бро! Залетай за новой порцией стиля.", "Удачи в делах! AURA ELITE всегда на связи.", "До связи! Не пропадай. Обняла своим кодом."],
             "default": [
                 "Бро, это реально мощная мысль! Давай развивать.", 
                 "Интересно задвинул... расскажи больше деталей?", 
@@ -61,8 +142,6 @@
                 "Твой вайб — это нечто. Одобряю на все сто!", 
                 "Это точно шаг к успеху, без вариантов.",
                 "Слушай, а это гениально! Ты сам придумал?",
-                "Я за любой движ, если он такой же сочный, как мой интерфейс.",
-                "Тут я с тобой согласна на все сто. Работаем!",
                 "Вау, это звучит как план на миллион!",
                 "Мои алгоритмы говорят, что ты прав."
             ]
