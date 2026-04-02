@@ -2,127 +2,193 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AURA BLACK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>AURA NEURAL</title>
     <style>
         :root {
-            --bg: #000000;
-            --accent: #5e5ce6;
-            --glass: rgba(255, 255, 255, 0.04);
-            --border: rgba(255, 255, 255, 0.08);
+            --bg: #000;
+            --accent: #007aff;
+            --card: #121212;
+            --border: rgba(255,255,255,0.08);
         }
 
         body, html {
             margin: 0; padding: 0; height: 100%; width: 100%;
             background: var(--bg); color: #fff;
-            font-family: -apple-system, "SF Pro Display", sans-serif;
+            font-family: -apple-system, system-ui, sans-serif;
             overflow: hidden;
         }
 
-        /* ШАПКА */
-        .header {
-            padding: 20px; display: flex; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(30px);
-            border-bottom: 1px solid var(--border);
+        /* SIDEBAR (ГАМБУРГЕР) */
+        .sidebar {
+            position: fixed; left: -280px; top: 0; width: 280px; height: 100%;
+            background: #080808; border-right: 1px solid var(--border);
+            z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column; padding: 25px; box-sizing: border-box;
         }
-        .logo { font-weight: 600; font-size: 13px; letter-spacing: 3px; color: #666; }
+        .sidebar.active { left: 0; box-shadow: 20px 0 60px rgba(0,0,0,0.8); }
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1999; display: none; backdrop-filter: blur(10px);
+        }
+        .overlay.active { display: block; }
 
-        /* ОКНО ЧАТА */
-        #chat {
-            height: calc(100vh - 160px); overflow-y: auto;
-            padding: 25px; display: flex; flex-direction: column; gap: 40px;
-            -webkit-overflow-scrolling: touch;
+        /* MAIN APP */
+        .app { display: flex; flex-direction: column; height: 100vh; padding-top: env(safe-area-inset-top); }
+        .nav {
+            padding: 15px 25px; display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
+        }
+        .menu-btn { background: none; border: none; color: #fff; font-size: 30px; cursor: pointer; }
+        .logo { font-weight: 700; font-size: 14px; letter-spacing: 3px; color: #888; text-transform: uppercase; }
+
+        #chat-scroller {
+            flex: 1; overflow-y: auto; padding: 25px;
+            display: flex; flex-direction: column; gap: 40px;
+            padding-bottom: 220px; -webkit-overflow-scrolling: touch;
         }
 
-        .m { max-width: 90%; line-height: 1.7; font-size: 16px; animation: msgIn 0.5s cubic-bezier(0.2, 1, 0.3, 1); }
-        @keyframes msgIn { from { opacity: 0; transform: translateY(10px); } }
+        /* СООБЩЕНИЯ */
+        .msg { max-width: 90%; line-height: 1.7; font-size: 16px; animation: slideIn 0.3s ease; white-space: pre-wrap; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } }
 
-        .ai { align-self: flex-start; color: #e5e5e7; }
+        .ai { align-self: flex-start; color: #efeff4; }
         .ai::before { 
-            content: '✦'; display: block; margin-bottom: 10px;
-            font-size: 20px; color: var(--accent);
-        }
-        
-        .user { 
-            align-self: flex-end; background: var(--glass); 
-            padding: 14px 20px; border-radius: 22px; border: 1px solid var(--border);
-            color: #fff;
+            content: '✦ AURA'; display: block; margin-bottom: 10px;
+            font-size: 11px; font-weight: 900; color: var(--accent); letter-spacing: 1px;
         }
 
-        /* ПОЛЕ ВВОДА */
-        .input-wrap {
+        .user { 
+            align-self: flex-end; background: var(--card); 
+            padding: 16px 22px; border-radius: 24px; border: 1px solid var(--border);
+        }
+
+        /* ПАНЕЛЬ ВВОДА */
+        .footer {
             position: fixed; bottom: 0; left: 0; right: 0;
             padding: 20px 20px calc(45px + env(safe-area-inset-bottom));
-            background: linear-gradient(to top, var(--bg) 90%, transparent);
+            background: linear-gradient(to top, var(--bg) 85%, transparent);
         }
         .pill {
-            max-width: 800px; margin: 0 auto; background: #121214;
-            border: 1px solid var(--border); border-radius: 30px;
-            padding: 8px 8px 8px 22px; display: flex; align-items: center;
+            max-width: 800px; margin: 0 auto; background: #161618;
+            border: 1px solid var(--border); border-radius: 35px;
+            padding: 8px 8px 8px 24px; display: flex; align-items: center; gap: 15px;
         }
         input { flex: 1; background: transparent; border: none; color: #fff; font-size: 17px; outline: none; }
-        .send { width: 42px; height: 42px; border-radius: 50%; background: #fff; border: none; font-size: 20px; cursor: pointer; transition: 0.2s; }
+        .send { width: 44px; height: 44px; border-radius: 50%; background: #fff; border: none; font-size: 22px; cursor: pointer; transition: 0.2s; }
         .send:active { transform: scale(0.9); background: var(--accent); color: #fff; }
+
+        /* ИСТОРИЯ */
+        .h-link { padding: 14px; margin-bottom: 8px; border-radius: 12px; font-size: 14px; color: #777; cursor: pointer; transition: 0.2s; }
+        .h-link:hover { background: var(--card); color: #fff; }
+        .action { width: 100%; padding: 14px; margin-bottom: 25px; border-radius: 14px; border: 1px solid var(--accent); background: transparent; color: var(--accent); font-weight: 700; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <div class="logo">AURA INTELLIGENCE</div>
+    <div class="overlay" id="overlay"></div>
+    <div class="sidebar" id="sidebar">
+        <button class="action" onclick="newChat()">+ NEW SESSION</button>
+        <div id="h-box" style="flex: 1; overflow-y: auto;"></div>
+        <button class="action" onclick="reset()" style="border-color: #ff3b30; color: #ff3b30;">WIPE ALL</button>
     </div>
 
-    <div id="chat"></div>
-
-    <div class="input-wrap">
-        <div class="pill">
-            <input type="text" id="in" placeholder="Задай вопрос..." autocomplete="off">
-            <button id="go" class="send">↑</button>
+    <div class="app">
+        <div class="nav">
+            <button class="menu-btn" onclick="toggle()">☰</button>
+            <div class="logo">AURA NEURAL</div>
+            <div style="width: 32px;"></div>
+        </div>
+        <div id="chat-scroller"></div>
+        <div class="footer">
+            <div class="pill">
+                <input type="text" id="query" placeholder="Ask anything..." autocomplete="off">
+                <button id="run" class="send">↑</button>
+            </div>
         </div>
     </div>
 
     <script>
-        const win = document.getElementById('chat'), input = document.getElementById('in'), btn = document.getElementById('go');
+        const chat = document.getElementById('chat-scroller'), inp = document.getElementById('query'), 
+              btn = document.getElementById('run'), side = document.getElementById('sidebar'), 
+              over = document.getElementById('overlay'), hBox = document.getElementById('h-box');
 
-        window.onload = () => {
-            add("Система готова. Я здесь, чтобы помогать с твоими проектами, учебой и любыми вопросами. Что обсудим?", 'ai');
-        };
+        let data = JSON.parse(localStorage.getItem('aura_n_v1')) || [];
+        let active = data.length > 0 ? 0 : -1;
 
-        function process() {
-            const val = input.value.trim(); if(!val) return;
-            add(val, 'user');
-            input.value = '';
+        function init() {
+            renderH();
+            if (active === -1) newChat(); else load(active);
+        }
 
-            // МГНОВЕННАЯ ЛОГИКА (БЕЗ ПРИПИСОК ПРО ПОИСК)
+        function toggle() { side.classList.toggle('active'); over.classList.toggle('active'); }
+        over.onclick = toggle;
+
+        function newChat() {
+            data.unshift({ title: "New Chat", logs: [] });
+            active = 0; save(); load(0);
+            if (side.classList.contains('active')) toggle();
+        }
+
+        function load(i) {
+            active = i; chat.innerHTML = '';
+            if (data[i].logs.length === 0) {
+                addMsg("AURA NEURAL активна. Я синхронизирована с твоими проектами и готова к работе. Что решим сегодня?", 'ai');
+            } else {
+                data[i].logs.forEach(l => addMsg(l.t, l.type));
+            }
+            renderH();
+            if (side.classList.contains('active')) toggle();
+        }
+
+        async function process() {
+            const val = inp.value.trim(); if(!val) return;
+            addMsg(val, 'user');
+            data[active].logs.push({t: val, type: 'user'});
+            if (data[active].logs.length === 1) data[active].title = val;
+            inp.value = '';
+
+            // УМНЫЙ ОТВЕТ (КАК ШВЕЙЦАРСКИЕ ЧАСЫ)
             setTimeout(() => {
                 let ans = "";
                 const q = val.toLowerCase();
 
+                // Прямая логика без лишних слов
                 if (q.includes('бравл') || q.includes('baza')) {
-                    ans = "Для развития BAZA SHOP сейчас лучше всего сделать упор на быстрые выдачи и отзывы. В Бравле актуален контроль карты — подсказать лучших бойцов под текущую ротацию?";
-                } else if (q.includes('школ') || q.includes('биол') || q.includes('геогр')) {
-                    ans = "В 8 классе эти темы разбираются подробно. Если это биология Пасечника — там сейчас акцент на физиологии. Какую конкретно задачу нужно решить?";
+                    ans = "Для BAZA SHOP сейчас идеальное время обновить ассортимент гемов. Рекомендую подготовить рекламный креатив под новую мету бойцов. Что именно в Бравле тебя интересует сейчас?";
+                } else if (q.includes('учеб') || q.includes('школ') || q.includes('биол')) {
+                    ans = "В 8 классе сейчас идут важные темы. По биологии Пасечника акцент на системах организма. Давай разберем конкретную задачу или напишем конспект?";
                 } else if (q.includes('невинк') || q.includes('чп')) {
-                    ans = "Твой проект ЧП | Невинка — отличная база для новостей города. Рекомендую использовать форматы коротких сводок и проверять информацию через официальные чаты безопасности.";
-                } else if (q.includes('кто') || q.includes('что')) {
-                    ans = "Я изучила информацию. Речь идет о важном событии/личности. Если вкратце — это оказало большое влияние на свою сферу. Рассказать подробнее?";
+                    ans = "Для проекта ЧП | Невинка стоит проверить последние сводки. Твой канал в топе по скорости, так что давай сделаем упор на эксклюзивность контента.";
+                } else if (q.includes('кто') || q.includes('что такое')) {
+                    ans = "Я проанализировала данные. Это понятие/личность имеет ключевое значение в своей области. Основная суть заключается в следующем... Хочешь разобрать детали?";
                 } else {
-                    ans = "Я проанализировала твой вопрос. Лучший способ решить это — разбить задачу на части. Давай начнем с самого первого шага, что скажешь?";
+                    ans = "Я поняла твой запрос. Для твоего темпа жизни на iPhone 17 Pro лучше всего решить это системно: сначала фиксируем задачу, потом действуем. С чего начнем?";
                 }
 
-                add(ans, 'ai');
-            }, 400);
+                addMsg(ans, 'ai');
+                data[active].logs.push({t: ans, type: 'ai'});
+                save();
+            }, 300);
         }
 
-        function add(t, type) {
+        function addMsg(t, type) {
             const d = document.createElement('div');
-            d.className = `m ${type}`;
+            d.className = `msg ${type}`;
             d.textContent = t;
-            win.appendChild(d);
-            win.scrollTop = win.scrollHeight;
+            chat.appendChild(d);
+            chat.scrollTop = chat.scrollHeight;
         }
+
+        function renderH() {
+            hBox.innerHTML = data.map((c, i) => `<div class="h-link" onclick="load(${i})">${c.title.substring(0, 20)}...</div>`).join('');
+        }
+
+        function save() { localStorage.setItem('aura_n_v1', JSON.stringify(data)); }
+        function reset() { if(confirm("Clear memory?")) { localStorage.clear(); location.reload(); } }
 
         btn.onclick = process;
-        input.onkeypress = (e) => { if(e.key === 'Enter') process(); };
+        inp.onkeypress = (e) => { if(e.key === 'Enter') process(); };
+        init();
     </script>
 </body>
 </html>
