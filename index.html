@@ -3,129 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AURA SEARCH</title>
+    <title>AURA BLACK</title>
     <style>
         :root {
             --bg: #000000;
-            --accent: #30d158; /* Цвет "Активен" */
-            --card: #1c1c1e;
-            --border: rgba(255, 255, 255, 0.1);
+            --accent: #5e5ce6;
+            --glass: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.08);
         }
 
         body, html {
             margin: 0; padding: 0; height: 100%; width: 100%;
             background: var(--bg); color: #fff;
-            font-family: -apple-system, system-ui, sans-serif;
+            font-family: -apple-system, "SF Pro Display", sans-serif;
             overflow: hidden;
         }
 
         /* ШАПКА */
         .header {
-            padding: 15px 20px; display: flex; align-items: center; justify-content: space-between;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
+            padding: 20px; display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(30px);
             border-bottom: 1px solid var(--border);
-            position: sticky; top: 0; z-index: 10;
         }
-        .logo { font-weight: 700; font-size: 14px; letter-spacing: 1px; color: #8e8e93; }
-        .indicator { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--accent); font-weight: 600; }
-        .dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); }
+        .logo { font-weight: 600; font-size: 13px; letter-spacing: 3px; color: #666; }
 
         /* ОКНО ЧАТА */
-        #viewport {
-            height: calc(100vh - 140px); overflow-y: auto;
-            padding: 20px; display: flex; flex-direction: column; gap: 20px;
+        #chat {
+            height: calc(100vh - 160px); overflow-y: auto;
+            padding: 25px; display: flex; flex-direction: column; gap: 40px;
             -webkit-overflow-scrolling: touch;
         }
 
-        .bubble { max-width: 90%; line-height: 1.5; font-size: 16px; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } }
+        .m { max-width: 90%; line-height: 1.7; font-size: 16px; animation: msgIn 0.5s cubic-bezier(0.2, 1, 0.3, 1); }
+        @keyframes msgIn { from { opacity: 0; transform: translateY(10px); } }
 
-        .ai-text { align-self: flex-start; color: #efeff4; }
-        .ai-text b { color: var(--accent); }
+        .ai { align-self: flex-start; color: #e5e5e7; }
+        .ai::before { 
+            content: '✦'; display: block; margin-bottom: 10px;
+            font-size: 20px; color: var(--accent);
+        }
         
-        .user-text { 
-            align-self: flex-end; background: var(--card); 
-            padding: 12px 18px; border-radius: 20px; border: 1px solid var(--border);
+        .user { 
+            align-self: flex-end; background: var(--glass); 
+            padding: 14px 20px; border-radius: 22px; border: 1px solid var(--border);
+            color: #fff;
         }
 
-        /* ПОЛЕ ВВОДА (GOOGLE STYLE) */
-        .footer {
+        /* ПОЛЕ ВВОДА */
+        .input-wrap {
             position: fixed; bottom: 0; left: 0; right: 0;
-            padding: 20px 20px calc(40px + env(safe-area-inset-bottom));
+            padding: 20px 20px calc(45px + env(safe-area-inset-bottom));
             background: linear-gradient(to top, var(--bg) 90%, transparent);
         }
-        .search-bar {
-            max-width: 700px; margin: 0 auto; background: #2c2c2e;
-            border-radius: 28px; padding: 6px 6px 6px 20px;
-            display: flex; align-items: center; gap: 12px;
+        .pill {
+            max-width: 800px; margin: 0 auto; background: #121214;
+            border: 1px solid var(--border); border-radius: 30px;
+            padding: 8px 8px 8px 22px; display: flex; align-items: center;
         }
         input { flex: 1; background: transparent; border: none; color: #fff; font-size: 17px; outline: none; }
-        .go-btn { width: 40px; height: 40px; border-radius: 50%; background: #fff; border: none; font-size: 20px; cursor: pointer; }
+        .send { width: 42px; height: 42px; border-radius: 50%; background: #fff; border: none; font-size: 20px; cursor: pointer; transition: 0.2s; }
+        .send:active { transform: scale(0.9); background: var(--accent); color: #fff; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="logo">AURA ENGINE v.2026</div>
-        <div class="indicator"><div class="dot"></div> GOOGLE & WIKI LINK ACTIVE</div>
+        <div class="logo">AURA INTELLIGENCE</div>
     </div>
 
-    <div id="viewport"></div>
+    <div id="chat"></div>
 
-    <div class="footer">
-        <div class="search-bar">
-            <input type="text" id="user-query" placeholder="Поиск или вопрос..." autocomplete="off">
-            <button id="search-btn" class="go-btn">→</button>
+    <div class="input-wrap">
+        <div class="pill">
+            <input type="text" id="in" placeholder="Задай вопрос..." autocomplete="off">
+            <button id="go" class="send">↑</button>
         </div>
     </div>
 
     <script>
-        const view = document.getElementById('viewport'), 
-              input = document.getElementById('user-query'), 
-              btn = document.getElementById('search-btn');
+        const win = document.getElementById('chat'), input = document.getElementById('in'), btn = document.getElementById('go');
 
-        // Стартовое сообщение
         window.onload = () => {
-            addMsg("<b>AURA SEARCH</b> готова. Я подключена к базам знаний. Могу найти информацию про знаменитостей, помочь с уроками или твоими проектами в Невинномысске. Что ищем?", 'ai-text');
+            add("Система готова. Я здесь, чтобы помогать с твоими проектами, учебой и любыми вопросами. Что обсудим?", 'ai');
         };
 
-        async function doSearch() {
-            const q = input.value.trim(); if(!q) return;
-            addMsg(q, 'user-text');
+        function process() {
+            const val = input.value.trim(); if(!val) return;
+            add(val, 'user');
             input.value = '';
 
-            // Имитация "умного поиска" через быстрый мост
+            // МГНОВЕННАЯ ЛОГИКА (БЕЗ ПРИПИСОК ПРО ПОИСК)
             setTimeout(() => {
-                let answer = "";
-                const low = q.toLowerCase();
+                let ans = "";
+                const q = val.toLowerCase();
 
-                // ЛОГИКА "КАК У GOOGLE"
-                if(low.includes('кто тако') || low.includes('биография')) {
-                    answer = "<b>[Википедия]:</b> Поиск нашел данные об этой личности. Это известный деятель, подробности можно найти в официальных источниках. О ком именно тебе рассказать детальнее?";
-                } else if (low.includes('бравл') || low.includes('baza')) {
-                    answer = "<b>[Игровой поиск]:</b> Твой BAZA SHOP активен. Для повышения продаж в Бравл Старс рекомендую обновить прайс-лист на гемы и проверить актуальную мету сезона.";
-                } else if (low.includes('невинк')) {
-                    answer = "<b>[Городские новости]:</b> В Невинномысске всё стабильно. Твой проект ЧП | Невинка может использовать последние сводки о погоде или событиях для контента.";
-                } else if (low.includes('биол') || low.includes('8 класс')) {
-                    answer = "<b>[Учебник 8 кл]:</b> Согласно программе Пасечника, эта тема изучается в середине года. Основные понятия включают в себя строение организмов и их функции. Написать краткий конспект?";
+                if (q.includes('бравл') || q.includes('baza')) {
+                    ans = "Для развития BAZA SHOP сейчас лучше всего сделать упор на быстрые выдачи и отзывы. В Бравле актуален контроль карты — подсказать лучших бойцов под текущую ротацию?";
+                } else if (q.includes('школ') || q.includes('биол') || q.includes('геогр')) {
+                    ans = "В 8 классе эти темы разбираются подробно. Если это биология Пасечника — там сейчас акцент на физиологии. Какую конкретно задачу нужно решить?";
+                } else if (q.includes('невинк') || q.includes('чп')) {
+                    ans = "Твой проект ЧП | Невинка — отличная база для новостей города. Рекомендую использовать форматы коротких сводок и проверять информацию через официальные чаты безопасности.";
+                } else if (q.includes('кто') || q.includes('что')) {
+                    ans = "Я изучила информацию. Речь идет о важном событии/личности. Если вкратце — это оказало большое влияние на свою сферу. Рассказать подробнее?";
                 } else {
-                    answer = "<b>[Google Search]:</b> Найдено несколько результатов. По твоему запросу '" + q + "' лучше всего подходит информация из открытых источников. Могу кратко пересказать суть.";
+                    ans = "Я проанализировала твой вопрос. Лучший способ решить это — разбить задачу на части. Давай начнем с самого первого шага, что скажешь?";
                 }
 
-                addMsg(answer, 'ai-text');
-            }, 500);
+                add(ans, 'ai');
+            }, 400);
         }
 
-        function addMsg(t, type) {
+        function add(t, type) {
             const d = document.createElement('div');
-            d.className = `bubble ${type}`;
-            d.innerHTML = t;
-            view.appendChild(d);
-            view.scrollTop = view.scrollHeight;
+            d.className = `m ${type}`;
+            d.textContent = t;
+            win.appendChild(d);
+            win.scrollTop = win.scrollHeight;
         }
 
-        btn.onclick = doSearch;
-        input.onkeypress = (e) => { if(e.key === 'Enter') doSearch(); };
+        btn.onclick = process;
+        input.onkeypress = (e) => { if(e.key === 'Enter') process(); };
     </script>
 </body>
 </html>
