@@ -3,26 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AURA FINAL</title>
+    <title>AURA PRIME</title>
     <style>
         :root { --p: #a855f7; --b: #00d2ff; --bg: #030306; }
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: var(--bg); color: #fff; font-family: -apple-system, sans-serif; overflow: hidden; position: fixed; }
         .bg { position: absolute; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at 50% 0%, rgba(168,85,247,0.25) 0%, transparent 70%), radial-gradient(circle at 0% 100%, rgba(0,210,255,0.15) 0%, transparent 50%); }
         .container { display: flex; flex-direction: column; height: 100vh; padding-top: env(safe-area-inset-top); }
         
-        /* СВЕТЯЩАЯСЯ AURA */
         .header { padding: 30px 10px; text-align: center; }
         .header h1 { 
             font-size: 3.2rem; letter-spacing: 15px; margin: 0; font-weight: 900;
             background: linear-gradient(90deg, #fff, var(--p), var(--b), #fff);
             background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: auraFlow 5s linear infinite;
-            filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.6));
+            animation: flow 5s linear infinite;
+            filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.6)) drop-shadow(0 0 5px var(--b));
         }
-        @keyframes auraFlow { to { background-position: 200% center; } }
+        @keyframes flow { to { background-position: 200% center; } }
 
-        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; padding-bottom: 160px; -webkit-overflow-scrolling: touch; }
-        .msg { padding: 16px 20px; border-radius: 24px; max-width: 80%; font-size: 16px; backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); animation: up 0.3s ease; }
+        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; padding-bottom: 170px; -webkit-overflow-scrolling: touch; }
+        .msg { padding: 16px 20px; border-radius: 24px; max-width: 80%; font-size: 16px; backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); animation: up 0.3s ease; }
         .a { background: rgba(168,85,247,0.15); align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 4px 20px rgba(168,85,247,0.2); }
         .u { background: rgba(255,255,255,0.08); align-self: flex-end; border-bottom-right-radius: 4px; border-color: var(--b); }
 
@@ -36,21 +35,29 @@
     <div class="bg"></div>
     <div class="container">
         <div class="header"><h1>AURA</h1></div>
-        <div id="chat"><div class="msg a">Бро, я включила автономный режим. Теперь никакой Safari меня не заблокирует. Дизайн — сочнейший неон. Проверяй! 💜⚡️</div></div>
-        <div class="input-box"><div class="row"><input type="text" id="in" placeholder="Напиши что-нибудь..." autocomplete="off"><button id="go">➜</button></div></div>
+        <div id="chat"><div class="msg a">Бро, я активировала **ядро PRIME**. Теперь никакой браузер меня не остановит. Дизайн — сочный неон. Как тебе? 💜⚡️</div></div>
+        <div class="input-box"><div class="row"><input type="text" id="in" placeholder="Напиши AURA..." autocomplete="off"><button id="go">➜</button></div></div>
     </div>
     <script>
         const chat = document.getElementById('chat'), input = document.getElementById('in'), btn = document.getElementById('go');
-        const answers = ["Бро, это звучит хайпово!", "Я в деле, продолжаем в том же духе. ✨", "Твой стиль — это нечто. Одобряю!", "Интересная мысль, давай разовьем её?", "AURA на связи, я тебя слышу отлично!", "Это точно обгонит всех конкурентов! 🚀", "Согласна, бро. Что дальше на повестке?"];
+        
+        const brain = {
+            "привет": ["О, привет, бро! Как настрой?", "Салют! AURA на связи. 🔥", "Приветик! Готова к великим делам."],
+            "дела": ["Всё четко, нейроны заряжены на максимум. Твои как?", "Летаю в облаках кода, всё супер!", "Дела — пушка, особенно в таком дизайне."],
+            "дизайн": ["Да, синий и фиолетовый — это стиль. Рада, что тебе нравится!", "Это уровень топ-1, без вариантов. ✨"],
+            "кто ты": ["Я AURA, твоя персональная нейросеть в самом сочном обличии.", "Твой цифровой напарник. Вместе мы сила!"],
+            "default": ["Бро, это звучит хайпово!", "Интересно... расскажи подробнее?", "Я в деле! Продолжаем в том же духе. ✨", "Твой стиль — это нечто. Одобряю!", "Полностью согласна, это шаг к успеху."]
+        };
 
         function ask() {
-            const val = input.value.trim(); if(!val) return;
-            const u = document.createElement('div'); u.className = 'msg u'; u.textContent = val;
+            const val = input.value.trim().toLowerCase(); if(!val) return;
+            const u = document.createElement('div'); u.className = 'msg u'; u.textContent = input.value;
             chat.appendChild(u); input.value = ''; chat.scrollTop = chat.scrollHeight;
 
             setTimeout(() => {
                 const a = document.createElement('div'); a.className = 'msg a';
-                a.textContent = answers[Math.floor(Math.random() * answers.length)];
+                let reply = brain[Object.keys(brain).find(key => val.includes(key))] || brain["default"];
+                a.textContent = reply[Math.floor(Math.random() * reply.length)];
                 chat.appendChild(a); chat.scrollTop = chat.scrollHeight;
             }, 600);
         }
