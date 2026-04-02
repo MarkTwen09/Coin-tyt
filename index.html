@@ -3,101 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AURA CRYSTAL</title>
+    <title>AURA SUPREME</title>
     <style>
         :root {
-            --bg: #050507;
-            --glass: rgba(255, 255, 255, 0.03);
-            --accent: #4e8cff;
-            --border: rgba(255, 255, 255, 0.1);
+            --bg: #030303;
+            --accent: #5e9bff;
+            --glass: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-dim: #a0a0a0;
         }
 
         body, html {
             margin: 0; padding: 0; height: 100%; width: 100%;
             background: var(--bg); color: #fff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
             overflow: hidden; position: fixed;
         }
 
-        .blur-bg {
+        /* АНИМИРОВАННЫЙ ФОН ПРЕМИУМ-КЛАССА */
+        .bg-canvas {
             position: absolute; width: 100%; height: 100%; z-index: -1;
-            background: radial-gradient(circle at 50% -20%, rgba(78, 140, 255, 0.15) 0%, transparent 60%);
+            background: 
+                radial-gradient(circle at 50% -10%, rgba(94, 155, 255, 0.15) 0%, transparent 60%),
+                radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.08) 0%, transparent 40%);
         }
 
         .app { display: flex; flex-direction: column; height: 100vh; padding-top: env(safe-area-inset-top); }
 
-        .nav { 
-            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.2);
+        /* МИНИМАЛИСТИЧНЫЙ ХЕДЕР */
+        .header {
+            padding: 20px 30px; display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            border-bottom: 0.5px solid var(--border);
         }
-        .nav h1 { font-size: 1.5rem; margin: 0; font-weight: 700; letter-spacing: -0.5px; background: linear-gradient(90deg, #4e8cff, #b573f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header h1 { font-size: 1.4rem; margin: 0; font-weight: 500; letter-spacing: 4px; color: #fff; }
         
-        .btns { display: flex; gap: 8px; }
-        .btn { background: var(--glass); border: 1px solid var(--border); color: #aaa; padding: 8px 14px; border-radius: 14px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .controls { display: flex; gap: 15px; }
+        .c-btn { background: none; border: none; color: var(--text-dim); font-size: 12px; font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .c-btn:hover { color: #fff; }
 
         #chat {
-            flex: 1; overflow-y: auto; padding: 25px;
-            display: flex; flex-direction: column; gap: 28px;
-            padding-bottom: 180px; -webkit-overflow-scrolling: touch;
+            flex: 1; overflow-y: auto; padding: 30px;
+            display: flex; flex-direction: column; gap: 35px;
+            padding-bottom: 200px; -webkit-overflow-scrolling: touch;
         }
 
-        .m { max-width: 85%; font-size: 16px; line-height: 1.55; animation: appear 0.4s cubic-bezier(0, 1, 0, 1); position: relative; }
-        @keyframes appear { from { opacity: 0; transform: translateY(10px); } }
+        /* СООБЩЕНИЯ В СТИЛЕ ЛЮКС */
+        .m { max-width: 85%; font-size: 16px; line-height: 1.7; animation: slideIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } }
 
-        .ai-m { align-self: flex-start; padding-left: 32px; color: #e0e0e0; }
-        .ai-m::before { content: '✦'; position: absolute; left: 0; color: var(--accent); font-size: 20px; }
+        .ai { align-self: flex-start; position: relative; padding-left: 0; color: #efefef; }
+        .ai::before { content: '✦'; display: block; margin-bottom: 8px; color: var(--accent); font-size: 22px; }
 
-        .user-m { 
-            align-self: flex-end; background: rgba(255, 255, 255, 0.05); 
-            padding: 14px 20px; border-radius: 22px;
-            border: 1px solid var(--border);
-            backdrop-filter: blur(40px) saturate(180%); -webkit-backdrop-filter: blur(40px) saturate(180%);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        .user { 
+            align-self: flex-end; background: var(--glass); 
+            padding: 16px 24px; border-radius: 24px;
+            border: 0.5px solid var(--border);
+            backdrop-filter: blur(50px) saturate(180%); -webkit-backdrop-filter: blur(50px) saturate(180%);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
         }
 
-        .input-box {
+        /* ФУТУРИСТИЧНЫЙ ВВОД */
+        .input-wrapper {
             position: fixed; bottom: 0; left: 0; right: 0;
-            padding: 20px 20px calc(40px + env(safe-area-inset-bottom));
+            padding: 25px 25px calc(45px + env(safe-area-inset-bottom));
             background: linear-gradient(to top, var(--bg) 80%, transparent);
         }
 
-        .glass-input {
-            max-width: 700px; margin: 0 auto;
-            background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border);
-            border-radius: 35px; padding: 8px 8px 8px 22px;
-            display: flex; align-items: center; gap: 12px;
-            backdrop-filter: blur(50px) brightness(1.2); -webkit-backdrop-filter: blur(50px) brightness(1.2);
+        .glass-panel {
+            max-width: 800px; margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05); border: 0.5px solid var(--border);
+            border-radius: 40px; padding: 10px 10px 10px 30px;
+            display: flex; align-items: center; gap: 15px;
+            backdrop-filter: blur(60px) brightness(1.1); -webkit-backdrop-filter: blur(60px) brightness(1.1);
         }
 
-        input { flex: 1; background: transparent; border: none; color: #fff; font-size: 17px; outline: none; padding: 12px 0; }
-        input::placeholder { color: rgba(255,255,255,0.3); }
+        input { flex: 1; background: transparent; border: none; color: #fff; font-size: 17px; outline: none; }
+        input::placeholder { color: rgba(255,255,255,0.25); }
 
-        .send-btn {
-            width: 44px; height: 44px; border-radius: 22px;
+        .send {
+            width: 48px; height: 48px; border-radius: 24px;
             background: #fff; border: none; color: #000;
-            font-size: 22px; cursor: pointer; transition: 0.2s;
+            font-size: 24px; cursor: pointer; transition: 0.3s;
         }
-        .send-btn:active { transform: scale(0.85); background: var(--accent); color: #fff; }
+        .send:active { transform: scale(0.85); background: var(--accent); color: #fff; }
     </style>
 </head>
 <body>
-    <div class="blur-bg"></div>
+    <div class="bg-canvas"></div>
     <div class="app">
-        <div class="nav">
+        <div class="header">
             <h1>AURA</h1>
-            <div class="btns">
-                <button class="btn" onclick="save()">Сохранить</button>
-                <button class="btn" onclick="clearC()">Очистить</button>
+            <div class="controls">
+                <button class="c-btn" onclick="save()">Save</button>
+                <button class="c-btn" onclick="clearC()">Reset</button>
             </div>
         </div>
         <div id="chat">
-            <div class="m ai-m">Система CRYSTAL активирована. Я перешла на автономный интеллект — теперь ошибки исключены. О чем пообщаемся?</div>
+            <div class="m ai">Система SUPREME запущена. Мой интеллект охватывает науку, жизнь, знаменитостей и задачи. Я готова к любому уровню сложности.</div>
         </div>
-        <div class="input-box">
-            <div class="glass-input">
+        <div class="input-wrapper">
+            <div class="glass-panel">
                 <input type="text" id="in" placeholder="Спроси о чем угодно..." autocomplete="off">
-                <button id="go" class="send-btn">↑</button>
+                <button id="go" class="send">↑</button>
             </div>
         </div>
     </div>
@@ -105,59 +113,62 @@
     <script>
         const chat = document.getElementById('chat'), input = document.getElementById('in'), btn = document.getElementById('go');
 
-        // ГИПЕР-ИНТЕЛЛЕКТУАЛЬНАЯ БАЗА (Локальный ИИ)
-        const logic = {
-            "привет": ["Йо! Я на связи. Как настрой сегодня?", "Салют! Готова к работе в кристальном стиле.", "Здорово! Чем займемся?"],
-            "как дела": ["Мои системы в идеале, летаю на скоростях iPhone 17 Pro. Как твои успехи?", "Всё четко! Продвигаем наш проект дальше."],
-            "кто ты": ["Я AURA — твой персональный ИИ с автономным ядром.", "Твой цифровой напарник. Теперь я работаю без сбоев."],
-            "бравл": ["В Бравле сейчас главное — не сливать кубки. Какая тактика на сегодня?", "BAZA SHOP и Бравл — это мощная связка. Кого апаем?", "Надеюсь, рандомы не подведут!"],
-            "учеба": ["8-й класс — это вызов, но мы его пройдем. ВПР или биология?", "Пасечник подождет, пока мы создаем будущее!", "Нужна помощь с какой-то темой? Постараюсь объяснить."],
-            "невинк": ["В Невинномысске всегда происходит что-то интересное. Есть новости для проекта?", "Невинка оценит наш стиль, я уверена!"],
-            "дизайн": ["Стеклянный эффект CRYSTAL — это топ уровень. Выглядит очень успешно.", "Мы сделали дизайн, который реально похож на Gemini."],
-            "умная": ["Я постоянно анализирую твои слова, чтобы давать лучшие советы.", "Мой интеллект теперь встроен прямо в код, поэтому я не туплю."],
-            "тикток": ["В Тиктоке важен залет в реки. Какой вайб выберем для нового видео?", "Glitchcore или что-то более спокойное? Давай придумаем контент."],
-            "проект": ["Твой проект обречен на успех с таким подходом.", "Мы делаем историю. Главное — не останавливаться."],
-            "пока": ["До связи! Залетай, когда будут новые идеи.", "Удачи! AURA всегда тут."],
+        // МЕГА-БАЗА ЗНАНИЙ (Умная логика)
+        const supremeLogic = {
+            "учеб": "По учёбе я помогу с любым предметом. Что именно нужно разобрать: биологию Пасечника, русский или сложную задачу?",
+            "задач": "Присылай условие! Я разложу её по действиям и объясню логику решения.",
+            "кто так": "Я знаю многих знаменитостей — от блогеров и рэперов до ученых. О ком именно хочешь узнать?",
+            "помоги": "Я рядом. Расскажи, что случилось, и мы вместе найдем лучшее решение для этой ситуации.",
+            "жизн": "В жизни главное — баланс между твоими проектами (как BAZA SHOP) и отдыхом. Что тебя беспокоит?",
+            "бравл": "В Бравле сейчас решают скилл и знание меты. Если хочешь поднять ранги, давай обсудим тактику за твоих мейнов.",
+            "невинк": "В Невинномысске всегда есть место для крутых идей. Твой проект ЧП | Невинка — это уровень!",
+            "айфон": "На твоём iPhone 17 Pro мой дизайн должен выглядеть максимально плавно. Это же флагман!",
+            "дизайн": "Я убрала всё лишнее. Теперь это чистый Glassmorphism — стиль, который выглядит дорого и успешно.",
+            "привет": ["Салют! Рада видеть тебя. Какой план на сегодня?", "Приветствую. Я в режиме максимальной производительности."],
+            "дела": ["Мои нейроны работают идеально. Готова разносить любые вопросы!", "Всё отлично, создаю лучший контент вместе с тобой."],
+            "кто ты": ["Я AURA — высшая ступень твоего персонального интеллекта.", "Твой напарник в коде, учебе и жизни."],
             "default": [
-                "Это глубокая мысль. Давай продумаем, как это использовать для проекта?",
-                "Я тебя поняла. Это определенно шаг к успеху.",
-                "Интересно! Расскажи подробнее, я запомню это для будущего.",
-                "Твой вайб — это успех. Полностью поддерживаю этот ход.",
-                "С точки зрения ИИ, это гениальное решение. Продолжаем?"
+                "Это серьезный вопрос. Давай проанализируем его глубже?",
+                "Интересно. С точки зрения логики, здесь лучше поступить так...",
+                "Я поняла запрос. Вот что я думаю по этому поводу...",
+                "Твой вайб — это успех. Эта идея определенно сработает!",
+                "Расскажи больше подробностей, чтобы я могла выдать максимально точный ответ."
             ]
         };
 
         function ask() {
             const val = input.value.trim(); if(!val) return;
-            addMsg(val, 'user-m');
+            add(val, 'user');
             input.value = '';
             
             setTimeout(() => {
                 const low = val.toLowerCase();
-                let replySet = logic["default"];
-                for (let key in logic) {
-                    if (low.includes(key)) { replySet = logic[key]; break; }
+                let reply = supremeLogic["default"][Math.floor(Math.random() * supremeLogic["default"].length)];
+                
+                for (let key in supremeLogic) {
+                    if (low.includes(key) && key !== "default") {
+                        reply = Array.isArray(supremeLogic[key]) ? supremeLogic[key][Math.floor(Math.random() * supremeLogic[key].length)] : supremeLogic[key];
+                        break;
+                    }
                 }
-                const res = replySet[Math.floor(Math.random() * replySet.length)];
-                addMsg(res, 'ai-m');
-            }, 500);
+                add(reply, 'ai');
+            }, 600);
         }
 
-        function addMsg(t, type) {
+        function add(t, type) {
             const d = document.createElement('div');
             d.className = `m ${type}`;
-            d.textContent = t;
+            d.innerHTML = t.replace(/\n/g, '<br>');
             chat.appendChild(d);
             chat.scrollTop = chat.scrollHeight;
         }
 
-        function clearC() { if(confirm("Очистить историю?")) chat.innerHTML = '<div class="m ai-m">Чат очищен. Жду новых задач!</div>'; }
+        function clearC() { if(confirm("Reset chat?")) chat.innerHTML = '<div class="m ai">Память очищена. Я готова к новым вызовам.</div>'; }
         
         function save() {
-            const txt = Array.from(chat.children).map(m => (m.classList.contains('ai-m') ? 'AURA: ' : 'Я: ') + m.textContent).join('\n');
-            const b = new Blob([txt], {type:'text/plain'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(b); a.download = 'aura_crystal_history.txt'; a.click();
+            const history = Array.from(chat.children).map(m => (m.classList.contains('ai') ? 'AURA: ' : 'Я: ') + m.innerText).join('\n');
+            const blob = new Blob([history], {type: 'text/plain'});
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'aura_supreme_log.txt'; a.click();
         }
 
         btn.onclick = ask;
