@@ -3,60 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AURA</title>
+    <title>AURA AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        .aura-gradient { background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .chat-area { height: calc(100vh - 140px); }
-        input:focus { font-size: 16px !important; }
-        ::-webkit-scrollbar { width: 0px; }
+        :root { --aura-neon: #a855f7; }
+        body { background-color: #050505; color: #e5e7eb; font-family: -apple-system, system-ui, sans-serif; margin: 0; }
+        .glass-panel { background: rgba(15, 15, 15, 0.7); backdrop-filter: blur(25px); border-top: 1px solid rgba(255, 255, 255, 0.05); }
+        .aura-text { background: linear-gradient(to right, #fff, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
+        .user-msg { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 1.2rem 1.2rem 0 1.2rem; }
+        .ai-msg { background: rgba(168, 85, 247, 0.05); border: 1px solid rgba(168, 85, 247, 0.2); border-radius: 1.2rem 1.2rem 1.2rem 0; }
+        .chat-scroll { height: calc(100vh - 160px); scrollbar-width: none; }
+        .chat-scroll::-webkit-scrollbar { display: none; }
+        input:focus { font-size: 16px !important; outline: none; border-color: var(--aura-neon) !important; }
+        .shimmer { animation: shimmer 2s infinite linear; background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.1), transparent); background-size: 200% 100%; }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
 
-    <header class="p-5 flex justify-between items-center glass z-10">
-        <span class="text-xl font-black tracking-widest aura-gradient">AURA</span>
-        <div class="h-2 w-2 rounded-full bg-purple-500 shadow-[0_0_10px_#a855f7]"></div>
-    </header>
+    <nav class="p-5 flex justify-center items-center border-b border-white/5 bg-black/50">
+        <h1 class="text-xl tracking-[0.2em] aura-text uppercase">Aura</h1>
+    </nav>
 
-    <main id="chat" class="chat-area overflow-y-auto p-5 space-y-6 flex flex-col"></main>
+    <div id="chat" class="chat-scroll overflow-y-auto p-4 space-y-6 flex flex-col">
+        <div class="ai-msg p-4 self-start max-w-[85%] text-sm leading-relaxed">
+            Ready to assist. System online.
+        </div>
+    </div>
 
-    <footer class="p-4 pb-8 glass">
-        <div class="max-w-3xl mx-auto flex gap-3">
-            <input type="text" id="input" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:border-purple-500 transition-all" placeholder="Message Aura...">
-            <button onclick="ask()" class="bg-white text-black px-6 py-4 rounded-2xl font-bold active:scale-90 transition-all">Send</button>
+    <div id="loading" class="hidden px-6 py-2 text-[10px] uppercase tracking-widest text-purple-400 animate-pulse">Aura is thinking...</div>
+
+    <footer class="glass-panel p-4 pb-10">
+        <div class="max-w-2xl mx-auto flex items-center gap-3 bg-white/5 p-2 rounded-3xl border border-white/10 focus-within:border-purple-500/50 transition-all">
+            <input type="text" id="input" class="w-full bg-transparent px-4 py-3 text-sm" placeholder="Ask anything..." autocomplete="off">
+            <button onclick="ask()" class="bg-white text-black h-10 w-10 flex items-center justify-center rounded-full hover:scale-105 active:scale-95 transition-all">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </button>
         </div>
     </footer>
 
     <script>
-        const KEY = 'INSERT_KEY_HERE AIzaSyDOqqL5RGsnseRbEnfn64YZdpZ7-2YIzOY'; 
+        const KEY = 'AIzaSyDOqqL5RGsnseRbEnfn64YZdpZ7-2YIzOY';
 
         async function ask() {
-            const i = document.getElementById('input');
-            const box = document.getElementById('chat');
-            if (!i.value.trim()) return;
+            const input = document.getElementById('input');
+            const chat = document.getElementById('chat');
+            const loader = document.getElementById('loading');
+            const text = input.value.trim();
 
-            const uMsg = i.value;
-            i.value = '';
-            box.innerHTML += `<div class="self-end bg-white/10 p-4 rounded-2xl max-w-[80%] text-sm">${uMsg}</div>`;
+            if (!text) return;
+
+            // User Message
+            input.value = '';
+            chat.innerHTML += `<div class="user-msg p-4 self-end max-w-[85%] text-sm shadow-xl">${text}</div>`;
+            chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
+
+            loader.classList.remove('hidden');
 
             try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${KEY}`, {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${KEY}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: uMsg }] }] })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: text }] }] })
                 });
-                const d = await res.json();
-                const txt = d.candidates[0].content.parts[0].text;
-                box.innerHTML += `<div class="self-start glass p-4 rounded-2xl max-w-[85%] text-sm border-l-2 border-purple-500">${txt}</div>`;
-                box.scrollTo(0, box.scrollHeight);
-            } catch (e) {
-                box.innerHTML += `<div class="text-red-400 text-xs text-center">Error: Check Key</div>`;
+
+                const data = await response.json();
+                const reply = data.candidates[0].content.parts[0].text;
+
+                loader.classList.add('hidden');
+                chat.innerHTML += `<div class="ai-msg p-4 self-start max-w-[85%] text-sm leading-relaxed shadow-lg">${reply}</div>`;
+                chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
+
+            } catch (err) {
+                loader.classList.add('hidden');
+                chat.innerHTML += `<div class="text-red-500 text-[10px] text-center uppercase tracking-widest">Connection Error: Check API Key</div>`;
             }
         }
-        document.getElementById('input').onkeypress = (e) => { if(e.key === 'Enter') ask() };
+
+        document.getElementById('input').addEventListener('keypress', (e) => { if (e.key === 'Enter') ask(); });
     </script>
 </body>
 </html>
