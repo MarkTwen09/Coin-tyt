@@ -1,202 +1,62 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura AI — Next Gen</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>AURA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --bg-color: #0b0d11;
-            --card-bg: #161a22;
-            --accent-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            --text-color: #eef2f6;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        /* Шапка */
-        header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #2d333b;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 24px;
-            letter-spacing: 2px;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 600;
-        }
-
-        /* Зона чата */
-        #chat-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 15px;
-            line-height: 1.5;
-            font-size: 15px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .user-message {
-            align-self: flex-end;
-            background: var(--accent-gradient);
-            color: #fff;
-        }
-
-        .ai-message {
-            align-self: flex-start;
-            background: var(--card-bg);
-            border: 1px solid #2d333b;
-        }
-
-        /* Поле ввода */
-        .input-area {
-            padding: 20px;
-            background: #11141a;
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid #2d333b;
-        }
-
-        input {
-            flex: 1;
-            background: #1c2128;
-            border: 1px solid #2d333b;
-            border-radius: 10px;
-            padding: 12px;
-            color: white;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        input:focus {
-            border-color: #4facfe;
-        }
-
-        button {
-            background: var(--accent-gradient);
-            border: none;
-            border-radius: 10px;
-            padding: 0 20px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            opacity: 0.8;
-            transform: scale(1.02);
-        }
-
-        /* Индикатор загрузки */
-        .typing {
-            font-style: italic;
-            font-size: 12px;
-            color: #8b949e;
-            display: none;
-        }
+        body { background: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .aura-gradient { background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .chat-area { height: calc(100vh - 140px); }
+        input:focus { font-size: 16px !important; }
+        ::-webkit-scrollbar { width: 0px; }
     </style>
 </head>
-<body>
+<body class="flex flex-col h-screen overflow-hidden">
 
-<header>
-    <h1>AURA</h1>
-</header>
+    <header class="p-5 flex justify-between items-center glass z-10">
+        <span class="text-xl font-black tracking-widest aura-gradient">AURA</span>
+        <div class="h-2 w-2 rounded-full bg-purple-500 shadow-[0_0_10px_#a855f7]"></div>
+    </header>
 
-<div id="chat-container">
-    <div class="message ai-message">Привет! Я Aura. Твой личный ИИ с характером Grok и мощью Gemini. Чем займемся? ✨</div>
-</div>
+    <main id="chat" class="chat-area overflow-y-auto p-5 space-y-6 flex flex-col"></main>
 
-<div id="typing-indicator" class="typing" style="padding-left: 20px; margin-bottom: 5px;">Aura думает...</div>
+    <footer class="p-4 pb-8 glass">
+        <div class="max-w-3xl mx-auto flex gap-3">
+            <input type="text" id="input" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:border-purple-500 transition-all" placeholder="Message Aura...">
+            <button onclick="ask()" class="bg-white text-black px-6 py-4 rounded-2xl font-bold active:scale-90 transition-all">Send</button>
+        </div>
+    </footer>
 
-<div class="input-area">
-    <input type="text" id="user-input" placeholder="Напиши что-нибудь..." autocomplete="off">
-    <button onclick="sendMessage()">Отправить</button>
-</div>
+    <script>
+        const KEY = 'INSERT_KEY_HERE AIzaSyDOqqL5RGsnseRbEnfn64YZdpZ7-2YIzOY'; 
 
-<script>
-    const API_KEY = AIzaSyDOqqL5RGsnseRbEnfn64YZdpZ7-2YIzOY'; // AIzaSyDOqqL5RGsnseRbEnfn64YZdpZ7-2YIzOY
-    const chatContainer = document.getElementById('chat-container');
-    const userInput = document.getElementById('user-input');
-    const typingIndicator = document.getElementById('typing-indicator');
+        async function ask() {
+            const i = document.getElementById('input');
+            const box = document.getElementById('chat');
+            if (!i.value.trim()) return;
 
-    // Промт для настройки личности
-    const SYSTEM_PROMPT = "Ты — Aura, умная, стильная и современная нейросеть. Твой стиль: смесь Grok (остроумие), Алисы (полезность) и Gemini (интеллект). Отвечай четко, используй эмодзи и будь классным собеседником.";
+            const uMsg = i.value;
+            i.value = '';
+            box.innerHTML += `<div class="self-end bg-white/10 p-4 rounded-2xl max-w-[80%] text-sm">${uMsg}</div>`;
 
-    async function sendMessage() {
-        const text = userInput.value.trim();
-        if (!text) return;
-
-        // Добавляем сообщение пользователя на экран
-        appendMessage(text, 'user-message');
-        userInput.value = '';
-        typingIndicator.style.display = 'block';
-
-        try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{ text: `${SYSTEM_PROMPT}\n\nПользователь: ${text}` }]
-                    }]
-                })
-            });
-
-            const data = await response.json();
-            const aiText = data.candidates[0].content.parts[0].text;
-            
-            appendMessage(aiText, 'ai-message');
-        } catch (error) {
-            appendMessage('Ошибка! Проверь API ключ в коде или интернет.', 'ai-message');
-            console.error(error);
-        } finally {
-            typingIndicator.style.display = 'none';
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: uMsg }] }] })
+                });
+                const d = await res.json();
+                const txt = d.candidates[0].content.parts[0].text;
+                box.innerHTML += `<div class="self-start glass p-4 rounded-2xl max-w-[85%] text-sm border-l-2 border-purple-500">${txt}</div>`;
+                box.scrollTo(0, box.scrollHeight);
+            } catch (e) {
+                box.innerHTML += `<div class="text-red-400 text-xs text-center">Error: Check Key</div>`;
+            }
         }
-    }
-
-    function appendMessage(text, className) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `message ${className}`;
-        msgDiv.innerText = text;
-        chatContainer.appendChild(msgDiv);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    // Отправка по Enter
-    userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendMessage();
-    });
-</script>
-
+        document.getElementById('input').onkeypress = (e) => { if(e.key === 'Enter') ask() };
+    </script>
 </body>
 </html>
