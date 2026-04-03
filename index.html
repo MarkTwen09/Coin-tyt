@@ -44,8 +44,24 @@ animation:float 20s infinite alternate ease-in-out;
 .header{padding:18px;text-align:center;font-size:22px;letter-spacing:4px;font-weight:bold;background:var(--glass);backdrop-filter:blur(30px);border-bottom:1px solid var(--border);}
 .chat{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;}
 /* Welcome Screen */
-.welcome{margin:auto;text-align:center;padding:40px;border-radius:30px;background:var(--glass);backdrop-filter:blur(40px);border:1px solid var(--border);max-width:500px;animation:fade 1s ease;}
-.welcome h1{font-size:40px;margin:0;background:linear-gradient(90deg,var(--accent1),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.welcome, .register{
+margin:auto;
+text-align:center;
+padding:40px;
+border-radius:30px;
+background:var(--glass);
+backdrop-filter:blur(40px);
+border:1px solid var(--border);
+max-width:500px;
+animation:fade 1s ease;
+}
+.welcome h1, .register h1{
+font-size:40px;
+margin:0;
+background:linear-gradient(90deg,var(--accent1),var(--accent2));
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
 .quick-buttons{margin-top:25px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;}
 .quick-buttons button{padding:10px 15px;border-radius:20px;border:none;cursor:pointer;background:rgba(255,255,255,0.08);color:white;transition:0.2s;}
 .quick-buttons button:hover{background:linear-gradient(135deg,var(--accent1),var(--accent2));}
@@ -54,11 +70,11 @@ animation:float 20s infinite alternate ease-in-out;
 .user{align-self:flex-end;background:linear-gradient(135deg,rgba(138,92,255,0.4),rgba(0,255,200,0.2));}
 .ai{align-self:flex-start;}
 .input-area{display:flex;padding:15px;gap:10px;background:var(--glass);backdrop-filter:blur(30px);border-top:1px solid var(--border);}
-input{flex:1;padding:15px;border:none;border-radius:20px;background:rgba(255,255,255,0.08);color:white;font-size:16px;outline:none;}
-button.send{padding:15px 20px;border:none;border-radius:20px;font-weight:bold;cursor:pointer;background:linear-gradient(135deg,var(--accent1),var(--accent2));color:white;transition:0.2s;}
-button.send:hover{transform:scale(1.05);}
+input, .register input{flex:1;padding:15px;margin-top:10px;border:none;border-radius:20px;background:rgba(255,255,255,0.08);color:white;font-size:16px;outline:none;}
+button.send, .register button{padding:15px 20px;border:none;border-radius:20px;font-weight:bold;cursor:pointer;background:linear-gradient(135deg,var(--accent1),var(--accent2));color:white;transition:0.2s;}
+button.send:hover, .register button:hover{transform:scale(1.05);}
 @keyframes fade{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
-@media(max-width:600px){.welcome{padding:25px;}.welcome h1{font-size:30px;}.message{max-width:95%;}}
+@media(max-width:600px){.welcome{padding:25px;}.welcome h1,.register h1{font-size:30px;}.message{max-width:95%;}}
 </style>
 </head>
 <body>
@@ -72,7 +88,17 @@ button.send:hover{transform:scale(1.05);}
 <div class="header">AURA</div>
 <div class="chat" id="chat">
 
-<div class="welcome" id="welcome">
+<!-- Registration Screen -->
+<div class="register" id="register">
+<h1>Регистрация</h1>
+<input type="text" id="regName" placeholder="Имя">
+<input type="email" id="regEmail" placeholder="Email">
+<input type="password" id="regPass" placeholder="Пароль">
+<button onclick="register()">Зарегистрироваться</button>
+</div>
+
+<!-- Welcome Screen -->
+<div class="welcome" id="welcome" style="display:none;">
 <h1>AURA</h1>
 <p>Продвинутая математическая нейросеть</p>
 <div class="quick-buttons">
@@ -95,6 +121,18 @@ button.send:hover{transform:scale(1.05);}
 const chat=document.getElementById("chat");
 const input=document.getElementById("input");
 const welcome=document.getElementById("welcome");
+const registerDiv=document.getElementById("register");
+
+/* Fake Registration */
+function register(){
+let name=document.getElementById("regName").value.trim();
+let email=document.getElementById("regEmail").value.trim();
+let pass=document.getElementById("regPass").value.trim();
+if(!name||!email||!pass){alert("Заполните все поля!");return;}
+registerDiv.style.display="none";
+welcome.style.display="block";
+addMessage(`Добро пожаловать, ${name}! Я AURA готова помогать вам.`, "ai");
+}
 
 /* Typewriter */
 function typeText(el,text,i=0){if(i<text.length){el.innerHTML+=text.charAt(i);setTimeout(()=>typeText(el,text,i+1),15);}}
