@@ -3,217 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura | Grok Edition</title>
+    <title>Aura Quantum | Pro Math</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
         
+        :root {
+            --accent: #c084fc;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #000;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #000;
+            background-image: radial-gradient(circle at 50% -20%, #1e1b4b, #000);
             color: #fff;
+            height: 100vh;
             overflow: hidden;
         }
 
-        /* Эффект стекла Grok */
-        .glass-panel {
-            background: rgba(15, 15, 15, 0.7);
-            backdrop-filter: blur(16px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        .ultra-glass {
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(50px) saturate(210%);
+            -webkit-backdrop-filter: blur(50px) saturate(210%);
+            border: 1px solid var(--border);
         }
 
-        .glass-input {
-            background: rgba(255, 255, 255, 0.03);
+        .chat-item {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+
+        .chat-item.active {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: var(--border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .neo-input {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
 
-        .glass-input:focus {
-            border-color: rgba(167, 139, 250, 0.5);
+        .neo-input:focus {
+            border-color: var(--accent);
             background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 20px rgba(167, 139, 250, 0.1);
+            box-shadow: 0 0 25px rgba(192, 132, 252, 0.15);
         }
 
-        /* Анимация Aura */
-        .aura-glow {
-            box-shadow: 0 0 30px rgba(167, 139, 250, 0.2);
-            animation: pulse-glow 4s infinite;
+        @keyframes messageIn {
+            from { opacity: 0; transform: translateY(15px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        @keyframes pulse-glow {
-            0%, 100% { opacity: 0.8; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
+        .msg-anim { animation: messageIn 0.4s ease forwards; }
 
-        .message-anim {
-            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Скроллбар */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
     </style>
 </head>
-<body class="h-screen flex">
+<body class="flex flex-col md:flex-row h-screen p-0 md:p-4 gap-4">
 
-    <aside id="sidebar" class="w-72 glass-panel border-r hidden md:flex flex-col z-50">
-        <div class="p-6">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-black font-bold aura-glow">/</div>
-                <span class="text-xl font-semibold tracking-tight">Aura <span class="text-violet-400 text-xs">v2.0</span></span>
-            </div>
-            <button onclick="createNewChat()" class="w-full py-3 px-4 glass-input rounded-xl text-sm font-medium hover:bg-white/10 transition flex items-center justify-center gap-2">
-                <span>+</span> Новый чат
-            </button>
+    <aside id="sidebar" class="hidden md:flex flex-col w-80 ultra-glass rounded-[32px] p-6 z-50">
+        <div class="flex items-center gap-3 mb-10 px-2">
+            <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-black font-bold text-xl shadow-lg shadow-white/10">/</div>
+            <h1 class="text-xl font-semibold tracking-tight">Aura <span class="text-violet-400">Quantum</span></h1>
         </div>
-        <div id="chat-list" class="flex-1 overflow-y-auto px-4 space-y-2">
+
+        <button onclick="createNewChat()" class="w-full py-4 px-6 neo-input rounded-2xl text-sm font-medium hover:bg-white/5 transition flex items-center justify-between group mb-8">
+            <span>Начать новый диалог</span>
+            <span class="opacity-40 group-hover:opacity-100 transition">+</span>
+        </button>
+
+        <div id="chat-list" class="flex-1 overflow-y-auto space-y-2 pr-2">
             </div>
-        <div class="p-4 border-t border-white/5 text-[10px] text-white/30 text-center uppercase tracking-widest">
-            Powered by Grok Engine & Math Core
+
+        <div class="pt-6 border-t border-white/5 mt-auto">
+            <div class="flex items-center gap-3 px-2">
+                <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <span class="text-[10px] uppercase tracking-[2px] text-white/40">Neural Math Engine v3.0</span>
+            </div>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col relative">
-        <header class="h-16 border-b border-white/5 flex items-center justify-between px-6 glass-panel">
-            <button class="md:hidden text-2xl" onclick="toggleSidebar()">☰</button>
-            <div class="text-sm font-medium text-white/60">Модель: <span class="text-white">Aura Math-X</span></div>
-            <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                <span class="text-xs text-white/40 font-mono">Status: Ready</span>
-            </div>
-        </header>
+    <main class="flex-1 flex flex-col ultra-glass md:rounded-[32px] overflow-hidden relative">
+        <div class="md:hidden flex items-center justify-between p-4 border-b border-white/5">
+            <button onclick="toggleSidebar()" class="p-2">☰</button>
+            <span class="font-bold">Aura</span>
+            <button onclick="createNewChat()" class="p-2 text-xl">+</button>
+        </div>
 
-        <div id="messages" class="flex-1 overflow-y-auto p-4 md:p-10 space-y-8">
-            <div class="max-w-3xl mx-auto text-center py-20">
-                <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-tighter">Что решим сегодня?</h1>
-                <p class="text-white/40 text-lg">Я обучена сложной математике, коду и глубоким рассуждениям.</p>
+        <div id="messages" class="flex-1 overflow-y-auto p-6 md:p-12 space-y-8">
+            <div id="welcome-screen" class="h-full flex flex-col items-center justify-center text-center space-y-6">
+                <div class="w-20 h-20 rounded-[30px] bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-4xl shadow-2xl shadow-violet-500/20">∑</div>
+                <h2 class="text-4xl font-bold tracking-tighter">Математический Интеллект</h2>
+                <p class="text-white/40 max-w-sm leading-relaxed">Я сохраняю твои чаты и решаю любые уравнения. Просто введи пример.</p>
             </div>
         </div>
 
-        <div class="p-4 md:p-8">
-            <div class="max-w-3xl mx-auto relative">
-                <textarea id="user-input" rows="1" 
-                    onkeydown="if(event.key === 'Enter' && !event.shiftKey){event.preventDefault(); sendMessage();}"
-                    placeholder="Спроси что угодно или введи уравнение..."
-                    class="w-full glass-input rounded-2xl py-4 px-6 pr-16 outline-none resize-none text-[16px] leading-relaxed"></textarea>
-                
-                <button onclick="sendMessage()" class="absolute right-3 bottom-3 w-10 h-10 bg-white text-black rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition">
-                    <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </button>
+        <div class="p-6 md:p-10">
+            <div class="max-w-4xl mx-auto relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-violet-600 to-transparent rounded-[26px] blur opacity-10 group-focus-within:opacity-20 transition"></div>
+                <div class="relative flex items-end gap-3">
+                    <textarea id="user-input" rows="1" 
+                        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+                        onkeydown="if(event.key === 'Enter' && !event.shiftKey){event.preventDefault(); sendMessage();}"
+                        placeholder="Введите уравнение или вопрос..."
+                        class="flex-1 neo-input rounded-2xl py-4 px-6 outline-none resize-none max-h-48 text-lg"></textarea>
+                    
+                    <button onclick="sendMessage()" class="w-14 h-14 bg-white text-black rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition shadow-xl">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
             </div>
-            <p class="text-center text-[10px] text-white/20 mt-4">Aura может ошибаться, но в математике она — зверь.</p>
         </div>
     </main>
 
     <script>
-        let chats = JSON.parse(localStorage.getItem('aura_v2_chats')) || [];
+        let chats = JSON.parse(localStorage.getItem('aura_pro_data')) || [];
         let currentChatId = null;
 
-        // Математическое ядро
-        const MathCore = {
-            solve(input) {
+        // Продвинутая математика
+        const Engine = {
+            evaluate(input) {
                 try {
-                    // Удаляем лишние слова, оставляем выражение
-                    let expr = input.replace(/[а-яА-ЯёЁ?]/g, '').trim();
-                    if(!expr || expr.length < 3) return null;
-                    
-                    // Безопасное вычисление (Math.js был бы лучше, но делаем нативно)
-                    const result = eval(expr.replace(/x/g, '*').replace(/\^/g, '**'));
-                    return `**Результат вычисления:** \n\n $$ ${expr} = ${result} $$ \n\nНужна помощь с разбором формулы?`;
-                } catch (e) {
-                    return null;
-                }
+                    // Чистим ввод от мусора, оставляем математику
+                    let expr = input.toLowerCase()
+                        .replace(/sqrt/g, 'Math.sqrt')
+                        .replace(/sin/g, 'Math.sin')
+                        .replace(/cos/g, 'Math.cos')
+                        .replace(/tan/g, 'Math.tan')
+                        .replace(/pi/g, 'Math.PI')
+                        .replace(/\^/g, '**')
+                        .replace(/[^-()0-9.+*\/Math.sqrtincopae\s]/g, '');
+
+                    if (!/[0-9]/.test(expr)) return null;
+
+                    const result = Function('"use strict"; return (' + expr + ')')();
+                    if (isNaN(result) || result === Infinity) return null;
+
+                    return {
+                        val: Number.isInteger(result) ? result : result.toFixed(6),
+                        raw: expr.replace(/Math\./g, '')
+                    };
+                } catch (e) { return null; }
             }
         };
+
+        function save() {
+            localStorage.setItem('aura_pro_data', JSON.stringify(chats));
+            renderChatList();
+        }
+
+        function createNewChat() {
+            const id = Date.now();
+            chats.unshift({ id, name: 'Новый диалог', messages: [] });
+            currentChatId = id;
+            document.getElementById('messages').innerHTML = '';
+            save();
+            if (window.innerWidth < 768) toggleSidebar();
+        }
+
+        function deleteChat(id, event) {
+            event.stopPropagation();
+            chats = chats.filter(c => c.id !== id);
+            if (currentChatId === id) {
+                currentChatId = chats.length > 0 ? chats[0].id : null;
+                renderMessages();
+            }
+            save();
+        }
+
+        function selectChat(id) {
+            currentChatId = id;
+            renderMessages();
+            renderChatList();
+            if (window.innerWidth < 768) toggleSidebar();
+        }
 
         function sendMessage() {
             const input = document.getElementById('user-input');
             const text = input.value.trim();
             if (!text) return;
 
-            if (!currentChatId) createNewChat(text.substring(0, 20));
+            if (!currentChatId) {
+                createNewChat();
+            }
+
+            const chat = chats.find(c => c.id === currentChatId);
+            if (chat.messages.length === 0) chat.name = text.substring(0, 25);
             
+            chat.messages.push({ role: 'user', content: text });
             appendMessage('user', text);
             input.value = '';
-            
-            // Имитация "умного" ответа
+            input.style.height = '';
+
+            // Aura Logic
             setTimeout(() => {
-                let response;
-                const mathResult = MathCore.solve(text);
+                const math = Engine.evaluate(text);
+                let response = math 
+                    ? `**Анализ выполнен:** \n\n # ${math.val} \n\n Выражение определено как: \`${math.raw}\``
+                    : `Я проанализировала запрос. Это не похоже на чистое уравнение, но я готова помочь тебе с логикой или кодом. Что именно мы разберем?`;
                 
-                if (mathResult) {
-                    response = mathResult;
-                } else if (text.toLowerCase().includes('привет')) {
-                    response = "Привет, Марк! Я обновила интерфейс под стиль Grok. Теперь всё летает. Какие задачи на сегодня? Могу помочь с кодом, уроками или разобрать твой новый проект.";
-                } else {
-                    response = "Я проанализировала твой запрос. С точки зрения логики и данных, это интересная тема. Давай углубимся в детали?";
-                }
-                
+                chat.messages.push({ role: 'aura', content: response });
                 appendMessage('aura', response);
-                saveChats();
-            }, 600);
+                save();
+            }, 500);
         }
 
         function appendMessage(role, content) {
-            const container = document.getElementById('messages');
-            if(container.querySelector('h1')) container.innerHTML = ''; // Убираем приветствие
+            const box = document.getElementById('messages');
+            const welcome = document.getElementById('welcome-screen');
+            if (welcome) welcome.remove();
 
             const div = document.createElement('div');
-            div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} message-anim`;
+            div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} msg-anim`;
             
-            const inner = role === 'user' 
-                ? `<div class="bg-white/10 px-5 py-3 rounded-2xl max-w-[80%] border border-white/5">${content}</div>`
-                : `<div class="flex gap-4 max-w-[85%]">
-                    <div class="w-8 h-8 rounded-full bg-white flex-shrink-0 flex items-center justify-center text-black text-xs font-bold">/</div>
+            div.innerHTML = role === 'user' 
+                ? `<div class="bg-white/10 border border-white/5 px-6 py-4 rounded-[24px] max-w-[85%]">${content}</div>`
+                : `<div class="flex gap-4 max-w-[90%]">
+                    <div class="w-10 h-10 rounded-2xl bg-white text-black flex-shrink-0 flex items-center justify-center font-bold">/</div>
                     <div class="space-y-2">
-                        <div class="text-xs text-white/40 font-mono uppercase tracking-widest">Aura Intelligence</div>
-                        <div class="text-white/90 leading-relaxed">${content.replace(/\n/g, '<br>')}</div>
+                        <div class="text-[10px] text-white/30 font-bold uppercase tracking-widest">Aura Intelligence</div>
+                        <div class="text-white/90 text-lg leading-relaxed">${content.replace(/\n/g, '<br>')}</div>
                     </div>
                    </div>`;
             
-            div.innerHTML = inner;
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
+            box.appendChild(div);
+            box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
         }
 
-        function createNewChat(name = "Новый диалог") {
-            const id = Date.now();
-            chats.unshift({ id, name, messages: [] });
-            currentChatId = id;
-            renderChatList();
+        function renderMessages() {
+            const box = document.getElementById('messages');
+            box.innerHTML = '';
+            const chat = chats.find(c => c.id === currentChatId);
+            if (chat && chat.messages.length > 0) {
+                chat.messages.forEach(m => appendMessage(m.role, m.content));
+            } else {
+                box.innerHTML = `
+                <div id="welcome-screen" class="h-full flex flex-col items-center justify-center text-center space-y-6">
+                    <div class="w-20 h-20 rounded-[30px] bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-4xl shadow-2xl shadow-violet-500/20">∑</div>
+                    <h2 class="text-4xl font-bold tracking-tighter">Математический Интеллект</h2>
+                    <p class="text-white/40 max-w-sm leading-relaxed">Я сохраняю твои чаты и решаю любые уравнения. Просто введи пример.</p>
+                </div>`;
+            }
         }
 
         function renderChatList() {
             const list = document.getElementById('chat-list');
             list.innerHTML = chats.map(c => `
-                <div onclick="selectChat(${c.id})" class="p-3 rounded-xl cursor-pointer transition ${c.id === currentChatId ? 'bg-white/10 border border-white/10' : 'hover:bg-white/5 text-white/50'} text-sm truncate">
-                    ${c.name}
+                <div onclick="selectChat(${c.id})" class="chat-item group flex items-center justify-between p-4 rounded-2xl cursor-pointer ${c.id === currentChatId ? 'active' : 'hover:bg-white/5'}">
+                    <span class="text-sm truncate pr-4">${c.name}</span>
+                    <button onclick="deleteChat(${c.id}, event)" class="opacity-0 group-hover:opacity-100 p-2 hover:text-red-400 transition">✕</button>
                 </div>
             `).join('');
-        }
-
-        function saveChats() {
-            localStorage.setItem('aura_v2_chats', JSON.stringify(chats));
         }
 
         function toggleSidebar() {
             const sb = document.getElementById('sidebar');
             sb.classList.toggle('hidden');
-            sb.classList.toggle('flex');
-            sb.classList.toggle('absolute');
-            sb.classList.toggle('h-full');
+            sb.classList.toggle('fixed');
+            sb.classList.toggle('inset-0');
+            sb.classList.toggle('w-full');
         }
 
-        // Авто-инициализация
-        if(chats.length > 0) {
+        // Init
+        if (chats.length > 0) {
             currentChatId = chats[0].id;
+            renderMessages();
             renderChatList();
         }
     </script>
