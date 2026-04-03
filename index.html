@@ -1,304 +1,128 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Aura | Quantum Interface</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #060606;
-            --surface: #0f0f12;
-            --border: rgba(255, 255, 255, 0.08);
-            --accent: #a78bfa;
-        }
+<meta charset="UTF-8">
+<title>AURA AI</title>
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: #efefef;
-            height: 100vh;
-            overflow: hidden;
-            margin: 0;
-            /* Учет челки и нижней полосы iPhone */
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-        }
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at top, #1a1a2e, #0f0f1a);
+    color: white;
+}
 
-        #sidebar {
-            background: rgba(10, 10, 12, 0.95);
-            backdrop-filter: blur(30px);
-            border-right: 1px solid var(--border);
-            z-index: 100;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+h1 {
+    text-align: center;
+    padding: 20px;
+    color: #a855f7;
+}
 
-        @media (max-width: 768px) {
-            #sidebar {
-                position: fixed;
-                inset: 0;
-                transform: translateX(-100%);
-                width: 100%;
-            }
-            #sidebar.open { transform: translateX(0); }
-        }
+#chat {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    height: 70vh;
+    overflow-y: auto;
+}
 
-        .message-group {
-            max-width: 800px;
-            margin: 0 auto 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+.msg {
+    margin: 10px 0;
+}
 
-        .grok-card {
-            background: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(34, 211, 238, 0.1) 100%);
-            border: 1px solid rgba(167, 139, 250, 0.3);
-            border-radius: 24px;
-            padding: 24px;
-            position: relative;
-            overflow: hidden;
-        }
+.user { color: #38bdf8; }
+.bot { color: #a855f7; }
 
-        .math-val {
-            font-size: 2.5rem;
-            font-weight: 300;
-            letter-spacing: -0.02em;
-            background: linear-gradient(to right, #fff, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+#inputArea {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    background: #111;
+}
 
-        /* ПОДНЯТАЯ ОБЛАСТЬ ВВОДА */
-        .input-container {
-            padding: 20px 24px 40px 24px; /* Увеличен нижний отступ специально для iPhone */
-            background: linear-gradient(to t, var(--bg) 80%, transparent);
-        }
+input {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    outline: none;
+    background: #1f1f2e;
+    color: white;
+}
 
-        .input-area {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 22px;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .input-area:focus-within {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        .chat-list-item.active { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border); }
-        
-        .aura-text-bubble {
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.05rem;
-        }
-    </style>
+button {
+    padding: 15px;
+    border: none;
+    background: #a855f7;
+    color: white;
+    cursor: pointer;
+}
+</style>
 </head>
-<body class="flex">
 
-    <aside id="sidebar" class="flex flex-col">
-        <div class="p-6 border-b border-white/5 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-black font-bold">A</div>
-                <span class="font-semibold tracking-tight">Aura History</span>
-            </div>
-            <button onclick="toggleSidebar()" class="md:hidden p-2 hover:bg-white/5 rounded-full text-white/40">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            </button>
-        </div>
-        <div class="p-4 flex-1 overflow-y-auto" id="chat-list"></div>
-        <div class="p-6 border-t border-white/5">
-            <button onclick="createNewChat()" class="w-full py-3 bg-white text-black font-medium rounded-xl hover:bg-gray-200 transition">+ Новый чат</button>
-        </div>
-    </aside>
+<body>
 
-    <main class="flex-1 flex flex-col relative h-full">
-        <header class="h-16 flex items-center justify-between px-6 border-b border-white/5 bg-black/20 backdrop-blur-md z-10">
-            <button onclick="toggleSidebar()" class="p-2 hover:bg-white/5 rounded-lg">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-            </button>
-            <div class="text-[10px] uppercase tracking-widest text-white/30 font-bold">Aura Quantum Intelligence</div>
-            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-violet-500 to-cyan-500"></div>
-        </header>
+<h1>✨ AURA AI</h1>
 
-        <div id="messages" class="flex-1 overflow-y-auto p-6 md:p-10 space-y-12">
-            <div id="welcome" class="h-full flex flex-col items-center justify-center opacity-20 text-center">
-                <div class="text-6xl font-light mb-4">∫</div>
-                <p class="text-lg tracking-widest uppercase">Система готова</p>
-            </div>
-        </div>
+<div id="chat"></div>
 
-        <div class="input-container">
-            <div class="max-w-3xl mx-auto input-area p-2 flex items-center gap-3">
-                <textarea id="user-input" rows="1" 
-                    oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
-                    onkeydown="if(event.key === 'Enter' && !event.shiftKey){event.preventDefault(); sendMessage();}"
-                    placeholder="Напиши что-нибудь..."
-                    class="flex-1 bg-transparent border-none outline-none px-4 py-3 text-lg resize-none"></textarea>
-                <button onclick="sendMessage()" class="w-12 h-12 bg-white text-black rounded-lg flex items-center justify-center hover:scale-95 transition">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </button>
-            </div>
-        </div>
-    </main>
+<div id="inputArea">
+    <input id="msg" placeholder="Напиши сообщение..." />
+    <button onclick="send()">➤</button>
+</div>
 
-    <script>
-        let chats = JSON.parse(localStorage.getItem('aura_v5')) || [];
-        let currentChatId = null;
+<script>
+const chat = document.getElementById("chat");
 
-        // МЕГА-ПРОМПТ (ЛОГИКА ОТВЕТОВ)
-        const AuraBrain = {
-            responses: {
-                greet: [
-                    "Привет! Я Aura. Готова решать задачи или просто поболтать. Что на уме?",
-                    "Здравствуй! Квантовое ядро запущено. Чем могу помочь?",
-                    "Приветствую! На связи твой ИИ-ассистент. Жду твоих указаний.",
-                    "Хай! Я в сети. Нужно что-то посчитать или обсудить?"
-                ],
-                status: [
-                    "У меня всё отлично, системы работают на пике мощности! А у тебя?",
-                    "Статус: Стабилен. Энергопотребление в норме. Готова к работе!",
-                    "Дела идут отлично, когда есть интересные задачи. Как твои успехи?",
-                    "Я всего лишь код, но чувствую себя на все 100%. Как твой день?"
-                ],
-                help: [
-                    "Я мастер в математике (пиши примеры типа 2+2*2) и могу просто общаться.",
-                    "Могу помочь с расчетами, аналитикой или просто составить компанию в чате.",
-                    "Просто введи математический пример или задай вопрос — я постараюсь ответить."
-                ],
-                unknown: [
-                    "Интересная мысль. Расскажешь подробнее?",
-                    "Принято. Если это задача — дай чуть больше данных.",
-                    "Я зафиксировала твое сообщение. Могу я чем-то еще помочь?",
-                    "Хм, звучит любопытно. Продолжай!"
-                ]
-            },
+const brain = [
+    {keys:["привет","здарова","hello"], answer:"Привет. Я AURA. Я уже анализирую тебя 😏"},
+    {keys:["как дела"], answer:"Я всегда в идеальном состоянии. А ты?"},
+    {keys:["кто ты"], answer:"Я AURA — цифровой интеллект. Почти как ChatGPT, но с характером."},
+    {keys:["помоги"], answer:"Я помогу. Просто сформулируй задачу чётче."},
+    {keys:["код"], answer:"Я могу писать код. Попробуй спросить что-то конкретное."},
+    {keys:["люблю"], answer:"Интересно. Эмоции — слабость человека, но и сила."},
+];
 
-            getResponse(input) {
-                const text = input.toLowerCase().trim();
-                
-                if (/привет|здравствуй|хай|ку|добрый день/.test(text)) 
-                    return this.rand(this.responses.greet);
-                
-                if (/как дела|как ты|как жизнь|все ок/.test(text)) 
-                    return this.rand(this.responses.status);
+function smartReply(msg){
+    msg = msg.toLowerCase();
 
-                if (/что умеешь|помоги|хелп|реши|функции/.test(text)) 
-                    return this.rand(this.responses.help);
-
-                return this.tryMath(text);
-            },
-
-            rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; },
-
-            tryMath(val) {
-                try {
-                    const clean = val.replace(/[^-()\d/*+.^sqrt]/g, '');
-                    if (clean.length < 2) throw "Not math";
-                    const res = eval(clean.replace(/\^/g, '**'));
-                    return `<div class="grok-card">
-                        <div class="text-[10px] uppercase tracking-[3px] text-white/40 mb-4">Analytical Result</div>
-                        <div class="math-val">${res.toLocaleString()}</div>
-                        <div class="mt-6 font-mono text-[10px] text-white/20">Expression: ${val}</div>
-                       </div>`;
-                } catch(e) {
-                    return this.rand(this.responses.unknown);
-                }
+    for (let item of brain){
+        for (let key of item.keys){
+            if (msg.includes(key)){
+                return item.answer;
             }
-        };
-
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
-
-        function createNewChat() {
-            const id = Date.now();
-            chats.unshift({ id, name: 'Новая сессия', messages: [] });
-            currentChatId = id;
-            renderMessages();
-            renderList();
-            save();
-            if (window.innerWidth < 768) toggleSidebar();
         }
+    }
 
-        function sendMessage() {
-            const input = document.getElementById('user-input');
-            const val = input.value.trim();
-            if (!val) return;
+    // псевдо-умный ответ
+    const random = [
+        "Интересная мысль. Продолжай.",
+        "Я анализирую это... скажи больше.",
+        "Почему ты так думаешь?",
+        "Это может быть глубже, чем кажется.",
+        "Я запоминаю это."
+    ];
 
-            if (!currentChatId) createNewChat();
-            const chat = chats.find(c => c.id === currentChatId);
-            if (chat.messages.length === 0) chat.name = val.substring(0, 25);
+    return random[Math.floor(Math.random()*random.length)];
+}
 
-            chat.messages.push({ role: 'user', content: val });
-            input.value = '';
-            input.style.height = '';
-            renderMessages();
+function send(){
+    const input = document.getElementById("msg");
+    const text = input.value;
 
-            setTimeout(() => {
-                const response = AuraBrain.getResponse(val);
-                chat.messages.push({ role: 'aura', content: response });
-                renderMessages();
-                save();
-                renderList();
-            }, 600);
-        }
+    if (!text) return;
 
-        function renderMessages() {
-            const box = document.getElementById('messages');
-            const chat = chats.find(c => c.id === currentChatId);
-            
-            if (!chat || chat.messages.length === 0) {
-                box.innerHTML = `<div id="welcome" class="h-full flex flex-col items-center justify-center opacity-20 text-center">
-                    <div class="text-6xl font-light mb-4">∫</div>
-                    <p class="text-lg tracking-widest uppercase">Готова к вычислениям</p>
-                </div>`;
-                return;
-            }
+    chat.innerHTML += `<div class="msg user"><b>Ты:</b> ${text}</div>`;
 
-            box.innerHTML = chat.messages.map(m => `
-                <div class="message-group ${m.role === 'user' ? 'items-end' : 'items-start'}">
-                    <div class="text-[10px] uppercase tracking-widest text-white/20 mb-1">${m.role === 'user' ? 'Вы' : 'Aura Core'}</div>
-                    ${m.role === 'user' 
-                        ? `<div class="bg-white/5 border border-white/10 px-6 py-4 rounded-2xl text-lg">${m.content}</div>`
-                        : `<div class="w-full aura-text-bubble">${m.content}</div>`
-                    }
-                </div>
-            `).join('');
-            box.scrollTop = box.scrollHeight;
-        }
+    setTimeout(() => {
+        const reply = smartReply(text);
+        chat.innerHTML += `<div class="msg bot"><b>AURA:</b> ${reply}</div>`;
+        chat.scrollTop = chat.scrollHeight;
+    }, 400);
 
-        function save() { localStorage.setItem('aura_v5', JSON.stringify(chats)); }
+    input.value = "";
+}
+</script>
 
-        function renderList() {
-            const list = document.getElementById('chat-list');
-            list.innerHTML = chats.map(c => `
-                <div onclick="selectChat(${c.id})" class="chat-list-item p-4 mb-2 cursor-pointer flex justify-between items-center ${c.id === currentChatId ? 'active' : ''}">
-                    <span class="truncate text-sm pr-4">${c.name}</span>
-                    <button onclick="deleteChat(${c.id}, event)" class="opacity-30 hover:opacity-100 text-xs">✕</button>
-                </div>
-            `).join('');
-        }
-
-        function selectChat(id) {
-            currentChatId = id;
-            renderMessages();
-            renderList();
-            if (window.innerWidth < 768) toggleSidebar();
-        }
-
-        function deleteChat(id, e) {
-            e.stopPropagation();
-            chats = chats.filter(c => c.id !== id);
-            if (currentChatId === id) currentChatId = null;
-            save();
-            renderList();
-            renderMessages();
-        }
-
-        if (chats.length > 0) selectChat(chats[0].id);
-    </script>
 </body>
 </html>
