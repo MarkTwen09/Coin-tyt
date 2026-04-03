@@ -7,114 +7,64 @@
 
 <style>
 :root{
---bg:#0b0b12;
---glass:rgba(255,255,255,0.06);
---border:rgba(255,255,255,0.15);
+--glass: rgba(255,255,255,0.06);
+--border: rgba(255,255,255,0.15);
 --accent1:#8a5cff;
 --accent2:#00ffd0;
---text:#ffffff;
 }
+
+*{box-sizing:border-box;}
 
 body{
 margin:0;
-font-family:Segoe UI, sans-serif;
-background:var(--bg);
-color:var(--text);
+font-family: 'Segoe UI', sans-serif;
+background:#0b0b12;
+color:white;
 overflow:hidden;
-cursor:none;
 }
 
-/* Canvas background */
-canvas{
+/* Background */
+.bg{
 position:fixed;
-top:0;
-left:0;
-z-index:-2;
-}
-
-/* Glow Cursor */
-.cursor{
-position:fixed;
-width:20px;
-height:20px;
-border-radius:50%;
-background:radial-gradient(circle,var(--accent1),transparent);
-pointer-events:none;
-mix-blend-mode:screen;
-z-index:999;
-}
-
-/* Center Energy */
-.energy{
-position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-width:300px;
-height:300px;
-border-radius:50%;
-background:radial-gradient(circle,var(--accent1),transparent 70%);
-filter:blur(80px);
-opacity:0.4;
+width:100%;
+height:100%;
 z-index:-1;
-transition:0.2s;
+overflow:hidden;
+}
+
+.blob{
+position:absolute;
+width:500px;
+height:500px;
+border-radius:50%;
+filter:blur(140px);
+opacity:0.45;
+animation:float 20s infinite alternate ease-in-out;
+}
+
+.blob:nth-child(1){background:#8a5cff; top:-150px; left:-150px;}
+.blob:nth-child(2){background:#00ffd0; bottom:-200px; right:-150px; animation-delay:6s;}
+
+@keyframes float{
+from{transform:translate(0,0);}
+to{transform:translate(100px,80px);}
 }
 
 /* Layout */
 .container{
 display:flex;
+flex-direction:column;
 height:100vh;
 }
 
-/* Sidebar */
-.sidebar{
-width:250px;
+.header{
+padding:18px;
+text-align:center;
+font-size:22px;
+letter-spacing:4px;
+font-weight:bold;
 background:var(--glass);
 backdrop-filter:blur(30px);
-border-right:1px solid var(--border);
-padding:20px;
-display:flex;
-flex-direction:column;
-}
-
-.history{
-flex:1;
-overflow-y:auto;
-font-size:14px;
-}
-
-.history div{
-margin-bottom:10px;
-opacity:0.7;
-cursor:pointer;
-}
-
-.theme-switch{
-margin-top:10px;
-}
-
-.theme-switch button{
-margin:3px;
-padding:6px 10px;
-border:none;
-border-radius:12px;
-cursor:pointer;
-background:var(--glass);
-color:white;
-}
-
-/* Chat */
-.main{
-flex:1;
-display:flex;
-flex-direction:column;
-}
-
-.header{
-padding:15px;
-text-align:center;
-letter-spacing:4px;
-background:var(--glass);
 border-bottom:1px solid var(--border);
 }
 
@@ -124,186 +74,222 @@ padding:20px;
 overflow-y:auto;
 display:flex;
 flex-direction:column;
-gap:12px;
+gap:14px;
 }
 
+/* Welcome Screen */
+.welcome{
+margin:auto;
+text-align:center;
+padding:40px;
+border-radius:30px;
+background:var(--glass);
+backdrop-filter:blur(40px);
+border:1px solid var(--border);
+max-width:500px;
+animation:fade 1s ease;
+}
+
+.welcome h1{
+font-size:40px;
+margin:0;
+background:linear-gradient(90deg,var(--accent1),var(--accent2));
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.quick-buttons{
+margin-top:25px;
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:10px;
+}
+
+.quick-buttons button{
+padding:10px 15px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+background:rgba(255,255,255,0.08);
+color:white;
+transition:0.2s;
+}
+
+.quick-buttons button:hover{
+background:linear-gradient(135deg,var(--accent1),var(--accent2));
+}
+
+/* Messages */
 .message{
-padding:15px;
-border-radius:18px;
-max-width:80%;
+padding:16px;
+border-radius:20px;
+max-width:85%;
 background:var(--glass);
 border:1px solid var(--border);
-backdrop-filter:blur(25px);
+backdrop-filter:blur(30px);
+animation:fade 0.3s ease;
 }
 
 .user{
 align-self:flex-end;
-background:linear-gradient(135deg,var(--accent1),var(--accent2));
+background:linear-gradient(135deg,rgba(138,92,255,0.4),rgba(0,255,200,0.2));
 }
 
 .ai{align-self:flex-start;}
 
 .input-area{
 display:flex;
-padding:10px;
+padding:15px;
 gap:10px;
 background:var(--glass);
+backdrop-filter:blur(30px);
+border-top:1px solid var(--border);
 }
 
 input{
 flex:1;
-padding:12px;
+padding:15px;
 border:none;
-border-radius:15px;
+border-radius:20px;
 background:rgba(255,255,255,0.08);
 color:white;
+font-size:16px;
 outline:none;
 }
 
 button.send{
-padding:12px 18px;
+padding:15px 20px;
 border:none;
-border-radius:15px;
+border-radius:20px;
+font-weight:bold;
 cursor:pointer;
 background:linear-gradient(135deg,var(--accent1),var(--accent2));
 color:white;
+transition:0.2s;
 }
 
-/* Themes */
-.dark{
---bg:#0b0b12;
---accent1:#8a5cff;
---accent2:#00ffd0;
+button.send:hover{transform:scale(1.05);}
+
+@keyframes fade{
+from{opacity:0; transform:translateY(10px);}
+to{opacity:1; transform:translateY(0);}
 }
 
-.ultra{
---bg:#050507;
---accent1:#ff00cc;
---accent2:#3333ff;
-}
-
-.neon{
---bg:#000000;
---accent1:#00ffcc;
---accent2:#ff00ff;
-}
-
-@media(max-width:900px){
-.sidebar{display:none;}
+@media(max-width:600px){
+.welcome{padding:25px;}
+.welcome h1{font-size:30px;}
+.message{max-width:95%;}
 }
 </style>
 </head>
 
-<body class="dark">
+<body>
 
-<canvas id="grid"></canvas>
-<div class="cursor" id="cursor"></div>
-<div class="energy" id="energy"></div>
+<div class="bg">
+<div class="blob"></div>
+<div class="blob"></div>
+</div>
 
 <div class="container">
-
-<div class="sidebar">
-<h3>AURA</h3>
-<div class="history" id="history"></div>
-
-<div class="theme-switch">
-<button onclick="setTheme('dark')">Dark</button>
-<button onclick="setTheme('ultra')">Ultra</button>
-<button onclick="setTheme('neon')">Neon</button>
-</div>
-</div>
-
-<div class="main">
 <div class="header">AURA</div>
-<div class="chat" id="chat"></div>
+<div class="chat" id="chat">
+
+<div class="welcome" id="welcome">
+<h1>AURA</h1>
+<p>Продвинутая математическая нейросеть</p>
+
+<div class="quick-buttons">
+<button onclick="quick('2+2')">2+2</button>
+<button onclick="quick('x^2+5x+6=0')">Квадратное</button>
+<button onclick="quick('sin(pi/2)')">sin(pi/2)</button>
+<button onclick="quick('Как дела?')">Как дела?</button>
+</div>
+</div>
+
+</div>
 
 <div class="input-area">
-<input id="input" placeholder="Введите сообщение...">
+<input type="text" id="input" placeholder="Введите сообщение или пример...">
 <button class="send" onclick="send()">→</button>
 </div>
 </div>
 
-</div>
-
 <script>
-/* Cursor */
-const cursor=document.getElementById("cursor");
-document.addEventListener("mousemove",e=>{
-cursor.style.left=e.clientX+"px";
-cursor.style.top=e.clientY+"px";
-});
-
-/* Energy Parallax */
-const energy=document.getElementById("energy");
-document.addEventListener("mousemove",e=>{
-let x=(e.clientX/window.innerWidth-0.5)*50;
-let y=(e.clientY/window.innerHeight-0.5)*50;
-energy.style.transform=`translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
-});
-
-/* Canvas Grid */
-const canvas=document.getElementById("grid");
-const ctx=canvas.getContext("2d");
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-
-let mouse={x:0,y:0};
-document.addEventListener("mousemove",e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
-
-function draw(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-for(let x=0;x<canvas.width;x+=40){
-for(let y=0;y<canvas.height;y+=40){
-let dx=x-mouse.x;
-let dy=y-mouse.y;
-let dist=Math.sqrt(dx*dx+dy*dy);
-let alpha=Math.max(0,1-dist/300);
-ctx.fillStyle="rgba(138,92,255,"+alpha*0.3+")";
-ctx.fillRect(x,y,2,2);
-}}
-requestAnimationFrame(draw);
-}
-draw();
-
-/* Chat */
 const chat=document.getElementById("chat");
 const input=document.getElementById("input");
-const history=document.getElementById("history");
-
-function typeText(element,text,i=0){
-if(i<text.length){
-element.innerHTML+=text.charAt(i);
-setTimeout(()=>typeText(element,text,i+1),20);
-}
-}
+const welcome=document.getElementById("welcome");
 
 function addMessage(text,type){
+welcome.style.display="none";
 const msg=document.createElement("div");
 msg.className="message "+type;
+msg.innerText=text;
 chat.appendChild(msg);
-
-if(type==="ai") typeText(msg,text);
-else msg.innerText=text;
-
 chat.scrollTop=chat.scrollHeight;
-
-if(type==="user"){
-let h=document.createElement("div");
-h.innerText=text;
-history.prepend(h);
-}
 }
 
-/* Simple brain */
-function respond(text){
+function quick(text){
+input.value=text;
+send();
+}
+
+/* Communication Brain */
+function talk(text){
 text=text.toLowerCase();
-if(text.includes("привет")) return "Привет 👋 Я AURA.";
-if(text.includes("как дела")) return "Отлично. Я чувствую цифровую энергию.";
+if(text.includes("привет")) return "Привет 👋 Я AURA. Готова решать задачи!";
+if(text.includes("как дела")) return "Отлично! Особенно когда решаю математику 😎";
+if(text.includes("кто ты")) return "Я AURA — продвинутая математическая нейросеть.";
+if(text.includes("спасибо")) return "Всегда рада помочь!";
+if(text.includes("пока")) return "До встречи! Возвращайся с задачами.";
+return null;
+}
+
+/* Math Engine */
+function factorial(n){return n<=1?1:n*factorial(n-1);}
+
+function solveQuadratic(a,b,c){
+let d=b*b-4*a*c;
+if(d<0) return "D="+d+" → Нет действительных корней";
+let x1=(-b+Math.sqrt(d))/(2*a);
+let x2=(-b-Math.sqrt(d))/(2*a);
+return "D="+d+"\nx1="+x1+"\nx2="+x2;
+}
+
+function parseEquation(str){
+if(str.includes("x^2")){
+let match=str.match(/([\-0-9\.]*)x\^2([+\-0-9\.]*)x([+\-0-9\.]*)=0/);
+if(match){
+let a=parseFloat(match[1]||1);
+let b=parseFloat(match[2]||0);
+let c=parseFloat(match[3]||0);
+return solveQuadratic(a,b,c);
+}}
+if(str.includes("x")&&str.includes("=")){
+let sides=str.split("=");
+let coef=parseFloat(sides[0].replace("x",""))||1;
+let right=parseFloat(sides[1]);
+return "x="+(right/coef);
+}
+return null;
+}
+
+function solveMath(expr){
+expr=expr.replace(/π|pi/gi,"Math.PI")
+.replace(/e/gi,"Math.E")
+.replace(/sqrt/gi,"Math.sqrt")
+.replace(/sin/gi,"Math.sin")
+.replace(/cos/gi,"Math.cos")
+.replace(/tan/gi,"Math.tan")
+.replace(/\^/g,"**")
+.replace(/(\d+)!/g,(m,n)=>factorial(parseInt(n)));
+
 try{
-let result=Function('"use strict";return ('+text.replace("^","**")+')')();
-if(!isNaN(result)) return "Ответ: "+result;
+let result=Function('"use strict";return ('+expr+')')();
+if(typeof result==="number"&&!isNaN(result))
+return "Ответ: "+result;
 }catch{}
-return "Я могу общаться и считать примеры.";
+return null;
 }
 
 function send(){
@@ -311,16 +297,23 @@ let text=input.value.trim();
 if(!text) return;
 addMessage(text,"user");
 input.value="";
-setTimeout(()=>addMessage(respond(text),"ai"),400);
+
+setTimeout(()=>{
+let chatAnswer=talk(text);
+if(chatAnswer){addMessage(chatAnswer,"ai"); return;}
+
+let eq=parseEquation(text);
+if(eq){addMessage(eq,"ai"); return;}
+
+let math=solveMath(text);
+if(math){addMessage(math,"ai"); return;}
+
+addMessage("Я могу общаться и решать математические задачи. Попробуйте пример.","ai");
+},500);
 }
 
 input.addEventListener("keypress",e=>{if(e.key==="Enter")send();});
-
-/* Theme switch */
-function setTheme(theme){
-document.body.className=theme;
-}
 </script>
 
 </body>
-</html>
+</html> 
