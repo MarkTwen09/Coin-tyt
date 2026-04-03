@@ -1,238 +1,66 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>AURA AI</title>
-<style>
-:root{
---glass: rgba(255,255,255,0.06);
---border: rgba(255,255,255,0.15);
---accent1:#8a5cff;
---accent2:#00ffd0;
---highlight:#fffd70;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{
-font-family:'Segoe UI',sans-serif;
-background:#0b0b12;
-color:white;
-overflow:hidden;
-height:100vh;
-width:100vw;
+function solveMath(expr){
+
+// --- Проценты вида "50% от 200"
+let percentOf = expr.match(/(\d+(\.\d+)?)\s*%\s*от\s*(\d+(\.\d+)?)/i);
+if(percentOf){
+let p=parseFloat(percentOf[1]);
+let n=parseFloat(percentOf[3]);
+return "Ответ: " + (n * p / 100);
 }
 
-/* Background blobs + parallax */
-.bg{position:fixed;width:100%;height:100%;z-index:-1;overflow:hidden;}
-.blob{
-position:absolute;width:500px;height:500px;border-radius:50%;
-filter:blur(140px);opacity:0.45;animation:float 20s infinite alternate ease-in-out;
-transition: transform 0.2s ease;
-}
-.blob:nth-child(1){background:#8a5cff; top:-150px; left:-150px;}
-.blob:nth-child(2){background:#00ffd0; bottom:-200px; right:-150px; animation-delay:6s;}
-@keyframes float{from{transform:translate(0,0);} to{transform:translate(100px,80px);}}
-
-/* Header */
-.header{padding:18px;text-align:center;font-size:22px;letter-spacing:4px;font-weight:bold;background:var(--glass);backdrop-filter:blur(30px);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
-.hamburger{cursor:pointer;font-size:28px;user-select:none;}
-
-/* Chat container */
-.container{display:flex;flex-direction:column;height:calc(100vh - 60px);}
-.chat{flex:1;padding:10px 20px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;}
-.message{padding:16px;border-radius:20px;max-width:85%;background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(30px);animation:fade 0.3s ease;word-wrap:break-word;}
-.user{align-self:flex-end;background:linear-gradient(135deg,rgba(138,92,255,0.4),rgba(0,255,200,0.2));}
-.ai{align-self:flex-start;font-family: monospace;}
-.highlight{color:var(--highlight);}
-
-/* Input */
-.input-area{display:flex;padding:10px;gap:10px;background:var(--glass);backdrop-filter:blur(30px);border-top:1px solid var(--border);}
-input{flex:1;padding:12px;border:none;border-radius:20px;background:rgba(255,255,255,0.08);color:white;font-size:16px;outline:none;}
-button.send{padding:12px 18px;border:none;border-radius:20px;font-weight:bold;cursor:pointer;background:linear-gradient(135deg,var(--accent1),var(--accent2));color:white;transition:0.2s;}
-button.send:hover{transform:scale(1.05);}
-
-/* Register & Welcome */
-.register, .welcome{margin:auto;text-align:center;padding:30px;border-radius:30px;background:var(--glass);backdrop-filter:blur(40px);border:1px solid var(--border);max-width:400px;animation:fade 1s ease;display:flex;flex-direction:column;gap:12px;}
-.register h1,.welcome h1{font-size:32px;margin-bottom:15px;background:linear-gradient(90deg,var(--accent1),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.register input{width:100%;padding:10px;border-radius:15px;border:none;background:rgba(255,255,255,0.08);color:white;}
-.register button{padding:10px;border-radius:20px;border:none;background:linear-gradient(135deg,var(--accent1),var(--accent2));color:white;cursor:pointer;transition:0.2s;}
-.register button:hover{transform:scale(1.05);}
-.quick-buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:15px;}
-.quick-buttons button{padding:8px 12px;border-radius:20px;border:none;cursor:pointer;background:rgba(255,255,255,0.08);color:white;transition:0.2s;}
-.quick-buttons button:hover{background:linear-gradient(135deg,var(--accent1),var(--accent2));}
-
-/* Sidebar */
-.sidebar{position:fixed;top:0;right:-260px;width:260px;height:100%;background:rgba(11,11,18,0.95);backdrop-filter:blur(20px);transition:0.3s;display:flex;flex-direction:column;padding:20px;z-index:10;}
-.sidebar.show{right:0;}
-.sidebar h2{text-align:center;margin-bottom:15px;}
-.sidebar button{margin-top:auto;padding:10px;border:none;border-radius:15px;background:linear-gradient(135deg,var(--accent1),var(--accent2));color:white;cursor:pointer;transition:0.2s;}
-.sidebar button:hover{transform:scale(1.05);}
-.sidebar .history{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
-.history p{padding:10px;border-radius:15px;background:rgba(255,255,255,0.08);cursor:pointer;word-wrap:break-word;}
-
-/* Animations */
-@keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-@media(max-width:430px){.register,.welcome{padding:20px;max-width:95%;}.register h1,.welcome h1{font-size:28px;}}
-</style>
-</head>
-<body>
-
-<div class="bg">
-<div class="blob"></div>
-<div class="blob"></div>
-<div class="live-center" style="position:absolute;top:50%;left:50%;width:40px;height:40px;background:rgba(138,92,255,0.3);border-radius:50%;filter:blur(25px);transform:translate(-50%,-50%);animation:pulse 2s infinite alternate;"></div>
-</div>
-
-<div class="header">
-<span>AURA</span>
-<span class="hamburger" onclick="toggleSidebar()">☰</span>
-</div>
-
-<div class="sidebar" id="sidebar">
-<h2>История</h2>
-<div class="history" id="history"></div>
-<button onclick="clearHistory()">Очистить чат</button>
-</div>
-
-<div class="container">
-<div class="chat" id="chat">
-
-<div class="register" id="register">
-<h1>Регистрация</h1>
-<input type="text" id="regName" placeholder="Имя">
-<input type="email" id="regEmail" placeholder="Email">
-<input type="password" id="regPass" placeholder="Пароль">
-<button onclick="register()">Зарегистрироваться</button>
-</div>
-
-<div class="welcome" id="welcome" style="display:none;">
-<h1>AURA</h1>
-<p>Продвинутая математическая нейросеть</p>
-<div class="quick-buttons">
-<button onclick="quick('2+2')">2+2</button>
-<button onclick="quick('x^2+5x+6=0')">Квадратное</button>
-<button onclick="quick('sin(pi/2)')">sin(pi/2)</button>
-<button onclick="quick('Как дела?')">Как дела?</button>
-</div>
-</div>
-
-</div>
-
-<div class="input-area">
-<input type="text" id="input" placeholder="Введите сообщение или пример...">
-<button class="send" onclick="send()">→</button>
-</div>
-</div>
-
-<script>
-const chat=document.getElementById("chat");
-const input=document.getElementById("input");
-const welcome=document.getElementById("welcome");
-const registerDiv=document.getElementById("register");
-const sidebar=document.getElementById("sidebar");
-const historyDiv=document.getElementById("history");
-
-/* Live cursor & parallax */
-document.addEventListener("mousemove",e=>{
-document.querySelectorAll(".blob").forEach((b,i)=>{
-b.style.transform=`translate(${(e.clientX/50)*(i+1)}px, ${(e.clientY/50)*(i+1)}px)`;
-});
-});
-
-/* Typewriter effect */
-function typeText(el,text,i=0){
-if(i<text.length){
-el.innerHTML+=text.charAt(i).replace(/([0-9\+\-\*\/\^\(\)\%\.\!])/g,'<span class="highlight">$1</span>');
-setTimeout(()=>typeText(el,text,i+1),15);
-}}
-
-function addMessage(text,type){
-welcome.style.display="none";
-const msg=document.createElement("div");
-msg.className="message "+type;
-chat.appendChild(msg);
-if(type==="ai"){typeText(msg,text);}else{msg.innerText=text;}
-chat.scrollTop=chat.scrollHeight;
-saveChat(text,type);
-updateSidebar();
+// --- 200 + 10%  (прибавить процент)
+let plusPercent = expr.match(/(\d+(\.\d+)?)\s*\+\s*(\d+(\.\d+)?)%/);
+if(plusPercent){
+let n=parseFloat(plusPercent[1]);
+let p=parseFloat(plusPercent[3]);
+return "Ответ: " + (n + (n*p/100));
 }
 
-/* Quick buttons */
-function quick(text){input.value=text; send();}
-
-/* Registration */
-function register(){
-let name=document.getElementById("regName").value.trim();
-let email=document.getElementById("regEmail").value.trim();
-let pass=document.getElementById("regPass").value.trim();
-if(!name||!email||!pass){alert("Заполните все поля!");return;}
-localStorage.setItem("user",JSON.stringify({name,email,pass}));
-registerDiv.style.display="none";welcome.style.display="flex";
-addMessage(`Добро пожаловать, ${name}! Я AURA готова помогать вам.`, "ai");
-loadChat();
+// --- 200 - 10%
+let minusPercent = expr.match(/(\d+(\.\d+)?)\s*\-\s*(\d+(\.\d+)?)%/);
+if(minusPercent){
+let n=parseFloat(minusPercent[1]);
+let p=parseFloat(minusPercent[3]);
+return "Ответ: " + (n - (n*p/100));
 }
 
-/* Load user */
-window.onload=function(){
-let user=JSON.parse(localStorage.getItem("user"));
-if(user){registerDiv.style.display="none";welcome.style.display="flex"; addMessage(`С возвращением, ${user.name}!`, "ai"); loadChat();}
+// --- 150 * 20%
+let multPercent = expr.match(/(\d+(\.\d+)?)\s*\*\s*(\d+(\.\d+)?)%/);
+if(multPercent){
+let n=parseFloat(multPercent[1]);
+let p=parseFloat(multPercent[3]);
+return "Ответ: " + (n * (p/100));
 }
 
-/* Chat history */
-function saveChat(text,type){
-let chats=JSON.parse(localStorage.getItem("chat")||"[]");
-chats.push({text,type});
-localStorage.setItem("chat",JSON.stringify(chats));
+// --- 100 / 25%
+let divPercent = expr.match(/(\d+(\.\d+)?)\s*\/\s*(\d+(\.\d+)?)%/);
+if(divPercent){
+let n=parseFloat(divPercent[1]);
+let p=parseFloat(divPercent[3]);
+return "Ответ: " + (n / (p/100));
 }
-function loadChat(){
-let chats=JSON.parse(localStorage.getItem("chat")||"[]");
-chats.forEach(c=>addMessage(c.text,c.type));
-}
-function updateSidebar(){
-historyDiv.innerHTML="";
-let chats=JSON.parse(localStorage.getItem("chat")||"[]");
-chats.forEach(c=>{
-let p=document.createElement("p");
-p.innerText=c.text;
-p.onclick=()=>{input.value=c.text; send();}
-historyDiv.appendChild(p);
-});
-}
-function clearHistory(){localStorage.removeItem("chat");historyDiv.innerHTML="";chat.innerHTML="";}
 
-/* Hamburger */
-function toggleSidebar(){sidebar.classList.toggle("show");}
+// --- просто 30%
+let simplePercent = expr.match(/(\d+(\.\d+)?)%$/);
+if(simplePercent){
+let p=parseFloat(simplePercent[1]);
+return "Ответ: " + (p/100);
+}
 
-/* AI brain */
-function talk(text){
-let t=text.toLowerCase();
-if(t.includes("привет"))return "Привет 👋 Я AURA. Готова решать задачи!";
-if(t.includes("как дела"))return "Отлично! Особенно когда решаю математику 😎";
-if(t.includes("кто ты"))return "Я AURA — продвинутая математическая нейросеть.";
-if(t.includes("спасибо"))return "Всегда рада помочь!";
-if(t.includes("пока"))return "До встречи! Возвращайся с задачами.";
+// ===== стандартная математика =====
+expr=expr.replace(/π|pi/gi,"Math.PI")
+.replace(/e/gi,"Math.E")
+.replace(/sqrt/gi,"Math.sqrt")
+.replace(/sin/gi,"Math.sin")
+.replace(/cos/gi,"Math.cos")
+.replace(/tan/gi,"Math.tan")
+.replace(/\^/g,"**")
+.replace(/(\d+)!/g,(m,n)=>factorial(parseInt(n)));
+
+try{
+let result=Function('"use strict";return ('+expr+')')();
+if(typeof result==="number"&&!isNaN(result))
+return "Ответ: "+result;
+}catch{}
 return null;
 }
-
-/* Math engine with % */
-function factorial(n){return n<=1?1:n*factorial(n-1);}
-function solveQuadratic(a,b,c){let d=b*b-4*a*c;if(d<0)return "D="+d+" → Нет действительных корней";let x1=(-b+Math.sqrt(d))/(2*a);let x2=(-b-Math.sqrt(d))/(2*a);return "D="+d+"\nx1="+x1+"\nx2="+x2;}
-function parseEquation(str){if(str.includes("x^2")){let match=str.match(/([\-0-9\.]*)x\^2([+\-0-9\.]*)x([+\-0-9\.]*)=0/);if(match){let a=parseFloat(match[1]||1);let b=parseFloat(match[2]||0);let c=parseFloat(match[3]||0);return solveQuadratic(a,b,c);}}if(str.includes("x")&&str.includes("=")){let sides=str.split("=");let coef=parseFloat(sides[0].replace("x",""))||1;let right=parseFloat(sides[1]);return "x="+(right/coef);}return null;}
-function solveMath(expr){
-let percentOf = expr.match(/(\d+(\.\d+)?)\s*%\s*от\s*(\d+(\.\d+)?)/i);
-if(percentOf){let p=parseFloat(percentOf[1]);let n=parseFloat(percentOf[3]);return "Ответ: "+(n*p/100);}
-let plusPercent = expr.match(/(\d+(\.\d+)?)\s*\+\s*(\d+(\.\d+)?)%/);if(plusPercent){let n=parseFloat(plusPercent[1]);let p=parseFloat(plusPercent[3]);return "Ответ: "+(n+(n*p/100));}
-let minusPercent = expr.match(/(\d+(\.\d+)?)\s*\-\s*(\d+(\.\d+)?)%/);if(minusPercent){let n=parseFloat(minusPercent[1]);let p=parseFloat(minusPercent[3]);return "Ответ: "+(n-(n*p/100));}
-let multPercent = expr.match(/(\d+(\.\d+)?)\s*\*\s*(\d+(\.\d+)?)%/);if(multPercent){let n=parseFloat(multPercent[1]);let p=parseFloat(multPercent[3]);return "Ответ: "+(n*(p/100));}
-let divPercent = expr.match(/(\d+(\.\d+)?)\s*\/\s*(\d+(\.\d+)?)%/);if(divPercent){let n=parseFloat(divPercent[1]);let p=parseFloat(divPercent[3]);return "Ответ: "+(n/(p/100));}
-let simplePercent = expr.match(/(\d+(\.\d+)?)%$/);if(simplePercent){let p=parseFloat(simplePercent[1]);return "Ответ: "+(p/100);}
-expr=expr.replace(/π|pi/gi,"Math.PI").replace(/\be\b/gi,"Math.E").replace(/sqrt/gi,"Math.sqrt").replace(/sin/gi,"Math.sin").replace(/cos/gi,"Math.cos").replace(/tan/gi,"Math.tan").replace(/\^/g,"**").replace(/(\d+)!/g,(m,n)=>factorial(parseInt(n)));
-try{let result=Function('"use strict";return ('+expr+')')();if(typeof result==="number"&&!isNaN(result))return "Ответ: "+result;}catch{}return null;
-}
-
-/* Send */
-function send(){let text=input.value.trim();if(!text)return;addMessage(text,"user");input.value="";setTimeout(()=>{let chatAnswer=talk(text);if(chatAnswer){addMessage(chatAnswer,"ai");return;}let eq=parseEquation(text);if(eq){addMessage(eq,"ai");return;}let math=solveMath(text);if(math){addMessage(math,"ai");return;}addMessage("Я могу общаться и решать математические задачи. Попробуйте пример.","ai");},400);}
-input.addEventListener("keypress",e=>{if(e.key==="Enter")send();});
-</script>
-</body>
-</html>
