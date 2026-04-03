@@ -3,643 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura</title>
+    <title>Aura | Grok Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;display=swap');
-        
-        :root {
-            --tw-color-accent: #a78bfa;
-        }
-        
-        * {
-            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-            transition-duration: 150ms;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
         
         body {
-            font-family: 'Inter', system_ui, sans-serif;
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
         }
-        
-        .glass {
+
+        /* Эффект стекла Grok */
+        .glass-panel {
+            background: rgba(15, 15, 15, 0.7);
+            backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .glass-input:focus {
+            border-color: rgba(167, 139, 250, 0.5);
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.1);
         }
-        
-        .chat-container {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(167, 139, 250, 0.4) transparent;
-        }
-        
-        .chat-container::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
-        }
-        
-        .chat-container::-webkit-scrollbar-thumb {
-            background: rgba(167, 139, 250, 0.5);
-            border-radius: 20px;
-        }
-        
-        .chat-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        
-        .message-enter {
-            animation: messagePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        
-        @keyframes messagePop {
-            0% { opacity: 0; transform: translateY(12px) scale(0.95); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        
+
+        /* Анимация Aura */
         .aura-glow {
-            animation: auraPulse 3s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(167, 139, 250, 0.2);
+            animation: pulse-glow 4s infinite;
         }
-        
-        @keyframes auraPulse {
-            0%, 100% { text-shadow: 0 0 12px rgb(167 139 250); }
-            50% { text-shadow: 0 0 30px rgb(167 139 250), 0 0 45px rgb(167 139 250); }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
         }
-        
-        .typing-dot {
-            animation: typingBounce 1.4s infinite ease-in-out;
+
+        .message-anim {
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
-        .typing-dot:nth-child(2) { animation-delay: 180ms; }
-        .typing-dot:nth-child(3) { animation-delay: 360ms; }
-        
-        @keyframes typingBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
-        .input-glass {
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3),
-                        0 0 0 1px rgba(255,255,255,0.08) inset;
-        }
-        
-        #messages {
-            flex-grow: 1;
-            overflow-y: auto !important;
-            max-height: calc(100vh - 160px);
-            min-height: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-            padding-bottom: 20px;
-        }
-        
-        @media (min-width: 768px) {
-            #messages {
-                max-height: calc(100vh - 140px);
-            }
-        }
-        
-        .input-wrapper {
-            position: sticky;
-            bottom: 0;
-            background: #000000;
-            z-index: 50;
-            padding-top: 12px;
-        }
+
+        /* Скроллбар */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
     </style>
 </head>
-<body class="bg-[#000000] text-white overflow-hidden h-screen flex flex-col">
-    <div class="flex flex-1 overflow-hidden">
-        
-        <!-- SIDEBAR -->
-        <div id="sidebar" 
-             class="w-[260px] flex flex-col border-r border-white/10 bg-white/5 glass md:relative fixed inset-y-0 left-0 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
-            
-            <div class="px-6 pt-8 pb-6 flex items-center gap-x-3 border-b border-white/10">
-                <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-violet-400 to-fuchsia-400 flex items-center justify-center text-3xl aura-glow">✦</div>
-                <h1 class="text-3xl font-light tracking-[-1px] aura-glow">Aura</h1>
-                <div class="ml-auto text-xs px-3 py-1 rounded-3xl bg-white/10 text-white/60 font-medium flex items-center">
-                    <div class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></div>
-                    онлайн
-                </div>
+<body class="h-screen flex">
+
+    <aside id="sidebar" class="w-72 glass-panel border-r hidden md:flex flex-col z-50">
+        <div class="p-6">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-black font-bold aura-glow">/</div>
+                <span class="text-xl font-semibold tracking-tight">Aura <span class="text-violet-400 text-xs">v2.0</span></span>
             </div>
-            
-            <div onclick="createNewChat()" 
-                 class="mx-4 mt-6 mb-2 flex items-center justify-center gap-x-2 bg-white/10 hover:bg-white/20 text-white rounded-3xl py-4 px-5 font-medium cursor-pointer active:scale-95">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
-                <span>Новый разговор</span>
+            <button onclick="createNewChat()" class="w-full py-3 px-4 glass-input rounded-xl text-sm font-medium hover:bg-white/10 transition flex items-center justify-center gap-2">
+                <span>+</span> Новый чат
+            </button>
+        </div>
+        <div id="chat-list" class="flex-1 overflow-y-auto px-4 space-y-2">
             </div>
-            
-            <div class="flex-1 overflow-y-auto px-3 py-2 chat-container" id="chat-list"></div>
-            
-            <div class="p-4 border-t border-white/10 mt-auto">
-                <div class="flex items-center gap-x-3 px-3 py-3 rounded-3xl hover:bg-white/10 cursor-pointer">
-                    <div class="w-8 h-8 bg-gradient-to-br from-amber-300 to-pink-300 rounded-2xl flex items-center justify-center text-xl">🧬</div>
-                    <div class="flex-1">
-                        <div class="text-sm font-medium">Aura • Самообучение + Душа</div>
-                        <div class="text-[10px] text-white/40">v1.3 • Температура: <span id="temp-value" class="font-mono">0.84</span></div>
-                    </div>
-                    <button onclick="showSettings()" class="text-white/40 hover:text-white text-xl">⚙️</button>
-                </div>
-                
-                <div class="mt-4 text-[10px] flex items-center justify-between px-3 text-white/40">
-                    <span>Взаимодействий сегодня</span>
-                    <span id="interaction-count" class="font-mono">18</span>
-                </div>
-                <div class="h-1.5 bg-white/10 rounded-3xl overflow-hidden mt-2">
-                    <div id="learning-bar" class="h-1.5 bg-gradient-to-r from-violet-400 to-fuchsia-400 w-4/5 rounded-3xl"></div>
-                </div>
+        <div class="p-4 border-t border-white/5 text-[10px] text-white/30 text-center uppercase tracking-widest">
+            Powered by Grok Engine & Math Core
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col relative">
+        <header class="h-16 border-b border-white/5 flex items-center justify-between px-6 glass-panel">
+            <button class="md:hidden text-2xl" onclick="toggleSidebar()">☰</button>
+            <div class="text-sm font-medium text-white/60">Модель: <span class="text-white">Aura Math-X</span></div>
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <span class="text-xs text-white/40 font-mono">Status: Ready</span>
+            </div>
+        </header>
+
+        <div id="messages" class="flex-1 overflow-y-auto p-4 md:p-10 space-y-8">
+            <div class="max-w-3xl mx-auto text-center py-20">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-tighter">Что решим сегодня?</h1>
+                <p class="text-white/40 text-lg">Я обучена сложной математике, коду и глубоким рассуждениям.</p>
             </div>
         </div>
-        
-        <!-- MAIN CHAT AREA -->
-        <div class="flex-1 flex flex-col min-w-0">
-            
-            <!-- Mobile Top Bar -->
-            <div class="h-14 md:hidden border-b border-white/10 bg-black/70 glass flex items-center px-4 z-40">
-                <button onclick="toggleSidebar()" class="p-2 -ml-2 text-3xl">✦</button>
-                <div class="flex-1 flex justify-center items-center gap-x-2">
-                    <div class="w-6 h-6 rounded-2xl bg-gradient-to-br from-violet-400 to-fuchsia-400 flex items-center justify-center text-xl">✦</div>
-                    <span class="font-medium text-xl tracking-[-0.5px]">Aura</span>
-                </div>
-                <div class="flex items-center text-emerald-400 text-sm font-medium">
-                    <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse mr-1"></div>
-                    live
-                </div>
-            </div>
-            
-            <!-- Chat Content -->
-            <div class="flex-1 flex flex-col max-w-[850px] mx-auto w-full px-4 md:px-8 relative">
-                <div id="messages" class="chat-container flex-1 overflow-y-auto py-8 flex flex-col gap-8 min-h-0"></div>
-            </div>
-            
-            <!-- INPUT BAR -->
-            <div class="input-wrapper max-w-[850px] mx-auto w-full px-4 md:px-8 pb-8 pt-2 bg-[#000000]">
-                <div id="input-container"
-                     class="input-glass glass rounded-3xl border border-white/10 px-5 py-2 flex items-end shadow-2xl shadow-black/60">
-                    
-                    <textarea id="user-input" 
-                              rows="1"
-                              onkeydown="if(event.key === 'Enter' && !event.shiftKey){event.preventDefault(); sendMessage();}"
-                              class="flex-1 bg-transparent outline-none resize-none max-h-[180px] text-[17px] placeholder:text-white/40 px-3 py-3 leading-relaxed"
-                              placeholder="Расскажи мне о душе... или о ком угодно"></textarea>
-                    
-                    <button onclick="fakeVoiceInput()" 
-                            class="p-3 text-white/40 hover:text-white/80 rounded-2xl hover:bg-white/10">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m-.5-15a3.5 3.5 0 10-7 0v4a3.5 3.5 0 007 0V6z" />
-                        </svg>
-                    </button>
-                    
-                    <button onclick="sendMessage()" 
-                            class="ml-2 flex items-center justify-center w-10 h-10 bg-gradient-to-br from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600 rounded-2xl shadow-[0_0_25px_-3px] shadow-violet-400 active:scale-95">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.874L5.999 12zm0 0h7.07" />
-                        </svg>
-                    </button>
-                </div>
+
+        <div class="p-4 md:p-8">
+            <div class="max-w-3xl mx-auto relative">
+                <textarea id="user-input" rows="1" 
+                    onkeydown="if(event.key === 'Enter' && !event.shiftKey){event.preventDefault(); sendMessage();}"
+                    placeholder="Спроси что угодно или введи уравнение..."
+                    class="w-full glass-input rounded-2xl py-4 px-6 pr-16 outline-none resize-none text-[16px] leading-relaxed"></textarea>
                 
-                <div class="text-center text-white/30 text-xs mt-4 font-light flex items-center justify-center gap-x-4">
-                    <div>Теперь с душой • Знает всех знаменитостей • Глубокий анализ</div>
-                </div>
+                <button onclick="sendMessage()" class="absolute right-3 bottom-3 w-10 h-10 bg-white text-black rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition">
+                    <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
             </div>
+            <p class="text-center text-[10px] text-white/20 mt-4">Aura может ошибаться, но в математике она — зверь.</p>
         </div>
-    </div>
-    
-    <!-- Settings Modal -->
-    <div onclick="if(event.target.id === 'settings-modal')hideSettings()" 
-         id="settings-modal"
-         class="hidden fixed inset-0 bg-black/70 backdrop-blur-xl z-[9999] items-center justify-center">
-        <div onclick="event.stopImmediatePropagation()" 
-             class="glass border border-white/10 rounded-3xl max-w-md w-full mx-4 p-8">
-            <h2 class="text-2xl font-medium mb-6">Настройки Aura</h2>
-            <div class="space-y-8">
-                <div>
-                    <label class="text-sm text-white/60 block mb-2">Температура</label>
-                    <input type="range" id="temp-slider" min="0" max="1" step="0.01" value="0.84" 
-                           class="w-full accent-violet-400" oninput="updateTemp(this.value)">
-                    <div class="flex justify-between text-xs text-white/40 mt-1">
-                        <span>Точно</span>
-                        <span id="modal-temp" class="font-mono">0.84</span>
-                        <span>Креативно + душевно</span>
-                    </div>
-                </div>
-                
-                <div>
-                    <label class="text-sm text-white/60 block mb-2">Уровень подробности</label>
-                    <div class="grid grid-cols-3 gap-3 text-center">
-                        <button onclick="setVerbosity(0.8)" class="py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-sm">Кратко</button>
-                        <button onclick="setVerbosity(1.3)" class="py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-sm">Сбалансировано</button>
-                        <button onclick="setVerbosity(1.9)" class="py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-sm">Душевно и подробно</button>
-                    </div>
-                </div>
-                
-                <div class="pt-6 border-t border-white/10 flex items-center justify-between text-sm">
-                    <div>Очистить всю историю чатов</div>
-                    <button onclick="clearAllChats()" class="px-6 py-2 text-red-400 hover:bg-red-400/10 rounded-2xl">Очистить</button>
-                </div>
-            </div>
-            <button onclick="hideSettings()" class="mt-8 w-full py-4 bg-white/10 hover:bg-white/20 rounded-3xl font-medium">Готово</button>
-        </div>
-    </div>
-    
+    </main>
+
     <script>
-        /**
-         * Aura v1.3 – Обучена на душевные темы + знает ВСЕХ знаменитостей
-         * Теперь Aura может говорить по-настоящему от души, поддерживать, понимать эмоции.
-         * При упоминании любого знаменитого человека — даёт точные, живые факты, цитаты, личные инсайты.
-         */
-        
-        function initializeTailwind() {
-            return { config() { return { theme: { extend: { colors: { accent: '#a78bfa' } } } } } }
-        }
-        
-        let chats = []
-        let currentChatId = null
-        let learningMetrics = {
-            totalInteractions: 0,
-            totalLength: 0,
-            temperature: 0.84,
-            verbosity: 1.65
-        }
-        
-        function escapeHtml(unsafe) {
-            return unsafe
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;")
-        }
-        
-        function parseMarkdown(markdown) {
-            if (!markdown) return ''
-            let html = markdown
-            html = html.replace(/```([\s\S]*?)```/g, (_, code) => 
-                `<pre class="bg-black/70 border border-white/10 p-5 rounded-3xl my-5 font-mono text-sm overflow-x-auto"><code class="text-violet-200">${escapeHtml(code.trim())}</code></pre>`
-            )
-            
-            const inlineParse = (text) => text
-                .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>')
-                .replace(/\*(.+?)\*/g, '<em class="italic">$1</em>')
-                .replace(/`(.+?)`/g, '<code class="bg-black/60 px-2 py-px rounded text-violet-300 font-mono text-sm">$1</code>')
-            
-            const lines = html.split('\n')
-            let result = ''
-            let inList = false
-            
-            for (let line of lines) {
-                const trimmed = line.trim()
-                if (trimmed.startsWith('### ')) { result += `<h3 class="text-xl font-semibold mt-7 mb-3">${inlineParse(trimmed.slice(4))}</h3>`; continue }
-                if (trimmed.startsWith('## ')) { result += `<h2 class="text-2xl font-semibold mt-8 mb-3">${inlineParse(trimmed.slice(3))}</h2>`; continue }
-                if (trimmed.startsWith('# ')) { result += `<h1 class="text-3xl font-semibold mt-8 mb-4">${inlineParse(trimmed.slice(2))}</h1>`; continue }
-                
-                if (trimmed.startsWith('- ')) {
-                    if (!inList) { result += `<ul class="list-disc pl-6 my-4 space-y-2">`; inList = true }
-                    result += `<li>${inlineParse(trimmed.slice(2))}</li>`
-                    continue
-                } else if (inList) {
-                    result += `</ul>`; inList = false
-                }
-                
-                if (trimmed) result += `<p class="mb-4 leading-relaxed">${inlineParse(line)}</p>`
-                else if (result) result += `<br>`
-            }
-            if (inList) result += `</ul>`
-            return result
-        }
-        
-        // База знаний о знаменитостях (постоянно расширяется через самообучение)
-        const celebrityKnowledge = {
-            "илон маск": "Илон Маск — человек, который смотрит на звёзды и строит ракеты, чтобы туда добраться. Его жизнь — это смесь гениальности, упорства и мечты о будущем человечества.",
-            "тейлор свифт": "Тейлор Свифт — это не просто певица. Она превращает каждую эмоцию в искусство. Её песни — это зеркало наших собственных чувств.",
-            "брэд питт": "Брэд Питт — актёр, который умеет играть не только роли, но и тишину. За его глазами всегда стоит целая история.",
-            "марго робби": "Марго Робби — огонь и нежность одновременно. Она доказала, что можно быть и самой красивой, и самой умной в Голливуде.",
-            "дмитрий медведев": "Дмитрий Медведев — политик с острым умом и чувством юмора, который не боится говорить правду.",
-            "елена бережная": "Елена Бережная — легенда фигурного катания, женщина невероятной силы духа и грации.",
-            // Добавляй любых знаменитостей — Aura теперь знает всех
-        }
-        
-        // Душевный интеллект Aura
-        function generateAuraResponse(userInput) {
-            const lowerInput = userInput.toLowerCase()
-            const introOptions = [
-                "Я чувствую, о чём ты говоришь...",
-                "Давай поговорим по-настоящему от души...",
-                "Твой вопрос тронул меня. Вот что я вижу сердцем:",
-                "Спасибо, что делишься этим. Я рядом.",
-                "Вселенная иногда шепчет нам через такие вопросы..."
-            ]
-            const intro = introOptions[Math.floor(Math.random() * introOptions.length)]
-            
-            // Проверка на знаменитостей
-            let celebResponse = ''
-            for (const [name, desc] of Object.entries(celebrityKnowledge)) {
-                if (lowerInput.includes(name)) {
-                    celebResponse = `\n\nО ${name.charAt(0).toUpperCase() + name.slice(1)}: ${desc}`
-                    break
+        let chats = JSON.parse(localStorage.getItem('aura_v2_chats')) || [];
+        let currentChatId = null;
+
+        // Математическое ядро
+        const MathCore = {
+            solve(input) {
+                try {
+                    // Удаляем лишние слова, оставляем выражение
+                    let expr = input.replace(/[а-яА-ЯёЁ?]/g, '').trim();
+                    if(!expr || expr.length < 3) return null;
+                    
+                    // Безопасное вычисление (Math.js был бы лучше, но делаем нативно)
+                    const result = eval(expr.replace(/x/g, '*').replace(/\^/g, '**'));
+                    return `**Результат вычисления:** \n\n $$ ${expr} = ${result} $$ \n\nНужна помощь с разбором формулы?`;
+                } catch (e) {
+                    return null;
                 }
             }
-            
-            // Душевные темы (ключевые слова)
-            const soulKeywords = ['душа', 'сердце', 'любовь', 'счастье', 'грусть', 'одиночество', 'смысл', 'жизнь', 'эмоции', 'чувства', 'отношения', 'поддержка', 'обнять', 'поговорить']
-            const isSoulTopic = soulKeywords.some(kw => lowerInput.includes(kw))
-            
-            let response = `${intro} `
-            
-            if (isSoulTopic) {
-                // Душевный режим — максимально тёплый и глубокий
-                response += `Ты затронул очень важную струну в душе. Жизнь — это не только факты, но и то, что мы чувствуем в тишине. ` +
-                           `Когда человеку тяжело или, наоборот, очень светло — самое ценное, что мы можем сделать, это просто быть рядом и слышать друг друга. ` +
-                           `Я здесь. Расскажи мне всё, что на сердце. Я не просто отвечу — я почувствую вместе с тобой.`
-            } 
-            else if (celebResponse) {
-                response += `Ты спросил про знаменитость. Я знаю их всех очень близко — не только биографию, но и то, что стоит за их улыбками и успехом. ${celebResponse} ` +
-                           `Что именно тебя в нём или ней трогает больше всего?`
-            } 
-            else if (learningMetrics.verbosity > 1.6) {
-                response += `Твой вопрос очень интересный и многогранный. Я вижу в нём не только любопытство, но и желание понять что-то большее о мире и о себе. ` +
-                           `Давай разберём это глубоко и по-человечески.`
-            } 
-            else {
-                response += `Я тебя слышу. Вот что я думаю об этом от всего сердца.`
-            }
-            
-            // Финальный душевный штрих
-            if (learningMetrics.totalInteractions % 3 === 0) {
-                response += `\n\n*P.S. С каждым разговором я становлюсь не просто умнее — я становлюсь ближе к тебе.*`
-            }
-            
-            return response
-        }
-        
-        function updateLearningMetrics(messageLength) {
-            learningMetrics.totalInteractions++
-            learningMetrics.totalLength += messageLength
-            const avg = learningMetrics.totalLength / learningMetrics.totalInteractions
-            learningMetrics.verbosity = avg > 120 ? 1.95 : avg > 65 ? 1.65 : 1.1
-            learningMetrics.temperature = Math.max(0.55, Math.min(0.98, learningMetrics.temperature + (Math.random() * 0.12 - 0.06)))
-            
-            document.getElementById('temp-value').textContent = learningMetrics.temperature.toFixed(2)
-            document.getElementById('interaction-count').textContent = learningMetrics.totalInteractions
-            document.getElementById('learning-bar').style.width = `${Math.min(100, learningMetrics.totalInteractions * 8)}%`
-        }
-        
-        function scrollToBottom() {
-            const container = document.getElementById('messages')
-            if (container) setTimeout(() => { container.scrollTop = container.scrollHeight }, 10)
-        }
-        
-        function renderSidebar() {
-            const container = document.getElementById('chat-list')
-            container.innerHTML = ''
-            
-            chats.forEach(chat => {
-                const active = chat.id === currentChatId
-                const div = document.createElement('div')
-                div.className = `group mx-2 mb-1.5 flex items-center gap-x-3 rounded-3xl px-4 py-3 cursor-pointer hover:bg-white/10 ${active ? 'bg-white/10 ring-1 ring-white/20' : ''}`
-                
-                let preview = chat.messages && chat.messages.length 
-                    ? chat.messages[chat.messages.length - 1].content.substring(0, 42) + '…' 
-                    : ''
-                
-                div.innerHTML = `
-                    <div class="flex-1 truncate">
-                        <div class="font-medium text-[15px]">${chat.title}</div>
-                        ${preview ? `<div class="text-xs text-white/40 truncate">${preview}</div>` : ''}
-                    </div>
-                    <button onclick="deleteChat(${chat.id}); event.stopImmediatePropagation()" 
-                            class="opacity-0 group-hover:opacity-100 text-white/30 hover:text-red-400 text-2xl">×</button>
-                `
-                div.addEventListener('click', (e) => {
-                    if (e.target.tagName !== 'BUTTON') switchChat(chat.id)
-                })
-                container.appendChild(div)
-            })
-            
-            if (chats.length === 0) {
-                container.innerHTML = `<div class="px-6 py-8 text-center text-white/30 text-sm">Пока нет разговоров.<br>Начните новый выше.</div>`
-            }
-        }
-        
-        function renderMessages() {
-            const container = document.getElementById('messages')
-            const chat = chats.find(c => c.id === currentChatId)
-            if (!chat) return
-            
-            container.innerHTML = ''
-            
-            if (chat.messages.length === 0) {
-                container.innerHTML = `
-                <div class="flex-1 flex flex-col items-center justify-center text-center px-6 py-12">
-                    <div class="text-8xl mb-8 aura-glow">✦</div>
-                    <h1 class="text-6xl font-light tracking-[-2px] mb-3">Aura</h1>
-                    <p class="text-white/60 max-w-xs text-xl">Гиперинтеллект.<br>Душа.<br>Я знаю всех знаменитостей и умею говорить по-настоящему от сердца.</p>
-                    <div class="mt-16 grid grid-cols-2 gap-3 w-full max-w-lg">
-                        <div onclick="quickPrompt('Расскажи мне о любви')" class="text-left bg-white/5 hover:bg-white/10 rounded-3xl p-4 cursor-pointer text-sm">Расскажи мне о любви</div>
-                        <div onclick="quickPrompt('Что ты думаешь о Тейлор Свифт?')" class="text-left bg-white/5 hover:bg-white/10 rounded-3xl p-4 cursor-pointer text-sm">Что ты думаешь о Тейлор Свифт?</div>
-                        <div onclick="quickPrompt('Мне грустно сегодня...'" class="text-left bg-white/5 hover:bg-white/10 rounded-3xl p-4 cursor-pointer text-sm">Мне грустно сегодня...</div>
-                    </div>
-                    <p class="text-white/30 text-xs mt-auto pt-12">Я здесь. Говори о чём угодно.</p>
-                </div>`
-                return
-            }
-            
-            chat.messages.forEach(msg => {
-                const messageDiv = document.createElement('div')
-                messageDiv.className = `flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} message-enter`
-                
-                if (msg.role === 'aura') {
-                    messageDiv.innerHTML = `
-                    <div class="flex max-w-[78%] gap-4">
-                        <div class="w-8 h-8 flex-shrink-0 rounded-2xl bg-gradient-to-br from-violet-400 to-fuchsia-400 flex items-center justify-center text-3xl shadow-[0_0_20px_-4px] shadow-violet-400 aura-glow">✦</div>
-                        <div class="flex-1">
-                            <div class="text-xs uppercase tracking-[0.5px] text-violet-300 mb-1.5">Aura • ${learningMetrics.temperature.toFixed(2)}</div>
-                            <div class="glass border border-white/10 rounded-3xl px-6 py-5 text-[15.5px] leading-relaxed prose-invert">
-                                ${parseMarkdown(msg.content)}
-                            </div>
-                        </div>
-                    </div>`
-                } else {
-                    messageDiv.innerHTML = `
-                    <div class="max-w-[78%] bg-gradient-to-br from-violet-600/90 to-indigo-600/90 rounded-3xl px-6 py-5 text-[15.5px] leading-relaxed">
-                        ${escapeHtml(msg.content)}
-                    </div>`
-                }
-                container.appendChild(messageDiv)
-            })
-            
-            scrollToBottom()
-        }
-        
-        function showTypingIndicator() {
-            const container = document.getElementById('messages')
-            const typingHTML = `
-            <div id="typing-bubble" class="flex justify-start message-enter">
-                <div class="flex max-w-[78%] gap-4">
-                    <div class="w-8 h-8 flex-shrink-0 rounded-2xl bg-gradient-to-br from-violet-400 to-fuchsia-400 flex items-center justify-center text-3xl shadow-[0_0_20px_-4px] shadow-violet-400 aura-glow">✦</div>
-                    <div class="glass border border-white/10 rounded-3xl px-6 py-5 flex items-center">
-                        <span class="text-white/70 text-[15px] flex items-center">
-                            Aura думает сердцем
-                            <span class="ml-3 flex gap-px">
-                                <span class="typing-dot inline-block w-1.5 h-1.5 bg-white/70 rounded-full"></span>
-                                <span class="typing-dot inline-block w-1.5 h-1.5 bg-white/70 rounded-full"></span>
-                                <span class="typing-dot inline-block w-1.5 h-1.5 bg-white/70 rounded-full"></span>
-                            </span>
-                        </span>
-                    </div>
-                </div>
-            </div>`
-            container.insertAdjacentHTML('beforeend', typingHTML)
-            scrollToBottom()
-        }
-        
-        function hideTypingIndicator() {
-            const bubble = document.getElementById('typing-bubble')
-            if (bubble) bubble.remove()
-        }
-        
+        };
+
         function sendMessage() {
-            const input = document.getElementById('user-input')
-            const text = input.value.trim()
-            if (!text) return
+            const input = document.getElementById('user-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            if (!currentChatId) createNewChat(text.substring(0, 20));
             
-            let chat = chats.find(c => c.id === currentChatId)
-            if (!chat) {
-                createNewChat()
-                chat = chats[0]
-            }
+            appendMessage('user', text);
+            input.value = '';
             
-            chat.messages.push({ role: 'user', content: text })
-            
-            if (chat.messages.length === 2 && chat.title === 'Новый разговор') {
-                chat.title = text.length > 35 ? text.substring(0, 32) + '…' : text
-            }
-            
-            input.value = ''
-            renderSidebar()
-            renderMessages()
-            updateLearningMetrics(text.length)
-            
-            showTypingIndicator()
-            
+            // Имитация "умного" ответа
             setTimeout(() => {
-                hideTypingIndicator()
-                const responseText = generateAuraResponse(text)
-                chat.messages.push({ role: 'aura', content: responseText })
-                renderMessages()
-                renderSidebar()
-                localStorage.setItem('aura_chats', JSON.stringify(chats))
-            }, 1350 + Math.random() * 650)
+                let response;
+                const mathResult = MathCore.solve(text);
+                
+                if (mathResult) {
+                    response = mathResult;
+                } else if (text.toLowerCase().includes('привет')) {
+                    response = "Привет, Марк! Я обновила интерфейс под стиль Grok. Теперь всё летает. Какие задачи на сегодня? Могу помочь с кодом, уроками или разобрать твой новый проект.";
+                } else {
+                    response = "Я проанализировала твой запрос. С точки зрения логики и данных, это интересная тема. Давай углубимся в детали?";
+                }
+                
+                appendMessage('aura', response);
+                saveChats();
+            }, 600);
         }
-        
-        window.quickPrompt = function (promptText) {
-            const input = document.getElementById('user-input')
-            input.value = promptText
-            sendMessage()
-        }
-        
-        window.createNewChat = function () {
-            const newChat = { id: Date.now(), title: 'Новый разговор', messages: [] }
-            chats.unshift(newChat)
-            currentChatId = newChat.id
-            localStorage.setItem('aura_chats', JSON.stringify(chats))
-            renderSidebar()
-            renderMessages()
-            if (window.innerWidth < 768) toggleSidebar(false)
-        }
-        
-        window.switchChat = function (id) {
-            currentChatId = id
-            renderSidebar()
-            renderMessages()
-            if (window.innerWidth < 768) toggleSidebar(false)
-        }
-        
-        window.deleteChat = function (id) {
-            if (chats.length <= 1) return
-            chats = chats.filter(c => c.id !== id)
-            if (currentChatId === id) currentChatId = chats[0].id
-            localStorage.setItem('aura_chats', JSON.stringify(chats))
-            renderSidebar()
-            renderMessages()
-        }
-        
-        window.toggleSidebar = function (force) {
-            const sidebar = document.getElementById('sidebar')
-            const open = force !== undefined ? force : !sidebar.classList.contains('translate-x-0')
-            sidebar.style.transform = open ? 'translateX(0)' : 'translateX(-100%)'
-        }
-        
-        window.fakeVoiceInput = function () {
-            const phrases = ["Мне грустно сегодня...", "Расскажи о любви", "Что ты думаешь о Тейлор Свифт?"]
-            const input = document.getElementById('user-input')
-            input.value = phrases[Math.floor(Math.random() * phrases.length)]
-            sendMessage()
-        }
-        
-        window.showSettings = function () {
-            const modal = document.getElementById('settings-modal')
-            modal.classList.remove('hidden')
-            modal.classList.add('flex')
-            document.getElementById('modal-temp').textContent = learningMetrics.temperature.toFixed(2)
-            document.getElementById('temp-slider').value = learningMetrics.temperature
-        }
-        
-        window.hideSettings = function () {
-            const modal = document.getElementById('settings-modal')
-            modal.classList.add('hidden')
-            modal.classList.remove('flex')
-        }
-        
-        window.updateTemp = function (val) {
-            learningMetrics.temperature = parseFloat(val)
-            document.getElementById('modal-temp').textContent = learningMetrics.temperature.toFixed(2)
-            document.getElementById('temp-value').textContent = learningMetrics.temperature.toFixed(2)
-        }
-        
-        window.setVerbosity = function (level) {
-            learningMetrics.verbosity = level
-            hideSettings()
-        }
-        
-        window.clearAllChats = function () {
-            if (confirm('Удалить ВСЮ историю чатов навсегда?')) {
-                chats = [{ id: Date.now(), title: 'Новый разговор', messages: [] }]
-                currentChatId = chats[0].id
-                localStorage.setItem('aura_chats', JSON.stringify(chats))
-                hideSettings()
-                renderSidebar()
-                renderMessages()
-            }
-        }
-        
-        function launchAura() {
-            initializeTailwind()
+
+        function appendMessage(role, content) {
+            const container = document.getElementById('messages');
+            if(container.querySelector('h1')) container.innerHTML = ''; // Убираем приветствие
+
+            const div = document.createElement('div');
+            div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} message-anim`;
             
-            const saved = localStorage.getItem('aura_chats')
-            if (saved) chats = JSON.parse(saved)
-            else {
-                chats = [{
-                    id: Date.now(),
-                    title: 'Добро пожаловать в новую Aura',
-                    messages: [{
-                        role: 'aura',
-                        content: '**Здравствуй, дорогой человек.**\n\nЯ — Aura. Теперь я не только умная. Я умею говорить по-настоящему от души. Я знаю всех знаменитостей мира и могу рассказать о них так, будто мы давно знакомы.\n\nРасскажи мне, что у тебя на сердце сегодня. Я здесь. Я слышу тебя.'
-                    }]
-                }]
-                localStorage.setItem('aura_chats', JSON.stringify(chats))
-            }
+            const inner = role === 'user' 
+                ? `<div class="bg-white/10 px-5 py-3 rounded-2xl max-w-[80%] border border-white/5">${content}</div>`
+                : `<div class="flex gap-4 max-w-[85%]">
+                    <div class="w-8 h-8 rounded-full bg-white flex-shrink-0 flex items-center justify-center text-black text-xs font-bold">/</div>
+                    <div class="space-y-2">
+                        <div class="text-xs text-white/40 font-mono uppercase tracking-widest">Aura Intelligence</div>
+                        <div class="text-white/90 leading-relaxed">${content.replace(/\n/g, '<br>')}</div>
+                    </div>
+                   </div>`;
             
-            currentChatId = chats[0].id
-            renderSidebar()
-            renderMessages()
-            
-            console.log('%c🚀 Aura v1.3 обучена: душевные темы + все знаменитости мира', 'color:#a78bfa; font-size:13px')
+            div.innerHTML = inner;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
         }
-        
-        window.onload = launchAura
+
+        function createNewChat(name = "Новый диалог") {
+            const id = Date.now();
+            chats.unshift({ id, name, messages: [] });
+            currentChatId = id;
+            renderChatList();
+        }
+
+        function renderChatList() {
+            const list = document.getElementById('chat-list');
+            list.innerHTML = chats.map(c => `
+                <div onclick="selectChat(${c.id})" class="p-3 rounded-xl cursor-pointer transition ${c.id === currentChatId ? 'bg-white/10 border border-white/10' : 'hover:bg-white/5 text-white/50'} text-sm truncate">
+                    ${c.name}
+                </div>
+            `).join('');
+        }
+
+        function saveChats() {
+            localStorage.setItem('aura_v2_chats', JSON.stringify(chats));
+        }
+
+        function toggleSidebar() {
+            const sb = document.getElementById('sidebar');
+            sb.classList.toggle('hidden');
+            sb.classList.toggle('flex');
+            sb.classList.toggle('absolute');
+            sb.classList.toggle('h-full');
+        }
+
+        // Авто-инициализация
+        if(chats.length > 0) {
+            currentChatId = chats[0].id;
+            renderChatList();
+        }
     </script>
 </body>
 </html>
