@@ -2,265 +2,248 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Aura Quantum | Pro Math-X 4.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Aura | Quantum Interface</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-deep: #080808;
-            --bg-obsidian: #0a0a0c;
-            --sidebar-item: rgba(255, 255, 255, 0.04);
+            --bg: #060606;
+            --surface: #0f0f12;
             --border: rgba(255, 255, 255, 0.08);
-            --math-grad: linear-gradient(135deg, #a78bfa 0%, #22d3ee 100%);
-            --accent: #ffffff;
+            --accent: #a78bfa;
         }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: radial-gradient(circle at 50% -20%, #1e1b4b, #000), var(--bg-deep);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
             color: #efefef;
             height: 100vh;
             overflow: hidden;
-            letter-spacing: -0.01em;
-            padding: calc(env(safe-area-inset-top) + 10px) 0 env(safe-area-inset-bottom) 0;
+            margin: 0;
         }
 
-        /* Glassmorphism Grok Style */
-        .glass-obsidian {
-            background: rgba(10, 10, 10, 0.6);
-            backdrop-filter: blur(40px) saturate(210%);
-            -webkit-backdrop-filter: blur(40px) saturate(210%);
-            border: 1px solid var(--border);
+        /* Glassmorphism Sidebar */
+        #sidebar {
+            background: rgba(10, 10, 12, 0.95);
+            backdrop-filter: blur(30px);
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .chat-container::-webkit-scrollbar { width: 3px; }
-        .chat-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-
-        .input-glass {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Мобильный вид сайдбара */
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed;
+                inset: 0;
+                transform: translateX(-100%);
+                width: 100%;
+            }
+            #sidebar.open { transform: translateX(0); }
         }
 
-        .input-glass:focus-within {
-            border-color: rgba(167, 139, 250, 0.5);
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 30px rgba(167, 139, 250, 0.15);
+        /* Группировка сообщений */
+        .message-group {
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        /* Анимация Грок-сообщений */
-        .msg-enter {
-            animation: cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s msgSlide forwards;
-        }
-
-        @keyframes msgSlide {
-            from { opacity: 0; transform: translateY(15px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .math-result-grok {
-            background: linear-gradient(135deg, #a78bfa 0%, #22d3ee 100%);
-            border-radius: 20px;
+        /* Квантовая карточка результата */
+        .grok-card {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(34, 211, 238, 0.1) 100%);
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            border-radius: 24px;
             padding: 24px;
-            box-shadow: 0 10px 40px rgba(167, 139, 250, 0.2);
-            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .math-result-grok h3 {
-            font-family: 'JetBrains Mono', 'SF Mono', monospace;
+        .grok-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #a78bfa 0%, #22d3ee 100%);
+            opacity: 0.05;
+            filter: blur(40px);
         }
 
-        .sidebar-item-grok {
-            transition: all 0.2s ease;
-            color: rgba(255,255,255,0.4);
+        .math-val {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, #fff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-area {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            transition: border-color 0.2s;
+        }
+
+        .input-area:focus-within {
+            border-color: var(--accent);
+        }
+
+        .chat-list-item {
+            transition: all 0.2s;
             border-radius: 12px;
-            border: 1px solid transparent;
         }
 
-        .sidebar-item-grok:hover {
-            color: #fff;
-            background: rgba(255,255,255,0.03);
-            border-color: rgba(255, 255, 255, 0.05);
-        }
+        .chat-list-item:hover { background: rgba(255, 255, 255, 0.05); }
+        .chat-list-item.active { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border); }
 
-        .sidebar-item-grok.active {
-            color: #fff;
-            background: rgba(255,255,255,0.07);
-            border-color: var(--border);
-        }
+        /* Кастомный скролл */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
 </head>
-<body class="flex flex-col md:flex-row h-screen p-0 md:p-4 gap-4">
+<body class="flex">
 
-    <aside id="sidebar" class="hidden md:flex flex-col w-80 bg-[#060608] border-r border-white/5 md:glass-obsidian md:rounded-[32px] p-6 z-50 transition-transform duration-300 ease-in-out">
-        <div class="p-4">
-            <div class="flex items-center gap-3 mb-10 px-2">
-                <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-black font-bold text-xl shadow-lg shadow-white/10">/</div>
-                <h1 class="text-xl font-semibold tracking-tight">Aura <span class="text-violet-400">Quantum</span></h1>
+    <aside id="sidebar" class="flex flex-col">
+        <div class="p-6 border-b border-white/5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-black font-bold">A</div>
+                <span class="font-semibold tracking-tight">История Aura</span>
             </div>
-            
-            <button onclick="createNewChat()" class="w-full py-4 px-6 input-glass rounded-xl text-xs font-medium hover:bg-white/5 transition flex items-center justify-between group mb-8">
-                <span>Начать новый диалог</span>
-                <span class="opacity-40 group-hover:opacity-100 transition">Ctrl+N</span>
+            <button onclick="toggleSidebar()" class="md:hidden p-2 hover:bg-white/5 rounded-full text-white/40">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             </button>
-
-            <nav id="chat-list" class="flex-1 overflow-y-auto chat-container space-y-1.5 pr-2">
-                </nav>
         </div>
 
-        <div class="mt-auto p-4 border-t border-white/5">
-            <div class="flex items-center gap-3 px-2">
-                <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                <span class="text-[10px] uppercase tracking-[2px] text-white/40">Neural Math Engine v4.0</span>
+        <div class="p-4 flex-1 overflow-y-auto" id="chat-list">
             </div>
+
+        <div class="p-6 border-t border-white/5">
+            <button onclick="createNewChat()" class="w-full py-3 bg-white text-black font-medium rounded-xl hover:bg-gray-200 transition">
+                + Новый чат
+            </button>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col glass-obsidian md:rounded-[32px] overflow-hidden relative">
-        <header class="md:hidden flex items-center justify-between p-4 border-b border-white/5">
-            <button onclick="toggleSidebar()" class="p-2 text-white/40 hover:text-white transition">☰</button>
-            <div class="flex items-center gap-2">
-                <div class="w-6 h-6 bg-white rounded-lg flex items-center justify-center text-black font-bold">A</div>
-                <span class="font-bold">Aura</span>
-            </div>
-            <button onclick="createNewChat()" class="p-2 text-white/40 hover:text-white transition">+</button>
+    <main class="flex-1 flex flex-col relative h-full">
+        <header class="h-16 flex items-center justify-between px-6 border-b border-white/5 bg-black/20 backdrop-blur-md z-10">
+            <button onclick="toggleSidebar()" class="p-2 hover:bg-white/5 rounded-lg">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <div class="text-[10px] uppercase tracking-widest text-white/30 font-bold">Quantum Math Engine</div>
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-violet-500 to-cyan-500"></div>
         </header>
 
-        <div id="messages" class="flex-1 overflow-y-auto chat-container max-w-[850px] mx-auto w-full py-10 px-4 md:px-0 scroll-smooth">
-            <div id="welcome" class="h-full flex flex-col items-center justify-center text-center space-y-6 opacity-30">
-                <div class="w-16 h-16 border border-white/10 rounded-2xl flex items-center justify-center text-3xl font-light">∫</div>
-                <h2 class="text-3xl font-light tracking-widest uppercase">Система готова</h2>
-                <p class="text-base mt-2 max-w-sm">Я обучена сложной математике и квантовым вычислениям. Введите задачу.</p>
+        <div id="messages" class="flex-1 overflow-y-auto p-6 md:p-10 space-y-12">
+            <div id="welcome" class="h-full flex flex-col items-center justify-center opacity-20 text-center">
+                <div class="text-6xl font-light mb-4">∫</div>
+                <p class="text-lg tracking-widest uppercase">Готова к вычислениям</p>
             </div>
         </div>
 
-        <div class="p-6 md:p-10">
-            <div class="max-w-4xl mx-auto relative group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-violet-600 to-transparent rounded-[26px] blur opacity-10 group-focus-within:opacity-20 transition"></div>
-                <div class="relative flex items-end gap-3">
-                    <textarea id="user-input" rows="1" 
-                        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
-                        onkeydown="if(event.key === 'Enter' && !event.shiftKey){event.preventDefault(); sendMessage();}"
-                        placeholder="Запросить расчет..."
-                        class="flex-1 input-glass rounded-2xl py-4 px-6 outline-none resize-none max-h-48 text-lg"></textarea>
-                    
-                    <button onclick="sendMessage()" class="w-14 h-14 bg-white text-black rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition flex-shrink-0 group">
-                        <svg viewBox="0 0 24 24" width="24" height="24" class="text-black group-hover:text-violet-600 transition" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </button>
-                </div>
+        <div class="p-6 md:p-10 bg-gradient-to-t from-black to-transparent">
+            <div class="max-w-3xl mx-auto input-area p-2 flex items-center gap-3">
+                <textarea id="user-input" rows="1" 
+                    oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+                    onkeydown="if(event.key === 'Enter' && !event.shiftKey){event.preventDefault(); sendMessage();}"
+                    placeholder="Введите выражение..."
+                    class="flex-1 bg-transparent border-none outline-none px-4 py-3 text-lg resize-none"></textarea>
+                <button onclick="sendMessage()" class="w-12 h-12 bg-white text-black rounded-lg flex items-center justify-center hover:scale-95 transition">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
             </div>
         </div>
     </main>
 
     <script>
-        let chats = JSON.parse(localStorage.getItem('aura_grok_math_v1')) || [];
+        let chats = JSON.parse(localStorage.getItem('aura_v5')) || [];
         let currentChatId = null;
 
-        // Продвинутый математический движок
-        const Engine = {
-            evaluate(input) {
-                try {
-                    // Регулярка для поиска математических выражений (цифры, знаки, скобки, функции)
-                    const cleanExpr = input.match(/[0-9.+\-*/^()|sqrt|sin|cos|tan|pi|e ]+/g);
-                    if (!cleanExpr) return null;
-                    
-                    const expr = cleanExpr.join('').trim();
-                    if (expr.length < 2) return null;
-
-                    const safeEval = expr.toLowerCase()
-                        .replace(/sqrt/g, 'Math.sqrt')
-                        .replace(/sin/g, 'Math.sin')
-                        .replace(/cos/g, 'Math.cos')
-                        .replace(/pi/g, 'Math.PI')
-                        .replace(/\^/g, '**');
-
-                    const res = Function('"use strict"; return (' + safeEval + ')')();
-                    if (isNaN(res) || res === Infinity) return null;
-
-                    return {
-                        val: Number.isInteger(res) ? res.toLocaleString('ru-RU') : res.toLocaleString('ru-RU', { maximumFractionDigits: 6 }),
-                        raw: expr.replace(/Math\./g, '')
-                    };
-                } catch (e) { return null; }
-            }
-        };
-
-        function sendMessage() {
-            const input = document.getElementById('user-input');
-            const text = input.value.trim();
-            if (!text) return;
-
-            if (!currentChatId) createNewChat();
-
-            const chat = chats.find(c => c.id === currentChatId);
-            if (chat.messages.length === 0) chat.name = text.substring(0, 30);
-            
-            chat.messages.push({ role: 'user', content: text });
-            appendMessage('user', text);
-            input.value = '';
-            input.style.height = '';
-
-            // Aura Logic
-            setTimeout(() => {
-                const math = Engine.evaluate(text);
-                let response = math 
-                    ? `<div class="math-result-grok msg-enter"><p class="text-[10px] text-white/40 mb-3 uppercase tracking-widest">Квантовый Результат</p><h3 class="text-4xl font-light tracking-tight">Value: ${math.val}</h3><p class="text-[10px] text-white/20 mt-5italic">Expression: ${math.raw}</p></div>`
-                    : `Запрос обработан. Система классифицировала ввод как текстовую информацию. Требуется ли аналитический разбор данных?`;
-                
-                chat.messages.push({ role: 'aura', content: response });
-                appendMessage('aura', response);
-                save();
-            }, 600);
-        }
-
-        function appendMessage(role, content) {
-            const box = document.getElementById('messages');
-            const welcome = document.getElementById('welcome');
-            if(welcome) welcome.remove();
-
-            const div = document.createElement('div');
-            div.className = `w-full ${role === 'user' ? 'flex justify-end' : ''} msg-enter`;
-            
-            div.innerHTML = role === 'user' 
-                ? `<div class="bg-white/10 border border-white/5 px-6 py-4 rounded-[24px] max-w-[85%]">${content}</div>`
-                : `<div class="max-w-[100%]">${content}</div>`;
-            
-            box.appendChild(div);
-            box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
-        }
-
-        function save() {
-            localStorage.setItem('aura_grok_math_v1', JSON.stringify(chats));
-            renderList();
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
         }
 
         function createNewChat() {
             const id = Date.now();
             chats.unshift({ id, name: 'Новая сессия', messages: [] });
             currentChatId = id;
-            document.getElementById('messages').innerHTML = '';
-            save();
-            if (window.innerWidth < 768) toggleSidebar(false);
+            renderMessages();
+            renderList();
+            localStorage.setItem('aura_v5', JSON.stringify(chats));
+            if (window.innerWidth < 768) toggleSidebar();
         }
 
-        function deleteChat(id, event) {
-            event.stopPropagation();
-            chats = chats.filter(c => c.id !== id);
-            if (currentChatId === id) {
-                currentChatId = chats.length > 0 ? chats[0].id : null;
+        function sendMessage() {
+            const input = document.getElementById('user-input');
+            const val = input.value.trim();
+            if (!val) return;
+
+            if (!currentChatId) createNewChat();
+
+            const chat = chats.find(c => c.id === currentChatId);
+            if (chat.messages.length === 0) chat.name = val.substring(0, 25);
+
+            chat.messages.push({ role: 'user', content: val });
+            input.value = '';
+            input.style.height = '';
+            
+            renderMessages();
+
+            // Эмуляция ответа
+            setTimeout(() => {
+                let mathRes = null;
+                try {
+                    const clean = val.replace(/[^-()\d/*+.^sqrt]/g, '');
+                    mathRes = eval(clean.replace(/\^/g, '**'));
+                } catch(e) {}
+
+                const response = mathRes !== null 
+                    ? `<div class="grok-card">
+                        <div class="text-[10px] uppercase tracking-[3px] text-white/40 mb-4">Analytical Result</div>
+                        <div class="math-val">${mathRes.toLocaleString()}</div>
+                        <div class="mt-6 font-mono text-[10px] text-white/20">Expression: ${val}</div>
+                       </div>`
+                    : `Запрос принят. Требуется ли математический анализ этого текста?`;
+
+                chat.messages.push({ role: 'aura', content: response });
                 renderMessages();
+                localStorage.setItem('aura_v5', JSON.stringify(chats));
+                renderList();
+            }, 500);
+        }
+
+        function renderMessages() {
+            const box = document.getElementById('messages');
+            const chat = chats.find(c => c.id === currentChatId);
+            
+            if (!chat || chat.messages.length === 0) {
+                box.innerHTML = `<div id="welcome" class="h-full flex flex-col items-center justify-center opacity-20 text-center">
+                    <div class="text-6xl font-light mb-4">∫</div>
+                    <p class="text-lg tracking-widest uppercase">Готова к вычислениям</p>
+                </div>`;
+                return;
             }
-            save();
+
+            box.innerHTML = chat.messages.map(m => `
+                <div class="message-group ${m.role === 'user' ? 'items-end' : 'items-start'}">
+                    <div class="text-[10px] uppercase tracking-widest text-white/20 mb-1">${m.role === 'user' ? 'Вы' : 'Aura Core'}</div>
+                    ${m.role === 'user' 
+                        ? `<div class="bg-white/5 border border-white/10 px-6 py-4 rounded-2xl text-lg">${m.content}</div>`
+                        : `<div class="w-full">${m.content}</div>`
+                    }
+                </div>
+            `).join('');
+            box.scrollTop = box.scrollHeight;
         }
 
         function renderList() {
             const list = document.getElementById('chat-list');
             list.innerHTML = chats.map(c => `
-                <div onclick="selectChat(${c.id})" class="sidebar-item-grok group flex items-center justify-between px-4 py-3 cursor-pointer ${c.id === currentChatId ? 'active' : ''}">
-                    <span class="text-sm truncate pr-4">${c.name}</span>
-                    <button onclick="deleteChat(${c.id}, event)" class="opacity-0 group-hover:opacity-100 p-1.5 hover:text-red-400 transition">✕</button>
+                <div onclick="selectChat(${c.id})" class="chat-list-item p-4 mb-2 cursor-pointer flex justify-between items-center ${c.id === currentChatId ? 'active' : ''}">
+                    <span class="truncate text-sm pr-4">${c.name}</span>
+                    <button onclick="deleteChat(${c.id}, event)" class="opacity-30 hover:opacity-100 text-xs">✕</button>
                 </div>
             `).join('');
         }
@@ -269,44 +252,19 @@
             currentChatId = id;
             renderMessages();
             renderList();
-            if (window.innerWidth < 768) toggleSidebar(false);
+            if (window.innerWidth < 768) toggleSidebar();
         }
 
-        function toggleSidebar(force) {
-            const sb = document.getElementById('sidebar');
-            const open = force !== undefined ? force : !sb.classList.contains('hidden');
-            
-            sb.classList.toggle('hidden', open);
-            sb.classList.toggle('flex', !open);
-            if (!open) {
-                sb.classList.add('fixed', 'inset-0', 'w-full', 'z-50');
-            } else {
-                sb.classList.remove('fixed', 'inset-0', 'w-full', 'z-50');
-            }
-        }
-
-        function renderMessages() {
-            const box = document.getElementById('messages');
-            box.innerHTML = '';
-            const chat = chats.find(c => c.id === currentChatId);
-            if (chat && chat.messages.length > 0) {
-                chat.messages.forEach(m => appendMessage(m.role, m.content));
-            } else {
-                box.innerHTML = `
-                <div id="welcome" class="h-full flex flex-col items-center justify-center text-center space-y-6 opacity-30">
-                    <div class="w-16 h-16 border border-white/10 rounded-2xl flex items-center justify-center text-3xl font-light">∫</div>
-                    <h2 class="text-3xl font-light tracking-widest uppercase">Система готова</h2>
-                    <p class="text-base mt-2 max-w-sm">Я обучена сложной математике и квантовым вычислениям. Введите задачу.</p>
-                </div>`;
-            }
-        }
-
-        // Init
-        if (chats.length > 0) {
-            currentChatId = chats[0].id;
-            renderMessages();
+        function deleteChat(id, e) {
+            e.stopPropagation();
+            chats = chats.filter(c => c.id !== id);
+            if (currentChatId === id) currentChatId = null;
             renderList();
+            renderMessages();
+            localStorage.setItem('aura_v5', JSON.stringify(chats));
         }
+
+        if (chats.length > 0) selectChat(chats[0].id);
     </script>
 </body>
 </html>
