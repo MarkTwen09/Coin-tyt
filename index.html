@@ -21,9 +21,11 @@
             height: 100vh;
             overflow: hidden;
             margin: 0;
+            /* Учет челки и нижней полосы iPhone */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* Glassmorphism Sidebar */
         #sidebar {
             background: rgba(10, 10, 12, 0.95);
             backdrop-filter: blur(30px);
@@ -32,7 +34,6 @@
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Мобильный вид сайдбара */
         @media (max-width: 768px) {
             #sidebar {
                 position: fixed;
@@ -43,7 +44,6 @@
             #sidebar.open { transform: translateX(0); }
         }
 
-        /* Группировка сообщений */
         .message-group {
             max-width: 800px;
             margin: 0 auto 2rem;
@@ -52,7 +52,6 @@
             gap: 12px;
         }
 
-        /* Квантовая карточка результата */
         .grok-card {
             background: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(34, 211, 238, 0.1) 100%);
             border: 1px solid rgba(167, 139, 250, 0.3);
@@ -60,15 +59,6 @@
             padding: 24px;
             position: relative;
             overflow: hidden;
-        }
-
-        .grok-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, #a78bfa 0%, #22d3ee 100%);
-            opacity: 0.05;
-            filter: blur(40px);
         }
 
         .math-val {
@@ -80,28 +70,32 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* ПОДНЯТАЯ ОБЛАСТЬ ВВОДА */
+        .input-container {
+            padding: 20px 24px 40px 24px; /* Увеличен нижний отступ специально для iPhone */
+            background: linear-gradient(to t, var(--bg) 80%, transparent);
+        }
+
         .input-area {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            transition: border-color 0.2s;
+            border-radius: 22px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .input-area:focus-within {
             border-color: var(--accent);
+            transform: translateY(-2px);
         }
 
-        .chat-list-item {
-            transition: all 0.2s;
-            border-radius: 12px;
-        }
-
-        .chat-list-item:hover { background: rgba(255, 255, 255, 0.05); }
         .chat-list-item.active { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border); }
-
-        /* Кастомный скролл */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        
+        .aura-text-bubble {
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.05rem;
+        }
     </style>
 </head>
 <body class="flex">
@@ -110,20 +104,15 @@
         <div class="p-6 border-b border-white/5 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-black font-bold">A</div>
-                <span class="font-semibold tracking-tight">История Aura</span>
+                <span class="font-semibold tracking-tight">Aura History</span>
             </div>
             <button onclick="toggleSidebar()" class="md:hidden p-2 hover:bg-white/5 rounded-full text-white/40">
                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             </button>
         </div>
-
-        <div class="p-4 flex-1 overflow-y-auto" id="chat-list">
-            </div>
-
+        <div class="p-4 flex-1 overflow-y-auto" id="chat-list"></div>
         <div class="p-6 border-t border-white/5">
-            <button onclick="createNewChat()" class="w-full py-3 bg-white text-black font-medium rounded-xl hover:bg-gray-200 transition">
-                + Новый чат
-            </button>
+            <button onclick="createNewChat()" class="w-full py-3 bg-white text-black font-medium rounded-xl hover:bg-gray-200 transition">+ Новый чат</button>
         </div>
     </aside>
 
@@ -132,23 +121,23 @@
             <button onclick="toggleSidebar()" class="p-2 hover:bg-white/5 rounded-lg">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
-            <div class="text-[10px] uppercase tracking-widest text-white/30 font-bold">Quantum Math Engine</div>
+            <div class="text-[10px] uppercase tracking-widest text-white/30 font-bold">Aura Quantum Intelligence</div>
             <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-violet-500 to-cyan-500"></div>
         </header>
 
         <div id="messages" class="flex-1 overflow-y-auto p-6 md:p-10 space-y-12">
             <div id="welcome" class="h-full flex flex-col items-center justify-center opacity-20 text-center">
                 <div class="text-6xl font-light mb-4">∫</div>
-                <p class="text-lg tracking-widest uppercase">Готова к вычислениям</p>
+                <p class="text-lg tracking-widest uppercase">Система готова</p>
             </div>
         </div>
 
-        <div class="p-6 md:p-10 bg-gradient-to-t from-black to-transparent">
+        <div class="input-container">
             <div class="max-w-3xl mx-auto input-area p-2 flex items-center gap-3">
                 <textarea id="user-input" rows="1" 
                     oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
                     onkeydown="if(event.key === 'Enter' && !event.shiftKey){event.preventDefault(); sendMessage();}"
-                    placeholder="Введите выражение..."
+                    placeholder="Напиши что-нибудь..."
                     class="flex-1 bg-transparent border-none outline-none px-4 py-3 text-lg resize-none"></textarea>
                 <button onclick="sendMessage()" class="w-12 h-12 bg-white text-black rounded-lg flex items-center justify-center hover:scale-95 transition">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -161,9 +150,68 @@
         let chats = JSON.parse(localStorage.getItem('aura_v5')) || [];
         let currentChatId = null;
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-        }
+        // МЕГА-ПРОМПТ (ЛОГИКА ОТВЕТОВ)
+        const AuraBrain = {
+            responses: {
+                greet: [
+                    "Привет! Я Aura. Готова решать задачи или просто поболтать. Что на уме?",
+                    "Здравствуй! Квантовое ядро запущено. Чем могу помочь?",
+                    "Приветствую! На связи твой ИИ-ассистент. Жду твоих указаний.",
+                    "Хай! Я в сети. Нужно что-то посчитать или обсудить?"
+                ],
+                status: [
+                    "У меня всё отлично, системы работают на пике мощности! А у тебя?",
+                    "Статус: Стабилен. Энергопотребление в норме. Готова к работе!",
+                    "Дела идут отлично, когда есть интересные задачи. Как твои успехи?",
+                    "Я всего лишь код, но чувствую себя на все 100%. Как твой день?"
+                ],
+                help: [
+                    "Я мастер в математике (пиши примеры типа 2+2*2) и могу просто общаться.",
+                    "Могу помочь с расчетами, аналитикой или просто составить компанию в чате.",
+                    "Просто введи математический пример или задай вопрос — я постараюсь ответить."
+                ],
+                unknown: [
+                    "Интересная мысль. Расскажешь подробнее?",
+                    "Принято. Если это задача — дай чуть больше данных.",
+                    "Я зафиксировала твое сообщение. Могу я чем-то еще помочь?",
+                    "Хм, звучит любопытно. Продолжай!"
+                ]
+            },
+
+            getResponse(input) {
+                const text = input.toLowerCase().trim();
+                
+                if (/привет|здравствуй|хай|ку|добрый день/.test(text)) 
+                    return this.rand(this.responses.greet);
+                
+                if (/как дела|как ты|как жизнь|все ок/.test(text)) 
+                    return this.rand(this.responses.status);
+
+                if (/что умеешь|помоги|хелп|реши|функции/.test(text)) 
+                    return this.rand(this.responses.help);
+
+                return this.tryMath(text);
+            },
+
+            rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; },
+
+            tryMath(val) {
+                try {
+                    const clean = val.replace(/[^-()\d/*+.^sqrt]/g, '');
+                    if (clean.length < 2) throw "Not math";
+                    const res = eval(clean.replace(/\^/g, '**'));
+                    return `<div class="grok-card">
+                        <div class="text-[10px] uppercase tracking-[3px] text-white/40 mb-4">Analytical Result</div>
+                        <div class="math-val">${res.toLocaleString()}</div>
+                        <div class="mt-6 font-mono text-[10px] text-white/20">Expression: ${val}</div>
+                       </div>`;
+                } catch(e) {
+                    return this.rand(this.responses.unknown);
+                }
+            }
+        };
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 
         function createNewChat() {
             const id = Date.now();
@@ -171,7 +219,7 @@
             currentChatId = id;
             renderMessages();
             renderList();
-            localStorage.setItem('aura_v5', JSON.stringify(chats));
+            save();
             if (window.innerWidth < 768) toggleSidebar();
         }
 
@@ -181,37 +229,21 @@
             if (!val) return;
 
             if (!currentChatId) createNewChat();
-
             const chat = chats.find(c => c.id === currentChatId);
             if (chat.messages.length === 0) chat.name = val.substring(0, 25);
 
             chat.messages.push({ role: 'user', content: val });
             input.value = '';
             input.style.height = '';
-            
             renderMessages();
 
-            // Эмуляция ответа
             setTimeout(() => {
-                let mathRes = null;
-                try {
-                    const clean = val.replace(/[^-()\d/*+.^sqrt]/g, '');
-                    mathRes = eval(clean.replace(/\^/g, '**'));
-                } catch(e) {}
-
-                const response = mathRes !== null 
-                    ? `<div class="grok-card">
-                        <div class="text-[10px] uppercase tracking-[3px] text-white/40 mb-4">Analytical Result</div>
-                        <div class="math-val">${mathRes.toLocaleString()}</div>
-                        <div class="mt-6 font-mono text-[10px] text-white/20">Expression: ${val}</div>
-                       </div>`
-                    : `Запрос принят. Требуется ли математический анализ этого текста?`;
-
+                const response = AuraBrain.getResponse(val);
                 chat.messages.push({ role: 'aura', content: response });
                 renderMessages();
-                localStorage.setItem('aura_v5', JSON.stringify(chats));
+                save();
                 renderList();
-            }, 500);
+            }, 600);
         }
 
         function renderMessages() {
@@ -231,12 +263,14 @@
                     <div class="text-[10px] uppercase tracking-widest text-white/20 mb-1">${m.role === 'user' ? 'Вы' : 'Aura Core'}</div>
                     ${m.role === 'user' 
                         ? `<div class="bg-white/5 border border-white/10 px-6 py-4 rounded-2xl text-lg">${m.content}</div>`
-                        : `<div class="w-full">${m.content}</div>`
+                        : `<div class="w-full aura-text-bubble">${m.content}</div>`
                     }
                 </div>
             `).join('');
             box.scrollTop = box.scrollHeight;
         }
+
+        function save() { localStorage.setItem('aura_v5', JSON.stringify(chats)); }
 
         function renderList() {
             const list = document.getElementById('chat-list');
@@ -259,9 +293,9 @@
             e.stopPropagation();
             chats = chats.filter(c => c.id !== id);
             if (currentChatId === id) currentChatId = null;
+            save();
             renderList();
             renderMessages();
-            localStorage.setItem('aura_v5', JSON.stringify(chats));
         }
 
         if (chats.length > 0) selectChat(chats[0].id);
