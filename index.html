@@ -2,159 +2,176 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura | Elite Intelligence</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Aura X-Grok | Quantum Math</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #050505;
-            --sidebar: #0a0a0a;
-            --card: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
-            --accent: #ffffff;
+            --bg-deep: #020202;
+            --bg-grad-1: #090915;
+            --bg-grad-2: #020202;
+            --accent-violet: #a78bfa;
+            --accent-cyan: #22d3ee;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.03);
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: #efefef;
+            background: radial-gradient(circle at top right, var(--bg-grad-1) 0%, var(--bg-grad-2) 60%), var(--bg-deep);
+            color: #ececec;
             height: 100vh;
             overflow: hidden;
             letter-spacing: -0.01em;
+            padding: calc(env(safe-area-inset-top) + 10px) 0 env(safe-area-inset-bottom) 0;
         }
 
-        /* Glassmorphism 2.0 - Тот самый стиль Gemini */
-        .glass-premium {
-            background: var(--card);
-            backdrop-filter: blur(25px) saturate(150%);
-            border: 1px solid var(--border);
+        /* Glassmorphism Grok Style */
+        .glass-block {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(160%);
+            -webkit-backdrop-filter: blur(25px) saturate(160%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+        }
+
+        /* Свечение на границах */
+        .glow-border {
+            border: 1px solid transparent;
+            background-image: linear-gradient(var(--bg-grad-2), var(--bg-grad-2)), linear-gradient(135deg, var(--accent-violet) 0%, var(--accent-cyan) 100%);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
         }
 
         .chat-container::-webkit-scrollbar { width: 3px; }
-        .chat-container::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+        .chat-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 
-        .input-box {
+        .input-glass {
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border);
+            border: 1px solid var(--glass-border);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .input-box:focus-within {
-            border-color: rgba(255, 255, 255, 0.2);
+        .input-glass:focus-within {
+            border-color: rgba(167, 139, 250, 0.5);
             background: rgba(255, 255, 255, 0.04);
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            box-shadow: 0 0 30px rgba(167, 139, 250, 0.15);
         }
 
+        /* Анимация сообщений */
         .msg-enter {
             animation: cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s msgSlide forwards;
         }
 
         @keyframes msgSlide {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(15px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
+        /* Математический блок в стиле Grok */
+        .math-block {
+            padding: 24px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', 'SF Mono', monospace;
+        }
+
+        /* Кнопки в сайдбаре */
         .sidebar-link {
             transition: all 0.2s ease;
             color: rgba(255,255,255,0.4);
+            border-radius: 12px;
         }
 
         .sidebar-link:hover {
             color: #fff;
-            background: rgba(255,255,255,0.03);
+            background: rgba(255,255,255,0.04);
         }
 
-        .math-block {
-            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
-            border-radius: 16px;
-            padding: 20px;
-            border-left: 1px solid rgba(255,255,255,0.1);
-            font-family: 'SF Mono', 'JetBrains Mono', monospace;
+        .sidebar-link.active {
+            color: #fff;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
 <body class="flex h-screen">
 
-    <aside class="w-72 bg-[#080808] border-r border-white/5 flex flex-col hidden md:flex">
+    <aside id="sidebar" class="w-80 bg-[#060608] border-r border-white/5 flex flex-col hidden md:flex transition-transform duration-300 ease-in-out">
         <div class="p-8">
             <div class="flex items-center gap-3 mb-10">
-                <div class="w-6 h-6 bg-white rounded-sm"></div>
-                <span class="text-sm font-semibold tracking-widest uppercase">Aura AI</span>
+                <div class="w-7 h-7 bg-white rounded-lg"></div>
+                <span class="text-sm font-semibold tracking-widest uppercase">Aura X-Grok</span>
             </div>
             
-            <button onclick="createNewChat()" class="w-full py-3 px-4 glass-premium rounded-xl text-xs font-medium hover:bg-white/5 transition mb-8">
-                + Новая сессия
+            <button onclick="createNewChat()" class="w-full py-4 px-6 glass-block rounded-xl text-xs font-medium hover:bg-white/5 transition flex items-center justify-between group mb-8">
+                <span>+ Новая сессия</span>
+                <span class="opacity-40 group-hover:opacity-100 transition">Ctrl+N</span>
             </button>
 
-            <nav id="chat-list" class="space-y-1">
+            <nav id="chat-list" class="flex-1 overflow-y-auto chat-container space-y-1 pr-2">
                 </nav>
         </div>
 
-        <div class="mt-auto p-8 border-t border-white/5">
-            <div class="flex items-center gap-3 opacity-40 hover:opacity-100 transition cursor-pointer">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-gray-600 to-gray-400"></div>
+        <div class="mt-auto p-8 border-t border-white/5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-gray-700 to-gray-500 flex items-center justify-center text-black text-xs font-black">MP</div>
                 <div class="text-[11px]">
                     <p class="font-medium text-white">Mark P.</p>
-                    <p class="uppercase tracking-tighter">Premium Access</p>
+                    <p class="uppercase tracking-widest text-white/40">Premium Access</p>
                 </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <span class="text-[10px] text-white/30 uppercase tracking-[0.2em]">Live</span>
             </div>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col relative bg-black">
-        <header class="h-16 flex items-center justify-between px-10 border-b border-white/5">
-            <div class="flex items-center gap-4">
-                <span class="text-[10px] text-white/30 uppercase tracking-[0.2em]">Neural Engine v4.2</span>
-                <div class="h-1 w-1 bg-white/20 rounded-full"></div>
-                <span class="text-[10px] text-white/30 uppercase tracking-[0.2em]">Math-X Stable</span>
+    <main class="flex-1 flex flex-col relative bg-black p-4 md:p-8">
+        
+        <header class="h-16 flex md:hidden items-center justify-between px-6 border border-white/5 glass-block mb-4 z-40">
+            <button onclick="toggleSidebar()" class="p-2 text-white/40 hover:text-white transition">☰</button>
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 bg-white rounded-lg flex items-center justify-center text-black font-bold">A</div>
+                <span class="font-semibold text-white">Aura</span>
             </div>
-            <div class="flex gap-6">
-                <button class="text-[11px] text-white/40 hover:text-white transition uppercase tracking-widest">Settings</button>
-                <button class="text-[11px] text-white/40 hover:text-white transition uppercase tracking-widest">Logs</button>
-            </div>
+            <button onclick="createNewChat()" class="p-2 text-white/40 hover:text-white transition">+</button>
         </header>
 
-        <div id="messages" class="flex-1 overflow-y-auto chat-container py-10">
-            <div id="welcome" class="h-full flex flex-col items-center justify-center text-center opacity-20">
-                <div class="w-16 h-16 border border-white/20 rounded-2xl mb-6 flex items-center justify-center text-3xl font-light">α</div>
-                <h2 class="text-2xl font-light tracking-widest uppercase">Система готова</h2>
-                <p class="text-sm mt-2">Введите параметры задачи или запроса</p>
+        <div id="messages" class="flex-1 overflow-y-auto chat-container max-w-[850px] mx-auto w-full space-y-8 py-10 px-4 md:px-0 scroll-smooth">
+            <div id="welcome" class="h-full flex flex-col items-center justify-center text-center opacity-30">
+                <div class="w-16 h-16 border border-white/10 rounded-2xl mb-8 flex items-center justify-center text-4xl font-light">α</div>
+                <h2 class="text-3xl font-light tracking-widest uppercase">Готова к расчету</h2>
+                <p class="text-base mt-4 max-w-sm">Я обучена сложной математике и квантовым вычислениям. Введите задачу.</p>
             </div>
         </div>
 
-        <div class="p-10">
-            <div class="max-w-4xl mx-auto">
-                <div class="input-box rounded-2xl p-2 flex flex-col gap-2 relative">
-                    <textarea id="user-input" 
-                              rows="1"
-                              oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
-                              onkeydown="if(event.key === 'Enter' && !event.shiftKey){event.preventDefault(); sendMessage();}"
-                              placeholder="Запросить расчет..."
-                              class="bg-transparent outline-none resize-none w-full py-4 px-6 text-[15px] placeholder:text-white/20"></textarea>
-                    
-                    <div class="flex items-center justify-between px-4 pb-2">
-                        <div class="flex gap-4">
-                            <button class="text-white/20 hover:text-white transition">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-                            </button>
-                        </div>
-                        <button onclick="sendMessage()" class="w-10 h-10 bg-white text-black rounded-xl flex items-center justify-center hover:bg-gray-200 transition">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        </button>
-                    </div>
-                </div>
+        <div class="w-full max-w-[850px] mx-auto p-4 md:p-0 mt-8 mb-4">
+            <div class="input-glass rounded-2xl p-2 flex items-end gap-3 relative">
+                <textarea id="user-input" 
+                          rows="1"
+                          oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+                          onkeydown="if(event.key === 'Enter' && !event.shiftKey){event.preventDefault(); sendMessage();}"
+                          placeholder="Запросить расчет..."
+                          class="bg-transparent outline-none resize-none flex-1 py-4 px-6 text-[16px] placeholder:text-white/20 leading-relaxed"></textarea>
+                
+                <button onclick="sendMessage()" class="w-14 h-14 rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition flex-shrink-0 group">
+                    <svg viewBox="0 0 24 24" width="24" height="24" class="text-white/40 group-hover:text-violet-400 transition" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
             </div>
         </div>
     </main>
 
     <script>
-        let chats = JSON.parse(localStorage.getItem('aura_premium_v1')) || [];
+        let chats = JSON.parse(localStorage.getItem('aura_grok_v1')) || [];
         let currentChatId = null;
 
-        const MathProcessor = {
-            process(input) {
+        // Продвинутая математика
+        const Engine = {
+            evaluate(input) {
                 try {
+                    // Регулярка для поиска математических выражений (цифры, знаки, скобки, функции)
                     const cleanExpr = input.match(/[0-9.+\-*/^()|sqrt|sin|cos|tan|pi|e ]+/g);
                     if (!cleanExpr) return null;
                     
@@ -169,7 +186,13 @@
                         .replace(/\^/g, '**');
 
                     const res = Function('"use strict"; return (' + safeEval + ')')();
-                    return isNaN(res) ? null : { original: expr, result: res.toLocaleString('ru-RU') };
+                    
+                    // Форматирование результата
+                    const formattedRes = isNaN(res) || res === Infinity 
+                        ? 'Ошибка вычисления' 
+                        : Number.isInteger(res) ? res.toLocaleString('ru-RU') : res.toLocaleString('ru-RU', { maximumFractionDigits: 6 });
+
+                    return { raw: expr, val: formattedRes };
                 } catch (e) { return null; }
             }
         };
@@ -188,11 +211,12 @@
             el.value = '';
             el.style.height = '';
 
+            // Aura Logic
             setTimeout(() => {
-                const math = MathProcessor.process(val);
-                const response = math 
-                    ? `<div class="math-block"><p class="text-[10px] text-white/30 mb-2 uppercase tracking-widest">Analytical Result</p><p class="text-2xl font-light">Value: ${math.result}</p><p class="text-[10px] text-white/20 mt-4 italic">Expression: ${math.original}</p></div>`
-                    : `Запрос обработан. Система классифицировала ввод как текстовую информацию. Требуется ли математический анализ данных?`;
+                const math = Engine.evaluate(val);
+                let response = math 
+                    ? `<div class="math-block glass-block glow-border msg-enter"><p class="text-[10px] text-white/40 mb-3 uppercase tracking-widest">Квантовый Результат</p><p class="text-4xl font-light tracking-tight">Value: ${math.val}</p><p class="text-[10px] text-white/20 mt-5italic">Expression: ${math.raw}</p></div>`
+                    : `Запрос обработан. Модель классифицировала ввод как текстовую информацию. Требуется ли аналитический разбор данных?`;
                 
                 chat.messages.push({ role: 'user', content: val });
                 chat.messages.push({ role: 'aura', content: response });
@@ -207,51 +231,93 @@
             if(welcome) welcome.remove();
 
             const div = document.createElement('div');
-            div.className = `px-10 py-8 msg-enter ${role === 'aura' ? 'bg-white/[0.02]' : ''}`;
+            div.className = `w-full ${role === 'user' ? 'flex justify-end' : ''} msg-enter`;
             
-            div.innerHTML = `
-                <div class="max-w-4xl mx-auto flex gap-10">
-                    <div class="w-5 h-5 mt-1 rounded-sm border ${role === 'user' ? 'border-white/20' : 'bg-white border-white'} flex-shrink-0"></div>
-                    <div class="text-[15px] leading-[1.6] text-white/80 flex-1">
-                        ${content}
-                    </div>
-                </div>
-            `;
+            div.innerHTML = role === 'user' 
+                ? `<div class="p-6 md:px-10 glass-block border-white/5 max-w-[85%] text-[16px] leading-relaxed text-white">${content}</div>`
+                : `<div class="max-w-[100%]">${content}</div>`;
+            
             box.appendChild(div);
             box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
         }
 
         function createNewChat() {
             const id = Date.now();
-            chats.unshift({ id, name: 'New Session', messages: [] });
+            chats.unshift({ id, name: 'Новая сессия', messages: [] });
             currentChatId = id;
             document.getElementById('messages').innerHTML = '';
+            renderList();
+            save();
+            if (window.innerWidth < 768) toggleSidebar(false);
+        }
+
+        function deleteChat(id, event) {
+            event.stopPropagation();
+            chats = chats.filter(c => c.id !== id);
+            if (currentChatId === id) {
+                currentChatId = chats.length > 0 ? chats[0].id : null;
+                renderMessages();
+            }
             save();
         }
 
+        function renderMessages() {
+            const box = document.getElementById('messages');
+            box.innerHTML = '';
+            const chat = chats.find(c => c.id === currentChatId);
+            if (chat && chat.messages.length > 0) {
+                chat.messages.forEach(m => addMessage(m.role, m.content));
+            } else {
+                box.innerHTML = `
+                <div id="welcome" class="h-full flex flex-col items-center justify-center text-center opacity-30">
+                    <div class="w-16 h-16 border border-white/10 rounded-2xl mb-8 flex items-center justify-center text-4xl font-light">α</div>
+                    <h2 class="text-3xl font-light tracking-widest uppercase">Готова к расчету</h2>
+                    <p class="text-base mt-4 max-w-sm">Я обучена сложной математике и квантовым вычислениям. Введите задачу.</p>
+                </div>`;
+            }
+        }
+
         function save() {
-            localStorage.setItem('aura_premium_v1', JSON.stringify(chats));
+            localStorage.setItem('aura_grok_v1', JSON.stringify(chats));
             renderList();
         }
 
         function renderList() {
             const list = document.getElementById('chat-list');
             list.innerHTML = chats.map(c => `
-                <div onclick="switchChat(${c.id})" class="sidebar-link px-4 py-2.5 rounded-lg cursor-pointer text-[12px] flex justify-between items-center ${c.id === currentChatId ? 'bg-white/5 !text-white' : ''}">
-                    <span class="truncate">${c.name}</span>
+                <div onclick="selectChat(${c.id})" class="sidebar-link group flex items-center justify-between px-4 py-3 cursor-pointer ${c.id === currentChatId ? 'active' : ''}">
+                    <span class="text-sm truncate pr-4">${c.name}</span>
+                    <button onclick="deleteChat(${c.id}, event)" class="opacity-0 group-hover:opacity-100 p-1.5 hover:text-red-400 transition">✕</button>
                 </div>
             `).join('');
         }
 
-        function switchChat(id) {
+        function selectChat(id) {
             currentChatId = id;
-            const chat = chats.find(c => c.id === id);
-            document.getElementById('messages').innerHTML = '';
-            chat.messages.forEach(m => addMessage(m.role, m.content));
+            renderMessages();
             renderList();
+            if (window.innerWidth < 768) toggleSidebar(false);
         }
 
-        if(chats.length > 0) switchChat(chats[0].id);
+        function toggleSidebar(force) {
+            const sb = document.getElementById('sidebar');
+            const open = force !== undefined ? force : !sb.classList.contains('hidden');
+            
+            sb.classList.toggle('hidden', open);
+            sb.classList.toggle('flex', !open);
+            if (!open) {
+                sb.classList.add('fixed', 'inset-0', 'w-full', 'z-50');
+            } else {
+                sb.classList.remove('fixed', 'inset-0', 'w-full', 'z-50');
+            }
+        }
+
+        // Init
+        if (chats.length > 0) {
+            currentChatId = chats[0].id;
+            renderMessages();
+            renderList();
+        }
     </script>
 </body>
 </html>
