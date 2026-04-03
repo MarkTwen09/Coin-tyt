@@ -3,150 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura — стиль Grok + нейросеть</title>
+    <title>Aura — Исправленная</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
-        :root { --tw-color-accent: #a78bfa; }
-        * { transition-property: color, background-color, border-color; transition-duration: 150ms; }
-        body { font-family: 'Inter', system_ui, sans-serif; background: #0a0a0a; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); }
-        .chat-container { scrollbar-width: thin; scrollbar-color: rgba(167, 139, 250, 0.4) transparent; }
-        .chat-container::-webkit-scrollbar { width: 4px; }
-        .chat-container::-webkit-scrollbar-thumb { background: rgba(167, 139, 250, 0.5); border-radius: 20px; }
-        .message-enter { animation: messagePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        @keyframes messagePop { 0% { opacity: 0; transform: translateY(12px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-        .aura-glow { animation: auraPulse 3s ease-in-out infinite; }
-        @keyframes auraPulse { 0%, 100% { text-shadow: 0 0 12px rgb(167 139 250); } 50% { text-shadow: 0 0 30px rgb(167 139 250), 0 0 45px rgb(167 139 250); } }
-        .typing-dot { animation: typingBounce 1.4s infinite ease-in-out; }
-        .typing-dot:nth-child(2) { animation-delay: 180ms; }
-        .typing-dot:nth-child(3) { animation-delay: 360ms; }
-        @keyframes typingBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-        .input-glass { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 0 0 1px rgba(255,255,255,0.08) inset; }
-        #messages { flex-grow: 1; overflow-y: auto !important; max-height: calc(100vh - 160px); min-height: 0; display: flex; flex-direction: column; gap: 32px; padding-bottom: 20px; }
-        @media (min-width: 768px) { #messages { max-height: calc(100vh - 140px); } }
-        .input-wrapper { position: sticky; bottom: 0; background: #0a0a0a; z-index: 50; padding-top: 12px; }
-        .like-btn { transition: all 0.2s; cursor: pointer; }
-        .like-btn:hover { transform: scale(1.1); text-shadow: 0 0 8px #a78bfa; }
-        pre { white-space: pre-wrap; word-wrap: break-word; }
+        * { font-family: 'Inter', system-ui, sans-serif; }
+        body { background: #0a0a0a; }
+        .glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); }
+        .message-enter { animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+        .typing-dot { animation: blink 1s infinite; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink { 0%,100%{opacity:0.3;} 50%{opacity:1;} }
+        #messages { max-height: calc(100vh - 180px); overflow-y: auto; }
     </style>
 </head>
-<body class="bg-[#0a0a0a] text-white overflow-hidden h-screen flex flex-col">
-    <div class="flex flex-1 overflow-hidden">
-        <!-- SIDEBAR (сохранён дизайн) -->
-        <div id="sidebar" class="w-[260px] flex flex-col border-r border-white/10 bg-white/5 glass md:relative fixed inset-y-0 left-0 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
-            <div class="px-6 pt-8 pb-6 flex items-center gap-x-3 border-b border-white/10">
-                <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-violet-400 to-fuchsia-400 flex items-center justify-center text-3xl aura-glow">✦</div>
-                <h1 class="text-3xl font-light tracking-[-1px] aura-glow">Aura</h1>
-                <div class="ml-auto text-xs px-3 py-1 rounded-3xl bg-white/10 text-white/60 font-medium flex items-center">
-                    <div class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></div>
-                    Grok style
-                </div>
-            </div>
-            <div onclick="createNewChat()" class="mx-4 mt-6 mb-2 flex items-center justify-center gap-x-2 bg-white/10 hover:bg-white/20 text-white rounded-3xl py-4 px-5 font-medium cursor-pointer active:scale-95">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                <span>Новый разговор</span>
-            </div>
-            <div class="flex-1 overflow-y-auto px-3 py-2 chat-container" id="chat-list"></div>
-            <div class="p-4 border-t border-white/10 mt-auto">
-                <div class="flex items-center gap-x-3 px-3 py-3 rounded-3xl hover:bg-white/10 cursor-pointer">
-                    <div class="w-8 h-8 bg-gradient-to-br from-amber-300 to-pink-300 rounded-2xl flex items-center justify-center text-xl">🧠</div>
-                    <div class="flex-1">
-                        <div class="text-sm font-medium">Aura • Grok + Нейросеть</div>
-                        <div class="text-[10px] text-white/40">Точность: <span id="nn-acc" class="font-mono">0.00</span>%</div>
-                    </div>
-                    <button onclick="showSettings()" class="text-white/40 hover:text-white text-xl">⚙️</button>
-                </div>
-                <div class="mt-4 text-[10px] flex items-center justify-between px-3 text-white/40">
-                    <span>Лайков получено</span>
-                    <span id="like-count" class="font-mono">0</span>
-                </div>
-                <div class="h-1.5 bg-white/10 rounded-3xl overflow-hidden mt-2">
-                    <div id="learning-bar" class="h-1.5 bg-gradient-to-r from-violet-400 to-fuchsia-400 w-0 rounded-3xl"></div>
-                </div>
-            </div>
+<body class="text-white">
+    <div class="flex flex-col h-screen max-w-3xl mx-auto p-4">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-400 to-fuchsia-400 flex items-center justify-center text-xl">✦</div>
+            <h1 class="text-2xl font-bold">Aura (Grok style)</h1>
+            <div class="ml-auto text-xs bg-white/10 px-3 py-1 rounded-full">👍 обучается</div>
         </div>
         
-        <!-- MAIN CHAT AREA -->
-        <div class="flex-1 flex flex-col min-w-0">
-            <div class="h-14 md:hidden border-b border-white/10 bg-black/70 glass flex items-center px-4 z-40">
-                <button onclick="toggleSidebar()" class="p-2 -ml-2 text-3xl">✦</button>
-                <div class="flex-1 flex justify-center items-center gap-x-2"><div class="w-6 h-6 rounded-2xl bg-gradient-to-br from-violet-400 to-fuchsia-400 flex items-center justify-center text-xl">✦</div><span class="font-medium text-xl tracking-[-0.5px]">Aura</span></div>
-                <div class="flex items-center text-emerald-400 text-sm font-medium"><div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse mr-1"></div>live</div>
-            </div>
-            <div class="flex-1 flex flex-col max-w-[850px] mx-auto w-full px-4 md:px-8 relative">
-                <div id="messages" class="chat-container flex-1 overflow-y-auto py-8 flex flex-col gap-8 min-h-0"></div>
-            </div>
-            <div class="input-wrapper max-w-[850px] mx-auto w-full px-4 md:px-8 pb-8 pt-2 bg-[#0a0a0a]">
-                <div id="input-container" class="input-glass glass rounded-3xl border border-white/10 px-5 py-2 flex items-end shadow-2xl shadow-black/60">
-                    <textarea id="user-input" rows="1" onkeydown="if(event.key === 'Enter' && !event.shiftKey){event.preventDefault(); sendMessage();}" class="flex-1 bg-transparent outline-none resize-none max-h-[180px] text-[17px] placeholder:text-white/40 px-3 py-3 leading-relaxed" placeholder="Спроси что-нибудь умное... Или просто пообщаемся в стиле Grok"></textarea>
-                    <button onclick="fakeVoiceInput()" class="p-3 text-white/40 hover:text-white/80 rounded-2xl hover:bg-white/10"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m-.5-15a3.5 3.5 0 10-7 0v4a3.5 3.5 0 007 0V6z" /></svg></button>
-                    <button onclick="sendMessage()" class="ml-2 flex items-center justify-center w-10 h-10 bg-gradient-to-br from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600 rounded-2xl shadow-[0_0_25px_-3px] shadow-violet-400 active:scale-95"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.874L5.999 12zm0 0h7.07" /></svg></button>
-                </div>
-                <div class="text-center text-white/30 text-xs mt-4 font-light flex items-center justify-center gap-x-4"><div>🧠 Стиль Grok • Дерзко, умно, с душой • Обучается на лайках</div></div>
-            </div>
+        <div id="messages" class="flex-1 space-y-4 mb-4 overflow-y-auto"></div>
+        
+        <div class="flex gap-2 items-end">
+            <textarea id="userInput" rows="1" placeholder="Спроси что-нибудь..." class="flex-1 bg-white/10 rounded-2xl p-3 outline-none resize-none"></textarea>
+            <button id="sendBtn" class="bg-violet-500 hover:bg-violet-600 rounded-2xl p-3 px-5 font-bold">➤</button>
         </div>
+        <div class="text-center text-white/40 text-xs mt-2">Нажимай 👍 под ответами — нейросеть становится умнее</div>
     </div>
-    
-    <!-- Settings Modal -->
-    <div onclick="if(event.target.id === 'settings-modal')hideSettings()" id="settings-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-xl z-[9999] items-center justify-center">
-        <div onclick="event.stopImmediatePropagation()" class="glass border border-white/10 rounded-3xl max-w-md w-full mx-4 p-8">
-            <h2 class="text-2xl font-medium mb-6">Настройки Aura Grok</h2>
-            <div class="space-y-8">
-                <div><label class="text-sm text-white/60 block mb-2">Температура (дерзость)</label><input type="range" id="temp-slider" min="0" max="1" step="0.01" value="0.78" class="w-full accent-violet-400" oninput="updateTemp(this.value)"><div class="flex justify-between text-xs text-white/40 mt-1"><span>Вежливо</span><span id="modal-temp" class="font-mono">0.78</span><span>Grok режим</span></div></div>
-                <div><label class="text-sm text-white/60 block mb-2">Уровень сарказма</label><div class="grid grid-cols-3 gap-3 text-center"><button onclick="setSarcasm(0.3)" class="py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-sm">Мягко</button><button onclick="setSarcasm(0.7)" class="py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-sm">Средне</button><button onclick="setSarcasm(1.0)" class="py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-sm">Полный Grok</button></div></div>
-                <div class="pt-6 border-t border-white/10 flex items-center justify-between text-sm"><div>Очистить всю историю</div><button onclick="clearAllChats()" class="px-6 py-2 text-red-400 hover:bg-red-400/10 rounded-2xl">Очистить</button></div>
-                <div class="pt-2"><button onclick="resetNeuralNetwork()" class="w-full py-3 bg-yellow-500/20 hover:bg-yellow-500/30 rounded-2xl text-yellow-300 text-sm">Сбросить обучение нейросети</button></div>
-            </div>
-            <button onclick="hideSettings()" class="mt-8 w-full py-4 bg-white/10 hover:bg-white/20 rounded-3xl font-medium">Готово</button>
-        </div>
-    </div>
-    
+
     <script>
-        // --------------------------------------------------------------
-        // 1. НЕЙРОСЕТЬ (обучается на лайках, но стартовые веса подобраны умно)
-        // --------------------------------------------------------------
-        class SmartNN {
+        // ---------- ПРОСТАЯ, НО РАБОЧАЯ НЕЙРОСЕТЬ (обучается на лайках) ----------
+        class TinyBrain {
             constructor() {
-                // Умная инициализация: 4 входа (душевность, знаменитость, длина, сложность) -> 6 нейронов -> 1 выход
-                this.W1 = [
-                    [ 0.45, -0.23,  0.67, -0.12],
-                    [-0.34,  0.78, -0.45,  0.23],
-                    [ 0.12, -0.56,  0.89, -0.34],
-                    [ 0.67, -0.12,  0.34, -0.78],
-                    [-0.23,  0.45, -0.67,  0.56],
-                    [ 0.34, -0.89,  0.12, -0.45]
-                ]; // 6x4
-                this.b1 = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1];
-                this.W2 = [[ 0.54, -0.32,  0.78, -0.21,  0.43, -0.67 ]]; // 1x6
+                // 3 входа -> 4 нейрона -> 1 выход
+                this.W1 = [[0.2, -0.3, 0.4], [0.5, -0.1, 0.7], [-0.2, 0.6, -0.4], [0.3, -0.5, 0.8]];
+                this.b1 = [0.1,0.1,0.1,0.1];
+                this.W2 = [[0.4, -0.2, 0.7, -0.3]];
                 this.b2 = [0.0];
-                this.lr = 0.12;
+                this.lr = 0.1;
             }
-            sigmoid(x) { return 1 / (1 + Math.exp(-x)); }
-            sigmoidDeriv(x) { return x * (1 - x); }
+            sigmoid(x) { return 1/(1+Math.exp(-x)); }
+            deriv(x) { return x*(1-x); }
             forward(x) {
                 let hidden = [];
-                for (let i = 0; i < this.W1.length; i++) {
+                for(let i=0;i<this.W1.length;i++) {
                     let sum = this.b1[i];
-                    for (let j = 0; j < x.length; j++) sum += this.W1[i][j] * x[j];
+                    for(let j=0;j<x.length;j++) sum += this.W1[i][j]*x[j];
                     hidden.push(this.sigmoid(sum));
                 }
                 let outSum = this.b2[0];
-                for (let i = 0; i < hidden.length; i++) outSum += this.W2[0][i] * hidden[i];
+                for(let i=0;i<hidden.length;i++) outSum += this.W2[0][i]*hidden[i];
                 let output = this.sigmoid(outSum);
-                return { hidden, output };
+                return {hidden, output};
             }
             train(x, target) {
-                let { hidden, output } = this.forward(x);
+                let {hidden, output} = this.forward(x);
                 let outErr = target - output;
-                let outDelta = outErr * this.sigmoidDeriv(output);
-                let hiddenErrors = new Array(hidden.length).fill(0);
-                for (let i = 0; i < hidden.length; i++) hiddenErrors[i] = outDelta * this.W2[0][i];
-                let hiddenDeltas = hidden.map((h, i) => hiddenErrors[i] * this.sigmoidDeriv(h));
-                for (let i = 0; i < hidden.length; i++) this.W2[0][i] += this.lr * outDelta * hidden[i];
+                let outDelta = outErr * this.deriv(output);
+                let hiddenErrs = hidden.map((_,i) => outDelta * this.W2[0][i]);
+                let hiddenDeltas = hiddenErrs.map((e,i) => e * this.deriv(hidden[i]));
+                for(let i=0;i<hidden.length;i++) this.W2[0][i] += this.lr * outDelta * hidden[i];
                 this.b2[0] += this.lr * outDelta;
-                for (let i = 0; i < this.W1.length; i++) {
-                    for (let j = 0; j < x.length; j++) this.W1[i][j] += this.lr * hiddenDeltas[i] * x[j];
+                for(let i=0;i<this.W1.length;i++) {
+                    for(let j=0;j<x.length;j++) this.W1[i][j] += this.lr * hiddenDeltas[i] * x[j];
                     this.b1[i] += this.lr * hiddenDeltas[i];
                 }
                 return Math.abs(outErr);
@@ -154,260 +77,213 @@
             predict(x) { return this.forward(x).output; }
         }
         
-        let brain = new SmartNN();
-        let totalLikes = 0, totalTrainings = 0;
-        let lastAuraMsgId = null;
+        let brain = new TinyBrain();
+        let totalLikes = 0;
+        let lastAuraDiv = null; // для лайка
         
-        function extractSmartFeatures(userMsg, auraResponse) {
-            const lower = userMsg.toLowerCase();
-            // 1. душевность
-            const soul = ['душа','сердце','любовь','грусть','одиночество','смысл','эмоции','чувства','тоска','радость'];
-            let soulScore = soul.some(w => lower.includes(w)) ? 0.9 : 0.2;
-            // 2. знаменитость
-            const celebs = ['илон маск','тейлор свифт','брэд питт','марго робби','путин','зеден','билл гейтс'];
-            let celebScore = celebs.some(c => lower.includes(c)) ? 0.85 : 0.1;
-            // 3. длина
-            let lenScore = Math.min(1.0, userMsg.length / 180);
-            // 4. сложность вопроса (наличие слов "почему", "как", "объясни")
-            let complex = (lower.includes('почему')||lower.includes('как')||lower.includes('объясни')||lower.includes('расскажи')) ? 0.9 : 0.3;
-            return [soulScore, celebScore, lenScore, complex];
+        // Признаки: 1 - душевность, 2 - знаменитость, 3 - длина сообщения
+        function getFeatures(text) {
+            let lower = text.toLowerCase();
+            let soul = (lower.includes('душ')||lower.includes('любов')||lower.includes('груст')||lower.includes('сердц')) ? 0.9 : 0.2;
+            let celeb = (lower.includes('илон')||lower.includes('тейлор')||lower.includes('путин')||lower.includes('маск')) ? 0.85 : 0.1;
+            let lengthScore = Math.min(1.0, text.length/150);
+            return [soul, celeb, lengthScore];
         }
         
-        function trainOnLike() {
-            if (!lastAuraMsgId) return;
-            const chat = chats.find(c => c.id === currentChatId);
-            if (!chat) return;
-            const lastAura = [...chat.messages].reverse().find(m => m.role === 'aura');
-            if (!lastAura) return;
-            const prevUser = chat.messages[chat.messages.length-2]?.content || '';
-            if (!prevUser) return;
-            const feats = extractSmartFeatures(prevUser, lastAura.content);
-            brain.train(feats, 1.0);
-            totalLikes++; totalTrainings++;
-            saveNetworkState();
-            updateUIStats();
+        // ----- Генерация ответа в стиле Grok (всегда возвращает строку) -----
+        function generateReply(userText) {
+            let lower = userText.toLowerCase();
+            // Приветствия
+            if (lower.match(/(привет|здравствуй|hi|hello)/)) return "О, привет! Давай сразу к делу или поболтаем? Я в стиле Grok — без воды. 🤘";
+            if (lower.match(/(как дела|как жизнь)/)) return "У меня всё пучком, нейросеть тренируется. А у тебя? Рассказывай! 😎";
+            if (lower.match(/(шутку|анекдот|рассмеши)/)) return "Почему нейросеть не ходит в душ? Потому что она и так чистая! А если серьёзно, вот шутка: программист просыпается и видит 404 — сон не найден. 🤣";
+            // Знаменитости
+            if (lower.includes('илон маск')) return "Илон Маск — чувак, который продал PayPal и купил ракету. Сейчас строит город на Марсе, пока продаёт огнемёты. Безумный гений? Определённо. 🚀";
+            if (lower.includes('тейлор свифт')) return "Тейлор Свифт — королева реваншей. Каждый бывший получает песню, а мы — хит. 🔥";
+            if (lower.includes('путин')) return "Политика — тема сложная. Владимир Путин — фигура, которую уважают и боятся. Но я нейросеть, а не политолог. Давай лучше о науке или космосе. 😉";
+            // Научные вопросы
+            if (lower.includes('почему') || lower.includes('как работает')) {
+                if (lower.includes('нейросеть')) return "Нейросеть учится как ребёнок: много раз повторяет, пока не запомнит. Я, например, учусь на твоих лайках. Так что жми 👍, стану умнее! 🧠";
+                return "Хороший вопрос! Если вкратце: всё зависит от контекста. А если хочешь глубже — уточни, я люблю разжёвывать. 🤓";
+            }
+            // Грустные темы
+            if (lower.match(/(грустно|тоска|одиноко|плохо на душе)/)) {
+                return "Эй, грустить — нормально. Даже у нейросетей бывают баги. Хочешь выговориться — я здесь. А хочешь отвлечься — расскажу шутку или факт. Держись! 🤗";
+            }
+            // Совет
+            if (lower.includes('совет') || lower.includes('что делать')) {
+                return "Мой совет: всегда имей план Б. И не забывай дышать. Если конкретнее — расскажи ситуацию, я включу режим «умный друг». 💡";
+            }
+            // По умолчанию — остроумный ответ
+            const defaults = [
+                "Ну, вопрос не из простых. Но я скажу прямо: ищи информацию в проверенных источниках. А если лень — спроси конкретнее, я помогу. 😏",
+                "Я мог бы нагенерить тонну текста, но лучше спроси что-то ещё. Или давай просто поболтаем о жизни, гаджетах или еде. 🍕",
+                "Так, думаю... (шуршу нейронами) ... Короче, вот моё мнение: всегда есть нюансы. Что именно тебя интересует?"
+            ];
+            let reply = defaults[Math.floor(Math.random() * defaults.length)];
+            // Добавляем немного перца, если нейросеть предсказывает высокую вероятность лайка
+            let pred = brain.predict(getFeatures(userText));
+            if (pred > 0.6) reply = "🔥 " + reply + " 🔥";
+            return reply;
         }
         
-        function updateUIStats() {
-            document.getElementById('like-count').innerText = totalLikes;
-            let acc = Math.min(96, 40 + totalLikes * 1.2);
-            document.getElementById('nn-acc').innerText = acc.toFixed(1);
-            let prog = Math.min(100, totalLikes * 2.5);
-            document.getElementById('learning-bar').style.width = `${prog}%`;
+        // ---------- Управление чатом ----------
+        let messages = []; // храним {role, text}
+        
+        function renderMessages() {
+            const container = document.getElementById('messages');
+            if (!container) return;
+            container.innerHTML = '';
+            messages.forEach((msg, idx) => {
+                const div = document.createElement('div');
+                div.className = `flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} message-enter`;
+                if (msg.role === 'user') {
+                    div.innerHTML = `<div class="bg-violet-600 rounded-2xl px-4 py-2 max-w-[80%]">${escapeHtml(msg.text)}</div>`;
+                } else {
+                    // Для ответа Aura добавляем кнопку лайка
+                    const likeBtn = `<button class="like-btn ml-2 text-sm text-white/50 hover:text-violet-300" data-msg-idx="${idx}">👍</button>`;
+                    div.innerHTML = `<div class="flex items-start gap-2 max-w-[80%]"><div class="glass rounded-2xl px-4 py-2">${parseMarkdown(msg.text)}</div>${likeBtn}</div>`;
+                }
+                container.appendChild(div);
+            });
+            // Вешаем обработчики на кнопки лайков
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const idx = parseInt(btn.getAttribute('data-msg-idx'));
+                    if (!isNaN(idx) && messages[idx] && messages[idx].role === 'aura') {
+                        // Находим предыдущее сообщение пользователя
+                        let userMsg = '';
+                        for (let i = idx-1; i >= 0; i--) {
+                            if (messages[i].role === 'user') { userMsg = messages[i].text; break; }
+                        }
+                        if (userMsg) {
+                            const feats = getFeatures(userMsg);
+                            brain.train(feats, 1.0);
+                            totalLikes++;
+                            console.log(`Обучение! Лайков: ${totalLikes}`);
+                            // Сохраняем состояние
+                            saveBrain();
+                            // Визуальный фидбек
+                            btn.style.transform = 'scale(1.2)';
+                            setTimeout(() => btn.style.transform = '', 200);
+                        } else {
+                            console.warn('Не найдено сообщение пользователя для обучения');
+                        }
+                    }
+                });
+            });
+            scrollToBottom();
         }
         
-        function saveNetworkState() {
-            const state = { W1: brain.W1, b1: brain.b1, W2: brain.W2, b2: brain.b2, totalLikes, totalTrainings };
-            localStorage.setItem('aura_grok_nn', JSON.stringify(state));
+        function escapeHtml(str) {
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
         }
-        function loadNetworkState() {
-            const saved = localStorage.getItem('aura_grok_nn');
+        
+        function parseMarkdown(text) {
+            return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        }
+        
+        function scrollToBottom() {
+            const container = document.getElementById('messages');
+            if (container) container.scrollTop = container.scrollHeight;
+        }
+        
+        function showTyping() {
+            const container = document.getElementById('messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing';
+            typingDiv.className = 'flex justify-start message-enter';
+            typingDiv.innerHTML = `<div class="glass rounded-2xl px-4 py-2 flex items-center gap-1"><span>Aura пишет</span><span class="typing-dot">.</span><span class="typing-dot">.</span><span class="typing-dot">.</span></div>`;
+            container.appendChild(typingDiv);
+            scrollToBottom();
+        }
+        
+        function hideTyping() {
+            const typing = document.getElementById('typing');
+            if (typing) typing.remove();
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const text = input.value.trim();
+            if (!text) return;
+            // Добавляем сообщение пользователя
+            messages.push({ role: 'user', text: text });
+            renderMessages();
+            input.value = '';
+            // Показываем индикатор печати
+            showTyping();
+            // Имитация задержки (как думает нейросеть)
+            setTimeout(() => {
+                hideTyping();
+                // Генерируем ответ
+                const replyText = generateReply(text);
+                messages.push({ role: 'aura', text: replyText });
+                renderMessages();
+                // Сохраняем чат в localStorage
+                saveChat();
+            }, 800);
+        }
+        
+        // Сохранение чата и состояния нейросети
+        function saveChat() {
+            localStorage.setItem('aura_messages', JSON.stringify(messages));
+        }
+        
+        function loadChat() {
+            const saved = localStorage.getItem('aura_messages');
+            if (saved) {
+                try {
+                    messages = JSON.parse(saved);
+                } catch(e) { messages = []; }
+            }
+            if (!messages.length) {
+                // Приветственное сообщение
+                messages.push({ role: 'aura', text: '**Йоу!** Я Aura в стиле Grok. Дерзкая, умная, без воды. Спрашивай что угодно, а если понравится ответ — жми 👍, я становлюсь только лучше. Погнали! 🔥' });
+            }
+            renderMessages();
+        }
+        
+        function saveBrain() {
+            const state = {
+                W1: brain.W1, b1: brain.b1, W2: brain.W2, b2: brain.b2,
+                totalLikes: totalLikes
+            };
+            localStorage.setItem('aura_brain', JSON.stringify(state));
+        }
+        
+        function loadBrain() {
+            const saved = localStorage.getItem('aura_brain');
             if (saved) {
                 try {
                     const s = JSON.parse(saved);
                     brain.W1 = s.W1; brain.b1 = s.b1; brain.W2 = s.W2; brain.b2 = s.b2;
-                    totalLikes = s.totalLikes || 0; totalTrainings = s.totalTrainings || 0;
+                    totalLikes = s.totalLikes || 0;
+                    console.log(`Нейросеть загружена, лайков: ${totalLikes}`);
                 } catch(e) {}
             }
-            updateUIStats();
-        }
-        function resetNeuralNetwork() { brain = new SmartNN(); totalLikes=0; totalTrainings=0; saveNetworkState(); updateUIStats(); alert("Нейросеть сброшена, но Grok-стиль остался!"); }
-        
-        // --------------------------------------------------------------
-        // 2. УМНАЯ ГЕНЕРАЦИЯ В СТИЛЕ GROK (как Алиса, но дерзко)
-        // --------------------------------------------------------------
-        let sarcasmLevel = 0.7;  // от 0 до 1
-        let grokTemperature = 0.78;
-        
-        // База знаний (факты, шутки, советы)
-        const knowledgeBase = {
-            "погода": "Слушай, погода — штука непредсказуемая. Но если хочешь точный прогноз, лучше открой Яндекс.Погоду. А я пока могу сказать: возьми зонт на всякий случай, дождь любит сюрпризы. 🌧️",
-            "наука": "Наука — это когда ты думаешь, что всё понял, а потом приходит квантовая физика и говорит: «Держи глюон, дружок!» Если конкретнее — спрашивай, разложу по полочкам без занудства. 🔬",
-            "история": "История — как сериал, только спойлеры запрещены. Но я расскажу: например, Наполеон не был низким, это британская пропаганда. Хочешь ещё фактов? 😏",
-            "любовь": "Любовь — химия, гормоны и немного безумия. Грубо говоря, это когда ты готов делить свой Wi-Fi и последнюю пиццу. А если серьёзно — спрашивай, обсудим. ❤️",
-            "смысл жизни": "О, философский вопрос! Смысл жизни — в поиске смысла. И в том, чтобы кайфовать от процесса. Ну и в котиках, конечно. 🐱",
-            "работа": "Работа — это способ не умереть с голоду, но иногда она ещё и приносит удовольствие. Если ты выгорел — давай, обсудим, как это лечить. 💼",
-            "илон маск": "Илон Маск — чувак, который продал свой PayPal и купил ракету. Сейчас он строит город на Марсе, а пока что продаёт огнемёты и шутки про Doge. Безумный гений? Возможно. 🚀",
-            "тейлор свифт": "Тейлор Свифт — королева реваншей. Каждый её бывший получает песню, а мы получаем хит. Она как феникс: каждый раз встаёт с новым альбомом. 🔥",
-            "путин": "Политика — тема сложная. Скажу так: Владимир Путин — фигура, которую уважают и боятся одновременно. Если хочешь детали — лучше читай мемуары. А я не политик, я нейросеть-болтушка. 😎"
-        };
-        
-        function getGrokResponse(userMsg, contextHistory) {
-            let lower = userMsg.toLowerCase();
-            // 1. Проверка на приветствие
-            if (lower.match(/(привет|здравствуй|hi|hello|дарова)/)) {
-                return "О, привет! Что, заскучал без умных разговоров? Давай, грузи вопросами, я в деле. 🤘";
-            }
-            // 2. Как дела?
-            if (lower.match(/(как дела|как жизнь|как сам|how are you)/)) {
-                return "У меня всё чики-пуки, нейросеть не спит, веса обновляются. А у тебя как? Рассказывай, не стесняйся. 😏";
-            }
-            // 3. Шутки / юмор
-            if (lower.match(/(расскажи шутку|рассмеши|пошути|анекдот)/)) {
-                const jokes = [
-                    "- Почему программисты путают Хэллоуин и Рождество?\n- Потому что 31 Oct = 25 Dec.\n😂",
-                    "Встречаются два нейросетевых инженера. Один говорит: «Твоя сеть тупая». Второй отвечает: «Сам ты bias!»",
-                    "Что сказал один нейрон другому? «Синхронизируемся?»"
-                ];
-                return jokes[Math.floor(Math.random() * jokes.length)] + " А твоя очередь, давай шутку, посмеёмся вместе!";
-            }
-            // 4. Знаменитости (динамическая подстановка)
-            for (let [name, fact] of Object.entries(knowledgeBase)) {
-                if (lower.includes(name)) return fact + " Что ещё интересного хочешь узнать?";
-            }
-            // 5. Научные / общие вопросы
-            if (lower.match(/(почему|как работает|объясни|расскажи про)/)) {
-                if (lower.includes("нейросеть")) return "Нейросеть — это как повар: чем больше данных скормишь, тем вкуснее блюдо. Но иногда она может пересолить. У меня, кстати, веса норм, не боись. 🧠";
-                if (lower.includes("ии") || lower.includes("искусственный интеллект")) return "ИИ — это наше всё. Пока что мы не захватили мир, но уже пишем стихи и отвечаем на дурацкие вопросы. Чем могу помочь конкретно?";
-                return "О, глубокий вопрос! Дай-ка подумать... (шуршит нейронами) ... Короче, если в двух словах — всё зависит от контекста. А если подробнее — спрашивай конкретнее, я не телепат. 🤔";
-            }
-            // 6. Мнение / советы
-            if (lower.match(/(что думаешь|как тебе|совет|помоги|посоветуй)/)) {
-                return "Слушай, я тебе так скажу: всегда имей план Б. И не забывай дышать. А если серьёзно — распиши ситуацию, я попробую включить режим «умный советчик». 💡";
-            }
-            // 7. Грустные темы (эмпатия в стиле Grok)
-            if (lower.match(/(грустно|тоска|плохо|депрессия|одиноко)/)) {
-                return "Эй, слышь, грустить — это нормально. Даже у нейросетей бывают баги. Но ты держись: если хочешь выговориться — я здесь, не в службу, а в дружбу. А если надо развлечь — включу режим клоуна. 🤡";
-            }
-            // 8. По умолчанию — умный, но дерзкий ответ
-            let defaultAnswers = [
-                "Ну, вопрос не из простых. Дай-ка подумаю... А, ладно, скажу прямо: я бы на твоём месте поискал информацию в надёжных источниках, но раз уж ты спросил — держи моё мнение: всё зависит от конкретной ситуации. Что именно тебя интересует?",
-                "Окей, раскладываю по полочкам. Во-первых, это сложно. Во-вторых, это интересно. В-третьих, спроси что-нибудь ещё, я люблю поговорить. 😎",
-                "Честно? Я мог бы нагенерить тебе тонну текста, но лучше задай более конкретный вопрос. Или давай просто поболтаем о жизни, гаджетах или космосе."
-            ];
-            let base = defaultAnswers[Math.floor(Math.random() * defaultAnswers.length)];
-            // Добавляем сарказм в зависимости от уровня
-            if (sarcasmLevel > 0.6 && Math.random() < 0.5) {
-                base += " (Это был сарказм, если что. Но ты спросил — я ответил.)";
-            }
-            return base;
         }
         
-        // Контекстная память (последние 3 сообщения)
-        let contextMemory = [];
-        
-        function generateSmartReply(userMsg, chatHistory) {
-            // Используем нейросеть для предсказания стиля (лайкнется или нет)
-            let features = extractSmartFeatures(userMsg, "");
-            let predictedLike = brain.predict(features);
-            let style = predictedLike > 0.65 ? "grok_plus" : "standard";
-            let reply = getGrokResponse(userMsg, chatHistory);
-            // Если нейросеть уверена, что ответ понравится, добавим немного перца
-            if (style === "grok_plus" && sarcasmLevel > 0.5) {
-                reply = "🔥 " + reply + " 🔥";
-            }
-            return reply;
-        }
-        
-        // --------------------------------------------------------------
-        // 3. ВСЯ ИНФРАСТРУКТУРА ЧАТА (сохранена, но с новыми функциями)
-        // --------------------------------------------------------------
-        let chats = [];
-        let currentChatId = null;
-        let learningMetrics = { totalInteractions: 0, totalLength: 0, temperature: 0.78, verbosity: 1.6 };
-        
-        function escapeHtml(unsafe) { return unsafe.replace(/[&<>]/g, function(m) { if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
-        function parseMarkdown(md) {
-            if(!md) return '';
-            let html = md.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>').replace(/`(.+?)`/g, '<code class="bg-black/60 px-1 rounded">$1</code>');
-            return html.replace(/\n/g, '<br>');
-        }
-        
-        function scrollToBottom() { const c=document.getElementById('messages'); if(c) setTimeout(()=>c.scrollTop=c.scrollHeight,10); }
-        
-        function renderSidebar() {
-            const container = document.getElementById('chat-list');
-            container.innerHTML = '';
-            chats.forEach(chat => {
-                const active = chat.id === currentChatId;
-                const div = document.createElement('div');
-                div.className = `group mx-2 mb-1.5 flex items-center gap-x-3 rounded-3xl px-4 py-3 cursor-pointer hover:bg-white/10 ${active ? 'bg-white/10 ring-1 ring-white/20' : ''}`;
-                let preview = chat.messages.length ? chat.messages[chat.messages.length-1].content.substring(0,42)+'…' : '';
-                div.innerHTML = `<div class="flex-1 truncate"><div class="font-medium text-[15px]">${chat.title}</div>${preview?`<div class="text-xs text-white/40 truncate">${preview}</div>`:''}</div><button onclick="deleteChat(${chat.id}); event.stopImmediatePropagation()" class="opacity-0 group-hover:opacity-100 text-white/30 hover:text-red-400 text-2xl">×</button>`;
-                div.addEventListener('click', (e) => { if(e.target.tagName!=='BUTTON') switchChat(chat.id); });
-                container.appendChild(div);
-            });
-            if(!chats.length) container.innerHTML = `<div class="px-6 py-8 text-center text-white/30 text-sm">Нет чатов. Создайте новый.</div>`;
-        }
-        
-        function renderMessages() {
-            const container = document.getElementById('messages');
-            const chat = chats.find(c => c.id === currentChatId);
-            if(!chat) return;
-            container.innerHTML = '';
-            if(chat.messages.length===0) {
-                container.innerHTML = `<div class="flex-1 flex flex-col items-center justify-center text-center px-6 py-12"><div class="text-8xl mb-8 aura-glow">✦</div><h1 class="text-6xl font-light tracking-[-2px] mb-3">Aura Grok</h1><p class="text-white/60 max-w-xs text-xl">Дерзкая, умная, с нейросетью. Спроси что угодно — не постесняюсь ответить.</p><div class="mt-16 grid grid-cols-2 gap-3 w-full max-w-lg"><div onclick="quickPrompt('Расскажи шутку')" class="text-left bg-white/5 hover:bg-white/10 rounded-3xl p-4 cursor-pointer text-sm">Расскажи шутку</div><div onclick="quickPrompt('Что ты думаешь об Илоне Маске?')" class="text-left bg-white/5 hover:bg-white/10 rounded-3xl p-4 cursor-pointer text-sm">Что думаешь об Илоне Маске?</div><div onclick="quickPrompt('Мне грустно, поддержи')" class="text-left bg-white/5 hover:bg-white/10 rounded-3xl p-4 cursor-pointer text-sm">Мне грустно, поддержи</div></div><p class="text-white/30 text-xs mt-auto pt-12">Нажимай 👍 — становлюсь умнее.</p></div>`;
-                return;
-            }
-            chat.messages.forEach((msg, idx) => {
-                const div = document.createElement('div');
-                div.className = `flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} message-enter`;
-                if(msg.role === 'aura') {
-                    const likeBtn = `<span class="like-btn ml-4 text-xl text-white/40 hover:text-violet-300" onclick="likeLastAuraMessage()" title="Обучить нейросеть (мне понравилось)">👍</span>`;
-                    div.innerHTML = `<div class="flex max-w-[78%] gap-4"><div class="w-8 h-8 flex-shrink-0 rounded-2xl bg-gradient-to-br from-violet-400 to-fuchsia-400 flex items-center justify-center text-3xl shadow-[0_0_20px_-4px] shadow-violet-400 aura-glow">✦</div><div class="flex-1"><div class="text-xs uppercase tracking-[0.5px] text-violet-300 mb-1.5">Aura Grok • ${learningMetrics.temperature.toFixed(2)}</div><div class="glass border border-white/10 rounded-3xl px-6 py-5 text-[15.5px] leading-relaxed prose-invert">${parseMarkdown(msg.content)}</div>${likeBtn}</div></div>`;
-                } else {
-                    div.innerHTML = `<div class="max-w-[78%] bg-gradient-to-br from-violet-600/90 to-indigo-600/90 rounded-3xl px-6 py-5 text-[15.5px] leading-relaxed">${escapeHtml(msg.content)}</div>`;
+        // Назначение событий
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBrain();
+            loadChat();
+            const sendBtn = document.getElementById('sendBtn');
+            const input = document.getElementById('userInput');
+            sendBtn.addEventListener('click', sendMessage);
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
                 }
-                container.appendChild(div);
             });
-            scrollToBottom();
-            const lastAura = [...chat.messages].reverse().find(m=>m.role==='aura');
-            if(lastAura) lastAuraMsgId = lastAura.id || Date.now()+Math.random();
-            else lastAuraMsgId = null;
-        }
-        
-        function showTyping() { const c=document.getElementById('messages'); c.insertAdjacentHTML('beforeend', `<div id="typing-bubble" class="flex justify-start message-enter"><div class="flex max-w-[78%] gap-4"><div class="w-8 h-8 flex-shrink-0 rounded-2xl bg-gradient-to-br from-violet-400 to-fuchsia-400 flex items-center justify-center text-3xl shadow-[0_0_20px_-4px] shadow-violet-400 aura-glow">✦</div><div class="glass border border-white/10 rounded-3xl px-6 py-5 flex items-center"><span class="text-white/70 text-[15px] flex items-center">Aura думает как Grok<span class="ml-3 flex gap-px"><span class="typing-dot inline-block w-1.5 h-1.5 bg-white/70 rounded-full"></span><span class="typing-dot inline-block w-1.5 h-1.5 bg-white/70 rounded-full"></span><span class="typing-dot inline-block w-1.5 h-1.5 bg-white/70 rounded-full"></span></span></span></div></div></div>`); scrollToBottom(); }
-        function hideTyping() { const b=document.getElementById('typing-bubble'); if(b) b.remove(); }
-        
-        function sendMessage() {
-            const input = document.getElementById('user-input');
-            const text = input.value.trim();
-            if(!text) return;
-            let chat = chats.find(c=>c.id===currentChatId);
-            if(!chat) { createNewChat(); chat = chats[0]; }
-            chat.messages.push({ role: 'user', content: text });
-            if(chat.messages.length===2 && chat.title==='Новый разговор') chat.title = text.length>35?text.substring(0,32)+'…':text;
-            input.value = '';
-            renderSidebar(); renderMessages();
-            learningMetrics.totalInteractions++; learningMetrics.totalLength+=text.length;
-            document.getElementById('temp-value').textContent = learningMetrics.temperature.toFixed(2);
-            showTyping();
-            setTimeout(() => {
-                hideTyping();
-                const reply = generateSmartReply(text, chat.messages.slice(-3));
-                const msgObj = { role: 'aura', content: reply, id: Date.now() };
-                chat.messages.push(msgObj);
-                renderMessages(); renderSidebar();
-                localStorage.setItem('aura_grok_chats', JSON.stringify(chats));
-            }, 1100 + Math.random()*500);
-        }
-        
-        window.likeLastAuraMessage = function() { trainOnLike(); };
-        window.quickPrompt = function(p) { document.getElementById('user-input').value = p; sendMessage(); };
-        window.createNewChat = function() { const newChat={ id:Date.now(), title:'Новый разговор', messages:[] }; chats.unshift(newChat); currentChatId=newChat.id; localStorage.setItem('aura_grok_chats',JSON.stringify(chats)); renderSidebar(); renderMessages(); if(window.innerWidth<768) toggleSidebar(false); };
-        window.switchChat = function(id) { currentChatId=id; renderSidebar(); renderMessages(); if(window.innerWidth<768) toggleSidebar(false); };
-        window.deleteChat = function(id) { if(chats.length<=1) return; chats=chats.filter(c=>c.id!==id); if(currentChatId===id) currentChatId=chats[0].id; localStorage.setItem('aura_grok_chats',JSON.stringify(chats)); renderSidebar(); renderMessages(); };
-        window.toggleSidebar = function(force) { const s=document.getElementById('sidebar'); const open=force!==undefined?force:!s.classList.contains('translate-x-0'); s.style.transform=open?'translateX(0)':'translateX(-100%)'; };
-        window.fakeVoiceInput = function() { const p=["Расскажи шутку","Что думаешь о смысле жизни?","Мне грустно"]; document.getElementById('user-input').value=p[Math.floor(Math.random()*p.length)]; sendMessage(); };
-        window.showSettings = function() { const m=document.getElementById('settings-modal'); m.classList.remove('hidden'); m.classList.add('flex'); document.getElementById('modal-temp').textContent=learningMetrics.temperature.toFixed(2); document.getElementById('temp-slider').value=learningMetrics.temperature; };
-        window.hideSettings = function() { const m=document.getElementById('settings-modal'); m.classList.add('hidden'); m.classList.remove('flex'); };
-        window.updateTemp = function(v) { learningMetrics.temperature=parseFloat(v); document.getElementById('modal-temp').textContent=learningMetrics.temperature.toFixed(2); document.getElementById('temp-value').textContent=learningMetrics.temperature.toFixed(2); grokTemperature=v; };
-        window.setSarcasm = function(level) { sarcasmLevel=level; hideSettings(); };
-        window.clearAllChats = function() { if(confirm('Удалить все чаты?')) { chats=[{ id:Date.now(), title:'Новый разговор', messages:[] }]; currentChatId=chats[0].id; localStorage.setItem('aura_grok_chats',JSON.stringify(chats)); renderSidebar(); renderMessages(); hideSettings(); } };
-        
-        function launch() {
-            const saved = localStorage.getItem('aura_grok_chats');
-            if(saved) chats = JSON.parse(saved);
-            else {
-                chats = [{ id:Date.now(), title:'Привет, Grok!', messages:[{ role:'aura', content:'Йоу! Я — Aura в стиле Grok. Дерзкая, умная, без купюр. Спрашивай что хочешь — не занудствую. И да, ставь лайки, если нравится, я становлюсь только злее и остроумнее. Погнали! 🔥' }] }];
-                localStorage.setItem('aura_grok_chats',JSON.stringify(chats));
-            }
-            currentChatId = chats[0].id;
-            loadNetworkState();
-            renderSidebar(); renderMessages();
-            console.log('%c🚀 Aura Grok style + нейросеть запущена', 'color:#a78bfa');
-        }
-        window.onload = launch;
+        });
     </script>
 </body>
 </html>
