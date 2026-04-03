@@ -6,176 +6,188 @@
 <title>AURA AI</title>
 
 <style>
-body {
-    margin: 0;
-    background: #0f0f14;
+:root{
+    --glass-bg: rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.1);
+    --accent: #8a5cff;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
     font-family: 'Segoe UI', sans-serif;
-    color: white;
-    display: flex;
-    height: 100vh;
+    background: radial-gradient(circle at 20% 20%, #1b1b2f, #0f0f17 60%);
+    color:white;
+    display:flex;
+    flex-direction:column;
+    height:100vh;
 }
 
-.sidebar {
-    width: 240px;
-    background: #14141c;
-    border-right: 1px solid #1f1f2a;
-    padding: 20px;
+/* HEADER */
+.header{
+    padding:15px;
+    text-align:center;
+    font-weight:bold;
+    font-size:20px;
+    letter-spacing:2px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border-bottom:1px solid var(--glass-border);
 }
 
-.logo {
-    font-size: 22px;
-    font-weight: bold;
-    background: linear-gradient(90deg,#7f5af0,#2cb67d);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 20px;
+/* CHAT AREA */
+.chat{
+    flex:1;
+    padding:15px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
 }
 
-.chat-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+.message{
+    padding:14px 16px;
+    border-radius:18px;
+    max-width:80%;
+    backdrop-filter: blur(25px);
+    background: var(--glass-bg);
+    border:1px solid var(--glass-border);
+    animation:fade 0.25s ease;
+    word-wrap: break-word;
 }
 
-.chat {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
+.user{
+    align-self:flex-end;
+    background: linear-gradient(135deg, rgba(138,92,255,0.4), rgba(0,255,200,0.15));
 }
 
-.message {
-    margin-bottom: 15px;
-    padding: 12px 16px;
-    border-radius: 14px;
-    max-width: 75%;
-    animation: fade 0.2s ease-in-out;
+.ai{
+    align-self:flex-start;
 }
 
-.user {
-    background: #2a2a38;
-    align-self: flex-end;
+/* INPUT */
+.input-area{
+    display:flex;
+    padding:12px;
+    gap:10px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border-top:1px solid var(--glass-border);
 }
 
-.ai {
-    background: #1c1c26;
-    border: 1px solid #2a2a38;
-    align-self: flex-start;
+input{
+    flex:1;
+    padding:14px;
+    border:none;
+    border-radius:16px;
+    background: rgba(255,255,255,0.08);
+    color:white;
+    font-size:16px;
+    outline:none;
 }
 
-.input-area {
-    display: flex;
-    padding: 15px;
-    border-top: 1px solid #1f1f2a;
-    background: #14141c;
+button{
+    padding:14px 18px;
+    border:none;
+    border-radius:16px;
+    font-weight:bold;
+    cursor:pointer;
+    background: linear-gradient(135deg,#8a5cff,#00ffd0);
+    color:white;
+    transition:0.2s;
 }
 
-input {
-    flex: 1;
-    padding: 12px;
-    border-radius: 12px;
-    border: none;
-    background: #1c1c26;
-    color: white;
-    outline: none;
+button:hover{
+    transform:scale(1.05);
 }
 
-button {
-    margin-left: 10px;
-    padding: 12px 20px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    background: linear-gradient(90deg,#7f5af0,#2cb67d);
-    color: white;
-    font-weight: bold;
+/* MOBILE OPTIMIZATION */
+@media (max-width:600px){
+    .message{
+        max-width:95%;
+        font-size:15px;
+    }
+    .header{
+        font-size:18px;
+    }
 }
 
-@keyframes fade {
-    from {opacity:0; transform: translateY(5px);}
-    to {opacity:1; transform: translateY(0);}
+@keyframes fade{
+    from{opacity:0; transform:translateY(5px);}
+    to{opacity:1; transform:translateY(0);}
 }
 </style>
 </head>
 
 <body>
 
-<div class="sidebar">
-    <div class="logo">AURA</div>
-    <p style="font-size:13px;color:#888;">
-        Advanced Universal Reactive Assistant
-    </p>
-</div>
+<div class="header">AURA</div>
 
-<div class="chat-container">
-    <div class="chat" id="chat"></div>
+<div class="chat" id="chat"></div>
 
-    <div class="input-area">
-        <input type="text" id="userInput" placeholder="Напиши сообщение...">
-        <button onclick="sendMessage()">➤</button>
-    </div>
+<div class="input-area">
+    <input type="text" id="input" placeholder="Введите математический пример...">
+    <button onclick="send()">→</button>
 </div>
 
 <script>
 const chat = document.getElementById("chat");
-const input = document.getElementById("userInput");
+const input = document.getElementById("input");
 
-let memory = [];
-
-function addMessage(text, sender) {
+function addMessage(text, type){
     const msg = document.createElement("div");
-    msg.classList.add("message", sender);
+    msg.className = "message " + type;
     msg.innerText = text;
     chat.appendChild(msg);
     chat.scrollTop = chat.scrollHeight;
 }
 
-function simpleBrain(text) {
-    text = text.toLowerCase();
+function solveMath(expression){
+    try{
+        expression = expression
+            .replace(/√/g, "Math.sqrt")
+            .replace(/sqrt/gi, "Math.sqrt")
+            .replace(/sin/gi, "Math.sin")
+            .replace(/cos/gi, "Math.cos")
+            .replace(/tan/gi, "Math.tan")
+            .replace(/log/gi, "Math.log")
+            .replace(/\^/g, "**");
 
-    if(text.includes("привет")) return "Привет. Я AURA. Чем займемся сегодня?";
-    if(text.includes("кто ты")) return "Я AURA — экспериментальная нейросеть с зачатками разума.";
-    if(text.includes("грок")) return "Grok? Интересный ИИ. Но у меня свой стиль.";
-    if(text.includes("ты помнишь")) {
-        if(memory.length > 0) {
-            return "Я помню, что ты писал: " + memory[memory.length-1];
+        let result = Function('"use strict";return (' + expression + ')')();
+        
+        if(typeof result === "number" && !isNaN(result)){
+            return "Ответ: " + result;
         } else {
-            return "Пока что у меня нет воспоминаний.";
+            return null;
         }
+    }catch{
+        return null;
     }
-    if(text.includes("шутка")) return "Почему программисты любят тёмную тему? Потому что свет привлекает баги.";
-
-    return generateSmartReply(text);
 }
 
-function generateSmartReply(text) {
-    let responses = [
-        "Интересная мысль. Расскажи подробнее.",
-        "Почему ты так считаешь?",
-        "Я анализирую это...",
-        "Это может быть глубже, чем кажется.",
-        "Любопытно. Продолжай."
-    ];
-
-    return responses[Math.floor(Math.random() * responses.length)];
-}
-
-function sendMessage() {
+function send(){
     const text = input.value.trim();
     if(!text) return;
 
     addMessage(text, "user");
-    memory.push(text);
-
-    setTimeout(() => {
-        const reply = simpleBrain(text);
-        addMessage(reply, "ai");
-    }, 400);
-
     input.value = "";
+
+    setTimeout(()=>{
+        let mathResult = solveMath(text);
+
+        if(mathResult){
+            addMessage(mathResult, "ai");
+        } else {
+            addMessage("Я специализируюсь на решении математических выражений. Попробуй пример.", "ai");
+        }
+    },300);
 }
 
-input.addEventListener("keypress", function(e) {
-    if(e.key === "Enter") sendMessage();
+input.addEventListener("keypress", e=>{
+    if(e.key==="Enter") send();
 });
 </script>
 
