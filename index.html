@@ -7,95 +7,132 @@
 
 <style>
 :root{
-    --glass-bg: rgba(255,255,255,0.06);
-    --glass-border: rgba(255,255,255,0.1);
-    --accent: #8a5cff;
+    --glass: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.12);
+    --accent1:#8a5cff;
+    --accent2:#00ffd0;
 }
 
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box;}
 
 body{
     margin:0;
     font-family: 'Segoe UI', sans-serif;
-    background: radial-gradient(circle at 20% 20%, #1b1b2f, #0f0f17 60%);
+    background:#0b0b12;
     color:white;
+    overflow:hidden;
+}
+
+/* Animated Background */
+.bg{
+    position:fixed;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    z-index:-1;
+}
+
+.blob{
+    position:absolute;
+    width:400px;
+    height:400px;
+    border-radius:50%;
+    filter:blur(120px);
+    opacity:0.5;
+    animation:float 18s infinite ease-in-out alternate;
+}
+
+.blob:nth-child(1){
+    background:#8a5cff;
+    top:-100px;
+    left:-100px;
+}
+
+.blob:nth-child(2){
+    background:#00ffd0;
+    bottom:-150px;
+    right:-100px;
+    animation-delay:5s;
+}
+
+@keyframes float{
+    from{transform:translateY(0px) translateX(0px);}
+    to{transform:translateY(100px) translateX(50px);}
+}
+
+/* Layout */
+.container{
     display:flex;
     flex-direction:column;
     height:100vh;
 }
 
-/* HEADER */
 .header{
-    padding:15px;
+    padding:18px;
     text-align:center;
     font-weight:bold;
-    font-size:20px;
-    letter-spacing:2px;
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    border-bottom:1px solid var(--glass-border);
+    letter-spacing:3px;
+    background:var(--glass);
+    backdrop-filter:blur(25px);
+    border-bottom:1px solid var(--border);
 }
 
-/* CHAT AREA */
 .chat{
     flex:1;
-    padding:15px;
+    padding:20px;
     overflow-y:auto;
     display:flex;
     flex-direction:column;
-    gap:10px;
+    gap:12px;
 }
 
 .message{
-    padding:14px 16px;
-    border-radius:18px;
-    max-width:80%;
-    backdrop-filter: blur(25px);
-    background: var(--glass-bg);
-    border:1px solid var(--glass-border);
-    animation:fade 0.25s ease;
-    word-wrap: break-word;
+    padding:16px;
+    border-radius:20px;
+    max-width:85%;
+    backdrop-filter:blur(30px);
+    background:var(--glass);
+    border:1px solid var(--border);
+    animation:fade 0.3s ease;
+    box-shadow:0 0 20px rgba(138,92,255,0.1);
 }
 
 .user{
     align-self:flex-end;
-    background: linear-gradient(135deg, rgba(138,92,255,0.4), rgba(0,255,200,0.15));
+    background:linear-gradient(135deg,rgba(138,92,255,0.4),rgba(0,255,200,0.15));
 }
 
 .ai{
     align-self:flex-start;
 }
 
-/* INPUT */
 .input-area{
     display:flex;
-    padding:12px;
+    padding:15px;
     gap:10px;
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    border-top:1px solid var(--glass-border);
+    background:var(--glass);
+    backdrop-filter:blur(25px);
+    border-top:1px solid var(--border);
 }
 
 input{
     flex:1;
-    padding:14px;
+    padding:15px;
     border:none;
-    border-radius:16px;
-    background: rgba(255,255,255,0.08);
+    border-radius:20px;
+    background:rgba(255,255,255,0.08);
     color:white;
     font-size:16px;
     outline:none;
 }
 
 button{
-    padding:14px 18px;
+    padding:15px 20px;
     border:none;
-    border-radius:16px;
+    border-radius:20px;
     font-weight:bold;
     cursor:pointer;
-    background: linear-gradient(135deg,#8a5cff,#00ffd0);
+    background:linear-gradient(135deg,var(--accent1),var(--accent2));
     color:white;
     transition:0.2s;
 }
@@ -104,89 +141,138 @@ button:hover{
     transform:scale(1.05);
 }
 
-/* MOBILE OPTIMIZATION */
-@media (max-width:600px){
-    .message{
-        max-width:95%;
-        font-size:15px;
-    }
-    .header{
-        font-size:18px;
-    }
+.typing{
+    font-size:14px;
+    opacity:0.7;
 }
 
 @keyframes fade{
-    from{opacity:0; transform:translateY(5px);}
+    from{opacity:0; transform:translateY(6px);}
     to{opacity:1; transform:translateY(0);}
+}
+
+@media(max-width:600px){
+    .message{max-width:95%;}
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">AURA</div>
+<div class="bg">
+    <div class="blob"></div>
+    <div class="blob"></div>
+</div>
 
-<div class="chat" id="chat"></div>
+<div class="container">
+    <div class="header">AURA</div>
+    <div class="chat" id="chat"></div>
 
-<div class="input-area">
-    <input type="text" id="input" placeholder="Введите математический пример...">
-    <button onclick="send()">→</button>
+    <div class="input-area">
+        <input type="text" id="input" placeholder="Введите математическое выражение...">
+        <button onclick="send()">→</button>
+    </div>
 </div>
 
 <script>
-const chat = document.getElementById("chat");
-const input = document.getElementById("input");
+const chat=document.getElementById("chat");
+const input=document.getElementById("input");
 
-function addMessage(text, type){
-    const msg = document.createElement("div");
-    msg.className = "message " + type;
-    msg.innerText = text;
+function addMessage(text,type){
+    const msg=document.createElement("div");
+    msg.className="message "+type;
+    msg.innerText=text;
     chat.appendChild(msg);
-    chat.scrollTop = chat.scrollHeight;
+    chat.scrollTop=chat.scrollHeight;
 }
 
-function solveMath(expression){
-    try{
-        expression = expression
-            .replace(/√/g, "Math.sqrt")
-            .replace(/sqrt/gi, "Math.sqrt")
-            .replace(/sin/gi, "Math.sin")
-            .replace(/cos/gi, "Math.cos")
-            .replace(/tan/gi, "Math.tan")
-            .replace(/log/gi, "Math.log")
-            .replace(/\^/g, "**");
+function typingIndicator(){
+    const t=document.createElement("div");
+    t.className="typing ai message";
+    t.innerText="AURA думает...";
+    chat.appendChild(t);
+    chat.scrollTop=chat.scrollHeight;
+    return t;
+}
 
-        let result = Function('"use strict";return (' + expression + ')')();
-        
-        if(typeof result === "number" && !isNaN(result)){
-            return "Ответ: " + result;
-        } else {
-            return null;
+/* Math Engine */
+
+function factorial(n){
+    if(n<0) return NaN;
+    if(n===0) return 1;
+    return n*factorial(n-1);
+}
+
+function solveQuadratic(a,b,c){
+    let d=b*b-4*a*c;
+    if(d<0) return "Нет действительных корней";
+    if(d===0) return "x = "+(-b/(2*a));
+    let x1=(-b+Math.sqrt(d))/(2*a);
+    let x2=(-b-Math.sqrt(d))/(2*a);
+    return "x1 = "+x1+" , x2 = "+x2;
+}
+
+function parseEquation(str){
+    if(str.includes("x^2")){
+        let match=str.match(/([\-0-9\.]*)x\^2([+\-0-9\.]*)x?([+\-0-9\.]*)=0/);
+        if(match){
+            let a=parseFloat(match[1]||1);
+            let b=parseFloat(match[2]||0);
+            let c=parseFloat(match[3]||0);
+            return solveQuadratic(a,b,c);
         }
-    }catch{
-        return null;
     }
+    if(str.includes("x") && str.includes("=")){
+        let sides=str.split("=");
+        let left=sides[0].replace("x","");
+        let right=parseFloat(sides[1]);
+        let coef=parseFloat(left)||1;
+        return "x = "+(right/coef);
+    }
+    return null;
+}
+
+function solveMath(expr){
+    expr=expr.replace(/π|pi/gi,"Math.PI")
+             .replace(/e/gi,"Math.E")
+             .replace(/sqrt/gi,"Math.sqrt")
+             .replace(/sin/gi,"Math.sin")
+             .replace(/cos/gi,"Math.cos")
+             .replace(/tan/gi,"Math.tan")
+             .replace(/\^/g,"**")
+             .replace(/(\d+)!/g,(m,n)=>factorial(parseInt(n)));
+
+    try{
+        let result=Function('"use strict";return ('+expr+')')();
+        if(typeof result==="number"&&!isNaN(result))
+            return "Ответ: "+result;
+    }catch{}
+    return null;
 }
 
 function send(){
-    const text = input.value.trim();
+    let text=input.value.trim();
     if(!text) return;
 
-    addMessage(text, "user");
-    input.value = "";
+    addMessage(text,"user");
+    input.value="";
+
+    let typing=typingIndicator();
 
     setTimeout(()=>{
-        let mathResult = solveMath(text);
+        typing.remove();
 
-        if(mathResult){
-            addMessage(mathResult, "ai");
-        } else {
-            addMessage("Я специализируюсь на решении математических выражений. Попробуй пример.", "ai");
-        }
-    },300);
+        let eq=parseEquation(text);
+        if(eq){ addMessage(eq,"ai"); return;}
+
+        let math=solveMath(text);
+        if(math){ addMessage(math,"ai"); return;}
+
+        addMessage("Я специализирована на математике. Введите пример или уравнение.","ai");
+    },600);
 }
 
-input.addEventListener("keypress", e=>{
+input.addEventListener("keypress",e=>{
     if(e.key==="Enter") send();
 });
 </script>
