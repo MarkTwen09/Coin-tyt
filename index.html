@@ -1,66 +1,98 @@
+<script>
+// --- Math engine with advanced % support ---
+function factorial(n){return n<=1?1:n*factorial(n-1);}
+
+function solveQuadratic(a,b,c){
+    let d=b*b-4*a*c;
+    if(d<0) return "D="+d+" → Нет действительных корней";
+    let x1=(-b+Math.sqrt(d))/(2*a);
+    let x2=(-b-Math.sqrt(d))/(2*a);
+    return "D="+d+"\nx1="+x1+"\nx2="+x2;
+}
+
+function parseEquation(str){
+    if(str.includes("x^2")){
+        let match=str.match(/([\-0-9\.]*)x\^2([+\-0-9\.]*)x([+\-0-9\.]*)=0/);
+        if(match){
+            let a=parseFloat(match[1]||1);
+            let b=parseFloat(match[2]||0);
+            let c=parseFloat(match[3]||0);
+            return solveQuadratic(a,b,c);
+        }
+    }
+    if(str.includes("x") && str.includes("=")){
+        let sides=str.split("=");
+        let coef=parseFloat(sides[0].replace("x",""))||1;
+        let right=parseFloat(sides[1]);
+        return "x="+(right/coef);
+    }
+    return null;
+}
+
 function solveMath(expr){
 
-// --- Проценты вида "50% от 200"
-let percentOf = expr.match(/(\d+(\.\d+)?)\s*%\s*от\s*(\d+(\.\d+)?)/i);
-if(percentOf){
-let p=parseFloat(percentOf[1]);
-let n=parseFloat(percentOf[3]);
-return "Ответ: " + (n * p / 100);
-}
+    // --- Проценты вида "50% от 200"
+    let percentOf = expr.match(/(\d+(\.\d+)?)\s*%\s*от\s*(\d+(\.\d+)?)/i);
+    if(percentOf){
+        let p=parseFloat(percentOf[1]);
+        let n=parseFloat(percentOf[3]);
+        return "Ответ: " + (n * p / 100);
+    }
 
-// --- 200 + 10%  (прибавить процент)
-let plusPercent = expr.match(/(\d+(\.\d+)?)\s*\+\s*(\d+(\.\d+)?)%/);
-if(plusPercent){
-let n=parseFloat(plusPercent[1]);
-let p=parseFloat(plusPercent[3]);
-return "Ответ: " + (n + (n*p/100));
-}
+    // --- 200 + 10%  (прибавить процент)
+    let plusPercent = expr.match(/(\d+(\.\d+)?)\s*\+\s*(\d+(\.\d+)?)%/);
+    if(plusPercent){
+        let n=parseFloat(plusPercent[1]);
+        let p=parseFloat(plusPercent[3]);
+        return "Ответ: " + (n + (n*p/100));
+    }
 
-// --- 200 - 10%
-let minusPercent = expr.match(/(\d+(\.\d+)?)\s*\-\s*(\d+(\.\d+)?)%/);
-if(minusPercent){
-let n=parseFloat(minusPercent[1]);
-let p=parseFloat(minusPercent[3]);
-return "Ответ: " + (n - (n*p/100));
-}
+    // --- 200 - 10%
+    let minusPercent = expr.match(/(\d+(\.\d+)?)\s*\-\s*(\d+(\.\d+)?)%/);
+    if(minusPercent){
+        let n=parseFloat(minusPercent[1]);
+        let p=parseFloat(minusPercent[3]);
+        return "Ответ: " + (n - (n*p/100));
+    }
 
-// --- 150 * 20%
-let multPercent = expr.match(/(\d+(\.\d+)?)\s*\*\s*(\d+(\.\d+)?)%/);
-if(multPercent){
-let n=parseFloat(multPercent[1]);
-let p=parseFloat(multPercent[3]);
-return "Ответ: " + (n * (p/100));
-}
+    // --- 150 * 20%
+    let multPercent = expr.match(/(\d+(\.\d+)?)\s*\*\s*(\d+(\.\d+)?)%/);
+    if(multPercent){
+        let n=parseFloat(multPercent[1]);
+        let p=parseFloat(multPercent[3]);
+        return "Ответ: " + (n * (p/100));
+    }
 
-// --- 100 / 25%
-let divPercent = expr.match(/(\d+(\.\d+)?)\s*\/\s*(\d+(\.\d+)?)%/);
-if(divPercent){
-let n=parseFloat(divPercent[1]);
-let p=parseFloat(divPercent[3]);
-return "Ответ: " + (n / (p/100));
-}
+    // --- 100 / 25%
+    let divPercent = expr.match(/(\d+(\.\d+)?)\s*\/\s*(\d+(\.\d+)?)%/);
+    if(divPercent){
+        let n=parseFloat(divPercent[1]);
+        let p=parseFloat(divPercent[3]);
+        return "Ответ: " + (n / (p/100));
+    }
 
-// --- просто 30%
-let simplePercent = expr.match(/(\d+(\.\d+)?)%$/);
-if(simplePercent){
-let p=parseFloat(simplePercent[1]);
-return "Ответ: " + (p/100);
-}
+    // --- просто 30%
+    let simplePercent = expr.match(/(\d+(\.\d+)?)%$/);
+    if(simplePercent){
+        let p=parseFloat(simplePercent[1]);
+        return "Ответ: " + (p/100);
+    }
 
-// ===== стандартная математика =====
-expr=expr.replace(/π|pi/gi,"Math.PI")
-.replace(/e/gi,"Math.E")
-.replace(/sqrt/gi,"Math.sqrt")
-.replace(/sin/gi,"Math.sin")
-.replace(/cos/gi,"Math.cos")
-.replace(/tan/gi,"Math.tan")
-.replace(/\^/g,"**")
-.replace(/(\d+)!/g,(m,n)=>factorial(parseInt(n)));
+    // ===== стандартная математика =====
+    expr=expr.replace(/π|pi/gi,"Math.PI")
+             .replace(/\be\b/gi,"Math.E")
+             .replace(/sqrt/gi,"Math.sqrt")
+             .replace(/sin/gi,"Math.sin")
+             .replace(/cos/gi,"Math.cos")
+             .replace(/tan/gi,"Math.tan")
+             .replace(/\^/g,"**")
+             .replace(/(\d+)!/g,(m,n)=>factorial(parseInt(n)));
 
-try{
-let result=Function('"use strict";return ('+expr+')')();
-if(typeof result==="number"&&!isNaN(result))
-return "Ответ: "+result;
-}catch{}
-return null;
+    try{
+        let result=Function('"use strict";return ('+expr+')')();
+        if(typeof result==="number" && !isNaN(result))
+            return "Ответ: "+result;
+    }catch{}
+    return null;
 }
+</script>
