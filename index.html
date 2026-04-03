@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AURA AI</title>
-
 <style>
 :root{
 --glass: rgba(255,255,255,0.06);
@@ -12,17 +11,14 @@
 --accent1:#8a5cff;
 --accent2:#00ffd0;
 }
-
 *{box-sizing:border-box;}
-
 body{
 margin:0;
-font-family: 'Segoe UI', sans-serif;
+font-family:'Segoe UI',sans-serif;
 background:#0b0b12;
 color:white;
 overflow:hidden;
 }
-
 /* Background */
 .bg{
 position:fixed;
@@ -31,7 +27,6 @@ height:100%;
 z-index:-1;
 overflow:hidden;
 }
-
 .blob{
 position:absolute;
 width:500px;
@@ -41,149 +36,31 @@ filter:blur(140px);
 opacity:0.45;
 animation:float 20s infinite alternate ease-in-out;
 }
-
 .blob:nth-child(1){background:#8a5cff; top:-150px; left:-150px;}
 .blob:nth-child(2){background:#00ffd0; bottom:-200px; right:-150px; animation-delay:6s;}
-
-@keyframes float{
-from{transform:translate(0,0);}
-to{transform:translate(100px,80px);}
-}
-
+@keyframes float{from{transform:translate(0,0);} to{transform:translate(100px,80px);}}
 /* Layout */
-.container{
-display:flex;
-flex-direction:column;
-height:100vh;
-}
-
-.header{
-padding:18px;
-text-align:center;
-font-size:22px;
-letter-spacing:4px;
-font-weight:bold;
-background:var(--glass);
-backdrop-filter:blur(30px);
-border-bottom:1px solid var(--border);
-}
-
-.chat{
-flex:1;
-padding:20px;
-overflow-y:auto;
-display:flex;
-flex-direction:column;
-gap:14px;
-}
-
+.container{display:flex;flex-direction:column;height:100vh;}
+.header{padding:18px;text-align:center;font-size:22px;letter-spacing:4px;font-weight:bold;background:var(--glass);backdrop-filter:blur(30px);border-bottom:1px solid var(--border);}
+.chat{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;}
 /* Welcome Screen */
-.welcome{
-margin:auto;
-text-align:center;
-padding:40px;
-border-radius:30px;
-background:var(--glass);
-backdrop-filter:blur(40px);
-border:1px solid var(--border);
-max-width:500px;
-animation:fade 1s ease;
-}
-
-.welcome h1{
-font-size:40px;
-margin:0;
-background:linear-gradient(90deg,var(--accent1),var(--accent2));
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-}
-
-.quick-buttons{
-margin-top:25px;
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:10px;
-}
-
-.quick-buttons button{
-padding:10px 15px;
-border-radius:20px;
-border:none;
-cursor:pointer;
-background:rgba(255,255,255,0.08);
-color:white;
-transition:0.2s;
-}
-
-.quick-buttons button:hover{
-background:linear-gradient(135deg,var(--accent1),var(--accent2));
-}
-
+.welcome{margin:auto;text-align:center;padding:40px;border-radius:30px;background:var(--glass);backdrop-filter:blur(40px);border:1px solid var(--border);max-width:500px;animation:fade 1s ease;}
+.welcome h1{font-size:40px;margin:0;background:linear-gradient(90deg,var(--accent1),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.quick-buttons{margin-top:25px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;}
+.quick-buttons button{padding:10px 15px;border-radius:20px;border:none;cursor:pointer;background:rgba(255,255,255,0.08);color:white;transition:0.2s;}
+.quick-buttons button:hover{background:linear-gradient(135deg,var(--accent1),var(--accent2));}
 /* Messages */
-.message{
-padding:16px;
-border-radius:20px;
-max-width:85%;
-background:var(--glass);
-border:1px solid var(--border);
-backdrop-filter:blur(30px);
-animation:fade 0.3s ease;
-}
-
-.user{
-align-self:flex-end;
-background:linear-gradient(135deg,rgba(138,92,255,0.4),rgba(0,255,200,0.2));
-}
-
+.message{padding:16px;border-radius:20px;max-width:85%;background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(30px);animation:fade 0.3s ease;}
+.user{align-self:flex-end;background:linear-gradient(135deg,rgba(138,92,255,0.4),rgba(0,255,200,0.2));}
 .ai{align-self:flex-start;}
-
-.input-area{
-display:flex;
-padding:15px;
-gap:10px;
-background:var(--glass);
-backdrop-filter:blur(30px);
-border-top:1px solid var(--border);
-}
-
-input{
-flex:1;
-padding:15px;
-border:none;
-border-radius:20px;
-background:rgba(255,255,255,0.08);
-color:white;
-font-size:16px;
-outline:none;
-}
-
-button.send{
-padding:15px 20px;
-border:none;
-border-radius:20px;
-font-weight:bold;
-cursor:pointer;
-background:linear-gradient(135deg,var(--accent1),var(--accent2));
-color:white;
-transition:0.2s;
-}
-
+.input-area{display:flex;padding:15px;gap:10px;background:var(--glass);backdrop-filter:blur(30px);border-top:1px solid var(--border);}
+input{flex:1;padding:15px;border:none;border-radius:20px;background:rgba(255,255,255,0.08);color:white;font-size:16px;outline:none;}
+button.send{padding:15px 20px;border:none;border-radius:20px;font-weight:bold;cursor:pointer;background:linear-gradient(135deg,var(--accent1),var(--accent2));color:white;transition:0.2s;}
 button.send:hover{transform:scale(1.05);}
-
-@keyframes fade{
-from{opacity:0; transform:translateY(10px);}
-to{opacity:1; transform:translateY(0);}
-}
-
-@media(max-width:600px){
-.welcome{padding:25px;}
-.welcome h1{font-size:30px;}
-.message{max-width:95%;}
-}
+@keyframes fade{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+@media(max-width:600px){.welcome{padding:25px;}.welcome h1{font-size:30px;}.message{max-width:95%;}}
 </style>
 </head>
-
 <body>
 
 <div class="bg">
@@ -198,7 +75,6 @@ to{opacity:1; transform:translateY(0);}
 <div class="welcome" id="welcome">
 <h1>AURA</h1>
 <p>Продвинутая математическая нейросеть</p>
-
 <div class="quick-buttons">
 <button onclick="quick('2+2')">2+2</button>
 <button onclick="quick('x^2+5x+6=0')">Квадратное</button>
@@ -220,100 +96,62 @@ const chat=document.getElementById("chat");
 const input=document.getElementById("input");
 const welcome=document.getElementById("welcome");
 
+/* Typewriter */
+function typeText(el,text,i=0){if(i<text.length){el.innerHTML+=text.charAt(i);setTimeout(()=>typeText(el,text,i+1),15);}}
+
 function addMessage(text,type){
 welcome.style.display="none";
 const msg=document.createElement("div");
 msg.className="message "+type;
-msg.innerText=text;
 chat.appendChild(msg);
+if(type==="ai"){typeText(msg,text);}else{msg.innerText=text;}
 chat.scrollTop=chat.scrollHeight;
 }
 
-function quick(text){
-input.value=text;
-send();
-}
+function quick(text){input.value=text;send();}
 
-/* Communication Brain */
+/* Brain */
 function talk(text){
-text=text.toLowerCase();
-if(text.includes("привет")) return "Привет 👋 Я AURA. Готова решать задачи!";
-if(text.includes("как дела")) return "Отлично! Особенно когда решаю математику 😎";
-if(text.includes("кто ты")) return "Я AURA — продвинутая математическая нейросеть.";
-if(text.includes("спасибо")) return "Всегда рада помочь!";
-if(text.includes("пока")) return "До встречи! Возвращайся с задачами.";
+let t=text.toLowerCase();
+if(t.includes("привет"))return "Привет 👋 Я AURA. Готова решать задачи!";
+if(t.includes("как дела"))return "Отлично! Особенно когда решаю математику 😎";
+if(t.includes("кто ты"))return "Я AURA — продвинутая математическая нейросеть.";
+if(t.includes("спасибо"))return "Всегда рада помочь!";
+if(t.includes("пока"))return "До встречи! Возвращайся с задачами.";
 return null;
 }
 
 /* Math Engine */
 function factorial(n){return n<=1?1:n*factorial(n-1);}
+function solveQuadratic(a,b,c){let d=b*b-4*a*c;if(d<0)return "D="+d+" → Нет действительных корней";let x1=(-b+Math.sqrt(d))/(2*a);let x2=(-b-Math.sqrt(d))/(2*a);return "D="+d+"\nx1="+x1+"\nx2="+x2;}
+function parseEquation(str){if(str.includes("x^2")){let match=str.match(/([\-0-9\.]*)x\^2([+\-0-9\.]*)x([+\-0-9\.]*)=0/);if(match){let a=parseFloat(match[1]||1);let b=parseFloat(match[2]||0);let c=parseFloat(match[3]||0);return solveQuadratic(a,b,c);}}if(str.includes("x")&&str.includes("=")){let sides=str.split("=");let coef=parseFloat(sides[0].replace("x",""))||1;let right=parseFloat(sides[1]);return "x="+(right/coef);}return null;}
 
-function solveQuadratic(a,b,c){
-let d=b*b-4*a*c;
-if(d<0) return "D="+d+" → Нет действительных корней";
-let x1=(-b+Math.sqrt(d))/(2*a);
-let x2=(-b-Math.sqrt(d))/(2*a);
-return "D="+d+"\nx1="+x1+"\nx2="+x2;
-}
-
-function parseEquation(str){
-if(str.includes("x^2")){
-let match=str.match(/([\-0-9\.]*)x\^2([+\-0-9\.]*)x([+\-0-9\.]*)=0/);
-if(match){
-let a=parseFloat(match[1]||1);
-let b=parseFloat(match[2]||0);
-let c=parseFloat(match[3]||0);
-return solveQuadratic(a,b,c);
-}}
-if(str.includes("x")&&str.includes("=")){
-let sides=str.split("=");
-let coef=parseFloat(sides[0].replace("x",""))||1;
-let right=parseFloat(sides[1]);
-return "x="+(right/coef);
-}
-return null;
-}
-
+/* Enhanced Math including % */
 function solveMath(expr){
-expr=expr.replace(/π|pi/gi,"Math.PI")
-.replace(/e/gi,"Math.E")
-.replace(/sqrt/gi,"Math.sqrt")
-.replace(/sin/gi,"Math.sin")
-.replace(/cos/gi,"Math.cos")
-.replace(/tan/gi,"Math.tan")
-.replace(/\^/g,"**")
-.replace(/(\d+)!/g,(m,n)=>factorial(parseInt(n)));
+let percentOf = expr.match(/(\d+(\.\d+)?)\s*%\s*от\s*(\d+(\.\d+)?)/i);
+if(percentOf){let p=parseFloat(percentOf[1]);let n=parseFloat(percentOf[3]);return "Ответ: "+(n*p/100);}
+let plusPercent = expr.match(/(\d+(\.\d+)?)\s*\+\s*(\d+(\.\d+)?)%/);if(plusPercent){let n=parseFloat(plusPercent[1]);let p=parseFloat(plusPercent[3]);return "Ответ: "+(n+(n*p/100));}
+let minusPercent = expr.match(/(\d+(\.\d+)?)\s*\-\s*(\d+(\.\d+)?)%/);if(minusPercent){let n=parseFloat(minusPercent[1]);let p=parseFloat(minusPercent[3]);return "Ответ: "+(n-(n*p/100));}
+let multPercent = expr.match(/(\d+(\.\d+)?)\s*\*\s*(\d+(\.\d+)?)%/);if(multPercent){let n=parseFloat(multPercent[1]);let p=parseFloat(multPercent[3]);return "Ответ: "+(n*(p/100));}
+let divPercent = expr.match(/(\d+(\.\d+)?)\s*\/\s*(\d+(\.\d+)?)%/);if(divPercent){let n=parseFloat(divPercent[1]);let p=parseFloat(divPercent[3]);return "Ответ: "+(n/(p/100));}
+let simplePercent = expr.match(/(\d+(\.\d+)?)%$/);if(simplePercent){let p=parseFloat(simplePercent[1]);return "Ответ: "+(p/100);}
 
-try{
-let result=Function('"use strict";return ('+expr+')')();
-if(typeof result==="number"&&!isNaN(result))
-return "Ответ: "+result;
-}catch{}
-return null;
+// standard math
+expr=expr.replace(/π|pi/gi,"Math.PI").replace(/\be\b/gi,"Math.E").replace(/sqrt/gi,"Math.sqrt").replace(/sin/gi,"Math.sin").replace(/cos/gi,"Math.cos").replace(/tan/gi,"Math.tan").replace(/\^/g,"**").replace(/(\d+)!/g,(m,n)=>factorial(parseInt(n)));
+try{let result=Function('"use strict";return ('+expr+')')();if(typeof result==="number"&&!isNaN(result))return "Ответ: "+result;}catch{}return null;
 }
 
 function send(){
-let text=input.value.trim();
-if(!text) return;
-addMessage(text,"user");
-input.value="";
-
+let text=input.value.trim();if(!text)return;
+addMessage(text,"user");input.value="";
 setTimeout(()=>{
-let chatAnswer=talk(text);
-if(chatAnswer){addMessage(chatAnswer,"ai"); return;}
-
-let eq=parseEquation(text);
-if(eq){addMessage(eq,"ai"); return;}
-
-let math=solveMath(text);
-if(math){addMessage(math,"ai"); return;}
-
+let chatAnswer=talk(text);if(chatAnswer){addMessage(chatAnswer,"ai");return;}
+let eq=parseEquation(text);if(eq){addMessage(eq,"ai");return;}
+let math=solveMath(text);if(math){addMessage(math,"ai");return;}
 addMessage("Я могу общаться и решать математические задачи. Попробуйте пример.","ai");
 },500);
 }
-
 input.addEventListener("keypress",e=>{if(e.key==="Enter")send();});
 </script>
-
 </body>
-</html> 
+</html>
