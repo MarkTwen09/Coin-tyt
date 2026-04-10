@@ -3,220 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Т-ГЕТТО БАНК</title>
+    <title>GHETTO PRIVATE BANKING</title>
     <style>
         :root {
-            --bg: #000000;
-            --card-gray: #1c1c1e;
-            --tinkoff-yellow: #ffdd2d;
+            --bg: #050505;
+            --card: #121212;
+            --accent: #d4af37; /* Золотой акцент для строгости */
             --text-main: #ffffff;
-            --text-muted: #8e8e93;
-            --green: #30d158;
+            --text-muted: #555555;
+            --border: #222222;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background: var(--bg); color: var(--text-main); font-family: -apple-system, system-ui, sans-serif; margin: 0; display: flex; justify-content: center; }
+        body { background: var(--bg); color: var(--text-main); font-family: 'Inter', -apple-system, sans-serif; margin: 0; display: flex; justify-content: center; letter-spacing: -0.02em; }
 
-        .container { width: 100%; max-width: 430px; min-height: 100vh; padding-bottom: 90px; }
+        .container { width: 100%; max-width: 430px; min-height: 100vh; padding-bottom: 100px; }
 
         /* HEADER */
-        .header { padding: 20px 16px; display: flex; justify-content: space-between; align-items: center; }
-        .profile-btn { width: 40px; height: 40px; background: #2c2c2e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; border: 1px solid #3a3a3c; }
+        .header { padding: 30px 20px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+        .logo { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 4px; color: var(--accent); }
+        .user-id { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
 
-        /* STORIES */
-        .stories { display: flex; gap: 12px; overflow-x: auto; padding: 0 16px 20px; scrollbar-width: none; }
-        .stories::-webkit-scrollbar { display: none; }
-        .story { min-width: 68px; height: 68px; border-radius: 50%; border: 2px solid var(--tinkoff-yellow); padding: 2px; }
-        .story-img { width: 100%; height: 100%; border-radius: 50%; background: #2c2c2e; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+        /* PREM CARD */
+        .card-box { margin: 0 20px 30px; position: relative; }
+        .card { 
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%); 
+            padding: 30px; border-radius: 16px; border: 1px solid var(--border);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+        .balance-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; letter-spacing: 1px; }
+        .balance { font-size: 36px; font-weight: 300; margin-bottom: 40px; }
+        .card-footer { display: flex; justify-content: space-between; align-items: flex-end; }
+        .card-chip { width: 35px; height: 25px; background: #333; border-radius: 4px; margin-bottom: 10px; opacity: 0.5; }
 
-        /* MAIN CARD */
-        .main-card { background: linear-gradient(135deg, #2c2c2e 0%, #111 100%); margin: 0 16px 24px; padding: 24px; border-radius: 24px; border: 1px solid #3a3a3c; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
-        .card-label { color: var(--text-muted); font-size: 14px; margin-bottom: 8px; }
-        .balance { font-size: 34px; font-weight: 800; letter-spacing: -1px; }
+        /* ACTION BAR */
+        .nav-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin: 0 20px 40px; border-radius: 12px; overflow: hidden; }
+        .nav-item { background: var(--bg); padding: 20px; text-align: center; cursor: pointer; transition: 0.2s; font-size: 12px; text-transform: uppercase; font-weight: 600; color: var(--accent); }
+        .nav-item:active { background: #111; }
 
-        /* QUICK ACTIONS */
-        .actions-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 16px; margin-bottom: 30px; }
-        .action-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
-        .action-icon { width: 56px; height: 56px; background: var(--card-gray); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 24px; transition: 0.2s; }
-        .action-item:active .action-icon { transform: scale(0.92); background: #2c2c2e; }
-        .action-text { font-size: 11px; color: var(--text-main); }
-
-        /* CONTACTS LIST (НОВОЕ) */
-        .section-title { padding: 0 16px; margin-bottom: 12px; font-size: 20px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
-        .contacts-scroll { display: flex; gap: 15px; overflow-x: auto; padding: 0 16px 25px; scrollbar-width: none; }
-        .contacts-scroll::-webkit-scrollbar { display: none; }
-        .contact-card { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; min-width: 70px; }
-        .contact-avatar { width: 54px; height: 54px; background: #2c2c2e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; border: 1px solid #333; }
-        .contact-name { font-size: 12px; text-align: center; color: var(--text-main); }
+        /* CONTACTS */
+        .section-header { padding: 0 20px; margin-bottom: 20px; font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 2px; }
+        .contact-list { padding: 0 20px; display: flex; gap: 20px; overflow-x: auto; scrollbar-width: none; margin-bottom: 40px; }
+        .contact { min-width: 60px; text-align: center; cursor: pointer; }
+        .contact-circle { width: 60px; height: 60px; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; font-size: 18px; color: var(--text-muted); }
+        .contact-name { font-size: 11px; color: var(--text-main); font-weight: 500; }
 
         /* MODAL */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: flex-end; z-index: 1000; }
-        .modal-content { background: var(--card-gray); width: 100%; padding: 30px 20px; border-radius: 24px 24px 0 0; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .modal-input { width: 100%; background: #2c2c2e; border: 1px solid #3a3a3c; padding: 18px; border-radius: 14px; color: #fff; font-size: 20px; margin: 20px 0; text-align: center; }
-        .btn-send { width: 100%; background: var(--tinkoff-yellow); color: #000; padding: 18px; border-radius: 14px; border: none; font-weight: 700; font-size: 16px; cursor: pointer; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
+        .modal-box { width: 100%; max-width: 350px; text-align: center; }
+        .modal-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border); color: #fff; font-size: 40px; text-align: center; margin: 40px 0; font-weight: 200; }
+        .modal-btn { width: 100%; background: var(--accent); color: #000; padding: 20px; border-radius: 4px; font-weight: 700; text-transform: uppercase; font-size: 12px; border: none; cursor: pointer; }
 
-        /* TAB BAR */
-        .tab-bar { position: fixed; bottom: 0; width: 100%; max-width: 430px; background: rgba(20,20,20,0.95); backdrop-filter: blur(15px); border-top: 1px solid #2c2c2e; display: flex; justify-content: space-around; padding: 10px 0 30px; }
-        .tab { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 10px; gap: 4px; }
-        .tab.active { color: var(--tinkoff-yellow); }
+        /* HISTORY */
+        .history-item { display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid #111; font-size: 13px; }
+        .h-name { font-weight: 600; margin-bottom: 4px; }
+        .h-date { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+        .h-amt { font-weight: 700; letter-spacing: 0.5px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <div class="profile-btn" id="user-initial">A</div>
-        <div style="font-weight: 700; font-size: 17px;">ГЕТТО БАНК</div>
-        <div style="font-size: 22px;">⚙️</div>
+        <div class="logo">Ghetto Private</div>
+        <div class="user-id" id="account-id">ID: 8821-4432</div>
     </div>
 
-    <div class="stories">
-        <div class="story"><div class="story-img">🍟</div></div>
-        <div class="story"><div class="story-img">💎</div></div>
-        <div class="story"><div class="story-img">🎮</div></div>
-        <div class="story"><div class="story-img">🕶️</div></div>
-        <div class="story"><div class="story-img">🔋</div></div>
-    </div>
-
-    <div class="main-card">
-        <div class="card-label">Гетто Black • MasterCard</div>
-        <div class="balance" id="balance-display">150 000,00 ₽</div>
-        <div style="margin-top: 15px; font-family: monospace; color: var(--text-muted); letter-spacing: 2px;">•••• 4432</div>
-    </div>
-
-    <div class="actions-row">
-        <div class="action-item" onclick="openTopUp()">
-            <div class="action-icon" style="background: var(--tinkoff-yellow); color: black;">+</div>
-            <span class="action-text">Пополнить</span>
-        </div>
-        <div class="action-item">
-            <div class="action-icon">⇄</div>
-            <span class="action-text">Перевод</span>
-        </div>
-        <div class="action-item">
-            <div class="action-icon">🧾</div>
-            <span class="action-text">Счета</span>
-        </div>
-        <div class="action-item">
-            <div class="action-icon">🛠️</div>
-            <span class="action-text">Сервис</span>
+    <div class="card-box">
+        <div class="card">
+            <div class="balance-label">Available Balance</div>
+            <div class="balance" id="main-balance">250 000,00 ₽</div>
+            <div class="card-footer">
+                <div class="card-chip"></div>
+                <div style="font-family: monospace; font-size: 14px; color: var(--text-muted);">•••• 7789</div>
+            </div>
         </div>
     </div>
 
-    <div class="section-title">Переводы людям</div>
-    <div class="contacts-scroll" id="contacts-list">
-        </div>
+    <div class="nav-grid">
+        <div class="nav-item" onclick="openReceive()">Принять перевод</div>
+        <div class="nav-item" onclick="topUp()">Пополнить</div>
+    </div>
 
-    <div class="section-title">История</div>
-    <div id="history-container" style="padding: 0 16px;"></div>
+    <div class="section-header">Direct Transfers</div>
+    <div class="contact-list" id="contacts"></div>
+
+    <div class="section-header">Recent Transactions</div>
+    <div id="history"></div>
 </div>
 
-<div class="modal" id="transfer-modal">
-    <div class="modal-content">
-        <div style="text-align: center; font-size: 18px; font-weight: 600;" id="target-name">Перевод Коле</div>
-        <input type="number" class="modal-input" id="amount-input" placeholder="0 ₽" autofocus>
-        <button class="btn-send" onclick="confirmTransfer()">Перевести</button>
-        <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--text-muted); margin-top:15px;">Отмена</button>
+<div class="modal" id="modal">
+    <div class="modal-box">
+        <div id="modal-title" style="text-transform: uppercase; font-size: 11px; letter-spacing: 2px; color: var(--text-muted);">Transfer Amount</div>
+        <input type="number" class="modal-input" id="amount-input" placeholder="0">
+        <button class="modal-btn" onclick="executeAction()">Confirm Transaction</button>
+        <div onclick="closeModal()" style="margin-top: 30px; font-size: 10px; text-transform: uppercase; color: var(--text-muted); cursor: pointer; letter-spacing: 1px;">Cancel</div>
     </div>
-</div>
-
-<div class="tab-bar">
-    <div class="tab active"><span>🏠</span><span>Главная</span></div>
-    <div class="tab"><span>📊</span><span>Платежи</span></div>
-    <div class="tab"><span>💬</span><span>Чат</span></div>
-    <div class="tab"><span>📁</span><span>Еще</span></div>
 </div>
 
 <script>
-    // База данных пользователей (те, кто "зарегистрирован")
-    const users = [
-        { id: 1, name: "Коля", avatar: "👦", color: "#ff453a" },
-        { id: 2, name: "Мама", avatar: "👩", color: "#30d158" },
-        { id: 3, name: "Бабуля", avatar: "👵", color: "#5856d6" },
-        { id: 4, name: "Брат", avatar: "👺", color: "#ff9f0a" },
-        { id: 5, name: "Aura AI", avatar: "🤖", color: "#007aff" }
+    let balance = parseFloat(localStorage.getItem('bank_balance')) || 250000;
+    let targetContact = null;
+
+    const contacts = [
+        { name: "Коля", id: "KOL" },
+        { name: "Мама", id: "MUM" },
+        { name: "Брат", id: "BRO" },
+        { name: "BAZA", id: "BAZ" }
     ];
 
-    let balance = parseFloat(localStorage.getItem('g_balance')) || 250000;
-    let selectedUser = null;
-
-    // Инициализация
     function init() {
         renderContacts();
         updateUI();
     }
 
     function updateUI() {
-        document.getElementById('balance-display').innerText = balance.toLocaleString('ru-RU') + ',00 ₽';
-        localStorage.setItem('g_balance', balance);
+        document.getElementById('main-balance').innerText = balance.toLocaleString('ru-RU') + ',00 ₽';
+        localStorage.setItem('bank_balance', balance);
     }
 
     function renderContacts() {
-        const list = document.getElementById('contacts-list');
-        users.forEach(u => {
+        const container = document.getElementById('contacts');
+        contacts.forEach(c => {
             const div = document.createElement('div');
-            div.className = 'contact-card';
-            div.onclick = () => openTransfer(u);
-            div.innerHTML = `
-                <div class="contact-avatar" style="background: ${u.color}33; color: ${u.color}">${u.avatar}</div>
-                <div class="contact-name">${u.name}</div>
-            `;
-            list.appendChild(div);
+            div.className = 'contact';
+            div.onclick = () => openTransfer(c);
+            div.innerHTML = `<div class="contact-circle">${c.name[0]}</div><div class="contact-name">${c.name}</div>`;
+            container.appendChild(div);
         });
     }
 
-    function openTransfer(user) {
-        selectedUser = user;
-        document.getElementById('target-name').innerText = `Перевод: ${user.name}`;
-        document.getElementById('transfer-modal').style.display = 'flex';
+    function openTransfer(contact) {
+        targetContact = contact;
+        document.getElementById('modal-title').innerText = `Transfer to ${contact.name}`;
+        document.getElementById('modal').style.display = 'flex';
         document.getElementById('amount-input').focus();
     }
 
-    function openTopUp() {
-        let amt = prompt("Сумма пополнения:");
-        if (amt && !isNaN(amt)) {
-            balance += parseFloat(amt);
-            addHistory("Пополнение", amt, true);
-            updateUI();
+    function openReceive() {
+        const code = prompt("Введите код перевода от друга:");
+        if (code) {
+            try {
+                const parts = code.split('-');
+                if (parts[0] !== "GH") throw new Error();
+                const amt = parseFloat(atob(parts[2]));
+                
+                let used = JSON.parse(localStorage.getItem('used_codes') || '[]');
+                if (used.includes(code)) return alert("Этот перевод уже получен.");
+
+                balance += amt;
+                used.push(code);
+                localStorage.setItem('used_codes', JSON.stringify(used));
+                addHistory(`От: ${parts[1]}`, amt, true);
+                updateUI();
+                alert(`Зачислено: ${amt} ₽`);
+            } catch(e) { alert("Ошибка: Код недействителен."); }
         }
     }
 
-    function confirmTransfer() {
-        const input = document.getElementById('amount-input');
-        const amt = parseFloat(input.value);
-
+    function executeAction() {
+        const amt = parseFloat(document.getElementById('amount-input').value);
         if (amt > 0 && amt <= balance) {
             balance -= amt;
-            addHistory(selectedUser.name, amt, false);
+            const transferCode = `GH-${targetContact.name.toUpperCase()}-${btoa(amt)}`;
+            
+            // Это "настоящая" часть: код, который можно передать
+            alert(`Перевод создан!\nОтправь этот код другу:\n\n${transferCode}`);
+            console.log("Code:", transferCode);
+            
+            addHistory(targetContact.name, amt, false);
             updateUI();
             closeModal();
-            alert(`Успешно! Переведено ${amt} ₽ пользователю ${selectedUser.name}`);
         } else {
-            alert("Недостаточно средств или неверная сумма!");
+            alert("Insufficient funds or invalid amount.");
+        }
+    }
+
+    function topUp() {
+        const amt = prompt("Сумма пополнения:");
+        if (amt && !isNaN(amt)) {
+            balance += parseFloat(amt);
+            addHistory("Deposit", amt, true);
+            updateUI();
         }
     }
 
     function closeModal() {
-        document.getElementById('transfer-modal').style.display = 'none';
+        document.getElementById('modal').style.display = 'none';
         document.getElementById('amount-input').value = '';
     }
 
-    function addHistory(name, amt, isPlus) {
-        const container = document.getElementById('history-container');
-        const item = document.createElement('div');
-        item.style = "display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #1c1c1e;";
-        item.innerHTML = `
-            <div style="display: flex; gap: 15px; align-items: center;">
-                <div style="width: 40px; height: 40px; background: #1c1c1e; border-radius: 10px; display: flex; align-items: center; justify-content: center;">${isPlus ? '💰' : '👤'}</div>
-                <div>
-                    <div style="font-weight: 500;">${name}</div>
-                    <div style="color: var(--text-muted); font-size: 12px;">Сегодня</div>
-                </div>
+    function addHistory(name, amt, plus) {
+        const h = document.getElementById('history');
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.innerHTML = `
+            <div>
+                <div class="h-name">${name}</div>
+                <div class="h-date">${new Date().toLocaleTimeString()}</div>
             </div>
-            <div style="font-weight: 700; color: ${isPlus ? 'var(--green)' : 'white'}">${isPlus ? '+' : '-'} ${parseFloat(amt).toLocaleString()} ₽</div>
+            <div class="h-amt" style="color: ${plus ? 'var(--accent)' : '#fff'}">${plus ? '+' : '-'} ${parseFloat(amt).toLocaleString()} ₽</div>
         `;
-        container.prepend(item);
+        h.prepend(div);
     }
 
     init();
