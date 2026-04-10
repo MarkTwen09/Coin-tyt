@@ -3,212 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GHETTO PRIVATE BANKING</title>
+    <title>GHETTO OS | PRIVATE BANKING</title>
     <style>
         :root {
-            --bg: #050505;
-            --card: #121212;
-            --accent: #d4af37; /* Золотой акцент для строгости */
-            --text-main: #ffffff;
-            --text-muted: #555555;
-            --border: #222222;
+            --bg: #000000;
+            --surface: #0a0a0a;
+            --accent: #ffffff;
+            --accent-dim: #333333;
+            --danger: #ff3b30;
+            --success: #34c759;
+            --font-main: 'Inter', -apple-system, sans-serif;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background: var(--bg); color: var(--text-main); font-family: 'Inter', -apple-system, sans-serif; margin: 0; display: flex; justify-content: center; letter-spacing: -0.02em; }
-
-        .container { width: 100%; max-width: 430px; min-height: 100vh; padding-bottom: 100px; }
+        body { background: var(--bg); color: var(--accent); font-family: var(--font-main); margin: 0; display: flex; justify-content: center; overflow-x: hidden; }
+        
+        .app-container { width: 100%; max-width: 430px; min-height: 100vh; padding: 20px; display: none; }
+        
+        /* РЕГИСТРАЦИЯ */
+        #auth-screen { width: 100%; max-width: 430px; height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 40px; text-align: center; }
+        .auth-title { font-size: 24px; font-weight: 200; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 50px; }
+        .auth-input { background: transparent; border: none; border-bottom: 1px solid var(--accent-dim); color: #fff; font-size: 18px; padding: 15px; text-align: center; margin-bottom: 30px; transition: 0.3s; }
+        .auth-input:focus { border-bottom-color: #fff; }
+        .btn { background: #fff; color: #000; border: none; padding: 20px; border-radius: 2px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; }
 
         /* HEADER */
-        .header { padding: 30px 20px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
-        .logo { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 4px; color: var(--accent); }
-        .user-id { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; margin-top: 10px; }
+        .brand { font-size: 14px; font-weight: 800; letter-spacing: 3px; }
+        .id-badge { font-size: 10px; color: var(--accent-dim); }
 
-        /* PREM CARD */
-        .card-box { margin: 0 20px 30px; position: relative; }
-        .card { 
-            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%); 
-            padding: 30px; border-radius: 16px; border: 1px solid var(--border);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-        }
-        .balance-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; letter-spacing: 1px; }
-        .balance { font-size: 36px; font-weight: 300; margin-bottom: 40px; }
-        .card-footer { display: flex; justify-content: space-between; align-items: flex-end; }
-        .card-chip { width: 35px; height: 25px; background: #333; border-radius: 4px; margin-bottom: 10px; opacity: 0.5; }
-
-        /* ACTION BAR */
-        .nav-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin: 0 20px 40px; border-radius: 12px; overflow: hidden; }
-        .nav-item { background: var(--bg); padding: 20px; text-align: center; cursor: pointer; transition: 0.2s; font-size: 12px; text-transform: uppercase; font-weight: 600; color: var(--accent); }
-        .nav-item:active { background: #111; }
+        /* CARD */
+        .premium-card { background: #050505; border: 1px solid var(--accent-dim); border-radius: 4px; padding: 30px; margin-bottom: 40px; position: relative; overflow: hidden; }
+        .card-label { font-size: 10px; text-transform: uppercase; color: var(--accent-dim); letter-spacing: 2px; margin-bottom: 10px; }
+        .balance { font-size: 38px; font-weight: 300; letter-spacing: -1px; }
 
         /* CONTACTS */
-        .section-header { padding: 0 20px; margin-bottom: 20px; font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 2px; }
-        .contact-list { padding: 0 20px; display: flex; gap: 20px; overflow-x: auto; scrollbar-width: none; margin-bottom: 40px; }
-        .contact { min-width: 60px; text-align: center; cursor: pointer; }
-        .contact-circle { width: 60px; height: 60px; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; font-size: 18px; color: var(--text-muted); }
-        .contact-name { font-size: 11px; color: var(--text-main); font-weight: 500; }
+        .section-header { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-dim); margin-bottom: 20px; display: flex; justify-content: space-between; }
+        .contacts-grid { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; scrollbar-width: none; }
+        .contacts-grid::-webkit-scrollbar { display: none; }
+        .contact-item { min-width: 70px; text-align: center; }
+        .contact-avatar { width: 60px; height: 60px; border: 1px solid var(--accent-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; font-size: 18px; transition: 0.3s; cursor: pointer; }
+        .contact-avatar:hover { border-color: #fff; background: #fff; color: #000; }
+        .contact-name { font-size: 11px; font-weight: 500; }
+
+        /* ACTIONS */
+        .quick-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 40px; }
+        .nav-btn { background: var(--surface); border: 1px solid var(--accent-dim); color: #fff; padding: 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; }
+        .nav-btn:hover { background: #fff; color: #000; }
 
         /* MODAL */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
-        .modal-box { width: 100%; max-width: 350px; text-align: center; }
-        .modal-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border); color: #fff; font-size: 40px; text-align: center; margin: 40px 0; font-weight: 200; }
-        .modal-btn { width: 100%; background: var(--accent); color: #000; padding: 20px; border-radius: 4px; font-weight: 700; text-transform: uppercase; font-size: 12px; border: none; cursor: pointer; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; align-items: center; justify-content: center; z-index: 100; padding: 30px; }
+        .modal-inner { width: 100%; max-width: 350px; text-align: center; }
+        .modal-title { font-size: 12px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-dim); }
+        .modal-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; color: #fff; font-size: 32px; text-align: center; margin: 40px 0; font-weight: 200; }
 
         /* HISTORY */
-        .history-item { display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid #111; font-size: 13px; }
-        .h-name { font-weight: 600; margin-bottom: 4px; }
-        .h-date { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
-        .h-amt { font-weight: 700; letter-spacing: 0.5px; }
+        .history-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #111; font-size: 12px; }
+        .h-dim { color: var(--accent-dim); font-size: 10px; margin-top: 4px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <div class="logo">Ghetto Private</div>
-        <div class="user-id" id="account-id">ID: 8821-4432</div>
+    <div id="auth-screen">
+        <div class="auth-title">GHETTO PRIVATE</div>
+        <input type="text" id="reg-name" class="auth-input" placeholder="Введите имя">
+        <button class="btn" onclick="register()">Создать аккаунт</button>
     </div>
 
-    <div class="card-box">
-        <div class="card">
-            <div class="balance-label">Available Balance</div>
-            <div class="balance" id="main-balance">250 000,00 ₽</div>
-            <div class="card-footer">
-                <div class="card-chip"></div>
-                <div style="font-family: monospace; font-size: 14px; color: var(--text-muted);">•••• 7789</div>
+    <div class="app-container" id="app">
+        <div class="header">
+            <div class="brand">GHETTO OS</div>
+            <div class="id-badge" id="my-id">ID: ----</div>
+        </div>
+
+        <div class="premium-card">
+            <div class="card-label">Total Assets</div>
+            <div class="balance" id="main-balance">0,00 ₽</div>
+            <div style="margin-top: 30px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-size: 12px; color: #333; letter-spacing: 2px;">• • • • 7789</div>
+                <div style="font-weight: 900; font-style: italic;">BLACK</div>
             </div>
+        </div>
+
+        <div class="quick-nav">
+            <button class="nav-btn" onclick="receiveMoney()">Принять код</button>
+            <button class="nav-btn" onclick="topUp()">Депозит</button>
+        </div>
+
+        <div class="section-header">
+            <span>Зарегистрированные люди</span>
+            <span style="color: #fff; cursor: pointer;" onclick="addFriend()">+ Добавить ID</span>
+        </div>
+        <div class="contacts-grid" id="contacts">
+            </div>
+
+        <div class="section-header">Транзакции</div>
+        <div id="history"></div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-inner">
+            <div id="modal-title" class="modal-title">AMOUNT</div>
+            <input type="number" id="amount-input" class="modal-input" placeholder="0">
+            <button class="btn" style="width: 100%;" onclick="executeTransfer()">Подтвердить</button>
+            <div onclick="closeModal()" style="margin-top: 30px; font-size: 10px; color: #333; cursor: pointer; letter-spacing: 2px;">ОТМЕНА</div>
         </div>
     </div>
 
-    <div class="nav-grid">
-        <div class="nav-item" onclick="openReceive()">Принять перевод</div>
-        <div class="nav-item" onclick="topUp()">Пополнить</div>
-    </div>
-
-    <div class="section-header">Direct Transfers</div>
-    <div class="contact-list" id="contacts"></div>
-
-    <div class="section-header">Recent Transactions</div>
-    <div id="history"></div>
-</div>
-
-<div class="modal" id="modal">
-    <div class="modal-box">
-        <div id="modal-title" style="text-transform: uppercase; font-size: 11px; letter-spacing: 2px; color: var(--text-muted);">Transfer Amount</div>
-        <input type="number" class="modal-input" id="amount-input" placeholder="0">
-        <button class="modal-btn" onclick="executeAction()">Confirm Transaction</button>
-        <div onclick="closeModal()" style="margin-top: 30px; font-size: 10px; text-transform: uppercase; color: var(--text-muted); cursor: pointer; letter-spacing: 1px;">Cancel</div>
-    </div>
-</div>
-
 <script>
-    let balance = parseFloat(localStorage.getItem('bank_balance')) || 250000;
-    let targetContact = null;
+    let user = JSON.parse(localStorage.getItem('gh_user')) || null;
+    let balance = parseFloat(localStorage.getItem('gh_bal')) || 100000;
+    let friends = JSON.parse(localStorage.getItem('gh_friends')) || [];
+    let currentTarget = null;
 
-    const contacts = [
-        { name: "Коля", id: "KOL" },
-        { name: "Мама", id: "MUM" },
-        { name: "Брат", id: "BRO" },
-        { name: "BAZA", id: "BAZ" }
-    ];
+    function register() {
+        const name = document.getElementById('reg-name').value;
+        if (name.length < 2) return alert("Имя слишком короткое");
+        const id = "GH-" + Math.floor(1000 + Math.random() * 9000);
+        user = { name, id };
+        localStorage.setItem('gh_user', JSON.stringify(user));
+        location.reload();
+    }
+
+    if (user) {
+        document.getElementById('auth-screen').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('my-id').innerText = `ID: ${user.id}`;
+        init();
+    }
 
     function init() {
-        renderContacts();
         updateUI();
+        renderFriends();
     }
 
     function updateUI() {
-        document.getElementById('main-balance').innerText = balance.toLocaleString('ru-RU') + ',00 ₽';
-        localStorage.setItem('bank_balance', balance);
+        document.getElementById('main-balance').innerText = balance.toLocaleString('ru-RU') + ' ₽';
+        localStorage.setItem('gh_bal', balance);
     }
 
-    function renderContacts() {
-        const container = document.getElementById('contacts');
-        contacts.forEach(c => {
+    function addFriend() {
+        const friendId = prompt("Введите ID зарегистрированного пользователя (например, GH-1234):");
+        if (friendId && friendId.startsWith("GH-")) {
+            const name = prompt("Как назвать этого человека в списке?");
+            if (name) {
+                friends.push({ id: friendId, name: name });
+                localStorage.setItem('gh_friends', JSON.stringify(friends));
+                renderFriends();
+            }
+        } else { alert("Неверный формат ID!"); }
+    }
+
+    function renderFriends() {
+        const list = document.getElementById('contacts');
+        list.innerHTML = '';
+        friends.forEach(f => {
             const div = document.createElement('div');
-            div.className = 'contact';
-            div.onclick = () => openTransfer(c);
-            div.innerHTML = `<div class="contact-circle">${c.name[0]}</div><div class="contact-name">${c.name}</div>`;
-            container.appendChild(div);
+            div.className = 'contact-item';
+            div.onclick = () => openTransfer(f);
+            div.innerHTML = `<div class="contact-avatar">${f.name[0]}</div><div class="contact-name">${f.name}</div>`;
+            list.appendChild(div);
         });
     }
 
-    function openTransfer(contact) {
-        targetContact = contact;
-        document.getElementById('modal-title').innerText = `Transfer to ${contact.name}`;
+    function openTransfer(friend) {
+        currentTarget = friend;
+        document.getElementById('modal-title').innerText = `Перевод для ${friend.name}`;
         document.getElementById('modal').style.display = 'flex';
-        document.getElementById('amount-input').focus();
     }
 
-    function openReceive() {
-        const code = prompt("Введите код перевода от друга:");
-        if (code) {
-            try {
-                const parts = code.split('-');
-                if (parts[0] !== "GH") throw new Error();
-                const amt = parseFloat(atob(parts[2]));
-                
-                let used = JSON.parse(localStorage.getItem('used_codes') || '[]');
-                if (used.includes(code)) return alert("Этот перевод уже получен.");
-
-                balance += amt;
-                used.push(code);
-                localStorage.setItem('used_codes', JSON.stringify(used));
-                addHistory(`От: ${parts[1]}`, amt, true);
-                updateUI();
-                alert(`Зачислено: ${amt} ₽`);
-            } catch(e) { alert("Ошибка: Код недействителен."); }
-        }
-    }
-
-    function executeAction() {
+    function executeTransfer() {
         const amt = parseFloat(document.getElementById('amount-input').value);
         if (amt > 0 && amt <= balance) {
             balance -= amt;
-            const transferCode = `GH-${targetContact.name.toUpperCase()}-${btoa(amt)}`;
-            
-            // Это "настоящая" часть: код, который можно передать
-            alert(`Перевод создан!\nОтправь этот код другу:\n\n${transferCode}`);
-            console.log("Code:", transferCode);
-            
-            addHistory(targetContact.name, amt, false);
+            const code = `TX-${user.id}-${btoa(amt)}`;
+            alert(`Успешно! Отправь этот код ${currentTarget.name}:\n\n${code}`);
+            addHistory(`Перевод: ${currentTarget.name}`, amt, false);
             updateUI();
             closeModal();
-        } else {
-            alert("Insufficient funds or invalid amount.");
+        } else { alert("Ошибка баланса"); }
+    }
+
+    function receiveMoney() {
+        const code = prompt("Вставь код перевода:");
+        if (code && code.startsWith("TX-")) {
+            const amt = parseFloat(atob(code.split('-')[2]));
+            let used = JSON.parse(localStorage.getItem('used_tx') || '[]');
+            if (used.includes(code)) return alert("Код уже использован");
+            
+            balance += amt;
+            used.push(code);
+            localStorage.setItem('used_tx', JSON.stringify(used));
+            addHistory("Принятие кода", amt, true);
+            updateUI();
+            alert("Деньги зачислены!");
         }
     }
 
     function topUp() {
         const amt = prompt("Сумма пополнения:");
-        if (amt && !isNaN(amt)) {
-            balance += parseFloat(amt);
-            addHistory("Deposit", amt, true);
-            updateUI();
-        }
+        if (amt) { balance += parseFloat(amt); updateUI(); addHistory("Депозит", amt, true); }
     }
 
-    function closeModal() {
-        document.getElementById('modal').style.display = 'none';
-        document.getElementById('amount-input').value = '';
-    }
-
-    function addHistory(name, amt, plus) {
+    function addHistory(title, amt, plus) {
         const h = document.getElementById('history');
-        const div = document.createElement('div');
-        div.className = 'history-item';
-        div.innerHTML = `
-            <div>
-                <div class="h-name">${name}</div>
-                <div class="h-date">${new Date().toLocaleTimeString()}</div>
-            </div>
-            <div class="h-amt" style="color: ${plus ? 'var(--accent)' : '#fff'}">${plus ? '+' : '-'} ${parseFloat(amt).toLocaleString()} ₽</div>
-        `;
-        h.prepend(div);
+        const row = document.createElement('div');
+        row.className = 'history-row';
+        row.innerHTML = `<div><div>${title}</div><div class="h-dim">${new Date().toLocaleTimeString()}</div></div>
+                         <div style="font-weight:700; color:${plus ? 'var(--success)' : '#fff'}">${plus ? '+' : '-'} ${parseFloat(amt).toLocaleString()}</div>`;
+        h.prepend(row);
     }
 
-    init();
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
 </script>
-
 </body>
 </html>
