@@ -3,149 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GHETTO BANK | FINAL BLACK</title>
+    <title>GHETTO BANK | LIVE NETWORK</title>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
     <style>
-        :root { --bg: #000; --card: #111; --accent: #2ecc71; --gold: #ffdd2d; --text: #fff; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, sans-serif; }
-        body { background: var(--bg); color: var(--text); margin: 0; padding: 0; display: flex; justify-content: center; }
+        :root { --bg: #000; --card: #111; --accent: #2ecc71; --gold: #ffdd2d; --text: #fff; --gray: #8e8e93; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, 'SF Pro Display', sans-serif; margin: 0; display: flex; justify-content: center; }
         
-        #app { width: 100%; max-width: 430px; min-height: 100vh; padding: 20px; display: none; }
-        #auth { width: 100%; max-width: 430px; height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 40px; text-align: center; }
+        #app { width: 100%; max-width: 430px; min-height: 100vh; padding: 25px 20px; display: none; }
+        #auth { width: 100%; max-width: 430px; height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 40px; }
 
-        /* PREMIUM UI */
+        /* HEADER */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .net-status { font-size: 10px; background: rgba(46, 204, 113, 0.1); color: var(--accent); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(46,204,113,0.2); }
+
+        /* КАРТА */
         .card { 
             background: linear-gradient(135deg, #1c1c1e 0%, #000 100%); 
-            border: 1px solid #222; border-radius: 30px; padding: 30px; margin-bottom: 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border: 1px solid #222; border-radius: 30px; padding: 30px; margin-bottom: 35px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6); position: relative; overflow: hidden;
         }
-        .bal-val { font-size: 42px; font-weight: 800; letter-spacing: -1.5px; margin: 10px 0; }
+        .card::after { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 60%); }
+        .bal-val { font-size: 42px; font-weight: 700; letter-spacing: -1.5px; margin: 10px 0; }
         
-        .box { background: var(--card); border: 1px solid #222; border-radius: 24px; padding: 20px; margin-bottom: 15px; }
-        input { background: #000; border: 1px solid #333; border-radius: 12px; padding: 15px; color: #fff; width: 100%; font-size: 16px; margin-bottom: 10px; outline: none; }
-        input:focus { border-color: var(--accent); }
+        /* ПЕРЕВОДЫ */
+        .box { background: var(--card); border: 1px solid #222; border-radius: 26px; padding: 25px; margin-bottom: 20px; }
+        .box-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
         
-        .btn { background: var(--gold); color: #000; border: none; width: 100%; padding: 20px; border-radius: 18px; font-weight: 800; font-size: 16px; cursor: pointer; transition: 0.2s; }
-        .btn:active { transform: scale(0.97); opacity: 0.9; }
+        .input-group { background: #000; border: 1px solid #333; border-radius: 16px; padding: 12px 18px; margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 10px; color: var(--gray); text-transform: uppercase; margin-bottom: 4px; }
+        input { background: none; border: none; color: #fff; width: 100%; font-size: 16px; font-weight: 600; }
 
-        .h-item { display: flex; justify-content: space-between; padding: 15px 5px; border-bottom: 1px solid #111; font-size: 14px; }
+        .btn { background: var(--gold); color: #000; border: none; width: 100%; padding: 20px; border-radius: 18px; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.2s; }
+        .btn:active { transform: scale(0.96); opacity: 0.8; }
+
+        /* ИСТОРИЯ */
+        .h-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1px solid #111; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .h-info div { font-weight: 600; font-size: 15px; }
+        .h-info span { font-size: 11px; color: var(--gray); }
     </style>
 </head>
 <body>
 
     <div id="auth">
-        <h1 style="font-size: 32px; letter-spacing: -1px;">GHETTO <span style="color:var(--gold)">PRIVATE</span></h1>
-        <input type="text" id="reg-name" placeholder="Ваше имя">
-        <button class="btn" onclick="register()">Открыть счет</button>
+        <h1 style="text-align: center; font-size: 38px; letter-spacing: -2px; margin-bottom: 10px;">GHETTO</h1>
+        <p style="text-align: center; color: var(--gray); margin-bottom: 40px;">PRIVATE BANKING SYSTEM</p>
+        <div class="input-group"><input type="text" id="reg-name" placeholder="Введите ваше имя"></div>
+        <button class="btn" onclick="register()">Создать аккаунт</button>
     </div>
 
     <div id="app">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px">
-            <div id="u-name" style="font-weight:900; font-size: 20px;">USER</div>
-            <div style="background:var(--card); padding:5px 12px; border-radius:20px; font-size:12px; border:1px solid #222" id="u-id">ID: 0000</div>
+        <div class="header">
+            <div id="u-display" style="font-weight: 800; font-size: 20px;">USER</div>
+            <div class="net-status" id="net-status">ПОДКЛЮЧЕНИЕ...</div>
         </div>
 
         <div class="card">
-            <div style="font-size:12px; color:#555; font-weight:700; text-transform:uppercase">Доступный лимит</div>
-            <div class="bal-val" id="balance">0 ₽</div>
-            <div style="display:flex; justify-content:space-between; margin-top:30px; font-family:monospace; color:#333">
-                <span>•••• 4456</span>
-                <span style="color:var(--gold); font-weight:900">PREMIUM</span>
+            <div style="font-size:13px; color:var(--gray); font-weight:600;">Баланс счета</div>
+            <div class="bal-val" id="main-bal">0 ₽</div>
+            <div style="margin-top: 30px; display: flex; justify-content: space-between; align-items: center;">
+                <span id="u-id" style="font-family: monospace; color: #444; font-size: 14px; font-weight: 800;">ID: GH-0000</span>
+                <span style="color: var(--gold); font-weight: 900; font-style: italic; font-size: 12px;">BLACK</span>
             </div>
         </div>
 
         <div class="box">
-            <div style="font-weight:800; margin-bottom:15px; font-size:18px">Мгновенный перевод</div>
-            <input type="number" id="send-amt" placeholder="Сумма ₽">
-            <button class="btn" style="background:#fff" onclick="makeTransfer()">Создать Смарт-Ссылку</button>
+            <div class="box-title">Мгновенный перевод</div>
+            <div class="input-group">
+                <label>ID получателя</label>
+                <input type="text" id="target-id" placeholder="GH-1234">
+            </div>
+            <div class="input-group">
+                <label>Сумма перевода</label>
+                <input type="number" id="send-amt" placeholder="0">
+            </div>
+            <button class="btn" id="send-btn" onclick="sendMoney()">Перевести сейчас</button>
         </div>
 
-        <div style="margin-top:30px">
-            <div style="font-weight:800; margin-bottom:15px">История операций</div>
+        <div style="padding: 10px;">
+            <div style="font-size: 18px; font-weight: 700; margin-bottom: 15px;">История</div>
             <div id="history"></div>
         </div>
     </div>
 
 <script>
-    let user = JSON.parse(localStorage.getItem('gh_final_v1')) || null;
-
-    // ПРОВЕРКА ВХОДЯЩЕГО ПЕРЕВОДА ИЗ URL
-    window.onload = () => {
-        const params = new URLSearchParams(window.location.search);
-        const transfer = params.get('pay');
-        if (transfer && user) {
-            try {
-                const data = JSON.parse(atob(transfer));
-                // Защита от повторного использования ссылки
-                let used = JSON.parse(localStorage.getItem('gh_used_tx')) || [];
-                if (!used.includes(data.key)) {
-                    user.balance += parseFloat(data.amt);
-                    used.push(data.key);
-                    localStorage.setItem('gh_used_tx', JSON.stringify(used));
-                    addHistory(`Входящий от ID:${data.from}`, data.amt, true);
-                    save();
-                    alert(`✅ ПРИНЯТО: +${data.amt} ₽`);
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                }
-            } catch(e) { console.log("Ошибка чека"); }
-        }
-        if (user) showApp();
-    };
+    // НАСТРОЙКА ЖИВОЙ СЕТИ
+    const client = mqtt.connect('wss://test.mosquitto.org:8081');
+    let user = JSON.parse(localStorage.getItem('gh_live_v1')) || null;
 
     function register() {
         const name = document.getElementById('reg-name').value;
-        if(!name) return;
-        user = { name: name, id: Math.floor(1000 + Math.random()*9000), balance: 150000, history: [] };
+        if(name.length < 2) return alert("Имя слишком короткое");
+        const id = "GH-" + Math.floor(1000 + Math.random() * 9000);
+        user = { name, id, balance: 150000, history: [] };
         save();
-        showApp();
+        location.reload();
     }
 
-    function showApp() {
+    if(user) {
         document.getElementById('auth').style.display = 'none';
         document.getElementById('app').style.display = 'block';
-        document.getElementById('u-name').innerText = user.name.toUpperCase();
+        initLiveSystem();
+        render();
+    }
+
+    function render() {
+        document.getElementById('main-bal').innerText = user.balance.toLocaleString() + ' ₽';
         document.getElementById('u-id').innerText = 'ID: ' + user.id;
-        updateUI();
-    }
-
-    function updateUI() {
-        document.getElementById('balance').innerText = user.balance.toLocaleString() + ' ₽';
-    }
-
-    function makeTransfer() {
-        const amt = parseFloat(document.getElementById('send-amt').value);
-        if (amt > 0 && amt <= user.balance) {
-            user.balance -= amt;
-            
-            // Создаем уникальный шифр перевода
-            const txData = btoa(JSON.stringify({
-                amt: amt,
-                from: user.id,
-                key: Math.random().toString(36).substring(7)
-            }));
-            
-            const link = window.location.href.split('?')[0] + '?pay=' + txData;
-            
-            // Копируем ссылку другу
-            navigator.clipboard.writeText(link);
-            addHistory(`Перевод по ссылке`, amt, false);
-            save();
-            updateUI();
-            
-            alert(`🔥 ССЫЛКА СКОПИРОВАНА!\nОтправь её другу. Как только он перейдет по ней, деньги зачислятся ему на счет.`);
-        } else {
-            alert("Ошибка: проверьте сумму и баланс");
-        }
-    }
-
-    function addHistory(msg, amt, plus) {
+        document.getElementById('u-display').innerText = user.name.toUpperCase();
+        
         const h = document.getElementById('history');
-        const d = document.createElement('div');
-        d.className = 'h-item';
-        d.innerHTML = `<div>${msg}</div><div style="font-weight:800; color:${plus?'var(--accent)':'#fff'}">${plus?'+':'-'} ${amt} ₽</div>`;
-        h.prepend(d);
+        h.innerHTML = '';
+        user.history.slice().reverse().forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'h-item';
+            div.innerHTML = `<div class="h-info"><div>${item.title}</div><span>${item.time}</span></div>
+                             <div style="font-weight:800; color:${item.plus ? 'var(--accent)' : '#fff'}">${item.plus ? '+' : '-'} ${item.amt.toLocaleString()} ₽</div>`;
+            h.appendChild(div);
+        });
     }
 
-    function save() { localStorage.setItem('gh_final_v1', JSON.stringify(user)); }
+    // СИСТЕМА ПРИЕМА ПЕРЕВОДОВ В РЕАЛЬНОМ ВРЕМЕНИ
+    function initLiveSystem() {
+        client.on('connect', () => {
+            document.getElementById('net-status').innerText = 'В СЕТИ';
+            client.subscribe(`ghetto_bank/${user.id}`); // Слушаем свой уникальный ID в облаке
+        });
+
+        client.on('message', (topic, message) => {
+            const data = JSON.parse(message.toString());
+            if(data.type === 'pay') {
+                user.balance += data.amt;
+                user.history.push({ title: `Входящий от ${data.fromName}`, amt: data.amt, plus: true, time: new Date().toLocaleTimeString() });
+                save();
+                render();
+                alert(`⚡️ МГНОВЕННО: +${data.amt} ₽ от ${data.fromName}`);
+            }
+        });
+    }
+
+    // ФУНКЦИЯ ОТПРАВКИ
+    function sendMoney() {
+        const targetId = document.getElementById('target-id').value.toUpperCase().trim();
+        const amt = parseFloat(document.getElementById('send-amt').value);
+        const btn = document.getElementById('send-btn');
+
+        if(!targetId.startsWith('GH-') || isNaN(amt) || amt <= 0) return alert("Неверные данные!");
+        if(amt > user.balance) return alert("Недостаточно средств!");
+
+        btn.innerText = "ОТПРАВКА...";
+        btn.disabled = true;
+
+        // Отправляем сигнал в облако для конкретного ID
+        const payload = JSON.stringify({
+            type: 'pay',
+            amt: amt,
+            fromId: user.id,
+            fromName: user.name
+        });
+
+        client.publish(`ghetto_bank/${targetId}`, payload, { qos: 1 }, (err) => {
+            if(!err) {
+                user.balance -= amt;
+                user.history.push({ title: `Перевод для ${targetId}`, amt: amt, plus: false, time: new Date().toLocaleTimeString() });
+                save();
+                render();
+                
+                alert(`✅ УСПЕШНО!\nДеньги мгновенно доставлены пользователю ${targetId}`);
+                btn.innerText = "Перевести сейчас";
+                btn.disabled = false;
+                document.getElementById('send-amt').value = '';
+                document.getElementById('target-id').value = '';
+            } else {
+                alert("Ошибка сети!");
+                btn.disabled = false;
+            }
+        });
+    }
+
+    function save() { localStorage.setItem('gh_live_v1', JSON.stringify(user)); }
 </script>
 </body>
 </html>
