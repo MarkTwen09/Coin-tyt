@@ -3,284 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Гетто Банк</title>
+    <title>Гетто Банк — Твой Район</title>
     <style>
         :root {
-            --bg-color: #000000;
-            --card-bg: #1c1c1e;
-            --accent-yellow: #ffdd2d;
-            --text-main: #ffffff;
-            --text-secondary: #8e8e93;
-            --success-green: #30d158;
-            --error-red: #ff453a;
+            --bg: #000000;
+            --card: #1c1c1e;
+            --accent: #ffdd2d;
+            --secondary: #8e8e93;
+            --success: #30d158;
+            --skeleton-grad: linear-gradient(90deg, #1c1c1e 25%, #2c2c2e 50%, #1c1c1e 75%);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: #fff; font-family: -apple-system, sans-serif; margin: 0; display: flex; justify-content: center; }
+        
+        .app { width: 100%; max-width: 430px; min-height: 100vh; padding-bottom: 100px; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: -apple-system, system-ui, sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-        }
+        /* Сторисы */
+        .stories { display: flex; gap: 12px; overflow-x: auto; padding: 16px; scrollbar-width: none; }
+        .stories::-webkit-scrollbar { display: none; }
+        .story { min-width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--accent); padding: 2px; }
+        .story-in { width: 100%; height: 100%; border-radius: 50%; background: #2c2c2e; display: flex; align-items: center; justify-content: center; font-size: 24px; }
 
-        .app {
-            width: 100%;
-            max-width: 430px;
-            min-height: 100vh;
-            padding: 16px;
-            padding-bottom: 100px;
-        }
+        /* Карточка */
+        .content { padding: 0 16px; }
+        .card { background: linear-gradient(135deg, #2c2c2e 0%, #000 100%); border-radius: 24px; padding: 24px; margin-bottom: 24px; border: 1px solid #3a3a3c; position: relative; cursor: pointer; }
+        .balance { font-size: 32px; font-weight: 700; margin: 10px 0; transition: 0.3s; }
+        
+        /* Скелетон */
+        .loading { background: var(--skeleton-grad); background-size: 200% 100%; animation: load 1.5s infinite; border-radius: 8px; color: transparent !important; }
+        @keyframes load { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-        /* Header */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-        }
+        /* Кнопки действий */
+        .actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px; }
+        .act-btn { background: none; border: none; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+        .act-icon { width: 54px; height: 54px; background: var(--card); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 22px; transition: 0.1s; }
+        .act-btn:active .act-icon { transform: scale(0.9); background: #2c2c2e; }
 
-        .avatar {
-            width: 42px;
-            height: 42px;
-            background: #2c2c2e;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            border: 1px solid #3a3a3c;
-        }
+        /* Аналитика */
+        .stats { background: var(--card); border-radius: 20px; padding: 16px; margin-bottom: 24px; }
+        .stats-bar { height: 6px; background: #333; border-radius: 3px; margin-top: 12px; overflow: hidden; display: flex; }
+        .fill { height: 100%; background: var(--accent); transition: 0.5s; }
 
-        /* Card Block */
-        .main-card {
-            background: linear-gradient(135deg, #3a3a3c 0%, #1c1c1e 100%);
-            border-radius: 24px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .balance-label { color: var(--text-secondary); font-size: 14px; margin-bottom: 8px; }
-        .balance-val { font-size: 32px; font-weight: 700; letter-spacing: -1px; }
-
-        /* Action Buttons */
-        .actions-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 32px;
-        }
-
-        .action-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-        }
-
-        .icon-circle {
-            width: 56px;
-            height: 56px;
-            background: #1c1c1e;
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            transition: transform 0.1s;
-        }
-
-        .action-btn:active .icon-circle { transform: scale(0.9); background: #2c2c2e; }
-
-        /* Transactions */
-        .section-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
-        .trans-list { display: flex; flex-direction: column; gap: 20px; }
-        .trans-item { display: flex; justify-content: space-between; align-items: center; }
-        .trans-icon { width: 44px; height: 44px; background: #1c1c1e; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .trans-details { flex: 1; margin-left: 14px; }
-        .trans-name { font-weight: 500; font-size: 16px; }
-        .trans-cat { color: var(--text-secondary); font-size: 13px; }
-        .trans-sum { font-weight: 600; text-align: right; }
-
-        /* Modal Area */
-        .modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            display: none;
-            align-items: flex-end;
-            z-index: 100;
-        }
-
-        .modal-content {
-            background: #1c1c1e;
-            width: 100%;
-            padding: 32px 24px;
-            border-radius: 24px 24px 0 0;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        input {
-            width: 100%;
-            background: #2c2c2e;
-            border: 1px solid #3a3a3c;
-            padding: 16px;
-            border-radius: 12px;
-            color: white;
-            font-size: 18px;
-            margin: 16px 0;
-            outline: none;
-        }
-
-        .confirm-btn {
-            width: 100%;
-            background: var(--accent-yellow);
-            color: black;
-            font-weight: 700;
-            padding: 16px;
-            border-radius: 12px;
-            border: none;
-            font-size: 16px;
-        }
-
-        /* Tab Bar */
-        .tab-bar {
-            position: fixed;
-            bottom: 0;
-            max-width: 430px;
-            width: 100%;
-            background: rgba(10, 10, 10, 0.9);
-            backdrop-filter: blur(15px);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0 30px;
-            border-top: 0.5px solid #2c2c2e;
-        }
-
-        .tab { color: var(--text-secondary); font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        .tab.active { color: var(--accent-yellow); }
+        /* История */
+        .trans { display: flex; align-items: center; padding: 14px 0; border-bottom: 0.5px solid #2c2c2e; animation: slideUp 0.4s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .t-icon { width: 44px; height: 44px; background: var(--card); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 14px; font-size: 20px; }
+        
+        /* Таббар */
+        .tabbar { position: fixed; bottom: 0; width: 100%; max-width: 430px; background: rgba(10,10,10,0.9); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 10px 0 30px; border-top: 0.5px solid #333; }
+        .tab { color: var(--secondary); font-size: 10px; text-align: center; }
+        .tab.active { color: var(--accent); }
     </style>
 </head>
 <body>
 
 <div class="app">
-    <div class="header">
-        <div class="avatar">A</div>
-        <div style="font-weight: 700; font-size: 17px;">ГЕТТО БАНК</div>
-        <div style="font-size: 20px;">🔔</div>
+    <div class="stories">
+        <div class="story"><div class="story-in">🏦</div></div>
+        <div class="story"><div class="story-in">😎</div></div>
+        <div class="story"><div class="story-in">🔫</div></div>
+        <div class="story"><div class="story-in">💰</div></div>
+        <div class="story"><div class="story-in">🏎️</div></div>
     </div>
 
-    <div class="main-card">
-        <div class="balance-label">Гетто Black • •• 7789</div>
-        <div class="balance-val" id="display-balance">0 ₽</div>
-    </div>
-
-    <div class="actions-grid">
-        <button class="action-btn" onclick="openModal('add')">
-            <div class="icon-circle" style="background: var(--accent-yellow); color: black;">+</div>
-            <span class="tab">Пополнить</span>
-        </button>
-        <button class="action-btn" onclick="openModal('pay')">
-            <div class="icon-circle">⇄</div>
-            <span class="tab">Перевести</span>
-        </button>
-        <button class="action-btn">
-            <div class="icon-circle">🧾</div>
-            <span class="tab">Платежи</span>
-        </button>
-        <button class="action-btn">
-            <div class="icon-circle">•••</div>
-            <span class="tab">Еще</span>
-        </button>
-    </div>
-
-    <div class="section-title">История</div>
-    <div class="trans-list" id="history-list">
+    <div class="content">
+        <div class="card" onclick="copyCard()">
+            <div style="color: var(--secondary); font-size: 13px;">Гетто Black • MasterCard</div>
+            <div id="bal" class="balance loading">000 000 ₽</div>
+            <div style="font-family: monospace; letter-spacing: 2px; color: var(--secondary);">•••• 7789</div>
         </div>
-</div>
 
-<div class="modal" id="modal">
-    <div class="modal-content">
-        <div id="modal-title" style="font-size: 20px; font-weight: 700;"></div>
-        <input type="number" id="amount-input" placeholder="Введите сумму">
-        <button class="confirm-btn" onclick="processTransaction()">Подтвердить</button>
-        <button onclick="closeModal()" style="background: none; border: none; color: var(--text-secondary); width: 100%; margin-top: 15px;">Отмена</button>
+        <div class="stats">
+            <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                <span>Траты по району</span>
+                <span id="spent-val" style="font-weight: 600;">0 ₽</span>
+            </div>
+            <div class="stats-bar"><div id="spent-fill" class="fill" style="width: 0%;"></div></div>
+        </div>
+
+        <div class="actions">
+            <div class="act-btn" onclick="transfer('send')">
+                <div class="act-icon" style="background: var(--accent); color: #000;">📤</div>
+                <div class="tab">Отправить</div>
+            </div>
+            <div class="act-btn" onclick="transfer('receive')">
+                <div class="act-icon" style="background: var(--success); color: #000;">📥</div>
+                <div class="tab">Принять</div>
+            </div>
+            <div class="act-btn" onclick="addMoney()">
+                <div class="act-icon">💵</div>
+                <div class="tab">Кэш</div>
+            </div>
+            <div class="act-btn">
+                <div class="act-icon">⚙️</div>
+                <div class="tab">Инфо</div>
+            </div>
+        </div>
+
+        <div style="font-size: 20px; font-weight: 700; margin-bottom: 15px;">История операций</div>
+        <div id="history"></div>
     </div>
 </div>
 
-<div class="tab-bar">
-    <div class="tab active"><span>🏠</span><span>Главная</span></div>
-    <div class="tab"><span>💎</span><span>Кэшбэк</span></div>
-    <div class="tab"><span>💬</span><span>Чат</span></div>
-    <div class="tab"><span>⚙️</span><span>Настройки</span></div>
+<div class="tabbar">
+    <div class="tab active"><span style="font-size: 20px;">🏠</span><br>Главная</div>
+    <div class="tab"><span style="font-size: 20px;">📊</span><br>Платежи</div>
+    <div class="tab"><span style="font-size: 20px;">💬</span><br>Чат</div>
+    <div class="tab"><span style="font-size: 20px;">👤</span><br>Профиль</div>
 </div>
 
 <script>
-    let balance = parseFloat(localStorage.getItem('ghetto_balance')) || 150000;
-    let mode = '';
+    let bal = parseFloat(localStorage.getItem('gh_bal')) || 100000;
+    let spent = parseFloat(localStorage.getItem('gh_spent')) || 0;
 
-    function updateUI() {
-        document.getElementById('display-balance').innerText = balance.toLocaleString('ru-RU') + ' ₽';
-        localStorage.setItem('ghetto_balance', balance);
+    // Эффект загрузки
+    setTimeout(() => {
+        document.getElementById('bal').classList.remove('loading');
+        update();
+    }, 1200);
+
+    function update() {
+        document.getElementById('bal').innerText = bal.toLocaleString() + ' ₽';
+        document.getElementById('spent-val').innerText = spent.toLocaleString() + ' ₽';
+        
+        let percent = (spent / (bal + spent)) * 100;
+        document.getElementById('spent-fill').style.width = Math.min(percent, 100) + '%';
+
+        localStorage.setItem('gh_bal', bal);
+        localStorage.setItem('gh_spent', spent);
     }
 
-    function openModal(type) {
-        mode = type;
-        document.getElementById('modal').style.display = 'flex';
-        document.getElementById('modal-title').innerText = type === 'add' ? 'Пополнение баланса' : 'Перевод средств';
-        document.getElementById('amount-input').focus();
-    }
-
-    function closeModal() {
-        document.getElementById('modal').style.display = 'none';
-        document.getElementById('amount-input').value = '';
-    }
-
-    function processTransaction() {
-        const val = parseFloat(document.getElementById('amount-input').value);
-        if (isNaN(val) || val <= 0) return alert('Введи нормальную сумму!');
-
-        if (mode === 'add') {
-            balance += val;
-            addHistory('Пополнение', val, true);
-        } else {
-            if (val > balance) return alert('Недостаточно средств на районе!');
-            balance -= val;
-            addHistory('Перевод', val, false);
+    function addMoney() {
+        let amt = prompt("Внеси наличку на счет:");
+        if (amt && !isNaN(amt)) {
+            bal += parseFloat(amt);
+            log("Наличные", amt, true);
+            update();
         }
-
-        updateUI();
-        closeModal();
     }
 
-    function addHistory(name, sum, isPlus) {
-        const list = document.getElementById('history-list');
+    function transfer(type) {
+        if (type === 'send') {
+            let amt = prompt("Сколько отправить корешу?");
+            if (amt && !isNaN(amt) && amt <= bal) {
+                bal -= parseFloat(amt);
+                spent += parseFloat(amt);
+                let code = "GT-" + Math.random().toString(36).substr(2, 5).toUpperCase() + "-" + btoa(amt);
+                alert("Код для друга (скопируй):\n" + code);
+                log("Гетто-код", amt, false);
+                update();
+            } else { alert("Недостаточно баланса!"); }
+        } else {
+            let code = prompt("Вставь код от друга:");
+            if (code) {
+                try {
+                    let parts = code.split('-');
+                    let amt = parseFloat(atob(parts[2]));
+                    let used = JSON.parse(localStorage.getItem('used') || '[]');
+                    if (used.includes(code)) return alert("Код уже юзали!");
+                    
+                    bal += amt;
+                    used.push(code);
+                    localStorage.setItem('used', JSON.stringify(used));
+                    log("Принял перевод", amt, true);
+                    update();
+                    alert("Деньги упали на счет!");
+                } catch(e) { alert("Код кривой!"); }
+            }
+        }
+    }
+
+    function log(name, amt, plus) {
+        const h = document.getElementById('history');
         const item = document.createElement('div');
-        item.className = 'trans-item';
+        item.className = 'trans';
         item.innerHTML = `
-            <div class="trans-icon">${isPlus ? '💰' : '💸'}</div>
-            <div class="trans-details">
-                <div class="trans-name">${name}</div>
-                <div class="trans-cat">${new Date().toLocaleTimeString()}</div>
+            <div class="t-icon">${plus ? '💰' : '💸'}</div>
+            <div style="flex:1">
+                <div style="font-weight:500">${name}</div>
+                <div style="color:var(--secondary); font-size:12px">${new Date().toLocaleTimeString()}</div>
             </div>
-            <div class="trans-sum" style="color: ${isPlus ? 'var(--success-green)' : 'white'}">
-                ${isPlus ? '+' : '-'} ${sum.toLocaleString()} ₽
+            <div style="font-weight:600; color:${plus ? 'var(--success)' : '#fff'}">
+                ${plus ? '+' : '-'} ${parseFloat(amt).toLocaleString()} ₽
             </div>
         `;
-        list.prepend(item);
+        h.prepend(item);
     }
 
-    // Старт
-    updateUI();
+    function copyCard() {
+        navigator.clipboard.writeText('2200 0000 7789 4432');
+        alert("Номер карты скопирован!");
+    }
 </script>
 
 </body>
