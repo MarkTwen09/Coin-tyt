@@ -3,216 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GHETTO PRIVATE BANK</title>
+    <title>GHETTO PRIVATE | NEXT GEN</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         :root {
             --bg: #000;
-            --card: #111;
-            --accent: #fff;
-            --gray: #8e8e93;
-            --green: #34c759;
-            --yellow: #ffdd2d;
+            --surface: #111;
+            --accent: #ffdd2d; /* Золото Тинькофф */
+            --text: #fff;
+            --secondary: #8e8e93;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background: var(--bg); color: var(--accent); font-family: -apple-system, system-ui, sans-serif; margin: 0; display: flex; justify-content: center; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, system-ui, sans-serif; }
+        body { background: var(--bg); color: var(--text); margin: 0; display: flex; justify-content: center; }
         
-        /* AUTH */
-        #auth { width: 100%; max-width: 430px; height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 40px; text-align: center; }
-        .auth-input { background: #1c1c1e; border: 1px solid #333; padding: 20px; border-radius: 18px; color: #fff; font-size: 16px; width: 100%; margin-bottom: 20px; text-align: center; }
+        #app { width: 100%; max-width: 430px; min-height: 100vh; padding: 25px 16px; }
 
-        /* APP */
-        #app { width: 100%; max-width: 430px; min-height: 100vh; display: none; padding: 20px 16px; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* HEADER */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .user-tag { background: var(--surface); border: 1px solid #222; padding: 8px 15px; border-radius: 20px; font-size: 13px; font-weight: 600; }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .user-chip { background: #1c1c1e; padding: 8px 16px; border-radius: 50px; font-size: 13px; font-weight: 600; border: 1px solid #333; }
-
-        /* ТИНЬКОВ-СТАЙЛ КАРТА */
-        .card-main { 
-            background: linear-gradient(135deg, #222 0%, #000 100%); 
-            border: 1px solid #333; border-radius: 28px; padding: 24px; margin-bottom: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        /* КАРТА */
+        .card { 
+            background: linear-gradient(145deg, #1a1a1a, #000); 
+            border: 1px solid #333; border-radius: 24px; padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
-        .bal-label { font-size: 13px; color: var(--gray); margin-bottom: 8px; font-weight: 500; }
-        .bal-val { font-size: 36px; font-weight: 700; letter-spacing: -1px; margin-bottom: 30px; }
+        .balance { font-size: 42px; font-weight: 800; letter-spacing: -1.5px; margin: 10px 0; }
         
-        /* КНОПКИ */
-        .nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 35px; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
-        .nav-icon { width: 56px; height: 56px; background: #1c1c1e; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 24px; transition: 0.2s; }
-        .nav-item:active .nav-icon { transform: scale(0.9); background: #2c2c2e; }
-        .nav-text { font-size: 11px; font-weight: 500; }
+        /* ДЕЙСТВИЯ */
+        .actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 35px; }
+        .act-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+        .act-icon { width: 58px; height: 58px; background: var(--surface); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 24px; transition: 0.1s; border: 1px solid #222; }
+        .act-item:active .act-icon { transform: scale(0.92); background: #222; }
+        .act-text { font-size: 11px; color: var(--secondary); font-weight: 500; }
 
-        /* СПИСОК */
+        /* ПЕРЕВОДЫ */
         .section-title { font-size: 20px; font-weight: 700; margin-bottom: 15px; }
-        .friend-row { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
-        .friend-row::-webkit-scrollbar { display: none; }
-        .friend-card { min-width: 75px; text-align: center; }
-        .avatar { width: 58px; height: 58px; background: #1c1c1e; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700; border: 1px solid #333; font-size: 20px; }
-
-        /* МОДАЛКА */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: flex-end; z-index: 1000; }
-        .modal-body { width: 100%; background: #1c1c1e; border-radius: 30px 30px 0 0; padding: 40px 20px; text-align: center; }
-        .amt-in { width: 100%; background: transparent; border: none; color: #fff; font-size: 48px; text-align: center; font-weight: 700; margin: 20px 0; }
-        .btn-confirm { width: 100%; background: var(--yellow); color: #000; border: none; padding: 20px; border-radius: 18px; font-weight: 700; font-size: 16px; cursor: pointer; }
+        .input-box { background: var(--surface); border: 1px solid #222; border-radius: 16px; padding: 18px; margin-bottom: 15px; }
+        input { background: none; border: none; color: #fff; width: 100%; font-size: 16px; outline: none; }
+        
+        .send-btn { background: var(--accent); color: #000; border: none; width: 100%; padding: 20px; border-radius: 16px; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.2s; }
+        .send-btn:active { opacity: 0.8; }
 
         /* ИСТОРИЯ */
-        .h-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #1c1c1e; }
-        .h-name { font-weight: 600; margin-bottom: 2px; }
-        .h-time { font-size: 12px; color: var(--gray); }
+        .history { margin-top: 30px; }
+        .h-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #111; }
+        .h-name { font-weight: 600; font-size: 15px; }
+        .h-sub { font-size: 12px; color: var(--secondary); }
     </style>
 </head>
 <body>
 
-    <div id="auth">
-        <h1 style="letter-spacing:-1px">GHETTO PRIVATE</h1>
-        <input type="text" id="reg-name" class="auth-input" placeholder="Введите ваше имя">
-        <button class="btn-confirm" onclick="register()">Войти в банк</button>
+<div id="app">
+    <div class="header">
+        <div id="my-name" style="font-weight: 800; font-size: 22px;">GHETTO</div>
+        <div class="user-tag" id="my-id">ID: LOADING...</div>
     </div>
 
-    <div id="app">
-        <div class="header">
-            <div class="user-chip" id="user-display">Загрузка...</div>
-            <div style="font-size: 20px;" onclick="location.reload()">🔄</div>
-        </div>
-
-        <div class="card-main">
-            <div class="bal-label">Ваш баланс</div>
-            <div class="bal-val" id="main-bal">0 ₽</div>
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:12px; color:var(--gray); letter-spacing:2px">•••• 0001</span>
-                <span style="font-size:10px; font-weight:900; color:var(--yellow)">PREMIUM</span>
-            </div>
-        </div>
-
-        <div class="nav-grid">
-            <div class="nav-item" onclick="receive()">
-                <div class="nav-icon">📥</div><div class="nav-text">Принять</div>
-            </div>
-            <div class="nav-item" onclick="deposit()">
-                <div class="nav-icon">💳</div><div class="nav-text">Пополнить</div>
-            </div>
-            <div class="nav-item">
-                <div class="nav-icon">📊</div><div class="nav-text">Лимиты</div>
-            </div>
-            <div class="nav-item">
-                <div class="nav-icon">📁</div><div class="nav-text">Еще</div>
-            </div>
-        </div>
-
-        <div class="section-title">Контакты</div>
-        <div class="friend-row" id="friends"></div>
-
-        <div class="section-title" style="margin-top:30px">События</div>
-        <div id="history"></div>
-    </div>
-
-    <div class="modal" id="modal">
-        <div class="modal-body">
-            <div id="target-title" style="color:var(--gray); text-transform:uppercase; font-size:12px; letter-spacing:1px">Перевод Коле</div>
-            <input type="number" id="amt-val" class="amt-in" placeholder="0">
-            <button class="btn-confirm" onclick="confirmTransfer()">Отправить по ссылке</button>
-            <div onclick="closeModal()" style="margin-top:20px; color:var(--gray); cursor:pointer">Отмена</div>
+    <div class="card">
+        <div style="color: var(--secondary); font-size: 13px; font-weight: 600;">Доступно средств</div>
+        <div class="balance" id="balance">0 ₽</div>
+        <div style="margin-top: 35px; display: flex; justify-content: space-between; font-family: monospace; color: #444;">
+            <span>•••• 7789</span>
+            <span style="color: var(--accent); font-weight: 900; font-style: italic;">PREMIUM</span>
         </div>
     </div>
+
+    <div class="actions">
+        <div class="act-item" onclick="topUp()"><div class="act-icon" style="background:var(--accent); color:#000">+</div><div class="act-text">Пополнить</div></div>
+        <div class="act-item"><div class="act-icon">🧾</div><div class="act-text">Счета</div></div>
+        <div class="act-item"><div class="act-icon">📊</div><div class="act-text">Лимиты</div></div>
+        <div class="act-item" onclick="logout()"><div class="act-icon">🚪</div><div class="act-text">Выйти</div></div>
+    </div>
+
+    <div class="section-title">Мгновенный перевод</div>
+    <div class="input-box">
+        <input type="text" id="target-id" placeholder="ID получателя (напр. GH-1234)">
+    </div>
+    <div class="input-box">
+        <input type="number" id="amount" placeholder="Сумма перевода">
+    </div>
+    <button class="send-btn" onclick="sendMoney()">Подтвердить перевод</button>
+
+    <div class="history" id="history">
+        <div class="section-title">История операций</div>
+    </div>
+</div>
 
 <script>
-    let user = JSON.parse(localStorage.getItem('gh_user')) || null;
-    let balance = parseFloat(localStorage.getItem('gh_bal')) || 250000;
-    let friends = [{n: 'Коля', i: '👦'}, {n: 'Мама', i: '👩'}, {n: 'Брат', i: '👺'}, {n: 'База', i: '🏪'}];
-    let selected = null;
-
-    // СИСТЕМА ОБХОДА: Проверка URL на наличие перевода
-    window.onload = () => {
-        const params = new URLSearchParams(window.location.search);
-        const transferData = params.get('send');
-        if (transferData) {
-            try {
-                const amt = parseFloat(atob(transferData));
-                balance += amt;
-                localStorage.setItem('gh_bal', balance);
-                alert(`ЧЕК ПРИНЯТ!\nЗачислено: ${amt} ₽`);
-                window.history.replaceState({}, document.title, window.location.pathname);
-                location.reload();
-            } catch(e) {}
-        }
+    // КОНФИГУРАЦИЯ БАЗЫ (Публичная для тестов)
+    const firebaseConfig = {
+        databaseURL: "https://ghetto-bank-default-rtdb.firebaseio.com/" 
     };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-    function register() {
-        const n = document.getElementById('reg-name').value;
-        if(n.length < 2) return;
-        user = { name: n };
-        localStorage.setItem('gh_user', JSON.stringify(user));
-        location.reload();
+    let myProfile = JSON.parse(localStorage.getItem('g_user'));
+    
+    // Регистрация если нет профиля
+    if (!myProfile) {
+        let name = prompt("Добро пожаловать в Private Banking. Введите ваше имя:");
+        let id = "GH-" + Math.floor(Math.random() * 8999 + 1000);
+        myProfile = { name, id, balance: 100000 };
+        localStorage.setItem('g_user', JSON.stringify(myProfile));
+        db.ref('users/' + id).set(myProfile);
     }
 
-    if (user) {
-        document.getElementById('auth').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-        document.getElementById('user-display').innerText = user.name;
-        updateUI();
-        renderFriends();
-    }
+    // Следим за своим балансом в реальном времени!
+    db.ref('users/' + myProfile.id).on('value', (snap) => {
+        const data = snap.val();
+        if (data) {
+            document.getElementById('balance').innerText = data.balance.toLocaleString() + ' ₽';
+            document.getElementById('my-id').innerText = 'ID: ' + data.id;
+            document.getElementById('my-name').innerText = data.name.toUpperCase();
+            myProfile.balance = data.balance;
+        }
+    });
 
-    function updateUI() {
-        document.getElementById('main-bal').innerText = balance.toLocaleString() + ' ₽';
-        localStorage.setItem('gh_bal', balance);
-    }
+    // ФУНКЦИЯ ПЕРЕВОДА (ОБЩАЯ БАЗА)
+    async function sendMoney() {
+        const targetId = document.getElementById('target-id').value.trim();
+        const amount = parseFloat(document.getElementById('amount').value);
 
-    function renderFriends() {
-        const container = document.getElementById('friends');
-        friends.forEach(f => {
-            const d = document.createElement('div');
-            d.className = 'friend-card';
-            d.onclick = () => { selected = f; openModal(); };
-            d.innerHTML = `<div class="avatar">${f.i}</div><div style="font-size:11px;font-weight:600">${f.n}</div>`;
-            container.appendChild(d);
-        });
-    }
+        if (!targetId || isNaN(amount) || amount <= 0) return alert("Введите данные!");
+        if (amount > myProfile.balance) return alert("Недостаточно средств!");
+        if (targetId === myProfile.id) return alert("Нельзя переводить самому себе!");
 
-    function openModal() {
-        document.getElementById('target-title').innerText = `Перевод: ${selected.n}`;
-        document.getElementById('modal').style.display = 'flex';
-        document.getElementById('amt-val').focus();
-    }
+        const targetRef = db.ref('users/' + targetId);
+        const snap = await targetRef.once('value');
+        const targetData = snap.val();
 
-    function confirmTransfer() {
-        const val = parseFloat(document.getElementById('amt-val').value);
-        if(val > 0 && val <= balance) {
-            balance -= val;
-            updateUI();
+        if (!targetData) return alert("Пользователь с таким ID не найден!");
+
+        // ПРОВОДИМ ТРАНЗАКЦИЮ В ОБЛАКЕ
+        try {
+            await db.ref('users/' + myProfile.id).update({ balance: myProfile.balance - amount });
+            await targetRef.update({ balance: targetData.balance + amount });
             
-            // ГЕНЕРАЦИЯ ССЫЛКИ ДЛЯ ДРУГА
-            const code = btoa(val.toString());
-            const currentUrl = window.location.href.split('?')[0];
-            const link = `${currentUrl}?send=${code}`;
-            
-            // Копируем в буфер
-            navigator.clipboard.writeText(`Бро, лови деньги в Гетто Банке: ${link}`);
-            alert(`ССЫЛКА СКОПИРОВАНА!\nОтправь её другу в Telegram. Когда он перейдет по ней, деньги зачислятся.`);
-            
-            log(selected.n, val, false);
-            closeModal();
-        } else { alert("Недостаточно средств!"); }
+            // Логируем
+            addHistory(`Перевод: ${targetData.name}`, amount, false);
+            alert(`Успешно переведено ${amount} ₽ пользователю ${targetData.name}`);
+            document.getElementById('amount').value = '';
+            document.getElementById('target-id').value = '';
+        } catch (e) {
+            alert("Ошибка сети!");
+        }
     }
 
-    function log(n, a, p) {
+    function topUp() {
+        let a = prompt("Сумма пополнения (симуляция кэша):");
+        if (a) db.ref('users/' + myProfile.id).update({ balance: myProfile.balance + parseFloat(a) });
+    }
+
+    function addHistory(name, amt, plus) {
         const h = document.getElementById('history');
         const i = document.createElement('div');
         i.className = 'h-item';
-        i.innerHTML = `<div><div class="h-name">${n}</div><div class="h-time">${new Date().toLocaleTimeString()}</div></div>
-                       <div style="font-weight:700; color:${p?'#34c759':'#fff'}">${p?'+':'-'} ${parseFloat(a).toLocaleString()} ₽</div>`;
-        h.prepend(i);
+        i.innerHTML = `<div><div class="h-name">${name}</div><div class="h-sub">${new Date().toLocaleTimeString()}</div></div>
+                       <div style="font-weight:700; color:${plus?'#34c759':'#fff'}">${plus?'+':'-'} ${amt.toLocaleString()} ₽</div>`;
+        h.insertBefore(i, h.children[1]);
     }
 
-    function deposit() {
-        const a = prompt("Сумма пополнения:");
-        if(a) { balance += parseFloat(a); updateUI(); log("Пополнение", a, true); }
-    }
-
-    function closeModal() { document.getElementById('modal').style.display = 'none'; }
-    function receive() { alert("Чтобы принять перевод, просто перейдите по ссылке, которую вам прислал друг."); }
+    function logout() { localStorage.clear(); location.reload(); }
 </script>
+
 </body>
 </html>
