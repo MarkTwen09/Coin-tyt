@@ -2,251 +2,311 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AURA — нейросеть</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гетто Банк — Главная</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        
         :root {
-            --glow: 0 0 70px -20px rgb(234 179 8);
+            --bg-color: #000000;
+            --card-bg: #1c1c1e;
+            --accent-yellow: #ffdd2d; /* Тот самый желтый */
+            --text-main: #ffffff;
+            --text-secondary: #8e8e93;
         }
-        
+
         body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
-            font-family: 'Inter', system_ui, sans-serif;
-            background: #0b0b12;
-            color: #f1f5f9;
-            overflow: hidden;
+            padding: 0;
+            display: flex;
+            justify-content: center;
         }
-        
-        .bg {
-            position: fixed;
+
+        .app-container {
             width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
+            max-width: 400px;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
         }
-        
-        .blob {
-            position: absolute;
-            width: 700px;
-            height: 700px;
-            border-radius: 50%;
-            filter: blur(160px);
-            opacity: 0.25;
-            animation: float 30s infinite alternate ease-in-out;
-        }
-        
-        .blob:nth-child(1) { background: #8a5cff; top: -250px; left: -250px; }
-        .blob:nth-child(2) { background: #00ffd0; bottom: -300px; right: -250px; animation-delay: 10s; }
-        
-        @keyframes float {
-            from { transform: translate(0, 0); }
-            to { transform: translate(80px, 120px); }
-        }
-        
+
+        /* Шапка */
         .header {
-            padding: 20px 24px;
-            text-align: center;
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(40px);
-            border-bottom: 1px solid rgba(255,255,255,0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-top: 10px;
         }
-        
-        .chat {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #2c2c2e;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: var(--accent-yellow);
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.2rem;
+            letter-spacing: -0.5px;
+        }
+
+        /* Карта */
+        .card-section {
+            background: linear-gradient(135deg, #2c2c2e 0%, #1c1c1e 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #3a3a3c;
+        }
+
+        .card-type {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .balance {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .card-number {
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+        }
+
+        /* Кнопки действий */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .action-item {
             display: flex;
             flex-direction: column;
-            gap: 20px;
-        }
-        
-        .message {
-            padding: 16px 22px;
-            border-radius: 24px;
-            max-width: 88%;
-            background: rgba(255,255,255,0.09);
-            border: 1px solid rgba(255,255,255,0.18);
-            backdrop-filter: blur(25px);
-            animation: messageIn 0.45s ease forwards;
-        }
-        
-        .user {
-            align-self: flex-end;
-            background: linear-gradient(135deg, rgba(138,92,255,0.4), rgba(0,255,208,0.25));
-        }
-        
-        .ai { align-self: flex-start; }
-        
-        @keyframes messageIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .input-area {
-            padding: 18px 24px;
-            background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(40px);
-            border-top: 1px solid rgba(255,255,255,0.15);
-        }
-        
-        input {
-            flex: 1;
-            padding: 18px 24px;
-            border: none;
-            border-radius: 9999px;
-            background: rgba(255,255,255,0.1);
-            color: white;
-            font-size: 16.5px;
-            outline: none;
-        }
-        
-        button.send {
-            padding: 18px 26px;
-            border: none;
-            border-radius: 9999px;
-            font-weight: 600;
+            align-items: center;
+            gap: 8px;
             cursor: pointer;
-            background: linear-gradient(135deg, #8a5cff, #00ffd0);
-            color: white;
-            transition: all 0.25s ease;
         }
-        
-        button.send:hover { transform: scale(1.1); }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #1c1c1e;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            transition: 0.2s;
+        }
+
+        .action-icon:active {
+            background-color: #2c2c2e;
+            transform: scale(0.95);
+        }
+
+        .action-label {
+            font-size: 0.7rem;
+            color: var(--text-main);
+        }
+
+        /* Список операций */
+        .history-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .transaction {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #1c1c1e;
+        }
+
+        .trans-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .trans-logo {
+            width: 40px;
+            height: 40px;
+            background-color: #2c2c2e;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .trans-name {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .trans-category {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .trans-amount {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .plus { color: #30d158; }
+
+        /* Нижнее меню */
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 400px;
+            background-color: rgba(28, 28, 30, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 25px 0;
+            border-top: 1px solid #3a3a3c;
+        }
+
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-secondary);
+            font-size: 0.65rem;
+        }
+
+        .tab-item.active {
+            color: var(--accent-yellow);
+        }
     </style>
 </head>
 <body>
 
-<div class="bg">
-    <div class="blob"></div>
-    <div class="blob"></div>
-</div>
+<div class="app-container">
+    <div class="header">
+        <div class="profile-icon">A</div>
+        <div class="logo-text">ГЕТТО БАНК</div>
+        <div style="font-size: 1.2rem;">🔍</div>
+    </div>
 
-<div class="container flex flex-col h-screen">
-    <div class="header">AURA</div>
-    
-    <div class="chat flex-1" id="chat">
-        <div class="message ai">
-            Привет! Я <strong>AURA v2.3</strong> — теперь значительно умнее.<br>
-            Я отлично понимаю естественные фразы, решаю примеры с процентами и могу просто поговорить.
+    <div class="card-section">
+        <div class="card-type">Гетто Black • MasterCard</div>
+        <div class="balance" id="main-balance">540 230,50 ₽</div>
+        <div class="card-number">•••• 4432</div>
+    </div>
+
+    <div class="quick-actions">
+        <div class="action-item" onclick="addMoney()">
+            <div class="action-icon" style="background-color: var(--accent-yellow); color: black;">+</div>
+            <div class="action-label">Пополнить</div>
+        </div>
+        <div class="action-item">
+            <div class="action-icon">⇄</div>
+            <div class="action-label">Перевести</div>
+        </div>
+        <div class="action-item">
+            <div class="action-icon">🧾</div>
+            <div class="action-label">Платежи</div>
+        </div>
+        <div class="action-item">
+            <div class="action-icon">•••</div>
+            <div class="action-label">Еще</div>
         </div>
     </div>
 
-    <div class="input-area">
-        <div class="flex gap-3">
-            <input type="text" id="input" placeholder="Например: сколько будет 100-5 или реши 75*9">
-            <button class="send" onclick="sendMessage()">→</button>
+    <div class="history-title">История операций</div>
+
+    <div id="transactions-list">
+        <div class="transaction">
+            <div class="trans-info">
+                <div class="trans-logo">🎮</div>
+                <div>
+                    <div class="trans-name">Brawl Stars: Gems</div>
+                    <div class="trans-category">Развлечения</div>
+                </div>
+            </div>
+            <div class="trans-amount">- 1 490 ₽</div>
+        </div>
+
+        <div class="transaction">
+            <div class="trans-info">
+                <div class="trans-logo">🍔</div>
+                <div>
+                    <div class="trans-name">Вкусно — и точка</div>
+                    <div class="trans-category">Рестораны</div>
+                </div>
+            </div>
+            <div class="trans-amount">- 840 ₽</div>
+        </div>
+
+        <div class="transaction">
+            <div class="trans-info">
+                <div class="trans-logo">💰</div>
+                <div>
+                    <div class="trans-name">Перевод от BAZA SHOP</div>
+                    <div class="trans-category">Переводы</div>
+                </div>
+            </div>
+            <div class="trans-amount plus">+ 15 000 ₽</div>
+        </div>
+    </div>
+
+    <div style="height: 100px;"></div> <div class="tab-bar">
+        <div class="tab-item active">
+            <span style="font-size: 1.2rem;">🏠</span>
+            <span>Главная</span>
+        </div>
+        <div class="tab-item">
+            <span style="font-size: 1.2rem;">📊</span>
+            <span>Платежи</span>
+        </div>
+        <div class="tab-item">
+            <span style="font-size: 1.2rem;">💬</span>
+            <span>Чат</span>
+        </div>
+        <div class="tab-item">
+            <span style="font-size: 1.2rem;">⚙️</span>
+            <span>Еще</span>
         </div>
     </div>
 </div>
 
 <script>
-// ==================== УЛУЧШЕННЫЙ МАТЕМАТИЧЕСКИЙ ДВИЖОК ====================
-function calculateMath(text) {
-    const lower = text.toLowerCase().trim();
+    let balance = 540230.50;
 
-    // Естественные фразы
-    if (lower.includes("сколько будет") || lower.includes("реши сколько") || lower.includes("помоги решить")) {
-        let expr = lower.replace(/сколько будет|реши сколько|помоги решить|сколько будет|реши/g, "").trim();
+    function addMoney() {
+        const amount = 5000;
+        balance += amount;
+        document.getElementById('main-balance').innerText = balance.toLocaleString('ru-RU') + ',50 ₽';
         
-        // Простые выражения
-        try {
-            let clean = expr
-                .replace(/÷/g, '/')
-                .replace(/×/g, '*')
-                .replace(/\^/g, '**')
-                .replace(/π/gi, 'Math.PI');
-            
-            const result = Function('"use strict";return (' + clean + ')')();
-            if (!isNaN(result)) return `**Ответ: ${result}**`;
-        } catch(e) {}
+        // Маленькая анимация
+        const el = document.getElementById('main-balance');
+        el.style.color = '#ffdd2d';
+        setTimeout(() => { el.style.color = '#ffffff'; }, 300);
     }
-
-    // Проценты
-    if (lower.includes('%')) {
-        let m = lower.match(/(\d+(?:\.\d+)?)\s*%\s*от\s*(\d+(?:\.\d+)?)/);
-        if (m) {
-            const p = parseFloat(m[1]);
-            const n = parseFloat(m[2]);
-            const res = (p / 100) * n;
-            return `**${p}% от ${n} = ${res}**\n\nШаги:\n1. ${p} ÷ 100 = ${p/100}\n2. ${p/100} × ${n} = ${res}`;
-        }
-    }
-
-    // Квадратные уравнения
-    if (lower.includes('x^2') || lower.includes('x²')) {
-        // ... (можно добавить позже)
-    }
-
-    return null;
-}
-
-// ==================== РАЗГОВОРНЫЕ ОТВЕТЫ ====================
-function getConversationResponse(text) {
-    const lower = text.toLowerCase();
-    
-    if (lower.includes("привет") || lower.includes("здравствуй")) 
-        return "Привет! Рад тебя видеть 👋 Чем могу помочь?";
-    
-    if (lower.includes("как дела") || lower.includes("как ты")) 
-        return "У меня всё отлично! А у тебя как настроение?";
-    
-    if (lower.includes("кто ты") || lower.includes("представься")) 
-        return "Я AURA v2.3 — умная нейросеть, которая хорошо считает и может просто поболтать.";
-    
-    if (lower.includes("спасибо")) return "Пожалуйста! Всегда рад помочь ❤️";
-    
-    return null;
-}
-
-// ==================== ОСНОВНАЯ ЛОГИКА ====================
-function sendMessage() {
-    const input = document.getElementById("input");
-    const text = input.value.trim();
-    if (!text) return;
-
-    // Добавляем сообщение пользователя
-    addMessage(text, "user");
-    input.value = "";
-
-    setTimeout(() => {
-        // Сначала пытаемся решить математику
-        const mathResult = calculateMath(text);
-        if (mathResult) {
-            addMessage(mathResult, "ai");
-            return;
-        }
-
-        // Потом обычный разговор
-        const conv = getConversationResponse(text);
-        if (conv) {
-            addMessage(conv, "ai");
-            return;
-        }
-
-        // Если ничего не подошло
-        addMessage("Я понял запрос. Напиши пример или задачу — я решу с объяснением.", "ai");
-    }, 700);
-}
-
-function addMessage(text, type) {
-    const chat = document.getElementById("chat");
-    const msg = document.createElement("div");
-    msg.className = `message ${type}`;
-    msg.innerHTML = text.replace(/\n/g, '<br>');
-    chat.appendChild(msg);
-    chat.scrollTop = chat.scrollHeight;
-}
-
-// Enter
-document.getElementById("input").addEventListener("keypress", e => {
-    if (e.key === "Enter") sendMessage();
-});
 </script>
 
 </body>
