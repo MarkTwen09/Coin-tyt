@@ -2,196 +2,109 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GHETTO BANK | ULTIMATE</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghetto Bank Online</title>
     <style>
-        :root { --bg: #000; --card: #151515; --accent: #2ecc71; --gold: #ffdd2d; --text: #fff; --error: #ff3b30; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; display: flex; justify-content: center; overflow-x: hidden; }
-        
-        #app { width: 100%; max-width: 430px; min-height: 100vh; padding: 25px 20px; display: none; }
-        #auth { width: 100%; max-width: 430px; height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 40px; }
-
-        /* HEADER */
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .net-status { font-size: 10px; font-weight: 700; padding: 6px 12px; border-radius: 20px; transition: 0.3s; }
-        .online { background: rgba(46, 204, 113, 0.1); color: var(--accent); border: 1px solid var(--accent); }
-        .offline { background: rgba(255, 59, 48, 0.1); color: var(--error); border: 1px solid var(--error); }
-
-        /* CARD */
-        .card { 
-            background: linear-gradient(165deg, #222 0%, #000 100%); 
-            border: 1px solid #333; border-radius: 28px; padding: 25px; margin-bottom: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8); position: relative;
-        }
-        .bal-label { font-size: 13px; color: #777; font-weight: 600; margin-bottom: 5px; }
-        .balance { font-size: 40px; font-weight: 800; letter-spacing: -1px; }
-
-        /* BOXES */
-        .box { background: var(--card); border-radius: 24px; padding: 20px; margin-bottom: 20px; border: 1px solid #222; }
-        .input-group { background: #080808; border: 1px solid #222; border-radius: 16px; padding: 12px 15px; margin-bottom: 12px; transition: 0.2s; }
-        .input-group:focus-within { border-color: var(--gold); }
-        .input-group label { display: block; font-size: 10px; color: #555; text-transform: uppercase; margin-bottom: 4px; font-weight: 700; }
-        input { background: none; border: none; color: #fff; width: 100%; font-size: 16px; font-weight: 600; }
-
-        .btn { background: var(--gold); color: #000; border: none; width: 100%; padding: 18px; border-radius: 16px; font-weight: 800; font-size: 16px; cursor: pointer; transition: 0.2s; }
-        .btn:active { transform: scale(0.96); }
-        .btn:disabled { background: #333; color: #666; }
-
-        /* HISTORY */
-        .h-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #111; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .h-info div { font-weight: 700; font-size: 14px; }
-        .h-info span { font-size: 11px; color: #444; }
+        :root { --bg: #000; --card: #111; --accent: #ffdd2d; --text: #fff; --gray: #888; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; display: flex; justify-content: center; }
+        #app { width: 100%; max-width: 400px; min-height: 100vh; padding: 20px; box-sizing: border-box; }
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #222; margin-bottom: 20px; }
+        .balance { font-size: 35px; font-weight: bold; margin: 10px 0; }
+        .user-id { font-size: 12px; color: var(--gray); background: #222; padding: 5px 10px; border-radius: 10px; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: none; background: #222; color: #fff; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--accent); font-weight: bold; cursor: pointer; }
+        .history-item { background: #111; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--accent); }
+        .loader { color: var(--accent); font-size: 12px; text-align: center; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="auth">
-        <h1 style="text-align: center; font-size: 32px; letter-spacing: -1px; margin-bottom: 40px;">GHETTO<br><span style="color:var(--gold)">PREMIUM</span></h1>
-        <div class="input-group"><input type="text" id="reg-name" placeholder="Ваше имя"></div>
-        <button class="btn" onclick="register()">Открыть счет</button>
+<div id="app">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="letter-spacing: -1px;">GHETTO<span style="color:var(--accent)">BANK</span></h2>
+        <span class="user-id" id="myId">ID: Loading...</span>
     </div>
 
-    <div id="app">
-        <div class="header">
-            <div id="u-display" style="font-weight: 800; font-size: 18px;">BANKING</div>
-            <div class="net-status offline" id="status">OFFLINE</div>
-        </div>
-
-        <div class="card" onclick="copyId()">
-            <div class="bal-label">Доступные средства</div>
-            <div class="balance" id="main-bal">0.00 ₽</div>
-            <div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: center;">
-                <span id="u-id" style="font-family: monospace; color: #555; font-size: 13px;">ID: GH-0000</span>
-                <span style="color: var(--gold); font-size: 11px; font-weight: 900; letter-spacing: 1px;">BLACK CARD</span>
-            </div>
-        </div>
-
-        <div class="box">
-            <div class="input-group">
-                <label>ID получателя</label>
-                <input type="text" id="target-id" placeholder="GH-XXXX" autocomplete="off">
-            </div>
-            <div class="input-group">
-                <label>Сумма перевода</label>
-                <input type="number" id="send-amt" placeholder="0">
-            </div>
-            <button class="btn" id="send-btn" onclick="sendMoney()">Перевести сейчас</button>
-        </div>
-
-        <div style="padding: 0 5px;">
-            <div style="font-size: 16px; font-weight: 800; margin-bottom: 15px; color: #444;">ИСТОРИЯ ОПЕРАЦИЙ</div>
-            <div id="history"></div>
-        </div>
+    <div class="card">
+        <div style="color: var(--gray); font-size: 14px;">Ваш баланс</div>
+        <div class="balance" id="balanceDisplay">0.00 ₽</div>
+        <div class="loader" id="syncStatus">Синхронизация с сетью...</div>
     </div>
+
+    <div class="card">
+        <h3 style="margin-top:0">Перевод</h3>
+        <input type="text" id="targetId" placeholder="ID получателя">
+        <input type="number" id="amount" placeholder="Сумма">
+        <button onclick="sendMoney()">Отправить Гетто-рубли</button>
+    </div>
+
+    <h4>История операций</h4>
+    <div id="history"></div>
+</div>
 
 <script>
-    // МГНОВЕННЫЙ ШЛЮЗ (Используем PieSocket для максимальной стабильности)
-    // Это бесплатный ключ, он будет работать сразу.
-    const apiKey = 'o79Yv7oE69xZ9XW9XW9XW9XW'; // Заглушка ключа
-    let user = JSON.parse(localStorage.getItem('gh_vfinal')) || null;
-    let socket;
+    // Используем публичный бесплатный KV-база данных (Bucket name - придумай свой уникальный)
+    const BUCKET = 'ghetto_bank_v1_main_storage'; 
+    const API_URL = `https://kvdb.io/${BUCKET}/`;
 
-    function register() {
-        const name = document.getElementById('reg-name').value.trim();
-        if(name.length < 2) return alert("Введите имя");
-        user = { name, id: "GH-" + Math.floor(1000 + Math.random()*8999), balance: 250000, history: [] };
-        save();
-        location.reload();
+    // 1. Генерируем или берем ID пользователя
+    let myId = localStorage.getItem('ghetto_user_id') || Math.floor(1000 + Math.random() * 9000).toString();
+    localStorage.setItem('ghetto_user_id', myId);
+    document.getElementById('myId').innerText = 'ID: ' + myId;
+
+    async function getBalance(id) {
+        try {
+            const r = await fetch(API_URL + id);
+            if (!r.ok) return 5000; // Стартовый капитал новым игрокам
+            return parseFloat(await r.text());
+        } catch { return 5000; }
     }
 
-    if(user) {
-        document.getElementById('auth').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-        initNetwork();
-        render();
+    async function saveBalance(id, amount) {
+        await fetch(API_URL + id, { method: 'POST', body: amount.toString() });
     }
 
-    function render() {
-        document.getElementById('main-bal').innerText = user.balance.toLocaleString('ru-RU', {minimumFractionDigits: 2}) + ' ₽';
-        document.getElementById('u-id').innerText = 'ID: ' + user.id;
-        document.getElementById('u-display').innerText = user.name.toUpperCase();
+    async function sync() {
+        const b = await getBalance(myId);
+        document.getElementById('balanceDisplay').innerText = b.toLocaleString() + ' ₽';
+        document.getElementById('syncStatus').innerText = 'В сети (Обновлено)';
+        return b;
+    }
+
+    async function sendMoney() {
+        const to = document.getElementById('targetId').value;
+        const sum = parseFloat(document.getElementById('amount').value);
+        const status = document.getElementById('syncStatus');
+
+        if (!to || !sum || sum <= 0) return alert('Введи данные');
+
+        status.innerText = 'Связь с банком...';
         
+        const myBalance = await sync();
+        if (myBalance < sum) {
+            alert('Недостаточно средств!');
+            status.innerText = 'Ошибка транзакции';
+            return;
+        }
+
+        const targetBalance = await getBalance(to);
+        
+        // Магия перевода:
+        await saveBalance(myId, myBalance - sum);
+        await saveBalance(to, targetBalance + sum);
+
+        // Добавляем в историю
         const h = document.getElementById('history');
-        h.innerHTML = '';
-        user.history.slice().reverse().forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'h-item';
-            div.innerHTML = `<div class="h-info"><div>${item.title}</div><span>${item.time}</span></div>
-                             <div style="font-weight:800; color:${item.plus ? 'var(--accent)' : '#fff'}">${item.plus ? '+' : '-'} ${item.amt.toLocaleString()} ₽</div>`;
-            h.appendChild(div);
-        });
+        h.innerHTML = `<div class="history-item">Отправлено ${sum}₽ пользователю ${to}</div>` + h.innerHTML;
+
+        alert('Перевод выполнен успешно!');
+        sync();
     }
 
-    function initNetwork() {
-        // Используем BroadcastChannel для стабильности внутри устройства + имитацию облака
-        const statusEl = document.getElementById('status');
-        
-        // Симуляция подключения к защищенному шлюзу
-        setTimeout(() => {
-            statusEl.innerText = 'ONLINE';
-            statusEl.classList.remove('offline');
-            statusEl.classList.add('online');
-        }, 1000);
-
-        // Слушаем эфир через localStorage (самый надежный способ для GitHub)
-        window.addEventListener('storage', (e) => {
-            if(e.key === 'gh_global_tx') {
-                const tx = JSON.parse(e.newValue);
-                if(tx.to === user.id && tx.timestamp > (Date.now() - 2000)) {
-                    processIncoming(tx);
-                }
-            }
-        });
-    }
-
-    function processIncoming(tx) {
-        user.balance += tx.amt;
-        user.history.push({ title: `Перевод от ${tx.fromName}`, amt: tx.amt, plus: true, time: new Date().toLocaleTimeString() });
-        save();
-        render();
-        try { new Audio('https://www.soundjay.com/buttons/sounds/button-3.mp3').play(); } catch(e){}
-        alert(`⚡️ ПОЛУЧЕНО: +${tx.amt} ₽`);
-    }
-
-    function sendMoney() {
-        const tId = document.getElementById('target-id').value.toUpperCase().trim();
-        const amt = parseFloat(document.getElementById('send-amt').value);
-        const btn = document.getElementById('send-btn');
-
-        if(tId === user.id) return alert("Нельзя переводить себе!");
-        if(!tId.startsWith('GH-') || isNaN(amt) || amt <= 0) return alert("Данные неверны!");
-        if(amt > user.balance) return alert("Мало денег на счету!");
-
-        btn.disabled = true;
-        btn.innerText = "ПРОВЕРКА...";
-
-        setTimeout(() => {
-            user.balance -= amt;
-            user.history.push({ title: `Перевод пользователю ${tId}`, amt: amt, plus: false, time: new Date().toLocaleTimeString() });
-            
-            // Глобальный сигнал (увидит другой телефон в этой же сети)
-            const tx = { to: tId, amt: amt, fromId: user.id, fromName: user.name, timestamp: Date.now() };
-            localStorage.setItem('gh_global_tx', JSON.stringify(tx));
-            
-            save();
-            render();
-            
-            alert(`✅ ОТПРАВЛЕНО!\n${amt} ₽ успешно ушли на ID ${tId}`);
-            btn.disabled = false;
-            btn.innerText = "Перевести сейчас";
-            document.getElementById('send-amt').value = '';
-        }, 800);
-    }
-
-    function copyId() {
-        navigator.clipboard.writeText(user.id);
-        alert("ID скопирован!");
-    }
-
-    function save() { localStorage.setItem('gh_vfinal', JSON.stringify(user)); }
+    // Авто-обновление каждые 10 секунд
+    setInterval(sync, 10000);
+    sync();
 </script>
+
 </body>
 </html>
