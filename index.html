@@ -2,108 +2,252 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ghetto Bank Online</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GHETTO BANK | Private Banking</title>
+    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
     <style>
-        :root { --bg: #000; --card: #111; --accent: #ffdd2d; --text: #fff; --gray: #888; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; display: flex; justify-content: center; }
-        #app { width: 100%; max-width: 400px; min-height: 100vh; padding: 20px; box-sizing: border-box; }
-        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #222; margin-bottom: 20px; }
-        .balance { font-size: 35px; font-weight: bold; margin: 10px 0; }
-        .user-id { font-size: 12px; color: var(--gray); background: #222; padding: 5px 10px; border-radius: 10px; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: none; background: #222; color: #fff; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--accent); font-weight: bold; cursor: pointer; }
-        .history-item { background: #111; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--accent); }
-        .loader { color: var(--accent); font-size: 12px; text-align: center; margin-bottom: 10px; }
+        :root {
+            --gold: #d4af37;
+            --black: #0a0a0a;
+            --card: #151515;
+            --gray: #222;
+            --text-dim: #666;
+        }
+
+        body {
+            background-color: var(--black);
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-top: 10px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .logo span { color: var(--gold); }
+
+        .user-tag {
+            background: var(--card);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            border: 1px solid #333;
+            color: var(--gold);
+        }
+
+        /* Main Card */
+        .main-card {
+            background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+            border-radius: 28px;
+            padding: 30px;
+            position: relative;
+            border: 1px solid #222;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            margin-bottom: 25px;
+        }
+
+        .main-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        .balance-label { color: var(--text-dim); font-size: 14px; margin-bottom: 8px; }
+        .balance-val { font-size: 42px; font-weight: 700; letter-spacing: -1px; }
+
+        /* Inputs & Buttons */
+        .section-title { font-size: 14px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; margin-left: 5px; }
+
+        .input-group {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #222;
+        }
+
+        input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 15px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .btn-send {
+            background: white;
+            color: black;
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 16px;
+            transition: 0.3s;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-send:active { transform: scale(0.97); background: #eee; }
+
+        /* History */
+        .history-list { margin-top: 20px; }
+        .history-item {
+            background: var(--card);
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #1a1a1a;
+        }
+
+        .h-info div { font-size: 14px; font-weight: 600; }
+        .h-info span { font-size: 11px; color: var(--text-dim); }
+        .h-amount { font-weight: 700; color: #ff453a; }
+        .h-amount.plus { color: #32d74b; }
+
+        #status {
+            text-align: center;
+            font-size: 11px;
+            margin-top: 10px;
+            color: var(--text-dim);
+        }
     </style>
 </head>
 <body>
 
-<div id="app">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h2 style="letter-spacing: -1px;">GHETTO<span style="color:var(--accent)">BANK</span></h2>
-        <span class="user-id" id="myId">ID: Loading...</span>
+<div class="container">
+    <header>
+        <div class="logo">Ghetto<span>Bank</span></div>
+        <div class="user-tag" id="myId">ID: ...</div>
+    </header>
+
+    <div class="main-card">
+        <div class="balance-label">Сумма активов</div>
+        <div class="balance-val" id="balanceDisplay">0.00 ₽</div>
+        <div style="margin-top: 25px; display: flex; gap: 10px;">
+            <div style="width: 40px; height: 25px; background: #333; border-radius: 4px;"></div>
+            <div style="color: var(--text-dim); font-size: 12px; line-height: 25px;">•••• 7789</div>
+        </div>
     </div>
 
-    <div class="card">
-        <div style="color: var(--gray); font-size: 14px;">Ваш баланс</div>
-        <div class="balance" id="balanceDisplay">0.00 ₽</div>
-        <div class="loader" id="syncStatus">Синхронизация с сетью...</div>
-    </div>
-
-    <div class="card">
-        <h3 style="margin-top:0">Перевод</h3>
+    <div class="section-title">Мгновенный перевод</div>
+    <div class="input-group">
         <input type="text" id="targetId" placeholder="ID получателя">
-        <input type="number" id="amount" placeholder="Сумма">
-        <button onclick="sendMoney()">Отправить Гетто-рубли</button>
     </div>
+    <div class="input-group">
+        <input type="number" id="amount" placeholder="Сумма ₽">
+    </div>
+    <button class="btn-send" onclick="sendMoney()">Отправить средства</button>
+    <div id="status">Система активна</div>
 
-    <h4>История операций</h4>
-    <div id="history"></div>
+    <div class="section-title" style="margin-top: 30px;">Последние транзакции</div>
+    <div id="history" class="history-list">
+        </div>
 </div>
 
 <script>
-    // Используем публичный бесплатный KV-база данных (Bucket name - придумай свой уникальный)
-    const BUCKET = 'ghetto_bank_v1_main_storage'; 
-    const API_URL = `https://kvdb.io/${BUCKET}/`;
+    // Инициализируем Gun.js (используем публичные узлы для синхронизации)
+    const gun = Gun(['https://gun-manhattan.herokuapp.com/gun']);
+    
+    // Создаем или загружаем личный ID
+    let myId = localStorage.getItem('gb_user_id') || 'ID' + Math.floor(Math.random() * 89999 + 10000);
+    localStorage.setItem('gb_user_id', myId);
+    document.getElementById('myId').innerText = myId;
 
-    // 1. Генерируем или берем ID пользователя
-    let myId = localStorage.getItem('ghetto_user_id') || Math.floor(1000 + Math.random() * 9000).toString();
-    localStorage.setItem('ghetto_user_id', myId);
-    document.getElementById('myId').innerText = 'ID: ' + myId;
+    const userNode = gun.get('ghetto_bank_v2').get(myId);
 
-    async function getBalance(id) {
-        try {
-            const r = await fetch(API_URL + id);
-            if (!r.ok) return 5000; // Стартовый капитал новым игрокам
-            return parseFloat(await r.text());
-        } catch { return 5000; }
-    }
+    // Начальный баланс для новых (только если в базе пусто)
+    userNode.get('balance').once((data) => {
+        if (data === undefined) userNode.put({balance: 50000});
+    });
 
-    async function saveBalance(id, amount) {
-        await fetch(API_URL + id, { method: 'POST', body: amount.toString() });
-    }
-
-    async function sync() {
-        const b = await getBalance(myId);
-        document.getElementById('balanceDisplay').innerText = b.toLocaleString() + ' ₽';
-        document.getElementById('syncStatus').innerText = 'В сети (Обновлено)';
-        return b;
-    }
+    // Постоянное слушание изменений баланса в реальном времени
+    userNode.get('balance').on((val) => {
+        document.getElementById('balanceDisplay').innerText = parseFloat(val).toLocaleString() + ' ₽';
+    });
 
     async function sendMoney() {
-        const to = document.getElementById('targetId').value;
+        const to = document.getElementById('targetId').value.trim();
         const sum = parseFloat(document.getElementById('amount').value);
-        const status = document.getElementById('syncStatus');
+        const status = document.getElementById('status');
 
-        if (!to || !sum || sum <= 0) return alert('Введи данные');
+        if (!to || !sum || sum <= 0) return;
 
-        status.innerText = 'Связь с банком...';
+        status.innerText = "Авторизация транзакции...";
         
-        const myBalance = await sync();
-        if (myBalance < sum) {
-            alert('Недостаточно средств!');
-            status.innerText = 'Ошибка транзакции';
-            return;
-        }
+        // Берем текущий баланс
+        userNode.get('balance').once(async (myBalance) => {
+            if (myBalance < sum) {
+                alert("Недостаточно средств на балансе");
+                status.innerText = "Отказ в операции";
+                return;
+            }
 
-        const targetBalance = await getBalance(to);
-        
-        // Магия перевода:
-        await saveBalance(myId, myBalance - sum);
-        await saveBalance(to, targetBalance + sum);
+            // Находим получателя и меняем балансы
+            const recipient = gun.get('ghetto_bank_v2').get(to);
+            
+            recipient.get('balance').once((targetBal) => {
+                const newTargetBal = (parseFloat(targetBal) || 0) + sum;
+                const newMyBal = myBalance - sum;
 
-        // Добавляем в историю
-        const h = document.getElementById('history');
-        h.innerHTML = `<div class="history-item">Отправлено ${sum}₽ пользователю ${to}</div>` + h.innerHTML;
+                recipient.put({balance: newTargetBal});
+                userNode.put({balance: newMyBal});
 
-        alert('Перевод выполнен успешно!');
-        sync();
+                // Добавляем в историю
+                addHistoryItem(to, sum);
+                
+                status.innerText = "Транзакция завершена";
+                document.getElementById('amount').value = '';
+                alert("Успешно отправлено!");
+            });
+        });
     }
 
-    // Авто-обновление каждые 10 секунд
-    setInterval(sync, 10000);
-    sync();
+    function addHistoryItem(to, sum) {
+        const h = document.getElementById('history');
+        const item = document.createElement('div');
+        item.className = 'history-item';
+        item.innerHTML = `
+            <div class="h-info">
+                <div>Перевод: ${to}</div>
+                <span>Сегодня, ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+            </div>
+            <div class="h-amount">-${sum} ₽</div>
+        `;
+        h.prepend(item);
+    }
 </script>
 
 </body>
