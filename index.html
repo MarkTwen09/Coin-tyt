@@ -2,246 +2,173 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GHETTO BANK BLACK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GHETTO BANK PRO</title>
     <style>
-        :root {
-            --bg-color: #000000;
-            --card-bg: #1c1c1e;
-            --accent-yellow: #ffde00;
-            --text-main: #ffffff;
-            --text-secondary: #8e8e93;
-            --danger: #ff3b30;
-            --success: #34c759;
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
+        :root { --bg: #000; --card: #121212; --accent: #ffde00; --red: #ff3b30; }
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom) 16px;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
+            background: var(--bg); color: #fff; font-family: -apple-system, sans-serif;
+            margin: 0; padding: env(safe-area-inset-top) 15px 100px 15px; user-select: none;
         }
-
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-        }
-        .header h1 { font-size: 24px; font-weight: 800; margin: 0; letter-spacing: -1px; }
-        .status-online {
-            color: var(--success);
-            font-size: 12px;
-            background: rgba(52, 199, 89, 0.1);
-            padding: 4px 10px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        /* Main Card */
-        .balance-card {
-            background: linear-gradient(135deg, #2c2c2e 0%, #1c1c1e 100%);
-            border-radius: 28px;
-            padding: 24px;
-            margin-bottom: 20px;
-            position: relative;
-            border: 1px solid #3a3a3c;
-        }
-        .balance-label { color: var(--text-secondary); font-size: 14px; margin-bottom: 8px; }
-        .balance-amount { font-size: 38px; font-weight: 700; margin-bottom: 20px; }
-        .card-footer { display: flex; justify-content: space-between; align-items: center; }
-        .card-id { color: var(--text-secondary); font-family: monospace; font-size: 14px; }
-        .card-type { color: var(--accent-yellow); font-weight: 900; font-size: 12px; letter-spacing: 1px; }
-
-        /* Action Block */
-        .action-container {
-            background: var(--card-bg);
-            border-radius: 28px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .action-title { font-weight: 700; margin-bottom: 16px; font-size: 18px; }
-        .input-group {
-            background: #2c2c2e;
-            border-radius: 16px;
-            padding: 12px 16px;
-            margin-bottom: 12px;
-            border: 1px solid #3a3a3c;
-        }
-        .input-label { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 4px; }
-        .input-val { font-size: 18px; font-weight: 600; color: var(--text-main); }
+        .header { display: flex; justify-content: space-between; padding: 20px 5px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: var(--card); padding: 15px; border-radius: 20px; border: 1px solid #222; }
+        .stat-label { font-size: 10px; color: #888; text-transform: uppercase; margin-bottom: 5px; }
+        .stat-val { font-size: 18px; font-weight: 800; }
         
-        .main-btn {
-            background: var(--accent-yellow);
-            color: #000;
-            border: none;
-            width: 100%;
-            padding: 18px;
-            border-radius: 18px;
-            font-size: 16px;
-            font-weight: 700;
-            margin-top: 10px;
-            transition: transform 0.1s;
+        .main-balance { background: var(--card); border-radius: 30px; padding: 25px; margin-bottom: 20px; border: 1px solid #222; position: relative; overflow: hidden; }
+        .main-balance::after { content: 'BLACK'; position: absolute; right: -10px; bottom: 10px; font-size: 40px; font-weight: 900; opacity: 0.05; }
+        
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .btn {
+            background: var(--card); border: 1px solid #333; color: #fff; padding: 20px 10px;
+            border-radius: 22px; font-weight: 700; font-size: 13px; transition: 0.2s;
         }
-        .main-btn:active { transform: scale(0.97); }
+        .btn:active { transform: scale(0.95); background: #222; }
+        .btn.primary { background: var(--accent); color: #000; border: none; }
+        .btn.danger { border-color: var(--red); color: var(--red); }
 
-        /* History */
-        .history-section { flex-grow: 1; overflow-y: auto; }
-        .history-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 0;
-            border-bottom: 1px solid #1c1c1e;
-        }
-        .hist-info div { font-weight: 600; font-size: 15px; }
-        .hist-info span { color: var(--text-secondary); font-size: 12px; }
-        .hist-amount { font-weight: 700; }
-        .plus { color: var(--success); }
-        .minus { color: var(--danger); }
-
-        /* Notifications */
-        #notify {
-            position: fixed;
-            top: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--danger);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            display: none;
-            z-index: 100;
+        .log-box { margin-top: 25px; background: #080808; border-radius: 20px; padding: 15px; height: 120px; overflow-y: auto; font-size: 12px; border: 1px solid #111; }
+        .log-entry { margin-bottom: 8px; border-left: 2px solid var(--accent); padding-left: 8px; }
+        
+        #death-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000;
+            display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;
         }
     </style>
 </head>
 <body>
 
-    <div id="notify">КРЫША ЗАБРАЛА ДОЛЮ -15%</div>
+<div id="death-screen">
+    <h1 style="color:var(--red); font-size: 40px;">ТЫ СЛИЛСЯ</h1>
+    <button class="btn primary" onclick="location.reload()">НАЧАТЬ СНАЧАЛА</button>
+</div>
 
-    <div class="header">
-        <h1>ЗАД</h1>
-        <div class="status-online">В СЕТИ</div>
+<div class="header">
+    <div style="font-weight: 900; font-size: 24px;">GHETTO <span style="color:var(--accent)">BANK</span></div>
+    <div id="day-counter" style="color:#888;">ДЕНЬ 1</div>
+</div>
+
+<div class="main-balance">
+    <div class="stat-label">Доступный нал</div>
+    <div id="money" style="font-size: 36px; font-weight: 800;">500 ₽</div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Товар на складе</div>
+        <div id="stock" class="stat-val">0 г.</div>
     </div>
-
-    <div class="balance-card">
-        <div class="balance-label">Баланс счета</div>
-        <div class="balance-amount" id="balance">100 ₽</div>
-        <div class="card-footer">
-            <div class="card-id">ID: GH-3448</div>
-            <div class="card-type">BLACK</div>
-        </div>
+    <div class="stat-card">
+        <div class="stat-label">Энергия</div>
+        <div id="energy" class="stat-val">100%</div>
     </div>
-
-    <div class="action-container">
-        <div class="action-title">Мгновенный перевод</div>
-        <div class="input-group">
-            <div class="input-label">ID Получателя</div>
-            <div class="input-val">ГЕТТО-ДИЛЕР (ПРОВЕРЕН)</div>
-        </div>
-        <div class="input-group">
-            <div class="input-label">Сумма инвестиции</div>
-            <div class="input-val" id="invest-amount">50 ₽</div>
-        </div>
-        <button class="main-btn" onclick="gamble()">Внести в капитал (Крыша)</button>
+    <div class="stat-card">
+        <div class="stat-label">Розыск (Полиция)</div>
+        <div id="wanted" class="stat-val" style="color: #34c759;">НЕТ</div>
     </div>
-
-    <div class="history-section">
-        <div class="action-title">История</div>
-        <div id="history-list">
-            </div>
+    <div class="stat-card">
+        <div class="stat-label">Авторитет</div>
+        <div id="rep" class="stat-val">0</div>
     </div>
+</div>
 
-    <script>
-        let balance = 100;
-        let investAmount = 50;
+<div class="action-grid">
+    <button class="btn" onclick="buyStock()">Закупить товар (-500₽)</button>
+    <button class="btn" onclick="sellStock()">Толкнуть на районе</button>
+    <button class="btn" onclick="rest()">Отлежаться (Энергия)</button>
+    <button class="btn danger" onclick="bribe()">Дать на лапу (-1000₽)</button>
+</div>
 
-        function updateUI() {
-            document.getElementById('balance').innerText = Math.floor(balance).toLocaleString() + " ₽";
-            document.getElementById('invest-amount').innerText = Math.floor(investAmount).toLocaleString() + " ₽";
+<div class="log-box" id="logs">
+    <div class="log-entry">Добро пожаловать в игру. Не попадись копам.</div>
+</div>
+
+<script>
+    let state = {
+        money: 500, stock: 0, energy: 100, wanted: 0, rep: 0, day: 1
+    };
+
+    function log(msg, color = '#888') {
+        const box = document.getElementById('logs');
+        const div = document.createElement('div');
+        div.className = 'log-entry';
+        div.style.borderLeftColor = color;
+        div.innerHTML = `[${state.day} дн.] ${msg}`;
+        box.prepend(div);
+    }
+
+    function update() {
+        document.getElementById('money').innerText = Math.floor(state.money).toLocaleString() + ' ₽';
+        document.getElementById('stock').innerText = state.stock + ' г.';
+        document.getElementById('energy').innerText = state.energy + '%';
+        document.getElementById('day-counter').innerText = 'ДЕНЬ ' + state.day;
+        document.getElementById('rep').innerText = state.rep;
+        
+        let w = document.getElementById('wanted');
+        if(state.wanted > 70) { w.innerText = 'ОПАСНО'; w.style.color = 'var(--red)'; }
+        else if(state.wanted > 30) { w.innerText = 'СЛЕДЯТ'; w.style.color = '#ff9500'; }
+        else { w.innerText = 'ЧИСТО'; w.style.color = '#34c759'; }
+
+        if(state.energy <= 0 || state.wanted >= 100) {
+            document.getElementById('death-screen').style.display = 'flex';
         }
+    }
 
-        function addHistory(title, amount, isPlus) {
-            const list = document.getElementById('history-list');
-            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
-            const item = document.createElement('div');
-            item.className = 'history-item';
-            item.innerHTML = `
-                <div class="hist-info">
-                    <div>${title}</div>
-                    <span>${time}</span>
-                </div>
-                <div class="hist-amount ${isPlus ? 'plus' : 'minus'}">
-                    ${isPlus ? '+' : '-'} ${Math.abs(Math.floor(amount)).toLocaleString()} ₽
-                </div>
-            `;
-            list.prepend(item);
-            if(list.children.length > 5) list.removeChild(list.lastChild);
+    function buyStock() {
+        if(state.money >= 500 && state.energy >= 10) {
+            state.money -= 500;
+            state.stock += 10;
+            state.energy -= 10;
+            log('Закупил 10г товара у поставщика.', '#34c759');
+            nextTurn();
+        } else { log('Нет денег или сил.', 'var(--red)'); }
+        update();
+    }
+
+    function sellStock() {
+        if(state.stock > 0 && state.energy >= 20) {
+            let gain = state.stock * (80 + Math.random() * 100);
+            state.money += gain;
+            state.stock = 0;
+            state.energy -= 20;
+            state.wanted += 15;
+            state.rep += 5;
+            log(`Скинул товар за ${Math.floor(gain)}₽. Копы начали копать.`, 'var(--accent)');
+            nextTurn();
+        } else { log('Нечего продавать или ты слишком устал.', 'var(--red)'); }
+        update();
+    }
+
+    function rest() {
+        state.energy = Math.min(100, state.energy + 40);
+        state.wanted = Math.max(0, state.wanted - 5);
+        log('Ты отоспался. Внимание копов чуть упало.');
+        nextTurn();
+        update();
+    }
+
+    function bribe() {
+        if(state.money >= 1000) {
+            state.money -= 1000;
+            state.wanted = 0;
+            log('Дал на лапу майору. Розыск снят.', '#5856d6');
+        } else { log('Недостаточно денег для взятки!'); }
+        update();
+    }
+
+    function nextTurn() {
+        state.day++;
+        // Случайные события
+        if(Math.random() > 0.8) {
+            let theft = state.money * 0.1;
+            state.money -= theft;
+            log(`Шныри украли у тебя ${Math.floor(theft)}₽ ночью!`, 'var(--red)');
         }
+        update();
+    }
 
-        function gamble() {
-            if (balance < investAmount) {
-                showNotify("НЕДОСТАТОЧНО СРЕДСТВ", true);
-                return;
-            }
-
-            balance -= investAmount;
-            let chance = Math.random();
-
-            if (chance > 0.6) { // Выигрыш
-                let win = investAmount * 2.5;
-                balance += win;
-                addHistory("Доход с оборота", win, true);
-                investAmount *= 1.2; // Растет сложность (цена входа)
-            } else { // Проигрыш
-                addHistory("Конфискация товара", investAmount, false);
-                investAmount = Math.max(50, investAmount * 0.8);
-            }
-            updateUI();
-        }
-
-        function showNotify(text, isRed) {
-            const n = document.getElementById('notify');
-            n.innerText = text;
-            n.style.display = 'block';
-            setTimeout(() => n.style.display = 'none', 2000);
-        }
-
-        // Случайные события гетто (Сложность)
-        setInterval(() => {
-            let event = Math.random();
-            if (event < 0.15 && balance > 200) { // Налог крыши
-                let tax = balance * 0.2;
-                balance -= tax;
-                addHistory("Потеря от КРЫШИ (Полиция)", tax, false);
-                showNotify("ОБЛАВА! -20%", true);
-                updateUI();
-            } else if (event > 0.95) { // Мелкая прибыль
-                let gift = 50;
-                balance += gift;
-                addHistory("Перевод от Лала", gift, true);
-                updateUI();
-            }
-            
-            // Инфляция (постоянное давление)
-            if (balance > 100) {
-                balance -= 1; 
-                updateUI();
-            }
-        }, 5000);
-
-        updateUI();
-    </script>
+    update();
+</script>
 </body>
 </html>
