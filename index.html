@@ -2,139 +2,187 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ГЕТТО БАНК | Твой район — твои правила</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GHETTO BANK | LIVE NETWORK</title>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
     <style>
-        /* Основные стили */
-        body {
-            background-color: #0a0a0a;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
+        :root { --bg: #000; --card: #111; --accent: #2ecc71; --gold: #ffdd2d; --text: #fff; --gray: #8e8e93; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, 'SF Pro Display', sans-serif; margin: 0; display: flex; justify-content: center; }
+        
+        #app { width: 100%; max-width: 430px; min-height: 100vh; padding: 25px 20px; display: none; }
+        #auth { width: 100%; max-width: 430px; height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 40px; }
 
-        .bank-container {
-            width: 400px;
-            background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
-            border: 2px solid #333;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
-            text-align: center;
-        }
+        /* HEADER */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .net-status { font-size: 10px; background: rgba(46, 204, 113, 0.1); color: var(--accent); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(46,204,113,0.2); }
 
-        h1 {
-            font-size: 3rem;
-            margin: 0;
-            letter-spacing: 5px;
-            color: #ff0000;
-            text-shadow: 2px 2px #000;
-            text-transform: uppercase;
+        /* КАРТА */
+        .card { 
+            background: linear-gradient(135deg, #1c1c1e 0%, #000 100%); 
+            border: 1px solid #222; border-radius: 30px; padding: 30px; margin-bottom: 35px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6); position: relative; overflow: hidden;
         }
+        .card::after { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 60%); }
+        .bal-val { font-size: 42px; font-weight: 700; letter-spacing: -1.5px; margin: 10px 0; }
+        
+        /* ПЕРЕВОДЫ */
+        .box { background: var(--card); border: 1px solid #222; border-radius: 26px; padding: 25px; margin-bottom: 20px; }
+        .box-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+        
+        .input-group { background: #000; border: 1px solid #333; border-radius: 16px; padding: 12px 18px; margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 10px; color: var(--gray); text-transform: uppercase; margin-bottom: 4px; }
+        input { background: none; border: none; color: #fff; width: 100%; font-size: 16px; font-weight: 600; }
 
-        .subtitle {
-            font-size: 0.8rem;
-            color: #666;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-        }
+        .btn { background: var(--gold); color: #000; border: none; width: 100%; padding: 20px; border-radius: 18px; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.2s; }
+        .btn:active { transform: scale(0.96); opacity: 0.8; }
 
-        .balance-card {
-            background: #222;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border-left: 5px solid #ff0000;
-        }
-
-        .balance-label {
-            font-size: 0.9rem;
-            color: #aaa;
-        }
-
-        .balance-amount {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        button {
-            background-color: #ff0000;
-            border: none;
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background-color: #b30000;
-            transform: translateY(-2px);
-        }
-
-        .history {
-            margin-top: 25px;
-            text-align: left;
-            font-size: 0.8rem;
-            color: #555;
-        }
-
-        /* Декоративный элемент */
-        .graffiti {
-            position: absolute;
-            bottom: 10px;
-            right: 20px;
-            font-size: 5rem;
-            opacity: 0.05;
-            pointer-events: none;
-        }
+        /* ИСТОРИЯ */
+        .h-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1px solid #111; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .h-info div { font-weight: 600; font-size: 15px; }
+        .h-info span { font-size: 11px; color: var(--gray); }
     </style>
 </head>
 <body>
 
-    <div class="bank-container">
-        <h1>ГЕТТО</h1>
-        <div class="subtitle">Банк для тех, кто в игре</div>
+    <div id="auth">
+        <h1 style="text-align: center; font-size: 38px; letter-spacing: -2px; margin-bottom: 10px;">GHETTO</h1>
+        <p style="text-align: center; color: var(--gray); margin-bottom: 40px;">PRIVATE BANKING SYSTEM</p>
+        <div class="input-group"><input type="text" id="reg-name" placeholder="Введите ваше имя"></div>
+        <button class="btn" onclick="register()">Создать аккаунт</button>
+    </div>
 
-        <div class="balance-card">
-            <div class="balance-label">Твой общак:</div>
-            <div class="balance-amount" id="balance">1 250 000 ₽</div>
+    <div id="app">
+        <div class="header">
+            <div id="u-display" style="font-weight: 800; font-size: 20px;">USER</div>
+            <div class="net-status" id="net-status">ПОДКЛЮЧЕНИЕ...</div>
         </div>
 
-        <div class="actions">
-            <button onclick="updateBalance(50000)">Приход</button>
-            <button onclick="updateBalance(-50000)" style="background: #333;">Расход</button>
+        <div class="card">
+            <div style="font-size:13px; color:var(--gray); font-weight:600;">Баланс счета</div>
+            <div class="bal-val" id="main-bal">0 ₽</div>
+            <div style="margin-top: 30px; display: flex; justify-content: space-between; align-items: center;">
+                <span id="u-id" style="font-family: monospace; color: #444; font-size: 14px; font-weight: 800;">ID: GH-0000</span>
+                <span style="color: var(--gold); font-weight: 900; font-style: italic; font-size: 12px;">BLACK</span>
+            </div>
         </div>
 
-        <div class="history">
-            <div>Последняя движуха: Перевод на район... OK</div>
-            <div>Статус: Под защитой Aura AI</div>
+        <div class="box">
+            <div class="box-title">Мгновенный перевод</div>
+            <div class="input-group">
+                <label>ID получателя</label>
+                <input type="text" id="target-id" placeholder="GH-1234">
+            </div>
+            <div class="input-group">
+                <label>Сумма перевода</label>
+                <input type="number" id="send-amt" placeholder="0">
+            </div>
+            <button class="btn" id="send-btn" onclick="sendMoney()">Перевести сейчас</button>
+        </div>
+
+        <div style="padding: 10px;">
+            <div style="font-size: 18px; font-weight: 700; margin-bottom: 15px;">История</div>
+            <div id="history"></div>
         </div>
     </div>
 
-    <div class="graffiti">GHETTO</div>
+<script>
+    // НАСТРОЙКА ЖИВОЙ СЕТИ
+    const client = mqtt.connect('wss://test.mosquitto.org:8081');
+    let user = JSON.parse(localStorage.getItem('gh_live_v1')) || null;
 
-    <script>
-        let currentBalance = 1250000;
+    function register() {
+        const name = document.getElementById('reg-name').value;
+        if(name.length < 2) return alert("Имя слишком короткое");
+        const id = "GH-" + Math.floor(1000 + Math.random() * 9000);
+        user = { name, id, balance: 150000, history: [] };
+        save();
+        location.reload();
+    }
 
-        function updateBalance(amount) {
-            currentBalance += amount;
-            document.getElementById('balance').innerText = currentBalance.toLocaleString() + ' ₽';
-        }
-    </script>
+    if(user) {
+        document.getElementById('auth').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        initLiveSystem();
+        render();
+    }
+
+    function render() {
+        document.getElementById('main-bal').innerText = user.balance.toLocaleString() + ' ₽';
+        document.getElementById('u-id').innerText = 'ID: ' + user.id;
+        document.getElementById('u-display').innerText = user.name.toUpperCase();
+        
+        const h = document.getElementById('history');
+        h.innerHTML = '';
+        user.history.slice().reverse().forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'h-item';
+            div.innerHTML = `<div class="h-info"><div>${item.title}</div><span>${item.time}</span></div>
+                             <div style="font-weight:800; color:${item.plus ? 'var(--accent)' : '#fff'}">${item.plus ? '+' : '-'} ${item.amt.toLocaleString()} ₽</div>`;
+            h.appendChild(div);
+        });
+    }
+
+    // СИСТЕМА ПРИЕМА ПЕРЕВОДОВ В РЕАЛЬНОМ ВРЕМЕНИ
+    function initLiveSystem() {
+        client.on('connect', () => {
+            document.getElementById('net-status').innerText = 'В СЕТИ';
+            client.subscribe(`ghetto_bank/${user.id}`); // Слушаем свой уникальный ID в облаке
+        });
+
+        client.on('message', (topic, message) => {
+            const data = JSON.parse(message.toString());
+            if(data.type === 'pay') {
+                user.balance += data.amt;
+                user.history.push({ title: `Входящий от ${data.fromName}`, amt: data.amt, plus: true, time: new Date().toLocaleTimeString() });
+                save();
+                render();
+                alert(`⚡️ МГНОВЕННО: +${data.amt} ₽ от ${data.fromName}`);
+            }
+        });
+    }
+
+    // ФУНКЦИЯ ОТПРАВКИ
+    function sendMoney() {
+        const targetId = document.getElementById('target-id').value.toUpperCase().trim();
+        const amt = parseFloat(document.getElementById('send-amt').value);
+        const btn = document.getElementById('send-btn');
+
+        if(!targetId.startsWith('GH-') || isNaN(amt) || amt <= 0) return alert("Неверные данные!");
+        if(amt > user.balance) return alert("Недостаточно средств!");
+
+        btn.innerText = "ОТПРАВКА...";
+        btn.disabled = true;
+
+        // Отправляем сигнал в облако для конкретного ID
+        const payload = JSON.stringify({
+            type: 'pay',
+            amt: amt,
+            fromId: user.id,
+            fromName: user.name
+        });
+
+        client.publish(`ghetto_bank/${targetId}`, payload, { qos: 1 }, (err) => {
+            if(!err) {
+                user.balance -= amt;
+                user.history.push({ title: `Перевод для ${targetId}`, amt: amt, plus: false, time: new Date().toLocaleTimeString() });
+                save();
+                render();
+                
+                alert(`✅ УСПЕШНО!\nДеньги мгновенно доставлены пользователю ${targetId}`);
+                btn.innerText = "Перевести сейчас";
+                btn.disabled = false;
+                document.getElementById('send-amt').value = '';
+                document.getElementById('target-id').value = '';
+            } else {
+                alert("Ошибка сети!");
+                btn.disabled = false;
+            }
+        });
+    }
+
+    function save() { localStorage.setItem('gh_live_v1', JSON.stringify(user)); }
+</script>
 </body>
 </html>
