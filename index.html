@@ -2,252 +2,89 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tapok Web Messenger</title>
+    <title>Tapok Messenger</title>
     <style>
         :root {
-            --tg-bg: #0f1621;
-            --tg-sidebar: #17212b;
-            --tg-active: #2b5278;
-            --tg-text: #ffffff;
-            --tg-hint: #708499;
-            --tg-msg-in: #182533;
-            --tg-msg-out: #2b5278;
+            --bg: #0e1621; --side: #17212b; --active: #2b5278;
+            --msg-in: #182533; --msg-out: #2b5278; --text: #fff;
         }
-
-        body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--tg-bg);
-            color: var(--tg-text);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* Боковая панель */
-        .sidebar {
-            width: 30%;
-            min-width: 300px;
-            max-width: 420px;
-            background-color: var(--tg-sidebar);
-            border-right: 1px solid rgba(0,0,0,0.2);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-header {
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .search-container {
-            flex: 1;
-            background: #242f3d;
-            border-radius: 22px;
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-        }
-
-        .search-container input {
-            background: transparent;
-            border: none;
-            color: white;
-            outline: none;
-            width: 100%;
-            font-size: 14px;
-        }
-
-        /* Список чатов */
-        .chat-list { overflow-y: auto; flex: 1; }
-        .chat-item {
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: background 0.1s;
-        }
-        .chat-item:hover { background: #202b36; }
-        .chat-item.active { background: var(--tg-active); }
-
-        .avatar {
-            width: 54px;
-            height: 54px;
-            border-radius: 50%;
-            background: linear-gradient(180deg, #62b0f5 0%, #3079b4 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        .avatar img { width: 60%; filter: invert(1); }
-
-        .chat-info { flex: 1; min-width: 0; }
-        .chat-name { display: flex; justify-content: space-between; margin-bottom: 4px; }
-        .chat-name b { font-size: 16px; font-weight: 600; }
-        .chat-name span { color: var(--tg-hint); font-size: 12px; }
-        .last-msg { color: var(--tg-hint); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        /* Окно сообщений */
-        .main-view {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: #0e1621 url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
-            background-size: 400px;
-        }
-
-        .top-bar {
-            height: 56px;
-            background: var(--tg-sidebar);
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-            z-index: 10;
-        }
-
-        .top-bar-info { flex: 1; margin-left: 15px; }
-        .top-bar-info b { display: block; font-size: 16px; }
-        .top-bar-info span { font-size: 13px; color: #7f91a4; }
-
-        .messages-container {
-            flex: 1;
-            padding: 16px 5% 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .message {
-            max-width: 480px;
-            padding: 6px 12px 8px;
-            border-radius: 12px;
-            font-size: 15px;
-            position: relative;
-            line-height: 1.4;
-        }
-        .message.in { background: var(--tg-msg-in); align-self: flex-start; border-bottom-left-radius: 4px; }
-        .message.out { background: var(--tg-msg-out); align-self: flex-end; border-bottom-right-radius: 4px; }
+        body { margin: 0; background: var(--bg); font-family: -apple-system, sans-serif; color: var(--text); display: flex; height: 100vh; overflow: hidden; }
         
-        .msg-time {
-            font-size: 11px;
-            color: rgba(255,255,255,0.5);
-            margin-left: 8px;
-            float: right;
-            margin-top: 4px;
-        }
+        /* Список чатов */
+        .sidebar { width: 30%; min-width: 320px; background: var(--side); border-right: 1px solid #080e15; display: flex; flex-direction: column; }
+        .search { padding: 15px; background: var(--side); }
+        .search input { width: 100%; background: #242f3d; border: none; padding: 10px; border-radius: 10px; color: #fff; outline: none; }
+        
+        .chat-item { padding: 12px 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .chat-item.active { background: var(--active); }
+        .avatar { width: 54px; height: 54px; border-radius: 50%; background: #2b5278; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .avatar img { width: 65%; filter: invert(1); }
+        
+        .chat-info h4 { margin: 0; font-size: 16px; }
+        .chat-info p { margin: 5px 0 0; font-size: 14px; color: #7f91a4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Поле ввода */
-        .bottom-bar {
-            padding: 10px 20px 20px;
-            display: flex;
-            justify-content: center;
-        }
-        .input-wrapper {
-            max-width: 700px;
-            width: 100%;
-            background: var(--tg-sidebar);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            padding: 8px 16px;
-            gap: 15px;
-        }
-        .input-wrapper input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: white;
-            outline: none;
-            font-size: 16px;
-        }
+        /* Окно чата */
+        .main { flex: 1; display: flex; flex-direction: column; background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-blend-mode: color-burn; background-color: #0e1621; }
+        .header { background: var(--side); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #080e15; }
+        
+        .messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .bubble { max-width: 450px; padding: 10px 14px; border-radius: 15px; font-size: 15px; position: relative; }
+        .in { background: var(--msg-in); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .out { background: var(--msg-out); align-self: flex-end; border-bottom-right-radius: 4px; }
+        
+        .input-bar { background: var(--side); padding: 15px 20px; display: flex; align-items: center; gap: 15px; }
+        .input-bar input { flex: 1; background: transparent; border: none; color: #fff; font-size: 16px; outline: none; }
 
-        .tapok-logo-small { width: 32px; filter: invert(1); }
+        .tapok-logo { width: 40px; filter: invert(1); }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div style="font-size: 24px; cursor: pointer;">☰</div>
-            <div class="search-container">
-                <input type="text" placeholder="Поиск в Tapok">
-            </div>
+<div class="sidebar">
+    <div class="search"><input type="text" placeholder="Поиск в Tapok"></div>
+    <div class="chat-list">
+        <div class="chat-item active">
+            <div class="avatar"><img src="https://i.ibb.co/Xxd9Y3q/image.png"></div>
+            <div class="chat-info"><h4>Tapok Mod (Beta)</h4><p>Бро, это твой мессенджер!</p></div>
         </div>
-        <div class="chat-list">
-            <div class="chat-item active">
-                <div class="avatar"><img src="https://i.ibb.co/Xxd9Y3q/image.png"></div>
-                <div class="chat-info">
-                    <div class="chat-name"><b>Tapok Mod</b> <span>15:50</span></div>
-                    <div class="last-msg">Это твой мессенджер, бро!</div>
-                </div>
-            </div>
-            <div class="chat-item">
-                <div class="avatar" style="background: linear-gradient(180deg, #f093fb 0%, #f5576c 100%);">B</div>
-                <div class="chat-info">
-                    <div class="chat-name"><b>BAZA SHOP</b> <span>14:20</span></div>
-                    <div class="last-msg">Твой заказ на Brawl Pass готов.</div>
-                </div>
-            </div>
+        <div class="chat-item">
+            <div class="avatar" style="background: #e17076">B</div>
+            <div class="chat-info"><h4>BAZA SHOP</h4><p>Гемы в наличии ✅</p></div>
         </div>
     </div>
+</div>
 
-    <div class="main-view">
-        <div class="top-bar">
-            <div style="font-size: 20px;">🔍</div>
-            <div class="top-bar-info">
-                <b>Tapok Support</b>
-                <span>в сети</span>
-            </div>
-            <img src="https://i.ibb.co/Xxd9Y3q/image.png" class="tapok-logo-small">
-        </div>
-
-        <div class="messages-container" id="chat">
-            <div class="message in">
-                Бро, я сделал этот файл максимально похожим на реальный Telegram Web.
-                <span class="msg-time">15:51</span>
-            </div>
-            <div class="message in">
-                Здесь даже фон оригинальный и шрифты как в моде.
-                <span class="msg-time">15:51</span>
-            </div>
-            <div class="message out">
-                Вот теперь «Тапок» выглядит как настоящий мессенджер! ✅✅
-                <span class="msg-time">15:52</span>
-            </div>
-        </div>
-
-        <div class="bottom-bar">
-            <div class="input-wrapper">
-                <span style="font-size: 24px; color: var(--tg-hint); cursor: pointer;">📎</span>
-                <input type="text" placeholder="Написать сообщение..." id="text-input">
-                <span style="font-size: 24px; color: var(--tg-hint); cursor: pointer;">😊</span>
-            </div>
-        </div>
+<div class="main">
+    <div class="header">
+        <div><b>Tapok Support</b><br><small style="color: #7f91a4">в сети</small></div>
+        <img src="https://i.ibb.co/Xxd9Y3q/image.png" class="tapok-logo">
     </div>
+    <div class="messages" id="box">
+        <div class="bubble in">Добро пожаловать в <b>Tapok</b> — твой собственный мод.</div>
+        <div class="bubble in">Я вшил сюда оригинальные стили Telegram Web K.</div>
+        <div class="bubble out">Вот теперь это реально похоже на Телегу! ✅✅</div>
+    </div>
+    <div class="input-bar">
+        <span>📎</span>
+        <input type="text" id="msg" placeholder="Написать сообщение...">
+        <span>🎤</span>
+    </div>
+</div>
 
-    <script>
-        const input = document.getElementById('text-input');
-        const chat = document.getElementById('chat');
+<script>
+    const msg = document.getElementById('msg');
+    const box = document.getElementById('box');
+    msg.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && msg.value !== '') {
+            const d = document.createElement('div');
+            d.className = 'bubble out';
+            d.innerHTML = msg.value;
+            box.appendChild(d);
+            msg.value = '';
+            box.scrollTop = box.scrollHeight;
+        }
+    });
+</script>
 
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && input.value.trim() !== '') {
-                const now = new Date();
-                const time = now.getHours() + ':' + now.getMinutes().toString().padStart(2, '0');
-                const msg = document.createElement('div');
-                msg.className = 'message out';
-                msg.innerHTML = input.value + `<span class="msg-time">${time}</span>`;
-                chat.appendChild(msg);
-                input.value = '';
-                chat.scrollTop = chat.scrollHeight;
-            }
-        });
-    </script>
 </body>
 </html>
