@@ -2,181 +2,246 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Ghetto Bank Simulator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GHETTO BANK BLACK</title>
     <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: #1c1c1e;
+            --accent-yellow: #ffde00;
+            --text-main: #ffffff;
+            --text-secondary: #8e8e93;
+            --danger: #ff3b30;
+            --success: #34c759;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            background-color: #1a1a1a;
-            color: #00ff00;
-            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom) 16px;
             display: flex;
             flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            padding: 20px;
+            padding: 20px 0;
         }
-        #game-container {
-            border: 2px solid #333;
-            padding: 20px;
-            width: 400px;
-            background-color: #000;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        .header h1 { font-size: 24px; font-weight: 800; margin: 0; letter-spacing: -1px; }
+        .status-online {
+            color: var(--success);
+            font-size: 12px;
+            background: rgba(52, 199, 89, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            font-weight: bold;
         }
-        .stat { font-size: 1.2em; margin-bottom: 10px; }
-        .btn {
-            background: #222;
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            padding: 10px;
+
+        /* Main Card */
+        .balance-card {
+            background: linear-gradient(135deg, #2c2c2e 0%, #1c1c1e 100%);
+            border-radius: 28px;
+            padding: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            border: 1px solid #3a3a3c;
+        }
+        .balance-label { color: var(--text-secondary); font-size: 14px; margin-bottom: 8px; }
+        .balance-amount { font-size: 38px; font-weight: 700; margin-bottom: 20px; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; }
+        .card-id { color: var(--text-secondary); font-family: monospace; font-size: 14px; }
+        .card-type { color: var(--accent-yellow); font-weight: 900; font-size: 12px; letter-spacing: 1px; }
+
+        /* Action Block */
+        .action-container {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .action-title { font-weight: 700; margin-bottom: 16px; font-size: 18px; }
+        .input-group {
+            background: #2c2c2e;
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            border: 1px solid #3a3a3c;
+        }
+        .input-label { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 4px; }
+        .input-val { font-size: 18px; font-weight: 600; color: var(--text-main); }
+        
+        .main-btn {
+            background: var(--accent-yellow);
+            color: #000;
+            border: none;
             width: 100%;
-            margin: 5px 0;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn:hover { background: #00ff00; color: #000; }
-        .btn:disabled { color: #444; border-color: #444; cursor: not-allowed; }
-        #log {
-            height: 150px;
-            overflow-y: auto;
-            border: 1px solid #333;
-            padding: 5px;
-            font-size: 0.8em;
+            padding: 18px;
+            border-radius: 18px;
+            font-size: 16px;
+            font-weight: 700;
             margin-top: 10px;
-            color: #aaa;
+            transition: transform 0.1s;
         }
-        .danger { color: #ff0000; }
-        .success { color: #ffff00; }
+        .main-btn:active { transform: scale(0.97); }
+
+        /* History */
+        .history-section { flex-grow: 1; overflow-y: auto; }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #1c1c1e;
+        }
+        .hist-info div { font-weight: 600; font-size: 15px; }
+        .hist-info span { color: var(--text-secondary); font-size: 12px; }
+        .hist-amount { font-weight: 700; }
+        .plus { color: var(--success); }
+        .minus { color: var(--danger); }
+
+        /* Notifications */
+        #notify {
+            position: fixed;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--danger);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: none;
+            z-index: 100;
+        }
     </style>
 </head>
 <body>
 
-    <h1>🏦 GHETTO BANK</h1>
-    
-    <div id="game-container">
-        <div class="stat">Баланс: <span id="money">100</span>$</div>
-        <div class="stat">Репутация: <span id="rep">0</span></div>
-        <div class="stat">Безопасность: <span id="security">1</span></div>
-        <hr>
-        
-        <button class="btn" onclick="collectMicroloan()">Собрать проценты по микрозаймам (+1$)</button>
-        
-        <button class="btn" id="upgradeSec" onclick="upgradeSecurity()">Нанять вышибалу (Цена: 50$)</button>
-        
-        <button class="btn" id="laundry" onclick="moneyLaundering()">Отмыть деньги (Риск!)</button>
-        
-        <button class="btn" id="legalize" onclick="legalize()">Купить лицензию (Цена: 1000$)</button>
+    <div id="notify">КРЫША ЗАБРАЛА ДОЛЮ -15%</div>
 
-        <div id="log"></div>
+    <div class="header">
+        <h1>ЗАД</h1>
+        <div class="status-online">В СЕТИ</div>
+    </div>
+
+    <div class="balance-card">
+        <div class="balance-label">Баланс счета</div>
+        <div class="balance-amount" id="balance">100 ₽</div>
+        <div class="card-footer">
+            <div class="card-id">ID: GH-3448</div>
+            <div class="card-type">BLACK</div>
+        </div>
+    </div>
+
+    <div class="action-container">
+        <div class="action-title">Мгновенный перевод</div>
+        <div class="input-group">
+            <div class="input-label">ID Получателя</div>
+            <div class="input-val">ГЕТТО-ДИЛЕР (ПРОВЕРЕН)</div>
+        </div>
+        <div class="input-group">
+            <div class="input-label">Сумма инвестиции</div>
+            <div class="input-val" id="invest-amount">50 ₽</div>
+        </div>
+        <button class="main-btn" onclick="gamble()">Внести в капитал (Крыша)</button>
+    </div>
+
+    <div class="history-section">
+        <div class="action-title">История</div>
+        <div id="history-list">
+            </div>
     </div>
 
     <script>
-        let money = 100;
-        let rep = 0;
-        let security = 1;
-        let isLegal = false;
-        let secCost = 50;
+        let balance = 100;
+        let investAmount = 50;
 
-        const logElement = document.getElementById('log');
-
-        function addLog(text, className = '') {
-            const entry = document.createElement('div');
-            entry.className = className;
-            entry.innerText = `> ${text}`;
-            logElement.prepend(entry);
+        function updateUI() {
+            document.getElementById('balance').innerText = Math.floor(balance).toLocaleString() + " ₽";
+            document.getElementById('invest-amount').innerText = Math.floor(investAmount).toLocaleString() + " ₽";
         }
 
-        function updateDisplay() {
-            document.getElementById('money').innerText = Math.floor(money);
-            document.getElementById('rep').innerText = rep;
-            document.getElementById('security').innerText = security;
-            document.getElementById('upgradeSec').innerText = `Нанять вышибалу (Цена: ${secCost}$)`;
-            
-            if(money < secCost) document.getElementById('upgradeSec').disabled = true;
-            else document.getElementById('upgradeSec').disabled = false;
-
-            if(money < 1000 || isLegal) document.getElementById('legalize').disabled = true;
-            else document.getElementById('legalize').disabled = false;
+        function addHistory(title, amount, isPlus) {
+            const list = document.getElementById('history-list');
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            item.innerHTML = `
+                <div class="hist-info">
+                    <div>${title}</div>
+                    <span>${time}</span>
+                </div>
+                <div class="hist-amount ${isPlus ? 'plus' : 'minus'}">
+                    ${isPlus ? '+' : '-'} ${Math.abs(Math.floor(amount)).toLocaleString()} ₽
+                </div>
+            `;
+            list.prepend(item);
+            if(list.children.length > 5) list.removeChild(list.lastChild);
         }
 
-        function collectMicroloan() {
-            let gain = 1 + (rep * 0.1);
-            money += gain;
-            rep += 1;
-            addLog(`Собрано ${gain.toFixed(1)}$ с должников.`);
-            checkRandomEvent();
-            updateDisplay();
-        }
-
-        function upgradeSecurity() {
-            if (money >= secCost) {
-                money -= secCost;
-                security += 1;
-                secCost = Math.floor(secCost * 1.8);
-                addLog("Безопасность повышена. Теперь грабить будут чуть реже.", "success");
-                updateDisplay();
+        function gamble() {
+            if (balance < investAmount) {
+                showNotify("НЕДОСТАТОЧНО СРЕДСТВ", true);
+                return;
             }
-        }
 
-        function moneyLaundering() {
+            balance -= investAmount;
             let chance = Math.random();
-            if (chance > 0.7) {
-                let gain = money * 0.5;
-                money += gain;
-                addLog(`Успех! Отмыто ${gain.toFixed(0)}$.`, "success");
-            } else {
-                let loss = money * 0.3;
-                money -= loss;
-                rep -= 10;
-                addLog(`Полиция накрыла точку! Потеряно ${loss.toFixed(0)}$.`, "danger");
+
+            if (chance > 0.6) { // Выигрыш
+                let win = investAmount * 2.5;
+                balance += win;
+                addHistory("Доход с оборота", win, true);
+                investAmount *= 1.2; // Растет сложность (цена входа)
+            } else { // Проигрыш
+                addHistory("Конфискация товара", investAmount, false);
+                investAmount = Math.max(50, investAmount * 0.8);
             }
-            updateDisplay();
+            updateUI();
         }
 
-        function legalize() {
-            if (money >= 1000) {
-                money -= 1000;
-                isLegal = true;
-                addLog("Вы получили лицензию! Налоги выросли, но облавы прекратились.", "success");
-                updateDisplay();
-            }
+        function showNotify(text, isRed) {
+            const n = document.getElementById('notify');
+            n.innerText = text;
+            n.style.display = 'block';
+            setTimeout(() => n.style.display = 'none', 2000);
         }
 
-        function checkRandomEvent() {
-            let eventChance = Math.random();
-            
-            // Ограбление (зависит от безопасности)
-            if (eventChance < 0.15 && !isLegal) {
-                let raidPower = Math.random() * 10;
-                if (raidPower > security) {
-                    let stolen = money * 0.4;
-                    money -= stolen;
-                    addLog(`МЕСТНАЯ БАНДА ОГРАБИЛА БАНК! Потеряно ${stolen.toFixed(0)}$.`, "danger");
-                } else {
-                    addLog("Охрана отбила нападение мелких воришек.");
-                }
-            }
-
-            // Инфляция или налоги
-            if (eventChance > 0.9) {
-                let tax = isLegal ? money * 0.05 : money * 0.15;
-                money -= tax;
-                addLog(`Уплачено за "крышу" или налоги: ${tax.toFixed(0)}$.`, "danger");
-            }
-            
-            // Случайный кризис
-            if (eventChance > 0.45 && eventChance < 0.5) {
-                rep = Math.floor(rep / 2);
-                addLog("Слухи в гетто: ваш банк — кидалово. Репутация упала!", "danger");
-            }
-        }
-
-        // Пассивный доход и инфляция
+        // Случайные события гетто (Сложность)
         setInterval(() => {
-            if (money > 0) {
-                money -= (money * 0.01); // Пассивное обесценивание денег
-                updateDisplay();
+            let event = Math.random();
+            if (event < 0.15 && balance > 200) { // Налог крыши
+                let tax = balance * 0.2;
+                balance -= tax;
+                addHistory("Потеря от КРЫШИ (Полиция)", tax, false);
+                showNotify("ОБЛАВА! -20%", true);
+                updateUI();
+            } else if (event > 0.95) { // Мелкая прибыль
+                let gift = 50;
+                balance += gift;
+                addHistory("Перевод от Лала", gift, true);
+                updateUI();
             }
-        }, 3000);
+            
+            // Инфляция (постоянное давление)
+            if (balance > 100) {
+                balance -= 1; 
+                updateUI();
+            }
+        }, 5000);
 
-        updateDisplay();
+        updateUI();
     </script>
 </body>
 </html>
