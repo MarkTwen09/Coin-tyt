@@ -7,126 +7,115 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --accent: #ffcc00;
+            --accent: #2e67f8; /* Синий как ты просил */
             --bg: #000000;
-            --card: #121212;
-            --gray: #282828;
-            --text-main: #ffffff;
-            --text-dim: #b3b3b3;
+            --surface: #121212;
+            --text: #ffffff;
+            --text-dim: #929292;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
+
         body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, system-ui, sans-serif;
             overflow: hidden;
             height: 100vh;
         }
 
-        /* --- Main Screen --- */
-        .main-content {
-            height: 100vh;
-            overflow-y: auto;
-            padding: 60px 20px 180px;
-            background: linear-gradient(to bottom, #1a1a1a 0%, #000 30%);
-        }
+        /* --- ГЛАВНЫЙ ЭКРАН --- */
+        .app-container { height: 100vh; overflow-y: auto; padding: 60px 16px 160px; scrollbar-width: none; }
+        .app-container::-webkit-scrollbar { display: none; }
 
-        .section-header { font-size: 24px; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.5px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .logo { font-size: 26px; font-weight: 900; letter-spacing: -1px; }
 
-        /* --- Track UI --- */
+        h2 { font-size: 22px; font-weight: 700; margin: 20px 0; }
+
+        /* --- ТРЕКИ --- */
+        .track-list { display: flex; flex-direction: column; gap: 4px; }
         .track-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 0;
-            gap: 16px;
+            display: flex; align-items: center; padding: 10px;
+            background: rgba(255,255,255,0.03); border-radius: 12px; transition: 0.2s;
         }
-        .track-item img { width: 52px; height: 52px; border-radius: 8px; object-fit: cover; }
-        .track-info { flex: 1; }
-        .track-info h4 { font-size: 16px; font-weight: 500; margin-bottom: 2px; }
-        .track-info p { font-size: 13px; color: var(--text-dim); }
+        .track-item:active { background: rgba(255,255,255,0.1); }
+        .track-item img { width: 48px; height: 48px; border-radius: 6px; margin-right: 14px; object-fit: cover; }
+        .track-meta { flex: 1; }
+        .track-meta h4 { font-size: 16px; font-weight: 500; }
+        .track-meta p { font-size: 13px; color: var(--text-dim); }
 
-        /* --- Секция публикации --- */
-        .upload-zone {
-            background: var(--card);
-            padding: 24px;
-            border-radius: 28px;
-            margin-bottom: 40px;
-            border: 1px solid #222;
+        /* --- СИНЯЯ КНОПКА ЗАГРУЗКИ (Floating Action Button) --- */
+        .fab {
+            position: fixed; right: 20px; bottom: 160px;
+            width: 56px; height: 56px; background: var(--accent);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 24px rgba(46, 103, 248, 0.4); z-index: 1500;
+            cursor: pointer; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .u-input {
-            width: 100%; background: #1f1f1f; border: none; padding: 16px;
-            border-radius: 16px; color: white; margin-bottom: 12px; font-size: 16px;
+        .fab:active { transform: scale(0.9); }
+
+        /* --- ОКНО ЗАГРУЗКИ (Modal) --- */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px); display: none; z-index: 3000;
+            align-items: center; justify-content: center; padding: 20px;
         }
-        .u-btn {
-            width: 100%; background: var(--accent); color: #000; border: none;
-            padding: 18px; border-radius: 18px; font-weight: 700; font-size: 16px;
+        .modal-card {
+            background: #1c1c1e; width: 100%; max-width: 350px;
+            padding: 24px; border-radius: 24px; border: 1px solid #333;
+        }
+        .modal-card input {
+            width: 100%; background: #2c2c2e; border: none; padding: 14px;
+            border-radius: 12px; color: #fff; margin-bottom: 12px; font-size: 15px;
+        }
+        .file-box {
+            background: #2c2c2e; padding: 12px; border-radius: 12px;
+            text-align: center; font-size: 13px; color: var(--text-dim); margin-bottom: 12px;
+        }
+        .btn-upload {
+            width: 100%; background: var(--accent); color: #fff; border: none;
+            padding: 15px; border-radius: 14px; font-weight: 700;
         }
 
-        /* --- FULL PLAYER --- */
-        .player-overlay {
+        /* --- ПОЛНЫЙ ПЛЕЕР --- */
+        .full-player {
             position: fixed; top: 100%; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 2000;
-            transition: transform 0.4s cubic-bezier(0.32, 1, 0.23, 1);
-            display: flex; flex-direction: column;
-            padding: 20px 28px 60px;
+            background: #000; z-index: 2500; transition: transform 0.4s cubic-bezier(0.32, 1, 0.23, 1);
+            padding: 30px 24px; display: flex; flex-direction: column;
         }
-        .player-overlay.active { transform: translateY(-100%); }
+        .full-player.active { transform: translateY(-100%); }
 
-        .player-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 0 40px; color: var(--text-dim);
-        }
+        .p-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .big-cover { width: 100%; aspect-ratio: 1; border-radius: 20px; object-fit: cover; box-shadow: 0 20px 50px rgba(0,0,0,0.8); margin-bottom: 30px; }
 
-        .cover-art {
-            width: 100%; aspect-ratio: 1; border-radius: 24px;
-            object-fit: cover; box-shadow: 0 30px 60px rgba(0,0,0,0.7);
-            margin-bottom: 40px;
-        }
-
-        /* --- Настоящий Слайдер --- */
-        .seek-bar-container { width: 100%; margin-top: 30px; }
+        /* --- СЛАЙДЕР (Seek Bar) --- */
+        .seek-container { margin: 30px 0 10px; }
         .seek-bar {
-            width: 100%; height: 6px; -webkit-appearance: none;
-            background: #333; border-radius: 10px; outline: none;
+            width: 100%; height: 4px; -webkit-appearance: none;
+            background: #333; border-radius: 2px; outline: none;
         }
         .seek-bar::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 14px; height: 14px;
-            background: #fff; border-radius: 50%; cursor: pointer;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            -webkit-appearance: none; width: 12px; height: 12px;
+            background: #fff; border-radius: 50%;
         }
 
-        .time-labels {
-            display: flex; justify-content: space-between;
-            font-size: 12px; color: var(--text-dim); margin-top: 12px;
-        }
+        .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+        .play-main { width: 72px; height: 72px; background: #fff; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; }
 
-        /* --- Контролы --- */
-        .controls-row {
-            display: flex; justify-content: space-around; align-items: center;
-            margin-top: 40px;
+        /* --- МИНИ-ПЛЕЕР --- */
+        .mini-player {
+            position: fixed; bottom: 85px; left: 10px; right: 10px;
+            background: rgba(28,28,30,0.95); backdrop-filter: blur(20px);
+            height: 60px; border-radius: 12px; display: flex; align-items: center;
+            padding: 0 10px; z-index: 1000; border: 1px solid rgba(255,255,255,0.05);
         }
-        .main-play-btn {
-            width: 76px; height: 76px; background: #fff; color: #000;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 28px;
-        }
+        .mini-player img { width: 42px; height: 42px; border-radius: 6px; margin-right: 12px; }
 
-        /* --- Mini Player --- */
-        .mini-p {
-            position: fixed; bottom: 84px; left: 10px; right: 10px;
-            background: rgba(25, 25, 25, 0.95); backdrop-filter: blur(20px);
-            height: 64px; border-radius: 16px; display: flex; align-items: center;
-            padding: 0 12px; z-index: 1000; border: 1px solid #333;
-        }
-        .mini-p img { width: 44px; height: 44px; border-radius: 8px; margin-right: 12px; }
-
-        /* --- Nav --- */
-        .tab-bar {
-            position: fixed; bottom: 0; width: 100%; height: 74px;
+        .tabs {
+            position: fixed; bottom: 0; width: 100%; height: 75px;
             background: #000; display: flex; justify-content: space-around;
-            padding-top: 12px; border-top: 1px solid #1a1a1a;
+            padding-top: 10px; border-top: 1px solid #1a1a1a;
         }
         .tab-item { color: var(--text-dim); font-size: 10px; text-align: center; }
         .tab-item.active { color: #fff; }
@@ -135,76 +124,77 @@
 </head>
 <body>
 
-<div class="main-content">
-    <h1 class="section-header">FLIXY MUSIC</h1>
-
-    <div class="upload-zone">
-        <h3 style="margin-bottom: 16px;">Опубликовать</h3>
-        <input type="text" id="name" class="u-input" placeholder="Название трека">
-        <input type="text" id="artist" class="u-input" placeholder="Артист">
-        <label style="display:block; margin-bottom:12px; color:#888; font-size:14px;">Обложка и Аудио:</label>
-        <input type="file" id="img-f" accept="image/*" class="u-input" style="padding:10px;">
-        <input type="file" id="snd-f" accept="audio/*" class="u-input" style="padding:10px;">
-        <button class="u-btn" onclick="save()">Загрузить на устройство</button>
+<div class="app-container">
+    <div class="header">
+        <div class="logo">FLIXY</div>
+        <i class="fas fa-search" style="font-size: 20px;"></i>
     </div>
-
-    <h2 class="section-header">Моя медиатека</h2>
-    <div id="lib"></div>
+    
+    <h2>Мои треки</h2>
+    <div id="lib" class="track-list"></div>
 </div>
 
-<div class="mini-p" id="mini" style="display: none;" onclick="openPlayer()">
-    <img id="m-img" src="">
-    <div class="track-info">
-        <h4 id="m-title">Title</h4>
-        <p id="m-artist">Artist</p>
-    </div>
-    <i class="fas fa-play" id="m-play" onclick="event.stopPropagation(); togglePlay();" style="font-size: 20px; margin: 0 15px;"></i>
+<div class="fab" onclick="toggleModal(true)">
+    <i class="fas fa-plus" style="color: white; font-size: 22px;"></i>
 </div>
 
-<div class="player-overlay" id="full">
-    <div class="player-header">
-        <i class="fas fa-chevron-down" onclick="closePlayer()" style="font-size: 20px;"></i>
-        <span style="font-weight: 600; font-size: 13px; letter-spacing: 1px;">СЕЙЧАС ИГРАЕТ</span>
+<div class="modal-overlay" id="modal" onclick="if(event.target == this) toggleModal(false)">
+    <div class="modal-card">
+        <h3 style="margin-bottom: 16px;">Новый трек</h3>
+        <input type="text" id="n" placeholder="Название">
+        <input type="text" id="a" placeholder="Исполнитель">
+        <div class="file-box">Обложка: <input type="file" id="fi" accept="image/*"></div>
+        <div class="file-box">Аудио (MP3): <input type="file" id="fa" accept="audio/*"></div>
+        <button class="btn-upload" onclick="upload()">Добавить в библиотеку</button>
+    </div>
+</div>
+
+<div class="mini-player" id="mini" style="display: none;" onclick="openP()">
+    <img id="m-i" src="">
+    <div class="track-meta">
+        <h4 id="m-t">Title</h4>
+        <p id="m-a">Artist</p>
+    </div>
+    <i class="fas fa-play" id="m-p" onclick="event.stopPropagation(); toggle();" style="font-size: 20px; margin: 0 10px;"></i>
+</div>
+
+<div class="full-player" id="full">
+    <div class="p-header">
+        <i class="fas fa-chevron-down" onclick="closeP()" style="font-size: 22px;"></i>
+        <span style="font-weight: 600; font-size: 12px; color: #666;">FLIXY MUSIC</span>
         <i class="fas fa-ellipsis-h" style="font-size: 20px;"></i>
     </div>
-
-    <img id="f-img" class="cover-art" src="">
-
-    <div style="text-align: left; width: 100%;">
-        <h1 id="f-title" style="font-size: 26px; margin-bottom: 4px;">Track Title</h1>
-        <p id="f-artist" style="font-size: 18px; color: var(--text-dim);">Artist Name</p>
+    <img id="f-i" class="big-cover">
+    <div style="width: 100%;">
+        <h1 id="f-t" style="font-size: 24px; margin-bottom: 4px;">Title</h1>
+        <p id="f-a" style="font-size: 16px; color: var(--text-dim);">Artist</p>
     </div>
-
-    <div class="seek-bar-container">
+    <div class="seek-container">
         <input type="range" class="seek-bar" id="seek" value="0" step="0.1">
-        <div class="time-labels">
+        <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 11px; color: #555;">
             <span id="cur">0:00</span>
             <span id="dur">0:00</span>
         </div>
     </div>
-
-    <div class="controls-row">
-        <i class="fas fa-random" style="color: #444; font-size: 20px;"></i>
-        <i class="fas fa-step-backward" style="font-size: 28px;"></i>
-        <div class="main-play-btn" onclick="togglePlay()">
-            <i class="fas fa-play" id="f-play"></i>
-        </div>
-        <i class="fas fa-step-forward" style="font-size: 28px;"></i>
-        <i class="fas fa-redo" style="color: #444; font-size: 20px;"></i>
+    <div class="controls">
+        <i class="fas fa-random" style="color: #333;"></i>
+        <i class="fas fa-step-backward" style="font-size: 24px;"></i>
+        <div class="play-main" onclick="toggle()"><i class="fas fa-play" id="f-p"></i></div>
+        <i class="fas fa-step-forward" style="font-size: 24px;"></i>
+        <i class="fas fa-redo" style="color: #333;"></i>
     </div>
 </div>
 
-<div class="tab-bar">
+<nav class="tabs">
     <div class="tab-item active"><i class="fas fa-home"></i>Главная</div>
     <div class="tab-item"><i class="fas fa-compass"></i>Обзор</div>
-    <div class="tab-item"><i class="fas fa-bookmark"></i>Коллекция</div>
-</div>
+    <div class="tab-item"><i class="fas fa-heart"></i>Коллекция</div>
+</nav>
 
 <script>
     const audio = new Audio();
     let db;
 
-    // База данных IndexedDB
     const req = indexedDB.open("FlixyDB", 1);
     req.onupgradeneeded = e => {
         db = e.target.result;
@@ -212,32 +202,32 @@
     };
     req.onsuccess = e => { db = e.target.result; render(); };
 
-    async function save() {
-        const n = document.getElementById('name').value, a = document.getElementById('artist').value;
-        const img = document.getElementById('img-f').files[0], snd = document.getElementById('snd-f').files[0];
-        if(!n || !a || !img || !snd) return alert("Выбери все файлы!");
+    function toggleModal(s) { document.getElementById('modal').style.display = s ? 'flex' : 'none'; }
 
-        const song = { name: n, artist: a, img: await toB64(img), snd: await toB64(snd) };
+    async function upload() {
+        const n = document.getElementById('n').value, a = document.getElementById('a').value;
+        const fi = document.getElementById('fi').files[0], fa = document.getElementById('fa').files[0];
+        if(!n || !a || !fi || !fa) return alert("Заполни всё!");
+
+        const song = { name: n, artist: a, img: await toB64(fi), snd: await toB64(fa) };
         const tx = db.transaction("songs", "readwrite");
         tx.objectStore("songs").add(song);
-        tx.oncomplete = () => { render(); alert("Готово!"); };
+        tx.oncomplete = () => { render(); toggleModal(false); };
     }
 
-    const toB64 = f => new Promise(r => { const reader = new FileReader(); reader.onload = e => r(e.target.result); reader.readAsDataURL(f); });
+    const toB64 = f => new Promise(res => { const r = new FileReader(); r.onload = e => res(e.target.result); r.readAsDataURL(f); });
 
     function render() {
-        const list = document.getElementById('lib'); list.innerHTML = '';
+        const l = document.getElementById('lib'); l.innerHTML = '';
         const tx = db.transaction("songs", "readonly");
         tx.objectStore("songs").openCursor().onsuccess = e => {
             const c = e.target.result;
             if(c) {
                 const s = c.value;
-                const div = document.createElement('div');
-                div.className = 'track-item';
-                div.onclick = () => play(s);
-                div.innerHTML = `<img src="${s.img}"><div class="track-info"><h4>${s.name}</h4><p>${s.artist}</p></div>`;
-                list.prepend(div);
-                c.continue();
+                const d = document.createElement('div');
+                d.className = 'track-item'; d.onclick = () => play(s);
+                d.innerHTML = `<img src="${s.img}"><div class="track-meta"><h4>${s.name}</h4><p>${s.artist}</p></div>`;
+                l.prepend(d); c.continue();
             }
         };
     }
@@ -245,48 +235,31 @@
     function play(s) {
         audio.src = s.snd; audio.play();
         document.getElementById('mini').style.display = 'flex';
-        document.getElementById('m-title').innerText = s.name;
-        document.getElementById('m-artist').innerText = s.artist;
-        document.getElementById('m-img').src = s.img;
-        document.getElementById('f-title').innerText = s.name;
-        document.getElementById('f-artist').innerText = s.artist;
-        document.getElementById('f-img').src = s.img;
+        ['m-t','f-t'].forEach(id => document.getElementById(id).innerText = s.name);
+        ['m-a','f-a'].forEach(id => document.getElementById(id).innerText = s.artist);
+        ['m-i','f-i'].forEach(id => document.getElementById(id).src = s.img);
         updateIcons(true);
     }
 
-    function togglePlay() {
-        if(audio.paused) { audio.play(); updateIcons(true); }
-        else { audio.pause(); updateIcons(false); }
-    }
-
-    function updateIcons(s) {
+    function toggle() { audio.paused ? audio.play() : audio.pause(); updateIcons(!audio.paused); }
+    function updateIcons(s) { 
         const i = s ? 'fa-pause' : 'fa-play';
-        document.getElementById('m-play').className = 'fas ' + i;
-        document.getElementById('f-play').className = 'fas ' + i;
+        document.getElementById('m-p').className = 'fas ' + i;
+        document.getElementById('f-p').className = 'fas ' + i;
     }
 
-    function openPlayer() { document.getElementById('full').classList.add('active'); }
-    function closePlayer() { document.getElementById('full').classList.remove('active'); }
+    function openP() { document.getElementById('full').classList.add('active'); }
+    function closeP() { document.getElementById('full').classList.remove('active'); }
 
-    // Логика слайдера перемотки
-    const slider = document.getElementById('seek');
+    const s = document.getElementById('seek');
     audio.ontimeupdate = () => {
         if(!audio.duration) return;
-        const val = (audio.currentTime / audio.duration) * 100;
-        slider.value = val;
-        document.getElementById('cur').innerText = formatTime(audio.currentTime);
-        document.getElementById('dur').innerText = formatTime(audio.duration);
+        s.value = (audio.currentTime / audio.duration) * 100;
+        document.getElementById('cur').innerText = fmt(audio.currentTime);
+        document.getElementById('dur').innerText = fmt(audio.duration);
     };
-
-    slider.oninput = function() {
-        const time = (this.value / 100) * audio.duration;
-        audio.currentTime = time;
-    };
-
-    function formatTime(s) {
-        let m = Math.floor(s / 60), sec = Math.floor(s % 60);
-        return m + ":" + (sec < 10 ? '0' : '') + sec;
-    }
+    s.oninput = function() { audio.currentTime = (this.value / 100) * audio.duration; };
+    const fmt = t => { const m = Math.floor(t/60), s = Math.floor(t%60); return m + ":" + (s<10?'0':'')+s; };
 </script>
 
 </body>
