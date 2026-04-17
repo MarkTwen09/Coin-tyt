@@ -2,379 +2,371 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FLIXY MUSIC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>FLIXY PREMUM</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --bg-black: #000000;
-            --surface: #121212;
-            --accent: #ffcc00; /* Желтый акцент как в Яндекс/Кинопоиск */
-            --text-main: #ffffff;
-            --text-secondary: #8e8e8e;
+            --accent: #ffcc00;
+            --bg: #000000;
+            --card: #1c1c1e;
+            --text: #ffffff;
+            --text-dim: #8e8e93;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body {
-            background-color: var(--bg-black);
-            color: var(--text-main);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow: hidden;
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             height: 100vh;
+            overflow: hidden;
         }
 
-        /* --- Скролл-зона --- */
-        .app-view {
+        /* --- Контентная часть --- */
+        .scroll-area {
             height: 100vh;
             overflow-y: auto;
-            padding: 20px 16px 160px 16px;
-            scrollbar-width: none;
+            padding: 60px 16px 180px;
+            scroll-behavior: smooth;
         }
-        .app-view::-webkit-scrollbar { display: none; }
 
-        header {
+        .header-top {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            padding: 15px 16px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
+            z-index: 100;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
         }
 
-        .logo { font-size: 26px; font-weight: 800; letter-spacing: -1px; color: var(--accent); }
+        .logo { font-size: 22px; font-weight: 900; color: var(--accent); letter-spacing: -1px; }
 
-        h2 { font-size: 22px; margin: 24px 0 16px; font-weight: 700; }
+        h2 { font-size: 22px; font-weight: 700; margin: 25px 0 15px; }
 
-        /* --- Секция публикации --- */
-        .upload-card {
-            background: var(--surface);
+        /* --- Секция Загрузки --- */
+        .upload-section {
+            background: var(--card);
             border-radius: 20px;
             padding: 20px;
-            margin-bottom: 30px;
-            border: 1px solid #222;
+            margin-bottom: 25px;
         }
 
-        .input-field {
+        .form-input {
             width: 100%;
-            background: #222;
+            background: #2c2c2e;
             border: none;
-            padding: 14px;
+            padding: 12px 15px;
             border-radius: 12px;
             color: white;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             font-size: 16px;
         }
 
-        .file-label {
+        .file-btn {
             display: block;
-            background: #333;
+            background: #3a3a3c;
             padding: 12px;
             border-radius: 12px;
             text-align: center;
-            margin-bottom: 12px;
             font-size: 14px;
+            margin-bottom: 10px;
             cursor: pointer;
+            color: var(--text-dim);
         }
 
-        .publish-btn {
+        .btn-main {
             width: 100%;
             background: var(--accent);
-            color: black;
+            color: #000;
             border: none;
             padding: 15px;
-            border-radius: 12px;
+            border-radius: 14px;
             font-weight: 700;
             font-size: 16px;
         }
 
-        /* --- Горизонтальные миксы --- */
-        .horizontal-scroll {
-            display: flex;
-            gap: 16px;
-            overflow-x: auto;
-            margin: 0 -16px;
-            padding: 0 16px;
-            scrollbar-width: none;
-        }
-        .horizontal-scroll::-webkit-scrollbar { display: none; }
-
-        .mix-card {
-            min-width: 160px;
-            width: 160px;
-        }
-        .mix-card img {
-            width: 160px;
-            height: 160px;
-            border-radius: 24px;
-            object-fit: cover;
-            margin-bottom: 10px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.4);
-        }
-
         /* --- Список треков (как на видео) --- */
-        .track-item {
+        .track-row {
             display: flex;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #1a1a1a;
+            padding: 12px 0;
+            border-bottom: 0.5px solid #2c2c2e;
         }
-        .track-item img {
-            width: 50px; height: 50px;
+
+        .track-row img {
+            width: 48px; height: 48px;
             border-radius: 8px;
             margin-right: 15px;
+            object-fit: cover;
         }
-        .track-info { flex: 1; }
-        .track-info h4 { font-size: 16px; font-weight: 500; margin-bottom: 2px; }
-        .track-info p { font-size: 13px; color: var(--text-secondary); }
 
-        /* --- Мини-плеер --- */
+        .track-meta { flex: 1; min-width: 0; }
+        .track-meta h4 { font-size: 16px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .track-meta p { font-size: 13px; color: var(--text-dim); }
+
+        /* --- Мини плеер --- */
         .mini-player {
             position: fixed;
-            bottom: 75px;
-            left: 10px;
-            right: 10px;
-            background: #1e1e1e;
-            height: 60px;
-            border-radius: 12px;
+            bottom: 85px;
+            left: 8px;
+            right: 8px;
+            height: 64px;
+            background: #2c2c2e;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             padding: 0 12px;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            z-index: 500;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .mini-player img { width: 40px; height: 40px; border-radius: 6px; margin-right: 12px; }
-        
-        /* --- Полноэкранный плеер (Player View) --- */
-        .full-player {
+
+        .mini-player img { width: 44px; height: 44px; border-radius: 8px; margin-right: 12px; }
+
+        /* --- Full Screen Player --- */
+        .full-screen-player {
             position: fixed;
-            top: 100%; /* Скрыт внизу */
+            top: 100%;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom, #2c3e50, #000000);
-            z-index: 2000;
-            transition: top 0.4s cubic-bezier(0.32, 1, 0.23, 1);
-            padding: 40px 30px;
+            background: #121212;
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.17, 0.67, 0.12, 1);
+            padding: 60px 30px;
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
-        .full-player.active { top: 0; }
-        .close-player { align-self: flex-start; font-size: 24px; margin-bottom: 40px; }
-        .big-cover { width: 100%; aspect-ratio: 1; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); margin-bottom: 40px; }
-        
-        .progress-container { width: 100%; margin: 30px 0; }
-        .slider { width: 100%; accent-color: var(--accent); }
 
-        .player-controls { display: flex; align-items: center; gap: 40px; font-size: 30px; }
-        .play-main { width: 70px; height: 70px; background: white; color: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 25px; }
+        .full-screen-player.active { transform: translateY(-100%); }
 
-        /* --- Таб-бар --- */
-        .tab-bar {
-            position: fixed;
-            bottom: 0;
+        .player-header { display: flex; justify-content: space-between; font-size: 24px; margin-bottom: 40px; }
+
+        .player-cover {
             width: 100%;
-            background: #000;
+            aspect-ratio: 1/1;
+            border-radius: 24px;
+            object-fit: cover;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            margin-bottom: 40px;
+        }
+
+        .progress-area { margin: 40px 0 20px; }
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            position: relative;
+        }
+        .progress-fill { height: 100%; background: #fff; width: 0%; border-radius: 2px; }
+
+        .player-controls {
             display: flex;
             justify-content: space-around;
-            padding: 12px 0 25px;
-            border-top: 1px solid #1a1a1a;
+            align-items: center;
+            margin-top: 20px;
         }
-        .tab { color: var(--text-secondary); text-align: center; font-size: 11px; }
-        .tab.active { color: var(--text-main); }
-        .tab i { display: block; font-size: 22px; margin-bottom: 4px; }
+        .play-trigger {
+            width: 80px; height: 80px;
+            background: #fff;
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+
+        /* --- Таб бар --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: 80px;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            justify-content: space-around;
+            padding-top: 10px;
+            border-top: 0.5px solid #2c2c2e;
+            z-index: 600;
+        }
+        .nav-item { color: var(--text-dim); text-align: center; font-size: 10px; }
+        .nav-item.active { color: #fff; }
+        .nav-item i { display: block; font-size: 22px; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
-<div class="app-view">
-    <header>
-        <div class="logo">FLIXY</div>
-        <i class="far fa-bell" style="font-size: 20px;"></i>
-    </header>
-
-    <h2>Начни с этого</h2>
-    <div class="horizontal-scroll">
-        <div class="mix-card">
-            <img src="https://m.media-amazon.com/images/I/41K-m8iZ8LL._UX250_FMjpg_QL85_.jpg">
-            <h4>Моя волна</h4>
-            <p style="color: grey; font-size: 12px;">Бесконечный поток</p>
-        </div>
-        <div class="mix-card">
-            <img src="https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=400&q=80">
-            <h4>Новинки</h4>
-            <p style="color: grey; font-size: 12px;">Для тебя</p>
-        </div>
-    </div>
-
-    <h2>Опубликовать свою музыку</h2>
-    <div class="upload-card">
-        <input type="text" id="up-title" class="input-field" placeholder="Название трека">
-        <input type="text" id="up-artist" class="input-field" placeholder="Имя артиста">
-        
-        <label class="file-label">Выберите обложку
-            <input type="file" id="up-cover" accept="image/*" hidden>
-        </label>
-        
-        <label class="file-label">Выберите MP3 файл
-            <input type="file" id="up-audio" accept="audio/*" hidden>
-        </label>
-        
-        <button class="publish-btn" onclick="handleUpload()">Опубликовать на FLIXY</button>
-    </div>
-
-    <h2>Твои треки</h2>
-    <div id="track-container">
-        </div>
+<div class="header-top">
+    <div class="logo">FLIXY</div>
+    <i class="fas fa-search"></i>
 </div>
 
-<div class="mini-player" id="mini-player" style="display: none;" onclick="openFullPlayer()">
-    <img src="" id="mini-img">
-    <div class="track-info">
-        <h4 id="mini-title">...</h4>
-        <p id="mini-artist">...</p>
+<div class="scroll-area">
+    <h2>Для тебя</h2>
+    <div style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 20px;">
+        <div style="min-width: 140px;"><img src="https://picsum.photos/200?1" style="width:140px; border-radius:20px;"></div>
+        <div style="min-width: 140px;"><img src="https://picsum.photos/200?2" style="width:140px; border-radius:20px;"></div>
+        <div style="min-width: 140px;"><img src="https://picsum.photos/200?3" style="width:140px; border-radius:20px;"></div>
     </div>
-    <i class="fas fa-play" id="mini-play-icon" style="font-size: 20px; padding: 10px;"></i>
+
+    <div class="upload-section">
+        <h3 style="margin-bottom: 15px;">Опубликовать трек</h3>
+        <input type="text" id="t-name" class="form-input" placeholder="Название">
+        <input type="text" id="t-artist" class="form-input" placeholder="Исполнитель">
+        
+        <label class="file-btn">Обложка (JPG) <input type="file" id="t-img" hidden accept="image/*"></label>
+        <label class="file-btn">Музыка (MP3) <input type="file" id="t-snd" hidden accept="audio/*"></label>
+        
+        <button class="btn-main" onclick="publish()">Опубликовать</button>
+    </div>
+
+    <h2>Моя музыка</h2>
+    <div id="library">
+        <p id="empty-msg" style="color: #444; text-align: center; margin-top: 20px;">У вас пока нет треков</p>
+    </div>
 </div>
 
-<div class="full-player" id="full-player">
-    <div class="close-player" onclick="closeFullPlayer()"><i class="fas fa-chevron-down"></i></div>
-    <img src="" class="big-cover" id="full-img">
+<div class="mini-player" id="m-player" style="display: none;" onclick="showPlayer()">
+    <img id="m-img" src="">
+    <div class="track-meta">
+        <h4 id="m-title">Название</h4>
+        <p id="m-artist">Исполнитель</p>
+    </div>
+    <i class="fas fa-play" id="m-play-btn" onclick="event.stopPropagation(); togglePlay();" style="font-size: 22px; margin: 0 10px;"></i>
+</div>
+
+<div class="full-screen-player" id="f-player">
+    <div class="player-header">
+        <i class="fas fa-chevron-down" onclick="hidePlayer()"></i>
+        <span style="font-size: 14px; font-weight: 600;">СЕЙЧАС ИГРАЕТ</span>
+        <i class="fas fa-ellipsis-h"></i>
+    </div>
     
-    <div style="width: 100%; text-align: left;">
-        <h1 id="full-title" style="font-size: 28px;">Song Title</h1>
-        <p id="full-artist" style="color: var(--text-secondary); font-size: 18px;">Artist Name</p>
+    <img id="f-img" class="player-cover" src="">
+
+    <div class="track-info-big">
+        <h1 id="f-title" style="font-size: 26px;">Title</h1>
+        <p id="f-artist" style="color: var(--text-dim); font-size: 18px;">Artist</p>
     </div>
 
-    <div class="progress-container">
-        <input type="range" class="slider" id="prog-slider" value="0" step="0.1">
+    <div class="progress-area">
+        <div class="progress-bar">
+            <div class="progress-fill" id="f-progress"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: #666; margin-top: 8px;">
+            <span id="time-cur">0:00</span>
+            <span id="time-dur">0:00</span>
+        </div>
     </div>
 
     <div class="player-controls">
-        <i class="fas fa-step-backward"></i>
-        <div class="play-main" onclick="event.stopPropagation(); togglePlayback();">
-            <i class="fas fa-play" id="full-play-icon"></i>
+        <i class="fas fa-random" style="color: #444"></i>
+        <i class="fas fa-step-backward" style="font-size: 24px;"></i>
+        <div class="play-trigger" onclick="togglePlay()">
+            <i class="fas fa-play" id="f-play-icon"></i>
         </div>
-        <i class="fas fa-step-forward"></i>
+        <i class="fas fa-step-forward" style="font-size: 24px;"></i>
+        <i class="fas fa-redo" style="color: #444"></i>
     </div>
 </div>
 
-<nav class="tab-bar">
-    <div class="tab active"><i class="fas fa-home"></i>Главная</div>
-    <div class="tab"><i class="fas fa-compass"></i>Обзор</div>
-    <div class="tab"><i class="fas fa-heart"></i>Коллекция</div>
+<nav class="bottom-nav">
+    <div class="nav-item active"><i class="fas fa-home"></i>Главная</div>
+    <div class="nav-item"><i class="fas fa-compass"></i>Обзор</div>
+    <div class="nav-item"><i class="fas fa-bookmark"></i>Коллекция</div>
+    <div class="nav-item"><i class="fas fa-user"></i>Профиль</div>
 </nav>
 
 <script>
-    // Инициализация базы данных в браузере (IndexedDB)
-    let db;
-    const request = indexedDB.open("FlixyDB", 1);
-    request.onupgradeneeded = e => {
-        db = e.target.result;
-        db.createObjectStore("songs", { keyPath: "id", autoIncrement: true });
-    };
-    request.onsuccess = e => {
-        db = e.target.result;
-        loadSongs();
-    };
-
     const audio = new Audio();
-    let currentTrack = null;
+    let library = JSON.parse(localStorage.getItem('flixy_lib') || '[]');
 
-    function handleUpload() {
-        const title = document.getElementById('up-title').value;
-        const artist = document.getElementById('up-artist').value;
-        const coverFile = document.getElementById('up-cover').files[0];
-        const audioFile = document.getElementById('up-audio').files[0];
+    function publish() {
+        const name = document.getElementById('t-name').value;
+        const artist = document.getElementById('t-artist').value;
+        const imgFile = document.getElementById('t-img').files[0];
+        const sndFile = document.getElementById('t-snd').files[0];
 
-        if(!title || !artist || !coverFile || !audioFile) return alert("Заполни всё!");
+        if(!name || !artist || !imgFile || !sndFile) return alert("Заполни все поля!");
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const coverData = e.target.result;
-            const readerAudio = new FileReader();
-            readerAudio.onload = function(e) {
-                const audioData = e.target.result;
-                const song = { title, artist, cover: coverData, audio: audioData };
-                
-                const tx = db.transaction("songs", "readwrite");
-                tx.objectStore("songs").add(song);
-                tx.oncomplete = () => {
-                    loadSongs();
-                    alert("Трек опубликован!");
-                };
+        const readerImg = new FileReader();
+        readerImg.onload = function(e) {
+            const imgData = e.target.result;
+            const readerSnd = new FileReader();
+            readerSnd.onload = function(ev) {
+                const track = { id: Date.now(), name, artist, img: imgData, snd: ev.target.result };
+                library.push(track);
+                localStorage.setItem('flixy_lib', JSON.stringify(library));
+                render();
+                alert("Готово!");
             };
-            readerAudio.readAsDataURL(audioFile);
+            readerSnd.readAsDataURL(sndFile);
         };
-        reader.readAsDataURL(coverFile);
+        readerImg.readAsDataURL(imgFile);
     }
 
-    function loadSongs() {
-        const container = document.getElementById('track-container');
-        container.innerHTML = '';
-        const tx = db.transaction("songs", "readonly");
-        tx.objectStore("songs").openCursor().onsuccess = e => {
-            const cursor = e.target.result;
-            if(cursor) {
-                const track = cursor.value;
-                const el = document.createElement('div');
-                el.className = 'track-item';
-                el.onclick = () => playTrack(track);
-                el.innerHTML = `
-                    <img src="${track.cover}">
-                    <div class="track-info">
-                        <h4>${track.title}</h4>
-                        <p>${track.artist}</p>
-                    </div>
-                    <i class="fas fa-ellipsis-v" style="color: #333"></i>
-                `;
-                container.prepend(el);
-                cursor.continue();
-            }
-        };
+    function render() {
+        const libDiv = document.getElementById('library');
+        libDiv.innerHTML = '';
+        if(library.length > 0) document.getElementById('empty-msg').style.display = 'none';
+        
+        library.forEach(t => {
+            const row = document.createElement('div');
+            row.className = 'track-row';
+            row.onclick = () => play(t);
+            row.innerHTML = `<img src="${t.img}"><div class="track-meta"><h4>${t.name}</h4><p>${t.artist}</p></div><i class="far fa-heart"></i>`;
+            libDiv.prepend(row);
+        });
     }
 
-    function playTrack(track) {
-        currentTrack = track;
-        audio.src = track.audio;
+    function play(t) {
+        audio.src = t.snd;
         audio.play();
+        document.getElementById('m-player').style.display = 'flex';
+        document.getElementById('m-title').innerText = t.name;
+        document.getElementById('m-artist').innerText = t.artist;
+        document.getElementById('m-img').src = t.img;
         
-        document.getElementById('mini-player').style.display = 'flex';
-        document.getElementById('mini-title').innerText = track.title;
-        document.getElementById('mini-artist').innerText = track.artist;
-        document.getElementById('mini-img').src = track.cover;
-        
-        document.getElementById('full-title').innerText = track.title;
-        document.getElementById('full-artist').innerText = track.artist;
-        document.getElementById('full-img').src = track.cover;
+        document.getElementById('f-title').innerText = t.name;
+        document.getElementById('f-artist').innerText = t.artist;
+        document.getElementById('f-img').src = t.img;
         
         updateIcons(true);
     }
 
-    function togglePlayback() {
+    function togglePlay() {
         if(audio.paused) { audio.play(); updateIcons(true); }
         else { audio.pause(); updateIcons(false); }
     }
 
-    function updateIcons(playing) {
-        const iconClass = playing ? 'fas fa-pause' : 'fas fa-play';
-        document.getElementById('mini-play-icon').className = iconClass;
-        document.getElementById('full-play-icon').className = iconClass;
+    function updateIcons(is) {
+        document.getElementById('m-play-btn').className = is ? 'fas fa-pause' : 'fas fa-play';
+        document.getElementById('f-play-icon').className = is ? 'fas fa-pause' : 'fas fa-play';
     }
 
-    function openFullPlayer() { document.getElementById('full-player').classList.add('active'); }
-    function closeFullPlayer() { document.getElementById('full-player').classList.remove('active'); }
+    function showPlayer() { document.getElementById('f-player').classList.add('active'); }
+    function hidePlayer() { document.getElementById('f-player').classList.remove('active'); }
 
-    // Прогресс бар
     audio.ontimeupdate = () => {
-        const slider = document.getElementById('prog-slider');
-        if(!audio.duration) return;
-        slider.value = (audio.currentTime / audio.duration) * 100;
+        const p = (audio.currentTime / audio.duration) * 100;
+        document.getElementById('f-progress').style.width = p + '%';
+        document.getElementById('time-cur').innerText = formatTime(audio.currentTime);
+        document.getElementById('time-dur').innerText = formatTime(audio.duration);
     };
 
-    document.getElementById('prog-slider').oninput = function() {
-        audio.currentTime = (this.value / 100) * audio.duration;
-    };
+    function formatTime(s) {
+        if(!s) return "0:00";
+        let m = Math.floor(s / 60);
+        let sec = Math.floor(s % 60);
+        return m + ":" + (sec < 10 ? '0' : '') + sec;
+    }
+
+    render();
 </script>
-
 </body>
 </html>
