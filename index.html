@@ -1,62 +1,56 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pik SMM • Премиум накрутка Telegram</title>
+    <title>Pik SMM • Премиум накрутка Telegram 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap');
         
         :root { --primary: #00ff9d; }
-        
         * { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .tail-container * { font-family: 'Inter', system-ui, sans-serif; }
-        .logo-font { font-family: 'Space Grotesk', sans-serif; }
-
-        .hero-bg { background: linear-gradient(135deg, #0a0a0a 0%, #1a0028 100%); }
         
-        .card {
-            background: rgba(15, 15, 20, 0.95);
-            border: 1px solid rgba(255,255,255,0.1);
+        .service-card {
+            background: rgba(20, 20, 25, 0.95);
+            border: 1px solid rgba(255,255,255,0.08);
             backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
         }
-        
-        .premium {
-            border: 2px solid #00ff9d;
-            box-shadow: 0 0 50px -15px #00ff9d;
+        .buy-btn {
+            margin-top: auto;
+            background: linear-gradient(to right, #00ff9d, #00cc7a);
         }
-        
-        .neon { text-shadow: 0 0 20px #00ff9d; }
+        .neon-text { text-shadow: 0 0 20px #00ff9d; }
     </style>
 </head>
 <body class="tail-container bg-[#0a0a0a] text-white overflow-x-hidden">
 
     <!-- HEADER -->
     <nav class="bg-black/95 backdrop-blur-2xl sticky top-0 z-50 border-b border-white/10">
-        <div class="max-w-screen-2xl mx-auto px-5 py-5 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-[#00ff9d] to-purple-500 rounded-3xl flex items-center justify-center text-4xl shadow-xl">🐐</div>
-                <div class="logo-font text-4xl font-bold tracking-tight">Pik<span class="text-[#00ff9d]">SMM</span></div>
+        <div class="max-w-screen-2xl mx-auto px-5 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-gradient-to-br from-[#00ff9d] to-purple-500 rounded-3xl flex items-center justify-center text-4xl">🐐</div>
+                <div class="logo-font text-4xl font-bold tracking-tighter">Pik<span class="text-[#00ff9d]">SMM</span></div>
             </div>
-            <a href="https://t.me/kaoface" target="_blank" class="flex items-center gap-3 bg-[#00ff9d] hover:bg-emerald-400 text-black px-7 py-4 rounded-3xl font-bold text-lg">
+            <a href="https://t.me/kaoface" target="_blank" class="flex items-center gap-3 bg-[#00ff9d] text-black px-6 py-3.5 rounded-3xl font-semibold">
                 <i class="fab fa-telegram-plane"></i> @kaoface
             </a>
         </div>
     </nav>
 
     <!-- HERO -->
-    <header class="hero-bg pt-20 pb-28 text-center">
+    <header class="hero-bg pt-20 pb-24 text-center" style="background: linear-gradient(135deg, #0a0a0a 0%, #1a0028 100%);">
         <div class="max-w-2xl mx-auto px-5">
-            <div class="inline-block bg-white/10 text-[#00ff9d] text-sm font-bold px-8 py-3 rounded-3xl mb-6">2026 • Telegram Stars</div>
-            <h1 class="text-6xl md:text-7xl font-bold leading-none tracking-tighter neon">ПРЕМИУМ НАКРУТКА<br>В TELEGRAM</h1>
+            <div class="inline-flex bg-white/10 text-[#00ff9d] text-sm font-bold px-8 py-3 rounded-3xl mb-6">2026 • Telegram Stars</div>
+            <h1 class="text-6xl md:text-7xl font-bold leading-none tracking-tighter neon-text">ПРЕМИУМ НАКРУТКА<br>В TELEGRAM</h1>
             <p class="mt-6 text-2xl text-zinc-300">Быстро • Качественно • Анонимно</p>
             
-            <div class="flex flex-col sm:flex-row gap-4 mt-12 max-w-md mx-auto">
-                <a href="#pricing" class="py-7 px-10 bg-gradient-to-r from-[#00ff9d] to-cyan-400 text-black font-bold text-xl rounded-3xl flex items-center justify-center gap-3 shadow-2xl">Выбрать пакет</a>
-                <a href="https://t.me/kaoface" target="_blank" class="py-7 px-10 border border-white/30 hover:border-[#00ff9d] font-bold text-xl rounded-3xl flex items-center justify-center gap-3">Написать в Telegram</a>
+            <div class="flex flex-col gap-4 mt-12 max-w-sm mx-auto">
+                <a href="#pricing" class="buy-btn text-black font-bold text-2xl py-7 rounded-3xl flex items-center justify-center gap-3">Выбрать пакет</a>
+                <a href="https://t.me/kaoface" target="_blank" class="border border-white/30 hover:border-[#00ff9d] font-bold text-xl py-7 rounded-3xl">Написать @kaoface</a>
             </div>
         </div>
     </header>
@@ -65,89 +59,101 @@
     <section id="pricing" class="max-w-screen-2xl mx-auto px-5 pb-20">
         <div class="text-center mb-12">
             <span class="bg-white/10 text-[#00ff9d] px-8 py-3 rounded-3xl text-sm font-bold">ПРАЙС 2026</span>
-            <h2 class="text-4xl font-bold mt-4">Выберите нужный пакет</h2>
+            <h2 class="text-4xl font-bold mt-4">Выберите пакет</h2>
         </div>
 
-        <!-- ПОДПИСЧИКИ -->
+        <!-- Подписчики -->
         <div class="mb-16">
-            <h3 class="text-3xl font-bold flex items-center gap-4 mb-8"><span class="text-5xl">👥</span> ПОДПИСЧИКИ</h3>
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                <div onclick="buyNow('100 подписчиков', 25)" class="card rounded-3xl p-8 cursor-pointer hover:scale-105">
+            <h3 class="text-3xl font-bold flex items-center gap-3 mb-8"><span class="text-5xl">👥</span> ПОДПИСЧИКИ</h3>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
+                <div onclick="buyNow('100 подписчиков', 25)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03]">
                     <div class="text-6xl font-bold">100</div>
-                    <div class="text-5xl font-bold text-[#00ff9d] neon">25 ⭐</div>
-                    <div class="text-amber-400 text-sm mt-2">без гарантии</div>
-                    <button class="mt-10 w-full py-6 bg-zinc-900 hover:bg-[#00ff9d] hover:text-black rounded-2xl font-semibold">Купить за 25 ⭐</button>
+                    <div class="text-5xl font-bold text-[#00ff9d]">25 ⭐</div>
+                    <div class="text-amber-400 text-sm">без гарантии</div>
+                    <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить за 25 ⭐</button>
                 </div>
-                <div onclick="buyNow('500 подписчиков', 75)" class="card rounded-3xl p-8 cursor-pointer hover:scale-105">
+                <div onclick="buyNow('500 подписчиков', 75)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03]">
                     <div class="text-6xl font-bold">500</div>
-                    <div class="text-5xl font-bold text-[#00ff9d] neon">75 ⭐</div>
-                    <div class="text-amber-400 text-sm mt-2">без гарантии</div>
-                    <button class="mt-10 w-full py-6 bg-zinc-900 hover:bg-[#00ff9d] hover:text-black rounded-2xl font-semibold">Купить за 75 ⭐</button>
+                    <div class="text-5xl font-bold text-[#00ff9d]">75 ⭐</div>
+                    <div class="text-amber-400 text-sm">без гарантии</div>
+                    <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить за 75 ⭐</button>
                 </div>
-                <div onclick="buyNow('1000 подписчиков', 150)" class="card rounded-3xl p-8 cursor-pointer hover:scale-105">
+                <div onclick="buyNow('1000 подписчиков', 150)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03]">
                     <div class="text-6xl font-bold">1000</div>
-                    <div class="text-5xl font-bold text-[#00ff9d] neon">150 ⭐</div>
-                    <div class="text-amber-400 text-sm mt-2">без гарантии</div>
-                    <button class="mt-10 w-full py-6 bg-zinc-900 hover:bg-[#00ff9d] hover:text-black rounded-2xl font-semibold">Купить за 150 ⭐</button>
+                    <div class="text-5xl font-bold text-[#00ff9d]">150 ⭐</div>
+                    <div class="text-amber-400 text-sm">без гарантии</div>
+                    <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить за 150 ⭐</button>
                 </div>
-                <div onclick="buyNow('1000 Premium + Гарантия', 500)" class="premium card rounded-3xl p-8 cursor-pointer hover:scale-105 relative">
-                    <div class="absolute -top-4 right-6 bg-[#00ff9d] text-black text-xs font-bold px-5 py-1 rounded-3xl">PREMIUM</div>
+                <div onclick="buyNow('1000 Premium + Гарантия', 500)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03] border-2 border-[#00ff9d]">
                     <div class="text-6xl font-bold">1000</div>
-                    <div class="text-5xl font-bold text-[#00ff9d] neon">500 ⭐</div>
+                    <div class="text-5xl font-bold text-[#00ff9d]">500 ⭐</div>
                     <div class="text-emerald-400">Premium + Гарантия</div>
-                    <button class="mt-10 w-full py-6 bg-[#00ff9d] text-black rounded-2xl font-bold">Купить за 500 ⭐</button>
+                    <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить за 500 ⭐</button>
                 </div>
             </div>
         </div>
 
-        <!-- ПРОСМОТРЫ -->
-        <div class="mb-16">
-            <h3 class="text-3xl font-bold flex items-center gap-4 mb-8"><span class="text-5xl">👁️</span> ПРОСМОТРЫ</h3>
-            <div class="grid grid-cols-2 gap-6">
-                <div onclick="buyNow('500 просмотров на 1 пост', 15)" class="card rounded-3xl p-8 cursor-pointer hover:scale-105 flex justify-between items-center">
-                    <div>
-                        <div class="text-5xl font-bold">500</div>
-                        <div class="text-zinc-400">на 1 пост</div>
+        <!-- Просмотры и Реакции (аналогично с ровными кнопками) -->
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Просмотры -->
+            <div>
+                <h3 class="text-3xl font-bold flex items-center gap-3 mb-8"><span class="text-5xl">👁️</span> ПРОСМОТРЫ</h3>
+                <div class="space-y-5">
+                    <div onclick="buyNow('500 просмотров на 1 пост', 15)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03]">
+                        <div class="flex justify-between">
+                            <div><span class="text-5xl font-bold">500</span><span class="text-zinc-400 ml-2">на 1 пост</span></div>
+                            <div class="text-5xl font-bold text-[#00ff9d]">15 ⭐</div>
+                        </div>
+                        <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить</button>
                     </div>
-                    <div class="text-right">
-                        <div class="text-5xl font-bold text-[#00ff9d] neon">15 ⭐</div>
+                    <div onclick="buyNow('1000 просмотров на 1 пост', 75)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03]">
+                        <div class="flex justify-between">
+                            <div><span class="text-5xl font-bold">1000</span><span class="text-zinc-400 ml-2">на 1 пост</span></div>
+                            <div class="text-5xl font-bold text-[#00ff9d]">75 ⭐</div>
+                        </div>
+                        <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить</button>
                     </div>
-                    <button class="ml-6 px-10 py-6 bg-zinc-900 hover:bg-[#00ff9d] hover:text-black rounded-2xl font-semibold">Купить</button>
                 </div>
-                <div onclick="buyNow('1000 просмотров на 1 пост', 75)" class="card rounded-3xl p-8 cursor-pointer hover:scale-105 flex justify-between items-center">
-                    <div>
-                        <div class="text-5xl font-bold">1000</div>
-                        <div class="text-zinc-400">на 1 пост</div>
+            </div>
+
+            <!-- Реакции -->
+            <div>
+                <h3 class="text-3xl font-bold flex items-center gap-3 mb-8"><span class="text-5xl">👍</span> РЕАКЦИИ</h3>
+                <div class="space-y-5">
+                    <div onclick="buyNow('10 реакций', 15)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03]">
+                        <div class="flex justify-between">
+                            <div class="text-5xl font-bold">10 шт.</div>
+                            <div class="text-5xl font-bold text-[#00ff9d]">15 ⭐</div>
+                        </div>
+                        <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить</button>
                     </div>
-                    <div class="text-right">
-                        <div class="text-5xl font-bold text-[#00ff9d] neon">75 ⭐</div>
+                    <div onclick="buyNow('50 реакций Mix', 50)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03]">
+                        <div class="flex justify-between">
+                            <div><span class="text-5xl font-bold">50 шт.</span><span class="text-zinc-400 ml-2">Mix</span></div>
+                            <div class="text-5xl font-bold text-[#00ff9d]">50 ⭐</div>
+                        </div>
+                        <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить</button>
                     </div>
-                    <button class="ml-6 px-10 py-6 bg-zinc-900 hover:bg-[#00ff9d] hover:text-black rounded-2xl font-semibold">Купить</button>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- РЕАКЦИИ -->
-        <div>
-            <h3 class="text-3xl font-bold flex items-center gap-4 mb-8"><span class="text-5xl">👍</span> РЕАКЦИИ</h3>
-            <div class="grid grid-cols-2 gap-6">
-                <div onclick="buyNow('10 реакций', 15)" class="card rounded-3xl p-8 cursor-pointer hover:scale-105 flex justify-between items-center">
-                    <div class="text-5xl font-bold">10 шт.</div>
-                    <div class="text-right">
-                        <div class="text-5xl font-bold text-[#00ff9d] neon">15 ⭐</div>
-                    </div>
-                    <button class="ml-6 px-10 py-6 bg-zinc-900 hover:bg-[#00ff9d] hover:text-black rounded-2xl font-semibold">Купить</button>
-                </div>
-                <div onclick="buyNow('50 реакций Mix', 50)" class="card rounded-3xl p-8 cursor-pointer hover:scale-105 flex justify-between items-center">
-                    <div>
-                        <div class="text-5xl font-bold">50 шт.</div>
-                        <div class="text-zinc-400">Mix эмодзи</div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-5xl font-bold text-[#00ff9d] neon">50 ⭐</div>
-                    </div>
-                    <button class="ml-6 px-10 py-6 bg-zinc-900 hover:bg-[#00ff9d] hover:text-black rounded-2xl font-semibold">Купить</button>
-                </div>
+    <!-- ОТЗЫВЫ -->
+    <section class="bg-black py-16">
+        <div class="max-w-screen-2xl mx-auto px-5">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold">Что говорят клиенты</h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"Кайф пришло быстро 🔥"</div>
+                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"Все пришло, не скам +реп"</div>
+                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"Не обман, подписчики реальные"</div>
+                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"Небольшая задержка, но всё ок"</div>
+                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"Кайф, всё пришло за 15 мин"</div>
+                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"Долго, но все подписчики пришли"</div>
+                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"Норм сервис, рекомендую"</div>
+                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"+реп, не скам, всё топ"</div>
             </div>
         </div>
     </section>
@@ -158,7 +164,7 @@
 
     <script>
         function buyNow(name, price) {
-            const text = encodeURIComponent(`Привет!\nХочу купить: ${name} — ${price} ⭐\n\nСсылка на канал/пост: [ВСТАВЬ ССЫЛКУ ЗДЕСЬ]\nОплата Stars`);
+            const text = encodeURIComponent(`Привет! Хочу купить:\n${name} — ${price} ⭐\n\nСсылка: [ВСТАВЬ ССЫЛКУ]\nОплата Stars`);
             window.open(`https://t.me/kaoface?text=${text}`, '_blank');
         }
     </script>
