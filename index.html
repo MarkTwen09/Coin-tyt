@@ -2,171 +2,775 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pik SMM • Премиум накрутка Telegram 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Пчелиная ферма — Кликер и пассивный доход</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap');
-        
-        :root { --primary: #00ff9d; }
-        * { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        
-        .service-card {
-            background: rgba(20, 20, 25, 0.95);
-            border: 1px solid rgba(255,255,255,0.08);
-            backdrop-filter: blur(20px);
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(145deg, #f7b42c 0%, #f79d1c 100%);
+            font-family: 'Segoe UI', 'Poppins', 'Roboto', system-ui, -apple-system, sans-serif;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-        .buy-btn {
-            margin-top: auto;
-            background: linear-gradient(to right, #00ff9d, #00cc7a);
+
+        /* главный контейнер игры */
+        .game-container {
+            max-width: 1300px;
+            width: 100%;
+            background: rgba(255, 248, 205, 0.9);
+            border-radius: 64px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.3), inset 0 1px 4px rgba(255, 255, 200, 0.8);
+            backdrop-filter: blur(2px);
+            padding: 20px 25px;
+            transition: all 0.2s;
         }
-        .neon-text { text-shadow: 0 0 20px #00ff9d; }
+
+        /* сетка */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        /* общие карточки */
+        .card {
+            background: #fff7e8;
+            border-radius: 48px;
+            padding: 18px 20px;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+            border: 2px solid #ffcd7e;
+            transition: transform 0.1s ease;
+        }
+
+        .card-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #b45f06;
+            border-left: 8px solid #f5b642;
+            padding-left: 16px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bee-icon {
+            font-size: 2rem;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+        }
+
+        /* кнопки */
+        .btn {
+            background: #f9d56e;
+            border: none;
+            border-radius: 100px;
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #5a3e1b;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 #b97f10;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #b97f10;
+        }
+
+        .btn-primary {
+            background: #ffb347;
+            color: #2c1a02;
+            box-shadow: 0 4px 0 #c16f1a;
+            font-size: 1.1rem;
+        }
+
+        .btn-success {
+            background: #6fbf4c;
+            color: white;
+            box-shadow: 0 4px 0 #3a6b22;
+        }
+
+        .stat {
+            background: #f3e5c0;
+            border-radius: 36px;
+            padding: 12px 18px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.3rem;
+            color: #3b2a1f;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .value {
+            color: #d68b1c;
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        /* пчела для кликов */
+        .bee-click-area {
+            text-align: center;
+            cursor: pointer;
+            transition: 0.05s linear;
+        }
+        .bee-click-area:active {
+            transform: scale(0.96);
+        }
+        .bee-main {
+            font-size: 130px;
+            filter: drop-shadow(8px 12px 0 rgba(0,0,0,0.2));
+            transition: 0.07s;
+        }
+        .bee-click-text {
+            font-size: 1.2rem;
+            background: #ffdd99;
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 60px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* прогресс задания */
+        .task-item {
+            background: #fffaec;
+            border-radius: 32px;
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border: 1px solid #ffe0a3;
+        }
+        .task-info {
+            flex: 2;
+        }
+        .task-name {
+            font-weight: bold;
+        }
+        .task-progress {
+            font-size: 0.9rem;
+            color: #aa7a3c;
+        }
+        .reward-badge {
+            background: #ffd966;
+            border-radius: 60px;
+            padding: 4px 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        /* улучшения этапов */
+        .upgrade-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fef3da;
+            border-radius: 40px;
+            padding: 10px 18px;
+            margin-bottom: 12px;
+        }
+
+        .conveyor-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .conveyor-stat {
+            background: #e7dbbd;
+            border-radius: 30px;
+            padding: 6px 12px;
+            text-align: center;
+            flex: 1;
+        }
+
+        .bonus-timer {
+            background: #f1c40f;
+            border-radius: 40px;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #835e2c;
+        }
+
+        @media (max-width: 850px) {
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .game-container {
+                padding: 15px;
+            }
+            .bee-main {
+                font-size: 100px;
+            }
+        }
+        button:disabled {
+            opacity: 0.6;
+            transform: none;
+            cursor: not-allowed;
+        }
+        .level-badge {
+            background: #f1c40f;
+            border-radius: 80px;
+            padding: 4px 14px;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
-<body class="tail-container bg-[#0a0a0a] text-white overflow-x-hidden">
-
-    <!-- HEADER -->
-    <nav class="bg-black/95 backdrop-blur-2xl sticky top-0 z-50 border-b border-white/10">
-        <div class="max-w-screen-2xl mx-auto px-5 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 bg-gradient-to-br from-[#00ff9d] to-purple-500 rounded-3xl flex items-center justify-center text-4xl">🐐</div>
-                <div class="logo-font text-4xl font-bold tracking-tighter">Pik<span class="text-[#00ff9d]">SMM</span></div>
+<body>
+<div class="game-container">
+    <div class="grid">
+        <!-- ЛЕВАЯ КОЛОНКА: Улучшения этапов + Конвейер -->
+        <div class="card">
+            <div class="card-title">
+                <span>🐝 УЛУЧШЕНИЯ</span>
             </div>
-            <a href="https://t.me/kaoface" target="_blank" class="flex items-center gap-3 bg-[#00ff9d] text-black px-6 py-3.5 rounded-3xl font-semibold">
-                <i class="fab fa-telegram-plane"></i> @kaoface
-            </a>
-        </div>
-    </nav>
-
-    <!-- HERO -->
-    <header class="hero-bg pt-20 pb-24 text-center" style="background: linear-gradient(135deg, #0a0a0a 0%, #1a0028 100%);">
-        <div class="max-w-2xl mx-auto px-5">
-            <div class="inline-flex bg-white/10 text-[#00ff9d] text-sm font-bold px-8 py-3 rounded-3xl mb-6">2026 • Telegram Stars</div>
-            <h1 class="text-6xl md:text-7xl font-bold leading-none tracking-tighter neon-text">ПРЕМИУМ НАКРУТКА<br>В TELEGRAM</h1>
-            <p class="mt-6 text-2xl text-zinc-300">Быстро • Качественно • Анонимно</p>
-            
-            <div class="flex flex-col gap-4 mt-12 max-w-sm mx-auto">
-                <a href="#pricing" class="buy-btn text-black font-bold text-2xl py-7 rounded-3xl flex items-center justify-center gap-3">Выбрать пакет</a>
-                <a href="https://t.me/kaoface" target="_blank" class="border border-white/30 hover:border-[#00ff9d] font-bold text-xl py-7 rounded-3xl">Написать @kaoface</a>
-            </div>
-        </div>
-    </header>
-
-    <!-- ПРАЙС -->
-    <section id="pricing" class="max-w-screen-2xl mx-auto px-5 pb-20">
-        <div class="text-center mb-12">
-            <span class="bg-white/10 text-[#00ff9d] px-8 py-3 rounded-3xl text-sm font-bold">ПРАЙС 2026</span>
-            <h2 class="text-4xl font-bold mt-4">Выберите пакет</h2>
-        </div>
-
-        <!-- Подписчики -->
-        <div class="mb-16">
-            <h3 class="text-3xl font-bold flex items-center gap-3 mb-8"><span class="text-5xl">👥</span> ПОДПИСЧИКИ</h3>
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
-                <div onclick="buyNow('100 подписчиков', 25)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03]">
-                    <div class="text-6xl font-bold">100</div>
-                    <div class="text-5xl font-bold text-[#00ff9d]">25 ⭐</div>
-                    <div class="text-amber-400 text-sm">без гарантии</div>
-                    <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить за 25 ⭐</button>
+            <div id="stagesContainer">
+                <!-- Этап 1 -->
+                <div class="upgrade-row" id="stage1Row">
+                    <div><span>Этап 1:</span> <strong>Bee 🐝 +2/сек</strong></div>
+                    <button class="btn" id="buyStage1Btn">УЛУЧШИТЬ</button>
                 </div>
-                <div onclick="buyNow('500 подписчиков', 75)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03]">
-                    <div class="text-6xl font-bold">500</div>
-                    <div class="text-5xl font-bold text-[#00ff9d]">75 ⭐</div>
-                    <div class="text-amber-400 text-sm">без гарантии</div>
-                    <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить за 75 ⭐</button>
+                <!-- Этап 2 -->
+                <div class="upgrade-row" id="stage2Row">
+                    <div><span>Этап 2:</span> <strong>🐝🐝 +5/сек</strong><br><span style="font-size:12px;">(Уровень 5)</span></div>
+                    <button class="btn" id="buyStage2Btn" disabled>🔒 УРОВЕНЬ 5</button>
                 </div>
-                <div onclick="buyNow('1000 подписчиков', 150)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03]">
-                    <div class="text-6xl font-bold">1000</div>
-                    <div class="text-5xl font-bold text-[#00ff9d]">150 ⭐</div>
-                    <div class="text-amber-400 text-sm">без гарантии</div>
-                    <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить за 150 ⭐</button>
-                </div>
-                <div onclick="buyNow('1000 Premium + Гарантия', 500)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03] border-2 border-[#00ff9d]">
-                    <div class="text-6xl font-bold">1000</div>
-                    <div class="text-5xl font-bold text-[#00ff9d]">500 ⭐</div>
-                    <div class="text-emerald-400">Premium + Гарантия</div>
-                    <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить за 500 ⭐</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Просмотры и Реакции (аналогично с ровными кнопками) -->
-        <div class="grid md:grid-cols-2 gap-8">
-            <!-- Просмотры -->
-            <div>
-                <h3 class="text-3xl font-bold flex items-center gap-3 mb-8"><span class="text-5xl">👁️</span> ПРОСМОТРЫ</h3>
-                <div class="space-y-5">
-                    <div onclick="buyNow('500 просмотров на 1 пост', 15)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03]">
-                        <div class="flex justify-between">
-                            <div><span class="text-5xl font-bold">500</span><span class="text-zinc-400 ml-2">на 1 пост</span></div>
-                            <div class="text-5xl font-bold text-[#00ff9d]">15 ⭐</div>
-                        </div>
-                        <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить</button>
-                    </div>
-                    <div onclick="buyNow('1000 просмотров на 1 пост', 75)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03]">
-                        <div class="flex justify-between">
-                            <div><span class="text-5xl font-bold">1000</span><span class="text-zinc-400 ml-2">на 1 пост</span></div>
-                            <div class="text-5xl font-bold text-[#00ff9d]">75 ⭐</div>
-                        </div>
-                        <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить</button>
-                    </div>
+                <!-- Этап 3 -->
+                <div class="upgrade-row" id="stage3Row">
+                    <div><span>Этап 3:</span> <strong>🐝🐝🐝 +10/сек</strong><br><span style="font-size:12px;">(Уровень 10)</span></div>
+                    <button class="btn" id="buyStage3Btn" disabled>🔒 УРОВЕНЬ 10</button>
                 </div>
             </div>
 
-            <!-- Реакции -->
-            <div>
-                <h3 class="text-3xl font-bold flex items-center gap-3 mb-8"><span class="text-5xl">👍</span> РЕАКЦИИ</h3>
-                <div class="space-y-5">
-                    <div onclick="buyNow('10 реакций', 15)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03]">
-                        <div class="flex justify-between">
-                            <div class="text-5xl font-bold">10 шт.</div>
-                            <div class="text-5xl font-bold text-[#00ff9d]">15 ⭐</div>
-                        </div>
-                        <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить</button>
-                    </div>
-                    <div onclick="buyNow('50 реакций Mix', 50)" class="service-card rounded-3xl p-6 cursor-pointer hover:scale-[1.03]">
-                        <div class="flex justify-between">
-                            <div><span class="text-5xl font-bold">50 шт.</span><span class="text-zinc-400 ml-2">Mix</span></div>
-                            <div class="text-5xl font-bold text-[#00ff9d]">50 ⭐</div>
-                        </div>
-                        <button class="buy-btn w-full mt-8 py-7 rounded-2xl font-semibold text-lg">Купить</button>
-                    </div>
-                </div>
+            <div class="card-title" style="margin-top: 20px;">
+                <span>🏭 КОНВЕЙЕР МЕДА</span>
+            </div>
+            <div class="conveyor-stats">
+                <div class="conveyor-stat">🍯 Доход<br> <span id="conveyorIncome">4</span> +<span id="incomeBonus">2</span></div>
+                <div class="conveyor-stat">⚡ Скорость<br> <span id="conveyorSpeed">100</span>% +<span id="speedBonus">1</span>%</div>
+                <div class="conveyor-stat">📦 Вместимость<br> <span id="conveyorCapacity">20</span> +<span id="capacityBonus">2</span></div>
+            </div>
+            <button class="btn btn-primary" id="upgradeConveyorBtn" style="width:100%">✨ Улучшить конвейер $120</button>
+        </div>
+
+        <!-- ЦЕНТР: Пчела + статистика и бонус -->
+        <div class="card" style="text-align: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="level-badge">🏆 Уровень <span id="levelValue">1</span></div>
+                <div class="level-badge" id="x2bonusIndicator">⭐ Бонус x1</div>
+            </div>
+            <div class="stat">
+                <span>🍯 МЕД:</span>
+                <span class="value" id="honeyAmount">0</span>
+            </div>
+            <div class="stat">
+                <span>🏺 ГОРШКИ:</span>
+                <span class="value" id="potAmount">0</span>
+            </div>
+            <div class="bee-click-area" id="beeClickArea">
+                <div class="bee-main">🐝</div>
+                <div class="bee-click-text">👆 Коснись пчелы! +1 мёд</div>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: center; margin: 15px 0;">
+                <button class="btn" id="makePotBtn">🏺 Сделать горшок (10🍯)</button>
+                <button class="btn btn-success" id="sellPotBtn">💰 Продать горшок (+12🍯)</button>
+            </div>
+            <button class="btn btn-primary" id="x2BonusBtn" style="background: #e67e22; width:100%">🚀 X2 БОНУС (на 5 минут)</button>
+            <div id="bonusTimer" class="bonus-timer" style="display: none;">⏱️ Бонус активен: <span id="bonusTimeLeft">0:00</span></div>
+            <div class="stat" style="margin-top: 12px;">
+                <span>📈 Пассивный доход:</span>
+                <span id="totalPassiveSpan">0 🍯/сек</span>
             </div>
         </div>
-    </section>
 
-    <!-- ОТЗЫВЫ -->
-    <section class="bg-black py-16">
-        <div class="max-w-screen-2xl mx-auto px-5">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold">Что говорят клиенты</h2>
+        <!-- ПРАВАЯ КОЛОНКА: ЗАДАНИЯ -->
+        <div class="card">
+            <div class="card-title">
+                <span>📋 ЗАДАНИЯ</span>
+                <span class="bee-icon">⭐</span>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"Кайф пришло быстро 🔥"</div>
-                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"Все пришло, не скам +реп"</div>
-                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"Не обман, подписчики реальные"</div>
-                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"Небольшая задержка, но всё ок"</div>
-                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"Кайф, всё пришло за 15 мин"</div>
-                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"Долго, но все подписчики пришли"</div>
-                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"Норм сервис, рекомендую"</div>
-                <div class="bg-zinc-900 rounded-3xl p-6 text-sm">"+реп, не скам, всё топ"</div>
+            <div id="tasksContainer">
+                <!-- задания будут динамически через JS -->
+            </div>
+            <div class="bonus-timer" style="background:#ffe6b3;">
+                💡 Советы: кликай пчелу, улучшай конвейер и этапы, выполняй задания!
             </div>
         </div>
-    </section>
+    </div>
+    <footer>🐝 Пчелиная ферма — развивай улей, получай мёд и горшки, становись королём пчёл!</footer>
+</div>
 
-    <footer class="bg-black py-12 text-center text-zinc-500">
-        © 2026 Pik SMM • Все права защищены
-    </footer>
+<script>
+    // ---------- ИГРОВЫЕ ДАННЫЕ ----------
+    let honey = 36;          // стартовый мед (как на скрине ~36)
+    let pots = 0;           // горшки в наличии
+    let potsSold = 0;       // продано горшков (задание)
+    let beeTaps = 5;        // кликов по пчеле (5/75)
+    let upgradesDone = 0;   // количество улучшений (этапы + конвейер)
+    let totalHoneyEarned = 36; // общий заработанный мед (для уровня)
+    let level = 1;
 
-    <script>
-        function buyNow(name, price) {
-            const text = encodeURIComponent(`Привет! Хочу купить:\n${name} — ${price} ⭐\n\nСсылка: [ВСТАВЬ ССЫЛКУ]\nОплата Stars`);
-            window.open(`https://t.me/kaoface?text=${text}`, '_blank');
+    // улучшения этапов (пассивка от пчел)
+    let beePassive = 0;     // дополнительно /сек от этапов
+    let stage1Owned = false;
+    let stage2Owned = false;
+    let stage3Owned = false;
+
+    // конвейерные параметры
+    let conveyorIncome = 4;      // доход от меда (база)
+    let conveyorSpeed = 100;     // скорость в %
+    let conveyorCapacity = 20;   // вместимость склада
+    let conveyorUpgradeCount = 0; // для улучшений (бонусы отображения +2,+1%,+2)
+
+    // бонус x2
+    let doubleUntil = 0;          // timestamp окончания
+    let bonusInterval = null;
+
+    // задания (динамические)
+    let tasks = [
+        { id: 0, type: "sell_pots", target: 30, progress: 0, reward: 48, description: "Продайте 30 горшков", claimed: false },
+        { id: 1, type: "tap_bee", target: 75, progress: 0, reward: 80, description: "Коснитесь пчел 75 раз", claimed: false },
+        { id: 2, type: "upgrades", target: 5, progress: 0, reward: 128, description: "Выполните 5 улучшений", claimed: false }
+    ];
+
+    // цены улучшений этапов
+    const STAGE1_PRICE = 120;
+    const STAGE2_PRICE = 500;
+    const STAGE3_PRICE = 2000;
+    const CONVEYOR_UPGRADE_PRICE = 120;
+
+    // DOM элементы
+    const honeySpan = document.getElementById('honeyAmount');
+    const potSpan = document.getElementById('potAmount');
+    const levelSpan = document.getElementById('levelValue');
+    const totalPassiveSpan = document.getElementById('totalPassiveSpan');
+    const conveyorIncomeSpan = document.getElementById('conveyorIncome');
+    const incomeBonusSpan = document.getElementById('incomeBonus');
+    const conveyorSpeedSpan = document.getElementById('conveyorSpeed');
+    const speedBonusSpan = document.getElementById('speedBonus');
+    const conveyorCapacitySpan = document.getElementById('conveyorCapacity');
+    const capacityBonusSpan = document.getElementById('capacityBonus');
+    const upgradeConveyorBtn = document.getElementById('upgradeConveyorBtn');
+    const buyStage1Btn = document.getElementById('buyStage1Btn');
+    const buyStage2Btn = document.getElementById('buyStage2Btn');
+    const buyStage3Btn = document.getElementById('buyStage3Btn');
+    const makePotBtn = document.getElementById('makePotBtn');
+    const sellPotBtn = document.getElementById('sellPotBtn');
+    const x2BonusBtn = document.getElementById('x2BonusBtn');
+    const bonusTimerDiv = document.getElementById('bonusTimer');
+    const bonusTimeLeftSpan = document.getElementById('bonusTimeLeft');
+    const x2Indicator = document.getElementById('x2bonusIndicator');
+
+    // helper: обновить отображение улучшений конвейера
+    function updateConveyorUI() {
+        conveyorIncomeSpan.innerText = conveyorIncome;
+        incomeBonusSpan.innerText = 2 + (conveyorUpgradeCount * 0); // просто +2 визуально
+        conveyorSpeedSpan.innerText = conveyorSpeed;
+        speedBonusSpan.innerText = 1 + (conveyorUpgradeCount * 0);
+        conveyorCapacitySpan.innerText = conveyorCapacity;
+        capacityBonusSpan.innerText = 2;
+    }
+
+    // пересчет пассивного дохода в секунду
+    function calcTotalPassive() {
+        let conveyorProd = conveyorIncome * (conveyorSpeed / 100);
+        let total = beePassive + conveyorProd;
+        return Math.max(0, total);
+    }
+
+    // обновить UI всех ресурсов, уровней, кнопок
+    function refreshUI() {
+        honeySpan.innerText = Math.floor(honey);
+        potSpan.innerText = pots;
+        levelSpan.innerText = level;
+        let passive = calcTotalPassive();
+        totalPassiveSpan.innerText = passive.toFixed(1) + " 🍯/сек";
+        
+        // состояние кнопок этапов
+        if (!stage1Owned) {
+            buyStage1Btn.innerText = `УЛУЧШИТЬ (${STAGE1_PRICE}🍯)`;
+            buyStage1Btn.disabled = (honey < STAGE1_PRICE);
+        } else {
+            buyStage1Btn.innerText = "✅ КУПЛЕНО";
+            buyStage1Btn.disabled = true;
         }
-    </script>
+        if (level >= 5 && !stage2Owned) {
+            buyStage2Btn.innerText = `УЛУЧШИТЬ (${STAGE2_PRICE}🍯)`;
+            buyStage2Btn.disabled = (honey < STAGE2_PRICE);
+        } else if (stage2Owned) {
+            buyStage2Btn.innerText = "✅ КУПЛЕНО";
+            buyStage2Btn.disabled = true;
+        } else {
+            buyStage2Btn.innerText = "🔒 УРОВЕНЬ 5";
+            buyStage2Btn.disabled = true;
+        }
+        if (level >= 10 && !stage3Owned) {
+            buyStage3Btn.innerText = `УЛУЧШИТЬ (${STAGE3_PRICE}🍯)`;
+            buyStage3Btn.disabled = (honey < STAGE3_PRICE);
+        } else if (stage3Owned) {
+            buyStage3Btn.innerText = "✅ КУПЛЕНО";
+            buyStage3Btn.disabled = true;
+        } else {
+            buyStage3Btn.innerText = "🔒 УРОВЕНЬ 10";
+            buyStage3Btn.disabled = true;
+        }
+        // конвейер
+        upgradeConveyorBtn.disabled = (honey < CONVEYOR_UPGRADE_PRICE);
+        
+        // обновить задания в DOM
+        renderTasks();
+        updateX2Indicator();
+    }
+
+    function updateX2Indicator() {
+        let active = (Date.now() < doubleUntil);
+        if (active) {
+            x2Indicator.innerHTML = "🔥 x2 БОНУС АКТИВЕН!";
+            x2Indicator.style.background = "#e67e22";
+        } else {
+            x2Indicator.innerHTML = "⭐ Бонус x1";
+            x2Indicator.style.background = "#f1c40f";
+        }
+    }
+
+    // бонусный множитель для дохода
+    function getBonusMultiplier() {
+        return (Date.now() < doubleUntil) ? 2 : 1;
+    }
+
+    // добавление меда с учётом лимита вместимости, totalEarned и уровня
+    function addHoney(amount) {
+        let multi = getBonusMultiplier();
+        let gain = amount * multi;
+        let newHoney = honey + gain;
+        let capacityLimit = conveyorCapacity;
+        if (newHoney > capacityLimit) newHoney = capacityLimit;
+        let actualGain = newHoney - honey;
+        if (actualGain > 0) {
+            totalHoneyEarned += actualGain;
+        }
+        honey = newHoney;
+        recalcLevel();
+        refreshUI();
+    }
+
+    function recalcLevel() {
+        let newLevel = Math.floor(totalHoneyEarned / 100) + 1;
+        if (newLevel < 1) newLevel = 1;
+        if (newLevel > 30) newLevel = 30;
+        if (newLevel !== level) {
+            level = newLevel;
+            refreshUI();
+        }
+    }
+
+    // продажа горшков (увеличивает мед и счетчик проданных)
+    function sellPot() {
+        if (pots <= 0) return;
+        pots--;
+        let sellValue = 12;
+        let multi = getBonusMultiplier();
+        let finalGain = sellValue * multi;
+        honey += finalGain;
+        totalHoneyEarned += finalGain;
+        potsSold++;
+        // проверяем лимит вместимости
+        if (honey > conveyorCapacity) honey = conveyorCapacity;
+        recalcLevel();
+        updateTaskProgress("sell_pots", potsSold);
+        refreshUI();
+    }
+
+    function makePot() {
+        let cost = 10;
+        if (honey >= cost) {
+            honey -= cost;
+            pots++;
+            refreshUI();
+        } else {
+            // визуальный фидбек
+            const btn = makePotBtn;
+            btn.style.transform = "scale(0.95)";
+            setTimeout(() => btn.style.transform = "", 150);
+        }
+    }
+
+    // клик по пчеле
+    function tapBee() {
+        let clickValue = 1 * getBonusMultiplier();
+        honey += clickValue;
+        totalHoneyEarned += clickValue;
+        if (honey > conveyorCapacity) honey = conveyorCapacity;
+        beeTaps++;
+        updateTaskProgress("tap_bee", beeTaps);
+        recalcLevel();
+        refreshUI();
+        // анимация пчелы
+        const beeDiv = document.querySelector('.bee-main');
+        beeDiv.style.transform = "scale(1.2)";
+        setTimeout(() => beeDiv.style.transform = "", 100);
+    }
+
+    // покупка улучшений (этапы, конвейер) вызывает увеличение счетчика улучшений
+    function applyUpgrade() {
+        upgradesDone++;
+        updateTaskProgress("upgrades", upgradesDone);
+    }
+
+    function buyStage1() {
+        if (!stage1Owned && honey >= STAGE1_PRICE) {
+            honey -= STAGE1_PRICE;
+            stage1Owned = true;
+            beePassive += 2;
+            applyUpgrade();
+            recalcLevel();
+            refreshUI();
+        }
+    }
+    function buyStage2() {
+        if (!stage2Owned && level >= 5 && honey >= STAGE2_PRICE) {
+            honey -= STAGE2_PRICE;
+            stage2Owned = true;
+            beePassive += 5;
+            applyUpgrade();
+            recalcLevel();
+            refreshUI();
+        }
+    }
+    function buyStage3() {
+        if (!stage3Owned && level >= 10 && honey >= STAGE3_PRICE) {
+            honey -= STAGE3_PRICE;
+            stage3Owned = true;
+            beePassive += 10;
+            applyUpgrade();
+            recalcLevel();
+            refreshUI();
+        }
+    }
+
+    function upgradeConveyor() {
+        if (honey >= CONVEYOR_UPGRADE_PRICE) {
+            honey -= CONVEYOR_UPGRADE_PRICE;
+            conveyorIncome += 2;
+            conveyorSpeed += 1;
+            conveyorCapacity += 2;
+            conveyorUpgradeCount++;
+            applyUpgrade();
+            recalcLevel();
+            updateConveyorUI();
+            refreshUI();
+        }
+    }
+
+    // Задания: обновление прогресса и проверка на выполнение
+    function updateTaskProgress(type, newValue) {
+        let changed = false;
+        tasks.forEach(task => {
+            if (!task.claimed && task.type === type) {
+                if (newValue > task.progress) {
+                    task.progress = newValue;
+                    changed = true;
+                }
+            }
+        });
+        if (changed) renderTasks();
+    }
+
+    function claimTask(taskId) {
+        let task = tasks.find(t => t.id === taskId);
+        if (!task || task.claimed) return false;
+        if (task.progress >= task.target) {
+            // выдать награду
+            let reward = task.reward;
+            let multi = getBonusMultiplier();
+            let finalReward = reward * multi;
+            honey += finalReward;
+            totalHoneyEarned += finalReward;
+            if (honey > conveyorCapacity) honey = conveyorCapacity;
+            task.claimed = true;
+            recalcLevel();
+            refreshUI();
+            // генерация нового задания вместо выполненного (бесконечные)
+            generateNewTask(task);
+            renderTasks();
+            return true;
+        }
+        return false;
+    }
+
+    function generateNewTask(oldTask) {
+        // новый тип может быть тот же, но с увеличенной целью, или рандом
+        const possibleTypes = ["sell_pots", "tap_bee", "upgrades"];
+        let newType = oldTask.type;
+        let newTarget = Math.floor(oldTask.target * 1.5) + 5;
+        if (newTarget > 250) newTarget = 250;
+        let newReward = Math.floor(oldTask.reward * 1.2) + 20;
+        let newDesc = "";
+        if (newType === "sell_pots") newDesc = `Продайте ${newTarget} горшков`;
+        else if (newType === "tap_bee") newDesc = `Коснитесь пчел ${newTarget} раз`;
+        else newDesc = `Выполните ${newTarget} улучшений`;
+        
+        let newProgress = 0;
+        // синхронизируем текущий прогресс с игровыми показателями
+        if (newType === "sell_pots") newProgress = potsSold;
+        else if (newType === "tap_bee") newProgress = beeTaps;
+        else if (newType === "upgrades") newProgress = upgradesDone;
+        
+        oldTask.type = newType;
+        oldTask.target = newTarget;
+        oldTask.reward = newReward;
+        oldTask.description = newDesc;
+        oldTask.progress = newProgress > newTarget ? newTarget : newProgress;
+        oldTask.claimed = false;
+    }
+
+    function renderTasks() {
+        const container = document.getElementById('tasksContainer');
+        if (!container) return;
+        container.innerHTML = '';
+        tasks.forEach(task => {
+            const taskDiv = document.createElement('div');
+            taskDiv.className = 'task-item';
+            let percent = Math.min(100, (task.progress / task.target) * 100);
+            let canClaim = (task.progress >= task.target) && !task.claimed;
+            taskDiv.innerHTML = `
+                <div class="task-info">
+                    <div class="task-name">${task.description}</div>
+                    <div class="task-progress">${task.progress} / ${task.target} <span style="background:#ffe0a3; border-radius:20px; padding:2px 8px;">🎁 ${task.reward}🍯</span></div>
+                </div>
+                <button class="btn ${canClaim ? 'btn-success' : ''}" data-id="${task.id}" ${!canClaim ? 'disabled' : ''}>${canClaim ? 'ЗАБРАТЬ' : 'Выполняется'}</button>
+            `;
+            const btn = taskDiv.querySelector('button');
+            if (btn && canClaim) {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    claimTask(task.id);
+                });
+            }
+            container.appendChild(taskDiv);
+        });
+    }
+
+    // Бонус x2 на 5 минут
+    function activateX2Bonus() {
+        let now = Date.now();
+        if (now < doubleUntil) {
+            // продлить? по логике можно просто обновить время +5мин
+            doubleUntil = now + 5 * 60 * 1000;
+        } else {
+            doubleUntil = now + 5 * 60 * 1000;
+        }
+        if (bonusInterval) clearInterval(bonusInterval);
+        bonusInterval = setInterval(updateBonusTimer, 1000);
+        updateBonusTimer();
+        refreshUI();
+    }
+
+    function updateBonusTimer() {
+        let now = Date.now();
+        if (now >= doubleUntil) {
+            if (bonusInterval) clearInterval(bonusInterval);
+            bonusTimerDiv.style.display = 'none';
+            doubleUntil = 0;
+            refreshUI();
+            updateX2Indicator();
+            return;
+        }
+        let diff = doubleUntil - now;
+        let minutes = Math.floor(diff / 60000);
+        let seconds = Math.floor((diff % 60000) / 1000);
+        bonusTimeLeftSpan.innerText = `${minutes}:${seconds < 10 ? '0'+seconds : seconds}`;
+        bonusTimerDiv.style.display = 'block';
+        updateX2Indicator();
+        refreshUI(); // обновляем множитель на кнопках
+    }
+
+    // Пассивный доход каждую секунду
+    let passiveInterval = null;
+    function startPassiveIncome() {
+        if (passiveInterval) clearInterval(passiveInterval);
+        passiveInterval = setInterval(() => {
+            let total = calcTotalPassive();
+            if (total > 0) {
+                let add = total;
+                let multi = getBonusMultiplier();
+                let finalAdd = add * multi;
+                let newHoney = honey + finalAdd;
+                if (newHoney > conveyorCapacity) newHoney = conveyorCapacity;
+                let realGain = newHoney - honey;
+                if (realGain > 0) {
+                    totalHoneyEarned += realGain;
+                }
+                honey = newHoney;
+                recalcLevel();
+                refreshUI();
+            }
+        }, 1000);
+    }
+
+    // инициализация и синхронизация прогресса заданий с текущими показателями
+    function syncTasksWithGameData() {
+        tasks[0].progress = potsSold;
+        tasks[1].progress = beeTaps;
+        tasks[2].progress = upgradesDone;
+        tasks.forEach(t => {
+            if (t.progress > t.target) t.progress = t.target;
+        });
+        renderTasks();
+    }
+
+    // обработчики событий
+    document.getElementById('beeClickArea').addEventListener('click', tapBee);
+    makePotBtn.addEventListener('click', makePot);
+    sellPotBtn.addEventListener('click', sellPot);
+    buyStage1Btn.addEventListener('click', buyStage1);
+    buyStage2Btn.addEventListener('click', buyStage2);
+    buyStage3Btn.addEventListener('click', buyStage3);
+    upgradeConveyorBtn.addEventListener('click', upgradeConveyor);
+    x2BonusBtn.addEventListener('click', activateX2Bonus);
+
+    // запуск
+    function init() {
+        updateConveyorUI();
+        startPassiveIncome();
+        syncTasksWithGameData();
+        refreshUI();
+        recalcLevel();
+        // если был куплен бонус ранее (нет сохранения, просто старт)
+    }
+    init();
+</script>
 </body>
 </html>
