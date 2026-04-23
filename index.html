@@ -1,593 +1,700 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>Rustok</title>
-<meta name="theme-color" content="#08090f" />
-<style>
-:root{
-  --bg:#07080d;
-  --panel:rgba(18,20,31,.72);
-  --panel2:rgba(255,255,255,.06);
-  --text:#f4f7fb;
-  --muted:#a3adbb;
-  --accent:#ff2d55;
-  --accent2:#7c5cff;
-  --line:rgba(255,255,255,.08);
-  --shadow:0 20px 60px rgba(0,0,0,.45);
-}
-*{box-sizing:border-box}
-html,body{
-  height:100%;
-  margin:0;
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:
-    radial-gradient(circle at 20% 10%,rgba(124,92,255,.18),transparent 30%),
-    radial-gradient(circle at 80% 0%,rgba(255,45,85,.18),transparent 26%),
-    linear-gradient(180deg,#05060a 0%,#090b12 100%);
-  color:var(--text);
-  overflow:hidden;
-}
-button{font:inherit;border:0;background:none;color:inherit}
-#app{
-  position:fixed;
-  inset:0;
-  display:flex;
-  justify-content:center;
-  align-items:stretch;
-}
-.phone{
-  position:relative;
-  width:min(100vw,460px);
-  height:100vh;
-  max-height:100vh;
-  background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));
-  backdrop-filter:blur(12px);
-  box-shadow:var(--shadow);
-  overflow:hidden;
-  border-left:1px solid rgba(255,255,255,.04);
-  border-right:1px solid rgba(255,255,255,.04);
-}
-.topbar{
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  z-index:20;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:18px 18px 12px;
-  background:linear-gradient(180deg,rgba(0,0,0,.52),transparent);
-}
-.brand{display:flex;flex-direction:column;gap:2px}
-.brand b{font-size:22px;letter-spacing:.4px}
-.brand span{font-size:12px;color:var(--muted)}
-.chip{
-  padding:10px 12px;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.08);
-}
-.feed{
-  position:absolute;
-  inset:0;
-  overflow:auto;
-  scroll-snap-type:y mandatory;
-  scroll-behavior:smooth;
-  -ms-overflow-style:none;
-  scrollbar-width:none;
-}
-.feed::-webkit-scrollbar{display:none}
-.post{
-  position:relative;
-  height:100vh;
-  width:100%;
-  scroll-snap-align:start;
-  display:flex;
-  align-items:flex-end;
-  justify-content:space-between;
-  padding:88px 14px 88px;
-  background:linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.56)),var(--bgimg) center/cover no-repeat;
-}
-.post::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.15) 40%,rgba(0,0,0,.7) 100%);
-  pointer-events:none;
-}
-.content,.actions,.footer,.topbar{
-  position:relative;
-  z-index:2;
-}
-.content{
-  max-width:72%;
-  align-self:flex-end;
-  padding:0 6px 0 2px;
-}
-.creator{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:10px;
-}
-.avatar{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#ff2d55,#7c5cff);
-  display:grid;
-  place-items:center;
-  font-weight:800;
-  box-shadow:0 10px 30px rgba(255,45,85,.25);
-}
-.meta b{display:block;font-size:15px}
-.meta span{display:block;font-size:12px;color:rgba(255,255,255,.75)}
-.caption{
-  font-size:15px;
-  line-height:1.45;
-  margin:10px 0 12px;
-  text-shadow:0 2px 16px rgba(0,0,0,.45);
-}
-.tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-.tag{
-  font-size:12px;
-  padding:7px 10px;
-  border-radius:999px;
-  background:rgba(255,255,255,.1);
-  border:1px solid rgba(255,255,255,.09);
-  backdrop-filter:blur(10px);
-}
-.actions{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  align-self:flex-end;
-  padding-bottom:72px;
-}
-.action{
-  width:54px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
-}
-.iconbtn{
-  width:54px;
-  height:54px;
-  border-radius:18px;
-  background:rgba(255,255,255,.09);
-  border:1px solid rgba(255,255,255,.08);
-  display:grid;
-  place-items:center;
-  font-size:22px;
-  box-shadow:0 10px 25px rgba(0,0,0,.25);
-  cursor:pointer;
-  transition:.2s transform,.2s background;
-}
-.iconbtn:active{transform:scale(.95)}
-.count{
-  font-size:12px;
-  color:#fff;
-  text-shadow:0 1px 8px rgba(0,0,0,.5);
-}
-.footer{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  padding:18px 16px 14px;
-  background:linear-gradient(180deg,transparent,rgba(6,7,11,.8) 35%,rgba(6,7,11,.96));
-  border-top:1px solid rgba(255,255,255,.06);
-}
-.nav{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.08);
-  padding:10px;
-  border-radius:22px;
-  backdrop-filter:blur(14px);
-}
-.navbtn{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:4px;
-  padding:10px 4px;
-  border-radius:16px;
-  color:var(--muted);
-  cursor:pointer;
-}
-.navbtn.active{
-  color:#fff;
-  background:linear-gradient(135deg,rgba(255,45,85,.22),rgba(124,92,255,.22));
-  border:1px solid rgba(255,255,255,.06);
-}
-.navbtn small{font-size:11px}
-.progress{
-  position:absolute;
-  top:0;
-  left:0;
-  height:3px;
-  width:100%;
-  background:rgba(255,255,255,.08);
-  z-index:30;
-}
-.progress i{
-  display:block;
-  height:100%;
-  width:38%;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  box-shadow:0 0 18px rgba(255,45,85,.45);
-}
-.toast{
-  position:absolute;
-  left:50%;
-  top:76px;
-  transform:translateX(-50%);
-  z-index:40;
-  background:rgba(0,0,0,.68);
-  backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,.08);
-  padding:10px 14px;
-  border-radius:999px;
-  font-size:13px;
-  opacity:0;
-  transition:.25s;
-}
-.toast.show{opacity:1}
-.videoBadge{
-  position:absolute;
-  left:16px;
-  top:68px;
-  z-index:3;
-  padding:8px 12px;
-  border-radius:999px;
-  background:rgba(0,0,0,.28);
-  border:1px solid rgba(255,255,255,.08);
-  backdrop-filter:blur(10px);
-  font-size:12px;
-  color:#fff;
-}
-.glow{
-  position:absolute;
-  inset:auto 10% 18% 10%;
-  height:120px;
-  filter:blur(46px);
-  background:radial-gradient(circle,rgba(255,45,85,.28),transparent 60%);
-  opacity:.9;
-  pointer-events:none;
-}
-.modal{
-  position:absolute;
-  inset:auto 12px 100px 12px;
-  z-index:50;
-  background:rgba(10,12,18,.92);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:22px;
-  box-shadow:var(--shadow);
-  padding:14px;
-  display:none;
-}
-.modal.show{display:block}
-.modal h3{margin:0 0 8px}
-.modal p{
-  margin:0 0 12px;
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.45;
-}
-.modal input{
-  width:100%;
-  background:rgba(255,255,255,.06);
-  color:#fff;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  padding:12px 14px;
-  outline:none;
-  margin-bottom:10px;
-}
-.modal .row{
-  display:flex;
-  gap:10px;
-}
-.modal .row button{
-  flex:1;
-  padding:12px;
-  border-radius:14px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  font-weight:700;
-  cursor:pointer;
-}
-.modal .row button.secondary{
-  background:rgba(255,255,255,.08);
-}
-.uploadPanel{
-  position:absolute;
-  left:12px;
-  right:12px;
-  bottom:100px;
-  z-index:45;
-  background:rgba(10,12,18,.92);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:22px;
-  box-shadow:var(--shadow);
-  padding:14px;
-  display:none;
-}
-.uploadPanel.show{display:block}
-.uploadPanel h3{margin:0 0 8px}
-.uploadPanel p{margin:0 0 10px;color:var(--muted);font-size:13px;line-height:1.45}
-.uploadPanel input, .uploadPanel textarea{
-  width:100%;
-  background:rgba(255,255,255,.06);
-  color:#fff;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  padding:12px 14px;
-  outline:none;
-  margin-bottom:10px;
-}
-.uploadPanel textarea{min-height:84px;resize:none}
-.uploadPanel .row{
-  display:flex;
-  gap:10px;
-}
-.uploadPanel .row button{
-  flex:1;
-  padding:12px;
-  border-radius:14px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  font-weight:700;
-  cursor:pointer;
-}
-.uploadPanel .row button.secondary{background:rgba(255,255,255,.08)}
-.previewBox{
-  display:none;
-  margin-bottom:10px;
-  border-radius:16px;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.08);
-  background:#000;
-}
-.previewBox video{
-  width:100%;
-  display:block;
-  max-height:180px;
-  object-fit:cover;
-}
-@media (max-width:520px){
-  .phone{width:100vw;border:0}
-  .content{max-width:74%}
-  .brand b{font-size:20px}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Super Translator | Качественный переводчик</title>
+    <!-- Font Awesome 6 (free icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Font: Inter для современного стиля -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #f5f7fc 0%, #eef2f8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        /* главный контейнер — карточка с гладкими тенями */
+        .translator-card {
+            max-width: 1400px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(2px);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 8px 18px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .card-header {
+            padding: 1.8rem 2rem;
+            background: #ffffff;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1f2b4e, #2b3b6e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-header h1 i {
+            background: none;
+            color: #3b5b9b;
+            font-size: 1.8rem;
+        }
+
+        .sub {
+            color: #5a6e8a;
+            margin-top: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* основная сетка переводчика */
+        .translator-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+            padding: 2rem;
+        }
+
+        .panel {
+            flex: 1;
+            min-width: 280px;
+            background: #ffffff;
+            border-radius: 1.8rem;
+            transition: all 0.2s;
+            padding: 0.2rem;
+        }
+
+        .source-panel {
+            margin-right: 0.5rem;
+        }
+
+        .target-panel {
+            margin-left: 0.5rem;
+        }
+
+        /* контролы языков */
+        .lang-selector {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            background: #f8fafd;
+            padding: 0.5rem 0.8rem;
+            border-radius: 2rem;
+        }
+
+        .lang-select {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #1e293b;
+            cursor: pointer;
+            outline: none;
+            transition: 0.2s;
+            font-family: 'Inter', monospace;
+        }
+
+        .lang-select:hover {
+            border-color: #7c9bcf;
+            background: #fefefe;
+        }
+
+        .lang-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #4b5c7c;
+            letter-spacing: 0.3px;
+            background: #eef3fc;
+            padding: 0.25rem 0.9rem;
+            border-radius: 30px;
+        }
+
+        /* текстовые поля */
+        .textarea-box {
+            position: relative;
+            margin-top: 0.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            border: 1px solid #e9edf2;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.2rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            font-family: 'Inter', monospace;
+            background: #fefefe;
+            resize: vertical;
+            transition: 0.2s;
+            outline: none;
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        textarea:focus {
+            border-color: #4f7bc9;
+            box-shadow: 0 0 0 3px rgba(79, 123, 201, 0.2);
+        }
+
+        .target-textarea {
+            background: #fbfdff;
+            color: #1a2c3e;
+        }
+
+        /* панель действий (кнопки) */
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            margin-top: 1rem;
+            justify-content: flex-start;
+        }
+
+        .icon-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 0.55rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #2c3e66;
+        }
+
+        .icon-btn i {
+            font-size: 1rem;
+        }
+
+        .icon-btn:hover {
+            background: #e2eaf5;
+            transform: translateY(-2px);
+            color: #1f3a6b;
+        }
+
+        .swap-btn-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .btn-swap {
+            background: #ffffff;
+            border: 1px solid #cddfef;
+            border-radius: 60px;
+            width: 52px;
+            height: 52px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 6px 12px -6px rgba(0, 0, 0, 0.1);
+            color: #2c5282;
+        }
+
+        .btn-swap:hover {
+            background: #eef3fc;
+            transform: scale(1.03);
+            border-color: #8aaee0;
+        }
+
+        .translate-manual {
+            background: #2c5282;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.6rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            margin-top: 0.8rem;
+            width: auto;
+            transition: 0.2s;
+        }
+
+        .translate-manual:hover {
+            background: #1d3f64;
+            transform: translateY(-2px);
+        }
+
+        .detection-badge {
+            font-size: 0.7rem;
+            margin-top: 0.6rem;
+            color: #4d6a9b;
+            background: #eef2fa;
+            display: inline-block;
+            padding: 0.2rem 0.9rem;
+            border-radius: 24px;
+        }
+
+        .loader-icon {
+            font-size: 0.9rem;
+            margin-left: 8px;
+            color: #3b6cb0;
+        }
+
+        footer {
+            background: #fafcff;
+            border-top: 1px solid #eef2f8;
+            padding: 1rem 2rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #6a7f9f;
+        }
+
+        @media (max-width: 780px) {
+            .translator-grid {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            .source-panel, .target-panel {
+                margin: 0;
+            }
+            .swap-btn-container {
+                margin: 0.5rem 0;
+            }
+            .panel {
+                width: 100%;
+            }
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            z-index: 1000;
+            opacity: 0;
+            transition: 0.2s;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
-<div id="app">
-  <div class="phone">
-    <div class="progress"><i id="prog"></i></div>
-    <div class="topbar">
-      <div class="brand"><b>Rustok</b><span>short videos • for you</span></div>
-      <div class="chip" id="openUpload">+ Upload</div>
+
+<div class="translator-card">
+    <div class="card-header">
+        <h1>
+            <i class="fas fa-language"></i> 
+            Super Translator
+        </h1>
+        <div class="sub">✨ Высокое качество перевода · Поддержка 9+ языков · Мгновенный результат</div>
     </div>
 
-    <div class="toast" id="toast">Liked</div>
-    <div class="feed" id="feed"></div>
+    <div class="translator-grid">
+        <!-- Панель источника (слева) -->
+        <div class="panel source-panel">
+            <div class="lang-selector">
+                <span class="lang-label"><i class="fas fa-arrow-right-from-bracket"></i> С языка</span>
+                <select id="sourceLangSelect" class="lang-select">
+                    <option value="auto">🔍 Определить язык (Auto)</option>
+                    <option value="en" selected>🇺🇸 Английский (English)</option>
+                    <option value="es">🇪🇸 Испанский (Español)</option>
+                    <option value="fr">🇫🇷 Французский (Français)</option>
+                    <option value="de">🇩🇪 Немецкий (Deutsch)</option>
+                    <option value="it">🇮🇹 Итальянский (Italiano)</option>
+                    <option value="pt">🇵🇹 Португальский (Português)</option>
+                    <option value="ru">🇷🇺 Русский (Русский)</option>
+                    <option value="zh">🇨🇳 Китайский (中文)</option>
+                    <option value="ja">🇯🇵 Японский (日本語)</option>
+                </select>
+            </div>
+            <div class="textarea-box">
+                <textarea id="sourceText" rows="6" placeholder="Enter text" style="font-size: 1rem;"></textarea>
+            </div>
+            <div class="action-bar">
+                <button class="icon-btn" id="copySourceBtn"><i class="far fa-copy"></i> Копировать</button>
+                <button class="icon-btn" id="clearSourceBtn"><i class="fas fa-eraser"></i> Очистить</button>
+                <button class="icon-btn" id="speakSourceBtn"><i class="fas fa-volume-up"></i> Озвучить</button>
+            </div>
+            <div id="detectLangInfo" class="detection-badge"><i class="fas fa-microchip"></i> Автоопределение: —</div>
+        </div>
 
-    <div class="footer">
-      <div class="nav">
-        <button class="navbtn active"><div>🏠</div><small>Home</small></button>
-        <button class="navbtn"><div>🔎</div><small>Search</small></button>
-        <button class="navbtn" id="navUpload"><div>➕</div><small>Post</small></button>
-        <button class="navbtn"><div>💬</div><small>Inbox</small></button>
-        <button class="navbtn"><div>👤</div><small>Profile</small></button>
-      </div>
+        <!-- Кнопка Swap посередине -->
+        <div class="swap-btn-container">
+            <button class="btn-swap" id="swapLanguagesBtn" title="Поменять языки местами">
+                <i class="fas fa-exchange-alt"></i>
+            </button>
+        </div>
+
+        <!-- Панель перевода (справа) -->
+        <div class="panel target-panel">
+            <div class="lang-selector">
+                <span class="lang-label"><i class="fas fa-arrow-right-to-bracket"></i> На язык</span>
+                <select id="targetLangSelect" class="lang-select">
+                    <option value="en">🇺🇸 Английский</option>
+                    <option value="es" selected>🇪🇸 Испанский (Español)</option>
+                    <option value="fr">🇫🇷 Французский</option>
+                    <option value="de">🇩🇪 Немецкий</option>
+                    <option value="it">🇮🇹 Итальянский</option>
+                    <option value="pt">🇵🇹 Португальский</option>
+                    <option value="ru">🇷🇺 Русский</option>
+                    <option value="zh">🇨🇳 Китайский</option>
+                    <option value="ja">🇯🇵 Японский</option>
+                </select>
+            </div>
+            <div class="textarea-box">
+                <textarea id="targetText" rows="6" readonly class="target-textarea" placeholder="Traducción / Перевод..."></textarea>
+            </div>
+            <div class="action-bar">
+                <button class="icon-btn" id="copyTargetBtn"><i class="far fa-copy"></i> Копировать</button>
+                <button class="icon-btn" id="speakTargetBtn"><i class="fas fa-volume-up"></i> Озвучить</button>
+                <button class="icon-btn" id="clearAllBtn"><i class="fas fa-trash-alt"></i> Очистить всё</button>
+            </div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 0.6rem;">
+                <button id="manualTranslateBtn" class="translate-manual"><i class="fas fa-arrow-right"></i> Перевести сейчас</button>
+            </div>
+        </div>
     </div>
-
-    <div class="modal" id="modal">
-      <h3>Rustok</h3>
-      <p>Это демо-приложение для GitHub Pages: лента, лайки, комментарии и свайпы. Можно загрузить своё видео и показать его в ленте.</p>
-      <input id="nameInput" placeholder="Твоё имя или ник" value="Rustok user" />
-      <div class="row">
-        <button id="saveBtn">Сохранить</button>
-        <button class="secondary" id="closeBtn">Закрыть</button>
-      </div>
-    </div>
-
-    <div class="uploadPanel" id="uploadPanel">
-      <h3>Загрузить видео</h3>
-      <p>Выбери видео с устройства. Оно покажется в верхнем посте ленты как локальный предпросмотр.</p>
-      <input id="videoInput" type="file" accept="video/*" />
-      <div class="previewBox" id="previewBox">
-        <video id="previewVideo" controls playsinline></video>
-      </div>
-      <textarea id="captionInput" placeholder="Подпись к видео"></textarea>
-      <div class="row">
-        <button id="addVideoBtn">Добавить в ленту</button>
-        <button class="secondary" id="closeUploadBtn">Закрыть</button>
-      </div>
-    </div>
-
-    <div class="glow"></div>
-  </div>
+    <footer>
+        <i class="fas fa-globe"></i> Работает на MyMemory Neural Translation · Мгновенный перевод с определением языка · Доступно 9+ направлений
+    </footer>
 </div>
+<div id="toastMessage" class="toast-msg"></div>
 
 <script>
-const feed = document.getElementById('feed');
-const toast = document.getElementById('toast');
-const modal = document.getElementById('modal');
-const uploadPanel = document.getElementById('uploadPanel');
-const nameInput = document.getElementById('nameInput');
-const saveBtn = document.getElementById('saveBtn');
-const closeBtn = document.getElementById('closeBtn');
-const openUpload = document.getElementById('openUpload');
-const navUpload = document.getElementById('navUpload');
-const closeUploadBtn = document.getElementById('closeUploadBtn');
-const addVideoBtn = document.getElementById('addVideoBtn');
-const videoInput = document.getElementById('videoInput');
-const previewBox = document.getElementById('previewBox');
-const previewVideo = document.getElementById('previewVideo');
-const captionInput = document.getElementById('captionInput');
-const prog = document.getElementById('prog');
+    // ------------------- DOM элементы --------------------
+    const sourceTextarea = document.getElementById('sourceText');
+    const targetTextarea = document.getElementById('targetText');
+    const sourceLangSelect = document.getElementById('sourceLangSelect');
+    const targetLangSelect = document.getElementById('targetLangSelect');
+    const swapBtn = document.getElementById('swapLanguagesBtn');
+    const copySourceBtn = document.getElementById('copySourceBtn');
+    const copyTargetBtn = document.getElementById('copyTargetBtn');
+    const clearSourceBtn = document.getElementById('clearSourceBtn');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    const speakSourceBtn = document.getElementById('speakSourceBtn');
+    const speakTargetBtn = document.getElementById('speakTargetBtn');
+    const manualTranslateBtn = document.getElementById('manualTranslateBtn');
+    const detectLangSpan = document.getElementById('detectLangInfo');
 
-let userVideo = null;
-let userVideoUrl = '';
-let liked = new Set();
+    // состояния
+    let translateTimeout = null;
+    let isTranslating = false;
 
-const demoBg = 'radial-gradient(circle at 30% 20%, rgba(255,45,85,.32), transparent 30%), radial-gradient(circle at 70% 30%, rgba(124,92,255,.28), transparent 30%), linear-gradient(180deg,#111,#05060a)';
-const demoPosts = [
-  {u:'@neonwave', t:'Ночной вайб, быстрый монтаж и чистый интерфейс.', tags:['#ai','#edit','#vibes']},
-  {u:'@pixelrush', t:'Вертикальная лента, жесты и плавные анимации для мобильного UX.', tags:['#ui','#mobile','#design']},
-  {u:'@midnightloop', t:'Красивый one-page прототип, который можно сразу залить на Pages.', tags:['#githubpages','#html','#js']}
-];
+    // ---------- многоязычные плейсхолдеры для поля источника (динамические) ----------
+    const sourcePlaceholders = {
+        'en': 'Enter text',
+        'es': 'Introducir texto',
+        'fr': 'Saisissez le texte',
+        'de': 'Text eingeben',
+        'it': 'Inserisci testo',
+        'pt': 'Digite o texto',
+        'ru': 'Введите текст',
+        'zh': '输入文本',
+        'ja': 'テキストを入力',
+        'auto': 'Введите текст (автоопределение)'
+    };
+    
+    const targetPlaceholders = {
+        'en': 'Translation will appear here',
+        'es': 'La traducción aparecerá aquí',
+        'fr': 'La traduction apparaîtra ici',
+        'de': 'Übersetzung erscheint hier',
+        'it': 'La traduzione apparirà qui',
+        'pt': 'A tradução aparecerá aqui',
+        'ru': 'Перевод появится здесь',
+        'zh': '翻译将显示在此处',
+        'ja': '翻訳がここに表示されます'
+    };
 
-function showToast(t){
-  toast.textContent = t;
-  toast.classList.add('show');
-  clearTimeout(showToast.t);
-  showToast.t = setTimeout(()=>toast.classList.remove('show'),900);
-}
+    // функция обновления плейсхолдеров
+    function updatePlaceholders() {
+        const srcLang = sourceLangSelect.value;
+        const tgtLang = targetLangSelect.value;
+        sourceTextarea.placeholder = sourcePlaceholders[srcLang] || 'Enter text';
+        targetTextarea.placeholder = targetPlaceholders[tgtLang] || 'Translation';
+    }
 
-function renderPosts(){
-  feed.innerHTML = '';
-  const all = [];
-  if(userVideo){
-    all.push({
-      u:'@you',
-      t:userVideo.caption,
-      tags:['#yourvideo','#rustok','#upload'],
-      bg:userVideoUrl,
-      uploaded:true
+    // отображение тоста (короткие уведомления)
+    function showToast(message, duration = 1800) {
+        const toast = document.getElementById('toastMessage');
+        toast.textContent = message;
+        toast.style.opacity = '1';
+        toast.style.transition = 'opacity 0.2s';
+        setTimeout(() => {
+            toast.style.opacity = '0';
+        }, duration);
+    }
+
+    // копирование текста
+    async function copyToClipboard(text, fieldName = 'текст') {
+        if (!text.trim()) {
+            showToast(`❌ Нет ${fieldName} для копирования`);
+            return;
+        }
+        try {
+            await navigator.clipboard.writeText(text);
+            showToast(`✅ ${fieldName} скопирован в буфер`);
+        } catch (err) {
+            showToast(`❌ Ошибка копирования`);
+        }
+    }
+
+    // Озвучивание через Web Speech API
+    function speakText(text, langCode = 'en') {
+        if (!text || text.trim() === '') {
+            showToast('🔇 Нет текста для озвучивания');
+            return;
+        }
+        if (!window.speechSynthesis) {
+            showToast('Ваш браузер не поддерживает Speech Synthesis');
+            return;
+        }
+        // корректировка кода языка для синтеза (es-ES, en-US базово)
+        let speechLang = langCode;
+        if (langCode === 'es') speechLang = 'es-ES';
+        if (langCode === 'en') speechLang = 'en-US';
+        if (langCode === 'fr') speechLang = 'fr-FR';
+        if (langCode === 'de') speechLang = 'de-DE';
+        if (langCode === 'it') speechLang = 'it-IT';
+        if (langCode === 'pt') speechLang = 'pt-PT';
+        if (langCode === 'ru') speechLang = 'ru-RU';
+        if (langCode === 'zh') speechLang = 'zh-CN';
+        if (langCode === 'ja') speechLang = 'ja-JP';
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = speechLang;
+        utterance.rate = 0.95;
+        utterance.pitch = 1.0;
+        window.speechSynthesis.cancel(); // предотвратить наложение
+        window.speechSynthesis.speak(utterance);
+        showToast(`🔊 Озвучивание на ${speechLang.toUpperCase()}`);
+    }
+
+    // ----- ОСНОВНАЯ ФУНКЦИЯ ПЕРЕВОДА (MyMemory API) -----
+    async function performTranslation(showLoader = true) {
+        const sourceText = sourceTextarea.value.trim();
+        let sourceLang = sourceLangSelect.value;
+        const targetLang = targetLangSelect.value;
+        
+        // если текст пустой — очищаем поле перевода и выходим
+        if (sourceText === '') {
+            targetTextarea.value = '';
+            if (sourceLang === 'auto') detectLangSpan.innerHTML = '<i class="fas fa-microchip"></i> Автоопределение: —';
+            return;
+        }
+        
+        // индикатор загрузки
+        if (showLoader) {
+            targetTextarea.value = '⏳ Переводим...';
+        }
+        
+        // формируем langpair для MyMemory: если sourceLang === 'auto', используем 'auto|targetLang'
+        let langPair = '';
+        if (sourceLang === 'auto') {
+            langPair = `auto|${targetLang}`;
+        } else {
+            langPair = `${sourceLang}|${targetLang}`;
+        }
+        
+        const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(sourceText)}&langpair=${langPair}&de=user@demo_github`;
+        
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 12000);
+            const response = await fetch(apiUrl, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            
+            // извлечение перевода
+            let translatedText = '';
+            if (data && data.responseData && data.responseData.translatedText) {
+                translatedText = data.responseData.translatedText;
+                // Убираем лишние теги (иногда MyMemory возвращает HTML сущности)
+                translatedText = translatedText.replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+                // иногда добавляет [detected] блоки, оставляем как есть, но удаляем "auto from ..." если мешает — это нормально
+                if (translatedText.includes('[detected')) {
+                    translatedText = translatedText.replace(/\[detected.*?\]/, '').trim();
+                }
+            } else if (data.matches && data.matches.length > 0) {
+                translatedText = data.matches[0].translation;
+            } else {
+                translatedText = '[Ошибка: перевод не получен]';
+            }
+            
+            targetTextarea.value = translatedText || '⚠️ Не удалось перевести';
+            
+            // Если включено автоопределение - отображаем распознанный язык (если есть)
+            if (sourceLang === 'auto' && data && data.responseData && data.responseData.detectedSourceLanguage) {
+                const detected = data.responseData.detectedSourceLanguage;
+                const langMap = {'en':'Английский','es':'Испанский','fr':'Французский','de':'Немецкий','it':'Итальянский','pt':'Португальский','ru':'Русский','zh':'Китайский','ja':'Японский'};
+                const langDisplay = langMap[detected] || detected.toUpperCase();
+                detectLangSpan.innerHTML = `<i class="fas fa-glasses"></i> Определён язык: ${langDisplay} (${detected})`;
+            } else if (sourceLang === 'auto') {
+                detectLangSpan.innerHTML = `<i class="fas fa-language"></i> Автоопределение активно (API: не распознан)`;
+            } else {
+                detectLangSpan.innerHTML = `<i class="fas fa-flag-checkered"></i> Исходный: ${sourceLangSelect.options[sourceLangSelect.selectedIndex]?.text.split(' ')[0] || sourceLang}`;
+            }
+        } catch (error) {
+            console.error('Translation error:', error);
+            targetTextarea.value = '❌ Ошибка соединения. Попробуйте позже или проверьте сеть.';
+            showToast('Ошибка перевода: проверьте интернет или повторите запрос');
+            if (sourceLang === 'auto') detectLangSpan.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Ошибка автоопределения';
+        } finally {
+            isTranslating = false;
+        }
+    }
+
+    // debounced перевод (при печати)
+    function debouncedTranslate() {
+        if (translateTimeout) clearTimeout(translateTimeout);
+        translateTimeout = setTimeout(() => {
+            performTranslation(true);
+        }, 550);
+    }
+
+    // Обработчики событий: изменения в исходном тексте
+    sourceTextarea.addEventListener('input', () => {
+        debouncedTranslate();
     });
-  }
-  demoPosts.forEach(p=>all.push({...p,bg:demoBg,uploaded:false}));
-
-  all.forEach((p,i)=>{
-    const el = document.createElement('section');
-    el.className = 'post';
-    el.style.setProperty('--bgimg', `linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.56)), ${p.bg}`);
-    el.innerHTML = `
-      <div class="videoBadge">🎬 Rustok • Clip ${i+1}</div>
-      <div class="content">
-        <div class="creator">
-          <div class="avatar">${(p.u || 'R').replace('@','').slice(0,1).toUpperCase()}</div>
-          <div class="meta">
-            <b>${p.u}</b>
-            <span>${p.uploaded ? 'your upload • just now' : 'original feed • ' + (12+i) + 'm ago'}</span>
-          </div>
-        </div>
-        <div class="caption">${p.t}</div>
-        <div class="tags">${p.tags.map(x=>`<span class="tag">${x}</span>`).join('')}</div>
-      </div>
-      <div class="actions">
-        <div class="action">
-          <button class="iconbtn like">❤</button>
-          <div class="count">${1200+i*223}</div>
-        </div>
-        <div class="action">
-          <button class="iconbtn comment">💬</button>
-          <div class="count">${80+i*18}</div>
-        </div>
-        <div class="action">
-          <button class="iconbtn share">↗</button>
-          <div class="count">Share</div>
-        </div>
-      </div>`;
-    feed.appendChild(el);
-
-    const like = el.querySelector('.like');
-    like.onclick = () => {
-      const on = liked.has(el);
-      if(on) liked.delete(el); else liked.add(el);
-      like.style.background = on ? 'rgba(255,255,255,.09)' : 'linear-gradient(135deg,var(--accent),var(--accent2))';
-      showToast(on ? 'Unliked' : 'Liked');
-    };
-
-    el.querySelector('.comment').onclick = () => {
-      modal.classList.add('show');
-      uploadPanel.classList.remove('show');
-      showToast('Comments opened');
-    };
-
-    el.querySelector('.share').onclick = async () => {
-      try{
-        await navigator.clipboard.writeText(location.href);
-        showToast('Link copied');
-      }catch(e){
-        showToast('Copy failed');
-      }
-    };
-  });
-
-  prog.style.width = all.length ? `${Math.max(35, 100/all.length)}%` : '100%';
-}
-
-openUpload.onclick = () => {
-  uploadPanel.classList.add('show');
-  modal.classList.remove('show');
-};
-
-navUpload.onclick = () => {
-  uploadPanel.classList.add('show');
-  modal.classList.remove('show');
-};
-
-closeUploadBtn.onclick = () => uploadPanel.classList.remove('show');
-
-closeBtn.onclick = () => modal.classList.remove('show');
-
-saveBtn.onclick = () => {
-  localStorage.setItem('rustok_name', nameInput.value.trim() || 'Rustok user');
-  modal.classList.remove('show');
-  showToast('Saved');
-};
-
-nameInput.value = localStorage.getItem('rustok_name') || 'Rustok user';
-
-videoInput.addEventListener('change', () => {
-  const file = videoInput.files && videoInput.files[0];
-  if(!file) return;
-  if(userVideoUrl) URL.revokeObjectURL(userVideoUrl);
-  userVideoUrl = URL.createObjectURL(file);
-  previewVideo.src = userVideoUrl;
-  previewBox.style.display = 'block';
-  userVideo = {
-    file,
-    caption: captionInput.value.trim() || ('Uploaded video: ' + file.name)
-  };
-  showToast('Video selected');
-});
-
-addVideoBtn.onclick = () => {
-  const file = videoInput.files && videoInput.files[0];
-  if(!file){
-    showToast('Choose a video first');
-    return;
-  }
-  userVideo.caption = captionInput.value.trim() || ('Uploaded video: ' + file.name);
-  renderPosts();
-  uploadPanel.classList.remove('show');
-  showToast('Added to feed');
-};
-
-document.addEventListener('keydown', (e) => {
-  if(e.key === 'Escape'){
-    modal.classList.remove('show');
-    uploadPanel.classList.remove('show');
-  }
-});
-
-renderPosts();
+    
+    // Принудительный перевод при смене языка источника/цели
+    function onLangChange() {
+        updatePlaceholders();
+        // при смене языка, если текст не пустой — запускаем перевод немедленно
+        if (sourceTextarea.value.trim() !== '') {
+            performTranslation(true);
+        } else {
+            targetTextarea.value = '';
+            if (sourceLangSelect.value === 'auto') detectLangSpan.innerHTML = '<i class="fas fa-microchip"></i> Автоопределение: —';
+            else detectLangSpan.innerHTML = `<i class="fas fa-flag-checkered"></i> Исходный: ${sourceLangSelect.options[sourceLangSelect.selectedIndex]?.text.split(' ')[0]}`;
+        }
+    }
+    
+    sourceLangSelect.addEventListener('change', onLangChange);
+    targetLangSelect.addEventListener('change', onLangChange);
+    
+    // ручной перевод
+    manualTranslateBtn.addEventListener('click', () => {
+        if (sourceTextarea.value.trim() === '') {
+            showToast('Введите текст для перевода');
+            return;
+        }
+        performTranslation(true);
+        showToast('🔄 Принудительный перевод выполнен');
+    });
+    
+    // Функция SWAP: меняем языки местами и содержимое текстовых полей
+    function swapLanguagesAndText() {
+        const srcLangVal = sourceLangSelect.value;
+        const tgtLangVal = targetLangSelect.value;
+        const srcText = sourceTextarea.value;
+        const tgtText = targetTextarea.value;
+        
+        // Меняем выбранные языки
+        sourceLangSelect.value = tgtLangVal;
+        targetLangSelect.value = srcLangVal;
+        
+        // Меняем текст: новый источник = то, что было в целевом (переводе), цель потом переведётся
+        sourceTextarea.value = tgtText;
+        targetTextarea.value = ''; // временно очищаем
+        
+        // Обновляем плейсхолдеры
+        updatePlaceholders();
+        
+        // Если в новом источнике есть текст — вызываем перевод для корректного отображения
+        if (sourceTextarea.value.trim() !== '') {
+            performTranslation(true);
+        } else {
+            targetTextarea.value = '';
+        }
+        
+        // обработка отображения информации о распознавании
+        if (sourceLangSelect.value === 'auto') {
+            detectLangSpan.innerHTML = '<i class="fas fa-microchip"></i> Автоопределение: после смены языков';
+        } else {
+            detectLangSpan.innerHTML = `<i class="fas fa-flag-checkered"></i> Исходный: ${sourceLangSelect.options[sourceLangSelect.selectedIndex]?.text.split(' ')[0]}`;
+        }
+        showToast('🔄 Языки и текст поменяны местами');
+    }
+    
+    swapBtn.addEventListener('click', swapLanguagesAndText);
+    
+    // копирования и очистка
+    copySourceBtn.addEventListener('click', () => copyToClipboard(sourceTextarea.value, 'Исходный текст'));
+    copyTargetBtn.addEventListener('click', () => copyToClipboard(targetTextarea.value, 'Перевод'));
+    
+    clearSourceBtn.addEventListener('click', () => {
+        sourceTextarea.value = '';
+        targetTextarea.value = '';
+        if (sourceLangSelect.value === 'auto') detectLangSpan.innerHTML = '<i class="fas fa-microchip"></i> Автоопределение: —';
+        performTranslation(true);
+        showToast('🧹 Исходный текст очищен');
+    });
+    
+    clearAllBtn.addEventListener('click', () => {
+        sourceTextarea.value = '';
+        targetTextarea.value = '';
+        if (sourceLangSelect.value === 'auto') detectLangSpan.innerHTML = '<i class="fas fa-microchip"></i> Автоопределение: —';
+        else detectLangSpan.innerHTML = `<i class="fas fa-flag-checkered"></i> Исходный: ${sourceLangSelect.options[sourceLangSelect.selectedIndex]?.text.split(' ')[0]}`;
+        showToast('✨ Всё очищено');
+    });
+    
+    // Озвучивание: источник (язык исходный или автодетект, но берём из select)
+    speakSourceBtn.addEventListener('click', () => {
+        let srcLangCode = sourceLangSelect.value;
+        if (srcLangCode === 'auto') {
+            // пытаемся угадать - но лучше проанализировать? используем английский как fallback
+            srcLangCode = 'en';
+            showToast('🔍 Язык не выбран конкретно, озвучивание на английском (default)');
+        }
+        speakText(sourceTextarea.value, srcLangCode);
+    });
+    
+    speakTargetBtn.addEventListener('click', () => {
+        const targetLangCode = targetLangSelect.value;
+        speakText(targetTextarea.value, targetLangCode);
+    });
+    
+    // Инициализация: установка плейсхолдеров, и демо-пример перевода (показываем качество)
+    function initDemo() {
+        updatePlaceholders();
+        // Пример текста, чтобы сразу увидеть мощность переводчика
+        sourceTextarea.value = "Hello! This is a super high-quality translator with real-time API.";
+        performTranslation(true);
+    }
+    
+    initDemo();
+    
+    // подсказка при пустом исходном поле для автоопределения
+    document.addEventListener('click', () => {
+        if (sourceLangSelect.value === 'auto' && sourceTextarea.value.trim() === '') {
+            detectLangSpan.innerHTML = '<i class="fas fa-microchip"></i> Автоопределение: ожидание текста...';
+        }
+    });
 </script>
 </body>
 </html>
