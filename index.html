@@ -1,238 +1,593 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#0b0c10" />
-<title>Bee Empire Deluxe</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Rustok</title>
+<meta name="theme-color" content="#08090f" />
 <style>
-:root{--bg:#090a0f;--bg2:#11131b;--card:#171922;--card2:#1e212d;--text:#f7f8fb;--muted:#a4a9bb;--accent:#f4c845;--accent2:#ffe6a0;--good:#58d37f;--bad:#ff6666;--shadow:0 16px 40px rgba(0,0,0,.42);--r:20px}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-html,body{margin:0;height:100%;background:radial-gradient(circle at top,#202431 0,#11131a 42%,#07080b 100%);overflow:hidden;color:var(--text)}
-body{touch-action:manipulation;overscroll-behavior:none}
-#game{width:100%;max-width:540px;height:100vh;margin:0 auto;position:relative;background:linear-gradient(to bottom,#171923 0,#11131a 35%,#090a0e 100%);overflow:hidden;box-shadow:0 0 0 1px #000,0 28px 60px rgba(0,0,0,.88)}
-.top{height:68px;padding:10px 12px 8px;background:linear-gradient(to bottom,#171923,#101117);display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;z-index:4}
-.row{display:flex;align-items:center;gap:10px;min-width:0}
-.btn{width:44px;height:44px;border:0;border-radius:16px;background:linear-gradient(180deg,#232533,#1a1c26);color:#e9ebf5;display:grid;place-items:center;box-shadow:var(--shadow);font-size:18px;flex:0 0 auto}
-.coin{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:linear-gradient(180deg,#242736,#171922);border:1px solid rgba(255,255,255,.04);box-shadow:var(--shadow);min-height:44px}
-.coin-dot{width:20px;height:20px;border-radius:50%;background:radial-gradient(circle at 30% 20%,#fff9d0 0,#f4c845 35%,#b97d00 100%);position:relative;box-shadow:0 0 8px rgba(255,221,85,.7)}
-.coin-dot:after{content:"₵";position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:900;color:#8a5800}
-.coin-val{font-weight:800;letter-spacing:.02em}
-.lvl{padding:8px 10px;border-radius:16px;background:linear-gradient(180deg,#242736,#171922);border:1px solid rgba(255,255,255,.04);min-height:44px;display:flex;flex-direction:column;justify-content:center;box-shadow:var(--shadow)}
-.lvlbar{width:126px;height:7px;border-radius:999px;background:#0f1015;overflow:hidden;margin-top:3px}
-.lvlfill{width:35%;height:100%;background:linear-gradient(90deg,#f4c845,#ffe6a0);box-shadow:0 0 10px rgba(255,225,120,.8)}
-.content{position:absolute;top:68px;bottom:98px;left:0;right:0;padding:10px 12px;display:grid;grid-template-rows:auto 1fr;gap:10px;overflow:hidden}
-.panel{border-radius:22px;background:linear-gradient(180deg,#232633 0,#171923 100%);border:1px solid rgba(255,255,255,.04);box-shadow:var(--shadow);overflow:hidden}
-.card-top{padding:12px 12px 10px}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
-.kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
-.pill{padding:7px 11px;border-radius:999px;background:#141620;color:var(--accent2);font-size:12px;font-weight:800;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
-.stats{display:grid;grid-template-columns:110px 1fr;gap:10px;min-height:150px}
-.tank{background:linear-gradient(180deg,#252937,#1b1e29);border-radius:18px;padding:10px;border:1px solid rgba(255,255,255,.04);display:flex;flex-direction:column;justify-content:space-between;min-width:0}
-.tank .big{font-size:28px;font-weight:900;text-align:center;color:var(--accent2);line-height:1}
-.tank .sub{font-size:11px;text-align:center;color:var(--muted);margin-top:3px}
-.upgrade{height:46px;border:0;border-radius:14px;background:linear-gradient(90deg,#f4c845,#ffe6a0);font-weight:900;color:#5d4300;box-shadow:0 10px 22px rgba(0,0,0,.35)}
-.upgrade:active,.btn:active,.tab:active,.claim:active,.shopbtn:active{transform:translateY(1px) scale(.985)}
-.belt{position:relative;background:linear-gradient(180deg,#10131a 0,#0c0d12 100%);border-radius:18px;padding:10px;border:1px solid rgba(255,255,255,.04);overflow:hidden;min-width:0}
-.belt-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px}
-.small{font-size:11px;color:var(--muted)}
-.track{position:absolute;left:10px;right:10px;top:43px;height:34px;border-radius:999px;background:linear-gradient(180deg,#1b1d27,#06070a);overflow:hidden}
-.track:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0 8px,transparent 8px 16px);opacity:.45;animation:move 1.2s linear infinite}
-@keyframes move{from{transform:translateX(0)}to{transform:translateX(-16px)}}
-.jar{width:26px;height:30px;border-radius:9px;background:linear-gradient(180deg,#fff1be 0,#f4c845 35%,#b37a00 100%);border:2px solid #ffe8a6;position:absolute;top:49px;box-shadow:0 0 10px rgba(252,214,96,.35),inset 0 1px 0 rgba(255,255,255,.3)}
-.jar:before{content:"";position:absolute;left:4px;right:4px;top:-6px;height:6px;border-radius:4px 4px 2px 2px;background:linear-gradient(180deg,#3a3d4d,#191b25)}
-.bar{margin-top:54px;height:6px;border-radius:999px;background:#181922;overflow:hidden}
-.bar > div{height:100%;width:0%;background:linear-gradient(90deg,#f4c845,#ffe6a0)}
-.world{padding:12px;border-radius:22px;background:linear-gradient(180deg,#202330 0,#151720 100%);border:1px solid rgba(255,255,255,.04);display:flex;flex-direction:column;gap:12px;min-height:0;overflow:hidden}
-.world-head{display:flex;justify-content:space-between;align-items:center}
-.world-sub{font-size:12px;color:var(--muted);line-height:1.2}
-.stage{flex:1;min-height:0;border-radius:20px;background:radial-gradient(circle at top,#1e2130 0,#141720 65%,#101217 100%);border:1px solid rgba(255,255,255,.03);display:grid;place-items:center;position:relative;overflow:hidden}
-.hive{width:min(220px,55vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 30% 22%,rgba(255,255,255,.22) 0,rgba(255,255,255,0) 16%), linear-gradient(135deg,#111 0 8%,#f4c845 8% 20%,#111 20% 31%,#f4c845 31% 43%,#111 43% 54%,#f4c845 54% 66%,#111 66% 77%,#f4c845 77% 89%,#111 89% 100%);box-shadow:0 20px 50px rgba(0,0,0,.45),0 0 0 6px rgba(0,0,0,.35),0 0 30px rgba(255,221,92,.18);display:grid;place-items:center;position:relative;cursor:pointer;user-select:none;will-change:transform}
-.hive:after{content:"🐝";font-size:38px;filter:drop-shadow(0 0 10px rgba(0,0,0,.75));transform:translateY(-2px)}
-.hive:before{content:"";position:absolute;inset:10%;border-radius:50%;border:1px solid rgba(255,255,255,.08)}
-.hive.p{animation:pop .16s ease-out}
-@keyframes pop{50%{transform:scale(.92)}}
-.float{position:absolute;pointer-events:none;font-weight:900;color:var(--accent2);text-shadow:0 0 10px rgba(0,0,0,.8);animation:up .58s ease-out forwards}
-@keyframes up{0%{opacity:0;transform:translateY(10px) scale(.96)}15%{opacity:1}100%{opacity:0;transform:translateY(-28px) scale(1.06)}}
-.hint{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#fff;opacity:.82;pointer-events:none;animation:hint 1.35s ease-in-out infinite}
-@keyframes hint{50%{transform:translateX(-50%) translateY(-6px)}}
-.bottom{position:absolute;left:0;right:0;bottom:0;height:98px;padding:10px 12px 12px;background:linear-gradient(to top,#050609,#101117 55%,#191b24);display:grid;grid-template-columns:1fr 126px;gap:10px;z-index:8}
-.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.tab{border:0;border-radius:999px;background:linear-gradient(180deg,#242736,#171922);color:#aeb2c3;font-size:11px;text-transform:uppercase;letter-spacing:.12em;padding:10px 6px;min-height:46px;box-shadow:var(--shadow)}
-.tab.active{background:linear-gradient(90deg,#f4c845,#ffe6a0);color:#5d4300;font-weight:900}
-.bonus{border:0;border-radius:18px;background:linear-gradient(180deg,#252734,#1b1d27);padding:6px;display:flex;flex-direction:column;justify-content:center;box-shadow:var(--shadow)}
-.bonus-top{font-size:9px;color:#aeb2c3;text-transform:uppercase;letter-spacing:.18em;text-align:center;margin-bottom:5px}
-.bonus-main{min-height:38px;border-radius:13px;background:linear-gradient(90deg,#f4c845,#ffe6a0);color:#5d4300;font-weight:900;display:grid;place-items:center;font-size:13px}
-.bonus-main.active{background:linear-gradient(90deg,#57d67b,#b8f4c8);color:#13341f}
-.modalbg{position:absolute;inset:0;background:rgba(0,0,0,.84);display:none;align-items:center;justify-content:center;z-index:30;padding:14px}
-.modalbg.show{display:flex}
-.modal{width:100%;max-width:430px;border-radius:24px;background:linear-gradient(180deg,#272a38 0,#171922 100%);border:1px solid rgba(255,255,255,.05);box-shadow:var(--shadow);padding:14px;max-height:min(82vh,720px);overflow:auto;-webkit-overflow-scrolling:touch}
-.mhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
-.close{width:44px;height:44px;border:0;border-radius:999px;background:#20222c;color:#bbb;flex:0 0 auto}
-.stat{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px;border-radius:16px;background:#191b24;margin-bottom:8px;min-height:60px;box-shadow:inset 0 1px 0 rgba(255,255,255,.02)}
-.right{text-align:right;font-weight:800}
-.mbtn{width:100%;height:50px;border:0;border-radius:15px;background:linear-gradient(90deg,#f4c845,#ffe6a0);font-weight:900;color:#5d4300;text-transform:uppercase;letter-spacing:.12em;box-shadow:0 12px 24px rgba(0,0,0,.35)}
-.list{margin-top:8px}
-.task{display:grid;grid-template-columns:1fr auto;gap:10px;padding:12px;border-radius:16px;background:#191b24;margin-bottom:8px;align-items:center;min-height:74px}
-.bar2{height:6px;border-radius:999px;background:#0b0c11;overflow:hidden;margin-top:6px}
-.fill{height:100%;background:linear-gradient(90deg,#f4c845,#ffe6a0)}
-.claim{border:0;border-radius:999px;min-width:96px;min-height:42px;background:#252734;color:#aeb2c3;font-size:11px;text-transform:uppercase;letter-spacing:.12em}
-.claim.ready{background:linear-gradient(90deg,#f4c845,#ffe6a0);color:#5d4300;font-weight:900}
-.toast{position:absolute;left:50%;top:74px;transform:translateX(-50%);padding:8px 12px;border-radius:999px;background:rgba(0,0,0,.72);font-size:12px;opacity:0;transition:.18s;z-index:40;pointer-events:none}
+:root{
+  --bg:#07080d;
+  --panel:rgba(18,20,31,.72);
+  --panel2:rgba(255,255,255,.06);
+  --text:#f4f7fb;
+  --muted:#a3adbb;
+  --accent:#ff2d55;
+  --accent2:#7c5cff;
+  --line:rgba(255,255,255,.08);
+  --shadow:0 20px 60px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html,body{
+  height:100%;
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(124,92,255,.18),transparent 30%),
+    radial-gradient(circle at 80% 0%,rgba(255,45,85,.18),transparent 26%),
+    linear-gradient(180deg,#05060a 0%,#090b12 100%);
+  color:var(--text);
+  overflow:hidden;
+}
+button{font:inherit;border:0;background:none;color:inherit}
+#app{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:stretch;
+}
+.phone{
+  position:relative;
+  width:min(100vw,460px);
+  height:100vh;
+  max-height:100vh;
+  background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));
+  backdrop-filter:blur(12px);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  border-left:1px solid rgba(255,255,255,.04);
+  border-right:1px solid rgba(255,255,255,.04);
+}
+.topbar{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  z-index:20;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 18px 12px;
+  background:linear-gradient(180deg,rgba(0,0,0,.52),transparent);
+}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand b{font-size:22px;letter-spacing:.4px}
+.brand span{font-size:12px;color:var(--muted)}
+.chip{
+  padding:10px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.08);
+}
+.feed{
+  position:absolute;
+  inset:0;
+  overflow:auto;
+  scroll-snap-type:y mandatory;
+  scroll-behavior:smooth;
+  -ms-overflow-style:none;
+  scrollbar-width:none;
+}
+.feed::-webkit-scrollbar{display:none}
+.post{
+  position:relative;
+  height:100vh;
+  width:100%;
+  scroll-snap-align:start;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  padding:88px 14px 88px;
+  background:linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.56)),var(--bgimg) center/cover no-repeat;
+}
+.post::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.15) 40%,rgba(0,0,0,.7) 100%);
+  pointer-events:none;
+}
+.content,.actions,.footer,.topbar{
+  position:relative;
+  z-index:2;
+}
+.content{
+  max-width:72%;
+  align-self:flex-end;
+  padding:0 6px 0 2px;
+}
+.creator{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+.avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ff2d55,#7c5cff);
+  display:grid;
+  place-items:center;
+  font-weight:800;
+  box-shadow:0 10px 30px rgba(255,45,85,.25);
+}
+.meta b{display:block;font-size:15px}
+.meta span{display:block;font-size:12px;color:rgba(255,255,255,.75)}
+.caption{
+  font-size:15px;
+  line-height:1.45;
+  margin:10px 0 12px;
+  text-shadow:0 2px 16px rgba(0,0,0,.45);
+}
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.tag{
+  font-size:12px;
+  padding:7px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.09);
+  backdrop-filter:blur(10px);
+}
+.actions{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  align-self:flex-end;
+  padding-bottom:72px;
+}
+.action{
+  width:54px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+}
+.iconbtn{
+  width:54px;
+  height:54px;
+  border-radius:18px;
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.08);
+  display:grid;
+  place-items:center;
+  font-size:22px;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+  cursor:pointer;
+  transition:.2s transform,.2s background;
+}
+.iconbtn:active{transform:scale(.95)}
+.count{
+  font-size:12px;
+  color:#fff;
+  text-shadow:0 1px 8px rgba(0,0,0,.5);
+}
+.footer{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  padding:18px 16px 14px;
+  background:linear-gradient(180deg,transparent,rgba(6,7,11,.8) 35%,rgba(6,7,11,.96));
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.nav{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  padding:10px;
+  border-radius:22px;
+  backdrop-filter:blur(14px);
+}
+.navbtn{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  padding:10px 4px;
+  border-radius:16px;
+  color:var(--muted);
+  cursor:pointer;
+}
+.navbtn.active{
+  color:#fff;
+  background:linear-gradient(135deg,rgba(255,45,85,.22),rgba(124,92,255,.22));
+  border:1px solid rgba(255,255,255,.06);
+}
+.navbtn small{font-size:11px}
+.progress{
+  position:absolute;
+  top:0;
+  left:0;
+  height:3px;
+  width:100%;
+  background:rgba(255,255,255,.08);
+  z-index:30;
+}
+.progress i{
+  display:block;
+  height:100%;
+  width:38%;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  box-shadow:0 0 18px rgba(255,45,85,.45);
+}
+.toast{
+  position:absolute;
+  left:50%;
+  top:76px;
+  transform:translateX(-50%);
+  z-index:40;
+  background:rgba(0,0,0,.68);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.08);
+  padding:10px 14px;
+  border-radius:999px;
+  font-size:13px;
+  opacity:0;
+  transition:.25s;
+}
 .toast.show{opacity:1}
-.shopbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
-.shopbtn{border:0;border-radius:16px;min-height:56px;padding:10px;background:linear-gradient(180deg,#242736,#171922);color:var(--text);box-shadow:var(--shadow);text-align:left}
-.shopbtn strong{display:block;font-size:13px;margin-bottom:2px}
-.shopbtn span{font-size:11px;color:var(--muted)}
-.shopbtn.active{background:linear-gradient(90deg,#f4c845,#ffe6a0);color:#5d4300}
-.shoplist{display:grid;gap:8px}
-.shopitem{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px;border-radius:16px;background:#191b24}
-.shopitem .name{font-weight:800}
-.shopitem .desc{font-size:11px;color:var(--muted);margin-top:3px}
-.shopitem .price{font-size:12px;color:var(--accent2);text-align:right;margin-bottom:6px}
-.mini{font-size:10px;opacity:.8}
-@media (max-height:720px){.content{bottom:92px}.world{padding:10px}.stats{min-height:138px}.hive{width:min(190px,52vw)}.modal{max-height:78vh}}
+.videoBadge{
+  position:absolute;
+  left:16px;
+  top:68px;
+  z-index:3;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(0,0,0,.28);
+  border:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(10px);
+  font-size:12px;
+  color:#fff;
+}
+.glow{
+  position:absolute;
+  inset:auto 10% 18% 10%;
+  height:120px;
+  filter:blur(46px);
+  background:radial-gradient(circle,rgba(255,45,85,.28),transparent 60%);
+  opacity:.9;
+  pointer-events:none;
+}
+.modal{
+  position:absolute;
+  inset:auto 12px 100px 12px;
+  z-index:50;
+  background:rgba(10,12,18,.92);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  padding:14px;
+  display:none;
+}
+.modal.show{display:block}
+.modal h3{margin:0 0 8px}
+.modal p{
+  margin:0 0 12px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+}
+.modal input{
+  width:100%;
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:12px 14px;
+  outline:none;
+  margin-bottom:10px;
+}
+.modal .row{
+  display:flex;
+  gap:10px;
+}
+.modal .row button{
+  flex:1;
+  padding:12px;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  font-weight:700;
+  cursor:pointer;
+}
+.modal .row button.secondary{
+  background:rgba(255,255,255,.08);
+}
+.uploadPanel{
+  position:absolute;
+  left:12px;
+  right:12px;
+  bottom:100px;
+  z-index:45;
+  background:rgba(10,12,18,.92);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  padding:14px;
+  display:none;
+}
+.uploadPanel.show{display:block}
+.uploadPanel h3{margin:0 0 8px}
+.uploadPanel p{margin:0 0 10px;color:var(--muted);font-size:13px;line-height:1.45}
+.uploadPanel input, .uploadPanel textarea{
+  width:100%;
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:12px 14px;
+  outline:none;
+  margin-bottom:10px;
+}
+.uploadPanel textarea{min-height:84px;resize:none}
+.uploadPanel .row{
+  display:flex;
+  gap:10px;
+}
+.uploadPanel .row button{
+  flex:1;
+  padding:12px;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  font-weight:700;
+  cursor:pointer;
+}
+.uploadPanel .row button.secondary{background:rgba(255,255,255,.08)}
+.previewBox{
+  display:none;
+  margin-bottom:10px;
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+  background:#000;
+}
+.previewBox video{
+  width:100%;
+  display:block;
+  max-height:180px;
+  object-fit:cover;
+}
+@media (max-width:520px){
+  .phone{width:100vw;border:0}
+  .content{max-width:74%}
+  .brand b{font-size:20px}
+}
 </style>
 </head>
 <body>
-<div id="game">
-  <div class="top">
-    <div class="row">
-      <button class="btn" id="settingsBtn">⚙</button>
-      <div class="coin"><div class="coin-dot"></div><div class="coin-val" id="coins">0</div></div>
+<div id="app">
+  <div class="phone">
+    <div class="progress"><i id="prog"></i></div>
+    <div class="topbar">
+      <div class="brand"><b>Rustok</b><span>short videos • for you</span></div>
+      <div class="chip" id="openUpload">+ Upload</div>
     </div>
-    <div class="lvl">
-      <div style="font-size:11px;color:#aeb2c3">Уровень <span id="level">1</span></div>
-      <div class="lvlbar"><div class="lvlfill" id="lvlfill"></div></div>
+
+    <div class="toast" id="toast">Liked</div>
+    <div class="feed" id="feed"></div>
+
+    <div class="footer">
+      <div class="nav">
+        <button class="navbtn active"><div>🏠</div><small>Home</small></button>
+        <button class="navbtn"><div>🔎</div><small>Search</small></button>
+        <button class="navbtn" id="navUpload"><div>➕</div><small>Post</small></button>
+        <button class="navbtn"><div>💬</div><small>Inbox</small></button>
+        <button class="navbtn"><div>👤</div><small>Profile</small></button>
+      </div>
     </div>
+
+    <div class="modal" id="modal">
+      <h3>Rustok</h3>
+      <p>Это демо-приложение для GitHub Pages: лента, лайки, комментарии и свайпы. Можно загрузить своё видео и показать его в ленте.</p>
+      <input id="nameInput" placeholder="Твоё имя или ник" value="Rustok user" />
+      <div class="row">
+        <button id="saveBtn">Сохранить</button>
+        <button class="secondary" id="closeBtn">Закрыть</button>
+      </div>
+    </div>
+
+    <div class="uploadPanel" id="uploadPanel">
+      <h3>Загрузить видео</h3>
+      <p>Выбери видео с устройства. Оно покажется в верхнем посте ленты как локальный предпросмотр.</p>
+      <input id="videoInput" type="file" accept="video/*" />
+      <div class="previewBox" id="previewBox">
+        <video id="previewVideo" controls playsinline></video>
+      </div>
+      <textarea id="captionInput" placeholder="Подпись к видео"></textarea>
+      <div class="row">
+        <button id="addVideoBtn">Добавить в ленту</button>
+        <button class="secondary" id="closeUploadBtn">Закрыть</button>
+      </div>
+    </div>
+
+    <div class="glow"></div>
   </div>
-
-  <div class="content">
-    <div class="panel card-top">
-      <div class="section-head">
-        <div class="kicker">конвейер</div>
-        <div class="pill">Доход <span id="jarIncome">+4</span></div>
-      </div>
-      <div class="stats">
-        <div class="tank">
-          <div>
-            <div class="sub" style="text-align:center">Мёд</div>
-            <div class="big" id="honey">0</div>
-            <div class="sub">Вместимость: <span id="cap">40</span></div>
-          </div>
-          <button class="upgrade" id="openConveyor">УЛУЧШИТЬ <span id="convCost">120</span></button>
-        </div>
-        <div class="belt">
-          <div class="belt-meta"><div class="small">Банки мёда</div><div class="small" id="speed">100%</div></div>
-          <div class="track"></div>
-          <div class="jar" id="j1"></div><div class="jar" id="j2"></div><div class="jar" id="j3"></div>
-          <div class="bar"><div id="progress"></div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel world">
-      <div class="world-head">
-        <div><div class="kicker">этап 1 · bee</div><div class="world-sub">Тапай по пчеле, улучшай улей и собирай бонусы</div></div>
-        <button class="btn" id="openBee">⬆</button>
-      </div>
-      <div class="stage">
-        <div class="hive" id="bee"></div>
-        <div class="hint" id="hint">НАЖМИ</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="bottom">
-    <div class="tabs">
-      <button class="tab active" id="tabUp">Уровни</button>
-      <button class="tab" id="tabTasks">Задания</button>
-      <button class="tab" id="tabSoon">Скоро</button>
-    </div>
-    <button class="bonus" id="bonusBtn"><div class="bonus-top">5 мин.</div><div class="bonus-main" id="bonusText">Х2 Бонус</div></button>
-  </div>
-
-  <div class="toast" id="toast">Ок</div>
-
-  <div class="modalbg" id="conveyorModal"><div class="modal"><div class="mhead"><div><div style="font-weight:900;font-size:16px">Конвейер · Уровень <span id="convLevel">1</span></div><div class="small">Сделай производство дороже и быстрее.</div></div><button class="close" data-close="conveyorModal">✕</button></div><div class="stat"><div><div style="font-weight:700">Доход за банку</div><div class="small">Сколько даёт одна банка.</div></div><div class="right"><div id="incCur">4</div><div class="small">+<span id="incNext">2</span></div></div></div><div class="stat"><div><div style="font-weight:700">Скорость</div><div class="small">Движение конвейера.</div></div><div class="right"><div id="spdCur">100%</div><div class="small">+5%</div></div></div><div class="stat"><div><div style="font-weight:700">Вместимость</div><div class="small">Макс. мёда в хранилище.</div></div><div class="right"><div id="capCur">40</div><div class="small">+<span id="capNext">20</span></div></div></div><button class="mbtn" id="buyConv">УЛУЧШИТЬ <span id="buyConvCost">120</span></button></div></div>
-
-  <div class="modalbg" id="beeModal"><div class="modal"><div class="mhead"><div><div style="font-weight:900;font-size:16px">Пчела · Уровень <span id="beeLevel">1</span></div><div class="small">Клик и авто-сбор становятся сильнее.</div></div><button class="close" data-close="beeModal">✕</button></div><div class="stat"><div><div style="font-weight:700">Мёд за клик</div><div class="small">Сила одного нажатия.</div></div><div class="right" id="clickHoney">1</div></div><div class="stat"><div><div style="font-weight:700">Авто-сбор</div><div class="small">Без кликов, в секунду.</div></div><div class="right" id="autoHoney">2/с</div></div><button class="mbtn" id="buyBee">УЛУЧШИТЬ <span id="buyBeeCost">60</span></button></div></div>
-
-  <div class="modalbg" id="tasksModal"><div class="modal"><div class="mhead"><div><div style="font-weight:900;font-size:16px">Задания</div><div class="small">Выполняй и забирай награды.</div></div><button class="close" data-close="tasksModal">✕</button></div><div class="list" id="tasks"></div></div></div>
-
-  <div class="modalbg" id="shopModal"><div class="modal"><div class="mhead"><div><div style="font-weight:900;font-size:16px">Магазин и рынок</div><div class="small">Покупай усиления и меняй валюту.</div></div><button class="close" data-close="shopModal">✕</button></div>
-    <div class="shopbar">
-      <button class="shopbtn active" data-shoptab="items"><strong>Магазин</strong><span>Усиления и бустеры</span></button>
-      <button class="shopbtn" data-shoptab="market"><strong>Рынок</strong><span>Обмен валют</span></button>
-    </div>
-    <div id="shopContent" style="margin-top:10px"></div>
-  </div></div>
 </div>
+
 <script>
-(function(){
-try{
-  var KEY='beeEmpireSaveV5';
-  var base={coins:20,diamonds:0,level:1,levelProgress:0,honey:0,honeyCapacity:40,incomePerJar:4,conveyorLevel:1,conveyorSpeedMult:1,conveyorUpgradeCost:120,beeLevel:1,honeyPerClick:1,autoHoneyPerSecond:2,beeUpgradeCost:60,bonusEndsAt:0,stats:{clicks:0,sold:0,upgrades:0},tasks:null,shop:{tapMult:1,offlineCash:0}};
-  function clone(o){return JSON.parse(JSON.stringify(o));}
-  var state=clone(base);
-  try{var saved=localStorage.getItem(KEY); if(saved) state=Object.assign(clone(base), JSON.parse(saved));}catch(e){}
-  if(!state.tasks) state.tasks=[{id:'t1',title:'Продайте 30 банок мёда',reward:48,target:30,progress:0,completed:false,claimed:false},{id:'t2',title:'Коснитесь пчел 75 раз',reward:80,target:75,progress:0,completed:false,claimed:false},{id:'t3',title:'Выполните 5 улучшений',reward:128,target:5,progress:0,completed:false,claimed:false}];
-  var $=function(id){return document.getElementById(id)};
-  var el={bee:$('bee'),coins:$('coins'),level:$('level'),lvlfill:$('lvlfill'),honey:$('honey'),cap:$('cap'),jarIncome:$('jarIncome'),speed:$('speed'),progress:$('progress'),convCost:$('convCost'),convLevel:$('convLevel'),incCur:$('incCur'),incNext:$('incNext'),spdCur:$('spdCur'),capCur:$('capCur'),capNext:$('capNext'),buyConv:$('buyConv'),buyConvCost:$('buyConvCost'),beeLevel:$('beeLevel'),clickHoney:$('clickHoney'),autoHoney:$('autoHoney'),buyBee:$('buyBee'),buyBeeCost:$('buyBeeCost'),toast:$('toast'),bonusBtn:$('bonusBtn'),bonusText:$('bonusText'),tasks:$('tasks'),conveyorModal:$('conveyorModal'),beeModal:$('beeModal'),tasksModal:$('tasksModal'),shopModal:$('shopModal'),hint:$('hint'),shopContent:$('shopContent')};
-  var reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
-  function toast(t){el.toast.textContent=t; el.toast.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(function(){el.toast.classList.remove('show');},1200)}
-  function fmt(n){return Math.floor(n).toString();}
-  function task(id){for(var i=0;i<state.tasks.length;i++) if(state.tasks[i].id===id) return state.tasks[i];}
-  function addTask(type,n){var t;if(type==='clicks'){t=task('t2'); if(t&&!t.completed){t.progress=Math.min(t.target,t.progress+n); if(t.progress>=t.target) t.completed=true;}} if(type==='upgrades'){t=task('t3'); if(t&&!t.completed){t.progress=Math.min(t.target,t.progress+n); if(t.progress>=t.target) t.completed=true;}} if(type==='sold'){t=task('t1'); if(t&&!t.completed){t.progress=Math.min(t.target,t.progress+n); if(t.progress>=t.target) t.completed=true;}}}
-  function renderTasks(){el.tasks.innerHTML=''; state.tasks.forEach(function(t){var row=document.createElement('div'); row.className='task'; var left=document.createElement('div'); left.innerHTML='<div style="font-size:13px;font-weight:700">'+t.title+'</div><div class="bar2"><div class="fill" style="width:'+(t.progress/t.target*100)+'%"></div></div><div class="small">'+t.progress+' / '+t.target+'</div>'; var right=document.createElement('div'); right.style.textAlign='right'; right.innerHTML='<div class="small" style="margin-bottom:6px">₵ '+t.reward+'</div>'; var b=document.createElement('button'); b.className='claim'; b.textContent=t.claimed?'Получено':(t.completed?'Забрать':'Недоступно'); if(t.completed&&!t.claimed){b.classList.add('ready'); b.onclick=function(){state.coins+=t.reward; t.claimed=true; toast('+'+t.reward); save(); update(); renderTasks();};} else b.disabled=true; right.appendChild(b); row.appendChild(left); row.appendChild(right); el.tasks.appendChild(row);});}
-  function shopUI(tab){
-    if(tab==='market'){
-      el.shopContent.innerHTML = '<div class="shoplist">'
-        + '<div class="shopitem"><div><div class="name">Обмен: 100 монет → 1 алмаз</div><div class="desc">Алмазы нужны для редких бустеров.</div></div><div><div class="price">100 ₵</div><button class="claim ready" id="swapDiamonds">Обменять</button></div></div>'
-        + '<div class="shopitem"><div><div class="name">Обмен: 10 алмазов → 1200 монет</div><div class="desc">Если хочешь быстро вернуться к росту.</div></div><div><div class="price">10 ✦</div><button class="claim ready" id="swapCoins">Обменять</button></div></div>'
-      + '</div>';
-      setTimeout(function(){
-        var d=$('swapDiamonds'), c=$('swapCoins');
-        if(d) d.onclick=function(){ if(state.coins<100){toast('Не хватает монет'); return;} state.coins-=100; state.diamonds+=1; toast('+1 алмаз'); save(); update(); shopUI('market'); };
-        if(c) c.onclick=function(){ if(state.diamonds<10){toast('Не хватает алмазов'); return;} state.diamonds-=10; state.coins+=1200; toast('+1200 монет'); save(); update(); shopUI('market'); };
-      },0);
-      return;
-    }
-    el.shopContent.innerHTML = '<div class="shoplist">'
-      + '<div class="shopitem"><div><div class="name">Клик-множитель</div><div class="desc">Каждый тап даёт больше мёда.</div></div><div><div class="price">15 ✦</div><button class="claim ready" id="buyTapMult">Купить</button></div></div>'
-      + '<div class="shopitem"><div><div class="name">Авто-пчела</div><div class="desc">+5 мёда/с к пассивному доходу.</div></div><div><div class="price">2 ✦</div><button class="claim ready" id="buyAutoBee">Купить</button></div></div>'
-      + '<div class="shopitem"><div><div class="name">Открыть контейнер</div><div class="desc">+40 к вместимости мёда.</div></div><div><div class="price">80 ₵</div><button class="claim ready" id="buyCap">Купить</button></div></div>'
-      + '</div>';
-    setTimeout(function(){
-      var t=$('buyTapMult'), a=$('buyAutoBee'), b=$('buyCap');
-      if(t) t.onclick=function(){ if(state.diamonds<15){toast('Не хватает алмазов'); return;} state.diamonds-=15; state.shop.tapMult+=1; state.honeyPerClick+=2; toast('Тап усилен'); save(); update(); shopUI('items'); };
-      if(a) a.onclick=function(){ if(state.diamonds<2){toast('Не хватает алмазов'); return;} state.diamonds-=2; state.autoHoneyPerSecond+=5; toast('+5/с'); save(); update(); shopUI('items'); };
-      if(b) b.onclick=function(){ if(state.coins<80){toast('Не хватает монет'); return;} state.coins-=80; state.honeyCapacity+=40; toast('Вместимость +40'); save(); update(); shopUI('items'); };
-    },0);
+const feed = document.getElementById('feed');
+const toast = document.getElementById('toast');
+const modal = document.getElementById('modal');
+const uploadPanel = document.getElementById('uploadPanel');
+const nameInput = document.getElementById('nameInput');
+const saveBtn = document.getElementById('saveBtn');
+const closeBtn = document.getElementById('closeBtn');
+const openUpload = document.getElementById('openUpload');
+const navUpload = document.getElementById('navUpload');
+const closeUploadBtn = document.getElementById('closeUploadBtn');
+const addVideoBtn = document.getElementById('addVideoBtn');
+const videoInput = document.getElementById('videoInput');
+const previewBox = document.getElementById('previewBox');
+const previewVideo = document.getElementById('previewVideo');
+const captionInput = document.getElementById('captionInput');
+const prog = document.getElementById('prog');
+
+let userVideo = null;
+let userVideoUrl = '';
+let liked = new Set();
+
+const demoBg = 'radial-gradient(circle at 30% 20%, rgba(255,45,85,.32), transparent 30%), radial-gradient(circle at 70% 30%, rgba(124,92,255,.28), transparent 30%), linear-gradient(180deg,#111,#05060a)';
+const demoPosts = [
+  {u:'@neonwave', t:'Ночной вайб, быстрый монтаж и чистый интерфейс.', tags:['#ai','#edit','#vibes']},
+  {u:'@pixelrush', t:'Вертикальная лента, жесты и плавные анимации для мобильного UX.', tags:['#ui','#mobile','#design']},
+  {u:'@midnightloop', t:'Красивый one-page прототип, который можно сразу залить на Pages.', tags:['#githubpages','#html','#js']}
+];
+
+function showToast(t){
+  toast.textContent = t;
+  toast.classList.add('show');
+  clearTimeout(showToast.t);
+  showToast.t = setTimeout(()=>toast.classList.remove('show'),900);
+}
+
+function renderPosts(){
+  feed.innerHTML = '';
+  const all = [];
+  if(userVideo){
+    all.push({
+      u:'@you',
+      t:userVideo.caption,
+      tags:['#yourvideo','#rustok','#upload'],
+      bg:userVideoUrl,
+      uploaded:true
+    });
   }
-  function update(){el.coins.textContent=fmt(state.coins)+(state.diamonds?(' ✦'+state.diamonds):''); el.level.textContent=state.level; el.lvlfill.style.width=(state.levelProgress*100)+'%'; el.honey.textContent=fmt(state.honey); el.cap.textContent=state.honeyCapacity; el.jarIncome.textContent='+'+state.incomePerJar; el.speed.textContent=Math.round(state.conveyorSpeedMult*100)+'%'; el.convCost.textContent=state.conveyorUpgradeCost; el.convLevel.textContent=state.conveyorLevel; el.incCur.textContent=state.incomePerJar; el.incNext.textContent=2+state.conveyorLevel; el.spdCur.textContent=Math.round(state.conveyorSpeedMult*100)+'%'; el.capCur.textContent=state.honeyCapacity; el.capNext.textContent=20+state.conveyorLevel*10; el.buyConvCost.textContent=state.conveyorUpgradeCost; el.beeLevel.textContent=state.beeLevel; el.clickHoney.textContent=state.honeyPerClick; el.autoHoney.textContent=state.autoHoneyPerSecond.toFixed(1).replace('.0','')+'/с'; el.buyBeeCost.textContent=state.beeUpgradeCost; el.bonusText.textContent=state.bonusEndsAt>Date.now()?'Х2 Активно':'Х2 Бонус'; el.bonusBtn.querySelector('.bonus-main').classList.toggle('active',state.bonusEndsAt>Date.now()); renderTasks();}
-  function addHoney(n){state.honey=Math.min(state.honeyCapacity,state.honey+n);}
-  function sellJar(mult){if(state.honey<4) return; state.honey-=4; state.coins+=state.incomePerJar*mult; state.levelProgress+=0.022; state.stats.sold++; if(state.levelProgress>=1){state.level++; state.levelProgress=0; toast('Новый уровень '+state.level);} addTask('sold',1);}
-  function floatText(text,x,y){var f=document.createElement('div'); f.className='float'; f.textContent=text; f.style.left=x+'px'; f.style.top=y+'px'; $('game').appendChild(f); setTimeout(function(){f.remove();},580)}
-  el.bee.addEventListener('click',function(ev){el.bee.classList.add('p'); setTimeout(function(){el.bee.classList.remove('p');},160); el.hint.style.display='none'; var r=el.bee.getBoundingClientRect(), g=$('game').getBoundingClientRect(); var gain=state.honeyPerClick*(state.bonusEndsAt>Date.now()?2:1); addHoney(gain); state.stats.clicks++; addTask('clicks',1); floatText('+'+gain,(r.left-g.left+r.width/2)+'px',(r.top-g.top)+'px'); save(); update();});
-  function openM(m){m.classList.add('show')} function closeM(m){m.classList.remove('show')}
-  document.querySelectorAll('[data-close]').forEach(function(b){b.onclick=function(){closeM($(b.dataset.close));};});
-  var shopTab='items';
-  function setShopTab(tab){shopTab=tab; document.querySelectorAll('.shopbtn').forEach(function(b){b.classList.toggle('active', b.dataset.shoptab===tab)}); shopUI(tab);}
-  $('settingsBtn').onclick=function(){toast('Магазин'); setShopTab('items'); openM(el.shopModal)};
-  el.bonusBtn.onclick=function(){if(state.bonusEndsAt>Date.now()){toast('Бонус уже активен'); return;} state.bonusEndsAt=Date.now()+5*60*1000; toast('Х2 на 5 минут'); save(); update();};
-  $('openConveyor').onclick=function(){openM(el.conveyorModal)}; $('openBee').onclick=function(){openM(el.beeModal)}; $('tabTasks').onclick=function(){openM(el.tasksModal)}; $('tabUp').onclick=function(){openM(el.conveyorModal)}; $('tabSoon').onclick=function(){openM(el.shopModal); setShopTab('market')};
-  el.buyConv.onclick=function(){if(state.coins<state.conveyorUpgradeCost){toast('Не хватает монет'); return;} state.coins-=state.conveyorUpgradeCost; state.conveyorLevel++; state.incomePerJar+=2+state.conveyorLevel; state.conveyorSpeedMult+=0.05; state.honeyCapacity+=20+state.conveyorLevel*10; state.conveyorUpgradeCost=Math.round(state.conveyorUpgradeCost*1.55); state.stats.upgrades++; addTask('upgrades',1); toast('Конвейер улучшен'); save(); update();};
-  el.buyBee.onclick=function(){if(state.coins<state.beeUpgradeCost){toast('Не хватает монет'); return;} state.coins-=state.beeUpgradeCost; state.beeLevel++; state.honeyPerClick++; state.autoHoneyPerSecond+=0.8; state.beeUpgradeCost=Math.round(state.beeUpgradeCost*1.6); state.stats.upgrades++; addTask('upgrades',1); toast('Пчела улучшена'); save(); update();};
-  document.querySelectorAll('.shopbtn').forEach(function(b){b.onclick=function(){setShopTab(b.dataset.shoptab);}});
-  document.addEventListener('visibilitychange',function(){running=!document.hidden; if(!running) save(); last=performance.now();});
-  window.addEventListener('pagehide',save); window.addEventListener('beforeunload',save); window.addEventListener('resize',update,{passive:true});
-  var last=performance.now(), belt=0, running=true;
-  function loop(ts){ if(!running){last=ts; requestAnimationFrame(loop); return;} var dt=Math.min(.05,(ts-last)/1000); last=ts; var bonus=state.bonusEndsAt>Date.now()?2:1; addHoney(state.autoHoneyPerSecond*dt*bonus); belt+=0.34*state.conveyorSpeedMult*dt; if(belt>=1){var n=Math.floor(belt); belt%=1; for(var i=0;i<n;i++) sellJar(bonus);} el.progress.style.width=(belt*100)+'%'; var jars=[$('j1'),$('j2'),$('j3')]; var w=Math.max(180, $('game').clientWidth-96); for(var j=0;j<jars.length;j++){var o=((belt+j/3)%1)*(w-26); jars[j].style.left=(14+o)+'px';} if(!reduceMotion){$('game').style.backgroundPosition=((ts/80)%100)+'px 0';} update(); save(); requestAnimationFrame(loop)}
-  setShopTab('items'); update(); requestAnimationFrame(loop);
-}catch(err){document.body.innerHTML='<div style="height:100vh;display:grid;place-items:center;text-align:center;padding:24px;color:#fff;background:#111;font-family:system-ui"><div><div style="font-size:22px;font-weight:900;margin-bottom:8px">Ошибка запуска</div><div style="opacity:.85">'+String(err.message).replace(/</g,'&lt;')+'</div></div></div>';}
-})();
+  demoPosts.forEach(p=>all.push({...p,bg:demoBg,uploaded:false}));
+
+  all.forEach((p,i)=>{
+    const el = document.createElement('section');
+    el.className = 'post';
+    el.style.setProperty('--bgimg', `linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.56)), ${p.bg}`);
+    el.innerHTML = `
+      <div class="videoBadge">🎬 Rustok • Clip ${i+1}</div>
+      <div class="content">
+        <div class="creator">
+          <div class="avatar">${(p.u || 'R').replace('@','').slice(0,1).toUpperCase()}</div>
+          <div class="meta">
+            <b>${p.u}</b>
+            <span>${p.uploaded ? 'your upload • just now' : 'original feed • ' + (12+i) + 'm ago'}</span>
+          </div>
+        </div>
+        <div class="caption">${p.t}</div>
+        <div class="tags">${p.tags.map(x=>`<span class="tag">${x}</span>`).join('')}</div>
+      </div>
+      <div class="actions">
+        <div class="action">
+          <button class="iconbtn like">❤</button>
+          <div class="count">${1200+i*223}</div>
+        </div>
+        <div class="action">
+          <button class="iconbtn comment">💬</button>
+          <div class="count">${80+i*18}</div>
+        </div>
+        <div class="action">
+          <button class="iconbtn share">↗</button>
+          <div class="count">Share</div>
+        </div>
+      </div>`;
+    feed.appendChild(el);
+
+    const like = el.querySelector('.like');
+    like.onclick = () => {
+      const on = liked.has(el);
+      if(on) liked.delete(el); else liked.add(el);
+      like.style.background = on ? 'rgba(255,255,255,.09)' : 'linear-gradient(135deg,var(--accent),var(--accent2))';
+      showToast(on ? 'Unliked' : 'Liked');
+    };
+
+    el.querySelector('.comment').onclick = () => {
+      modal.classList.add('show');
+      uploadPanel.classList.remove('show');
+      showToast('Comments opened');
+    };
+
+    el.querySelector('.share').onclick = async () => {
+      try{
+        await navigator.clipboard.writeText(location.href);
+        showToast('Link copied');
+      }catch(e){
+        showToast('Copy failed');
+      }
+    };
+  });
+
+  prog.style.width = all.length ? `${Math.max(35, 100/all.length)}%` : '100%';
+}
+
+openUpload.onclick = () => {
+  uploadPanel.classList.add('show');
+  modal.classList.remove('show');
+};
+
+navUpload.onclick = () => {
+  uploadPanel.classList.add('show');
+  modal.classList.remove('show');
+};
+
+closeUploadBtn.onclick = () => uploadPanel.classList.remove('show');
+
+closeBtn.onclick = () => modal.classList.remove('show');
+
+saveBtn.onclick = () => {
+  localStorage.setItem('rustok_name', nameInput.value.trim() || 'Rustok user');
+  modal.classList.remove('show');
+  showToast('Saved');
+};
+
+nameInput.value = localStorage.getItem('rustok_name') || 'Rustok user';
+
+videoInput.addEventListener('change', () => {
+  const file = videoInput.files && videoInput.files[0];
+  if(!file) return;
+  if(userVideoUrl) URL.revokeObjectURL(userVideoUrl);
+  userVideoUrl = URL.createObjectURL(file);
+  previewVideo.src = userVideoUrl;
+  previewBox.style.display = 'block';
+  userVideo = {
+    file,
+    caption: captionInput.value.trim() || ('Uploaded video: ' + file.name)
+  };
+  showToast('Video selected');
+});
+
+addVideoBtn.onclick = () => {
+  const file = videoInput.files && videoInput.files[0];
+  if(!file){
+    showToast('Choose a video first');
+    return;
+  }
+  userVideo.caption = captionInput.value.trim() || ('Uploaded video: ' + file.name);
+  renderPosts();
+  uploadPanel.classList.remove('show');
+  showToast('Added to feed');
+};
+
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape'){
+    modal.classList.remove('show');
+    uploadPanel.classList.remove('show');
+  }
+});
+
+renderPosts();
 </script>
 </body>
 </html>
