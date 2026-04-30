@@ -1,203 +1,199 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Clash JS: Final Hope</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moon Stars — Купить Telegram Stars</title>
     <style>
-        :root { --purple: #d63384; --gold: #ffd700; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: none; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: sans-serif; }
-        
-        /* Меню */
-        #lobby { position: fixed; inset: 0; background: #1a2a6c; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
-        .btn-start { background: #28a745; color: white; border: none; padding: 20px 60px; font-size: 24px; border-radius: 50px; cursor: pointer; box-shadow: 0 5px 0 #19692c; font-weight: bold; }
+        :root {
+            --main-bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --accent-blue: #87cefa;
+            --text-dark: #333;
+            --input-bg: #f9f9f9;
+        }
 
-        /* HUD */
-        #hud { position: fixed; bottom: 0; width: 100%; z-index: 100; display: none; flex-direction: column; align-items: center; padding: 10px; pointer-events: none; }
-        #elixir-container { width: 80%; height: 12px; background: rgba(0,0,0,0.8); border: 2px solid white; border-radius: 6px; margin-bottom: 8px; overflow: hidden; }
-        #elixir-fill { height: 100%; background: var(--purple); width: 50%; transition: width 0.3s; }
-        
-        .deck { display: flex; gap: 8px; pointer-events: auto; }
-        .card { width: 80px; height: 100px; background: white; border-radius: 8px; border: 3px solid #333; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; font-weight: bold; font-size: 11px; }
-        .card.active { border-color: var(--gold); transform: translateY(-10px); }
-        .card-cost { position: absolute; top: -8px; left: -8px; background: var(--purple); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; font-size: 12px; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--main-bg);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-        /* HP Bars */
-        .hp-box { position: absolute; width: 40px; height: 6px; background: #333; border: 1px solid white; pointer-events: none; z-index: 50; }
-        .hp-bar { height: 100%; background: #28a745; width: 100%; }
-        .hp-tower { width: 80px; height: 10px; }
+        .container {
+            width: 90%;
+            max-width: 400px;
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            font-size: 22px;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border-radius: 18px;
+            border: 1px solid #eee;
+            background: var(--input-bg);
+            box-sizing: border-box;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+
+        /* Ползунок */
+        .slider-container {
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #eee;
+            border-radius: 5px;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+
+        .buy-btn {
+            width: 100%;
+            padding: 18px;
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        .buy-btn:hover {
+            background-color: #70bce8;
+        }
+
+        .buy-btn:active {
+            transform: scale(0.98);
+        }
+
+        .footer-logo {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            color: var(--text-dark);
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
 
-<div id="lobby">
-    <h1>CLASH JS</h1>
-    <button class="btn-start" onclick="initGame()">В БОЙ!</button>
-</div>
+<div class="container">
+    <div class="footer-logo">🌙 MOON STARS</div>
+    <br>
+    <h1>Купить Telegram Stars</h1>
+    <p>Пополните баланс Stars себе или друзьям через наш сервис.</p>
 
-<div id="hud">
-    <div id="elixir-container"><div id="elixir-fill"></div></div>
-    <div class="deck">
-        <div class="card active" id="c_knight" onclick="selectCard('knight')"><div class="card-cost">3</div>🛡️<br>РЫЦАРЬ</div>
-        <div class="card" id="c_archer" onclick="selectCard('archer')"><div class="card-cost">2</div>🏹<br>ЛУЧНИК</div>
-        <div class="card" id="c_giant" onclick="selectCard('giant')"><div class="card-cost">5</div>👹<br>ГИГАНТ</div>
+    <div class="input-group">
+        <span class="icon">@</span>
+        <input type="text" id="username" placeholder="Введите Telegram username">
     </div>
+
+    <div class="input-group">
+        <span class="icon">💳</span>
+        <select>
+            <option>RUB (СБП)</option>
+            <option>TON</option>
+            <option>Звезды (Обмен)</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <span class="icon">⭐</span>
+        <input type="number" id="starsAmount" placeholder="Количество (100 - 25000)" min="100" max="25000">
+    </div>
+
+    <div class="slider-container">
+        <input type="range" id="starsSlider" min="100" max="5000" step="50" value="100">
+    </div>
+
+    <button class="buy-btn" onclick="redirectToTG()">Купить Stars</button>
 </div>
 
-<div id="hp-container" style="position: absolute; top:0; left:0; pointer-events:none;"></div>
+<script>
+    const slider = document.getElementById('starsSlider');
+    const input = document.getElementById('starsAmount');
+    
+    // Твой аккаунт для связи
+    const myTelegram = "ТВОЙ_ЮЗЕРНЕЙМ"; 
 
-<script type="importmap"> { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } } </script>
-
-<script type="module">
-    import * as THREE from 'three';
-
-    const DATA = {
-        knight: { hp: 800, dmg: 50, range: 1.5, speed: 0.05, rate: 1000, cost: 3, color: 0x3498db, size: 0.6 },
-        archer: { hp: 300, dmg: 40, range: 6.0, speed: 0.07, rate: 800, cost: 2, color: 0xe67e22, size: 0.4 },
-        giant:  { hp: 2500, dmg: 100, range: 1.8, speed: 0.03, rate: 1500, cost: 5, color: 0x27ae60, size: 1.0, towerOnly: true }
-    };
-
-    let scene, camera, renderer, elixir = 5, botElixir = 2, activeCard = 'knight', gameActive = false;
-    let units = [], towers = [], clock = new THREE.Clock();
-
-    window.initGame = () => {
-        document.getElementById('lobby').style.display = 'none';
-        document.getElementById('hud').style.display = 'flex';
-        setup();
-        gameActive = true;
-    };
-
-    window.selectCard = (id) => {
-        activeCard = id;
-        document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-        document.getElementById('c_'+id).classList.add('active');
-    };
-
-    function setup() {
-        scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x2ecc71);
-
-        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 22, 18);
-        camera.lookAt(0, 0, 0);
-
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        document.body.appendChild(renderer.domElement);
-
-        scene.add(new THREE.AmbientLight(0xffffff, 1));
-        const light = new THREE.DirectionalLight(0xffffff, 0.8);
-        light.position.set(5, 20, 10);
-        scene.add(light);
-
-        // Поле
-        const ground = new THREE.Mesh(new THREE.PlaneGeometry(14, 28), new THREE.MeshStandardMaterial({color: 0x27ae60}));
-        ground.rotation.x = -Math.PI/2;
-        scene.add(ground);
-
-        // Башни
-        towers.push(createTower(0, 10, 'player'));
-        towers.push(createTower(0, -10, 'bot'));
-
-        window.addEventListener('touchstart', (e) => {
-            if(!gameActive || elixir < DATA[activeCard].cost) return;
-            const t = e.touches[0];
-            const mouse = new THREE.Vector2((t.clientX/window.innerWidth)*2-1, -(t.clientY/window.innerHeight)*2+1);
-            const ray = new THREE.Raycaster();
-            ray.setFromCamera(mouse, camera);
-            const hits = ray.intersectObject(ground);
-            if(hits.length > 0 && hits[0].point.z > 1) {
-                spawnUnit(activeCard, hits[0].point.x, hits[0].point.z, 'player');
-                elixir -= DATA[activeCard].cost;
-            }
-        });
-
-        animate();
+    // Синхронизация слайдера и поля ввода
+    slider.oninput = function() {
+        input.value = this.value;
+    }
+    input.oninput = function() {
+        slider.value = this.value;
     }
 
-    function createTower(x, z, team) {
-        const mesh = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 4, 8), new THREE.MeshStandardMaterial({color: team === 'player' ? 0x3498db : 0xe74c3c}));
-        mesh.position.set(x, 2, z);
-        scene.add(mesh);
-        const hpBar = createHPUI(true);
-        return { mesh, team, hp: 3000, max: 3000, hpBar };
-    }
+    function redirectToTG() {
+        const user = document.getElementById('username').value;
+        const amount = document.getElementById('starsAmount').value;
 
-    function createHPUI(isTower) {
-        const div = document.createElement('div');
-        div.className = 'hp-box' + (isTower ? ' hp-tower' : '');
-        div.innerHTML = '<div class="hp-bar"></div>';
-        document.getElementById('hp-container').appendChild(div);
-        return div;
-    }
-
-    function spawnUnit(type, x, z, team) {
-        const d = DATA[type];
-        const mesh = new THREE.Mesh(new THREE.BoxGeometry(d.size, d.size*1.2, d.size), new THREE.MeshStandardMaterial({color: team === 'player' ? 0x3498db : 0xe74c3c}));
-        mesh.position.set(x, d.size, z);
-        scene.add(mesh);
-        const hpBar = createHPUI(false);
-        units.push({ ...d, mesh, team, curHp: d.hp, hpBar, lastAtk: 0 });
-    }
-
-    function updateHP(obj, yOff) {
-        const v = obj.mesh.position.clone();
-        v.y += yOff;
-        v.project(camera);
-        const x = (v.x * 0.5 + 0.5) * window.innerWidth;
-        const y = -(v.y * 0.5 - 0.5) * window.innerHeight;
-        obj.hpBar.style.transform = `translate(${x - (obj.max ? 40 : 20)}px, ${y}px)`;
-        const p = (obj.hp || obj.curHp) / (obj.max || obj.hp) * 100;
-        obj.hpBar.children[0].style.width = Math.max(0, p) + '%';
-    }
-
-    function animate() {
-        if(!gameActive) return;
-        requestAnimationFrame(animate);
-        const dt = clock.getElapsedTime() * 1000;
-
-        elixir = Math.min(10, elixir + 0.006);
-        botElixir = Math.min(10, botElixir + 0.005);
-        document.getElementById('elixir-fill').style.width = (elixir * 10) + '%';
-
-        if(botElixir >= 5) {
-            spawnUnit('knight', (Math.random()-0.5)*8, -10, 'bot');
-            botElixir -= 3;
+        if(!user || !amount) {
+            alert("Пожалуйста, заполните все поля");
+            return;
         }
 
-        units.forEach((u, i) => {
-            let targets = [...units.filter(en => en.team !== u.team), ...towers.filter(t => t.team !== u.team)];
-            if(u.towerOnly) targets = towers.filter(t => t.team !== u.team);
-
-            let target = null, minDist = Infinity;
-            targets.forEach(t => {
-                const d = u.mesh.position.distanceTo(t.mesh.position);
-                if(d < minDist) { minDist = d; target = t; }
-            });
-
-            if(target) {
-                if(minDist > u.range) {
-                    const dir = new THREE.Vector3().subVectors(target.mesh.position, u.mesh.position).normalize();
-                    u.mesh.position.add(dir.multiplyScalar(u.speed));
-                    u.mesh.lookAt(target.mesh.position);
-                } else if(dt - u.lastAtk > u.rate) {
-                    target.hp !== undefined ? target.hp -= u.dmg : target.curHp -= u.dmg;
-                    u.lastAtk = dt;
-                }
-            }
-            updateHP(u, 1.5);
-            if(u.curHp <= 0) { u.hpBar.remove(); scene.remove(u.mesh); units.splice(i, 1); }
-        });
-
-        towers.forEach(t => {
-            updateHP(t, 4);
-            if(t.hp <= 0) { alert(t.team === 'player' ? "LOSE" : "WIN"); location.reload(); }
-        });
-
-        renderer.render(scene, camera);
+        // Формируем текст сообщения
+        const message = `Привет! Я хочу купить ${amount} звёзд для аккаунта @${user.replace('@', '')}.`;
+        const encodedMessage = encodeURIComponent(message);
+        
+        // Перенаправление в Telegram
+        window.location.href = `https://t.me/${myTelegram}?text=${encodedMessage}`;
     }
 </script>
+
 </body>
 </html>
