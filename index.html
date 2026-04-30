@@ -8,9 +8,10 @@
         :root {
             --main-bg: #f5f7fa;
             --card-bg: #ffffff;
-            --accent-blue: #87cefa;
+            --accent-blue: #0088cc;
             --text-dark: #333;
             --input-bg: #f9f9f9;
+            --gold: #ffd700;
         }
 
         body {
@@ -21,6 +22,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            color: var(--text-dark);
         }
 
         .container {
@@ -32,70 +34,60 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
 
-        h1 {
-            font-size: 22px;
-            color: var(--text-dark);
-            margin-bottom: 10px;
-        }
+        .header { text-align: center; margin-bottom: 20px; }
+        .logo { font-size: 24px; font-weight: 800; color: var(--accent-blue); }
 
-        p {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
+        h1 { font-size: 20px; margin: 10px 0; text-align: center; }
+        .description { color: #666; font-size: 13px; text-align: center; margin-bottom: 25px; line-height: 1.4; }
 
-        .input-group {
-            margin-bottom: 15px;
-            position: relative;
-        }
+        .label { font-size: 14px; font-weight: 600; margin-bottom: 8px; display: block; color: #555; }
 
-        input, select {
+        .input-group { margin-bottom: 20px; position: relative; }
+        
+        input {
             width: 100%;
             padding: 15px 15px 15px 45px;
-            border-radius: 18px;
+            border-radius: 15px;
             border: 1px solid #eee;
             background: var(--input-bg);
             box-sizing: border-box;
             font-size: 16px;
             outline: none;
-            transition: 0.3s;
         }
 
-        input:focus {
-            border-color: var(--accent-blue);
-        }
+        .icon { position: absolute; left: 15px; top: 38px; color: #aaa; }
 
-        .icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #aaa;
-        }
-
-        /* Ползунок */
-        .slider-container {
-            margin: 25px 0;
+        /* Стилизация прайса */
+        .price-box {
+            background: #f0f9ff;
+            padding: 15px;
+            border-radius: 15px;
             text-align: center;
+            margin-bottom: 20px;
+            border: 1px dashed var(--accent-blue);
         }
 
+        .price-value { font-size: 24px; font-weight: bold; color: var(--accent-blue); }
+
+        .slider-container { margin: 20px 0; text-align: center; }
+        
         input[type="range"] {
             -webkit-appearance: none;
             width: 100%;
-            height: 6px;
-            background: #eee;
+            height: 8px;
+            background: #e0e0e0;
             border-radius: 5px;
-            padding: 0;
             cursor: pointer;
         }
 
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #ffd700;
+            width: 24px;
+            height: 24px;
+            background: var(--gold);
             border-radius: 50%;
-            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .buy-btn {
@@ -104,94 +96,91 @@
             background-color: var(--accent-blue);
             color: white;
             border: none;
-            border-radius: 20px;
+            border-radius: 18px;
             font-size: 18px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, background 0.3s;
+            transition: 0.2s;
         }
 
-        .buy-btn:hover {
-            background-color: #70bce8;
-        }
+        .buy-btn:hover { filter: brightness(1.1); }
+        .buy-btn:active { transform: scale(0.98); }
 
-        .buy-btn:active {
-            transform: scale(0.98);
-        }
-
-        .footer-logo {
-            text-align: center;
+        .features {
             margin-top: 20px;
-            font-weight: bold;
-            color: var(--text-dark);
-            letter-spacing: 1px;
+            font-size: 12px;
+            color: #888;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="footer-logo">🌙 MOON STARS</div>
-    <br>
-    <h1>Купить Telegram Stars</h1>
-    <p>Пополните баланс Stars себе или друзьям через наш сервис.</p>
+    <div class="header">
+        <div class="logo">🌙 MOON STARS</div>
+    </div>
 
+    <h1>Купить Telegram Stars</h1>
+    <p class="description">Мгновенное пополнение после оплаты.<br>Безопасно и с гарантией.</p>
+
+    <label class="label">Ваш аккаунт</label>
     <div class="input-group">
         <span class="icon">@</span>
-        <input type="text" id="username" placeholder="Введите Telegram username">
+        <input type="text" id="username" placeholder="username">
     </div>
 
-    <div class="input-group">
-        <span class="icon">💳</span>
-        <select>
-            <option>RUB (СБП)</option>
-            <option>TON</option>
-            <option>Звезды (Обмен)</option>
-        </select>
-    </div>
-
-    <div class="input-group">
-        <span class="icon">⭐</span>
-        <input type="number" id="starsAmount" placeholder="Количество (100 - 25000)" min="100" max="25000">
+    <label class="label">Выберите количество звёзд</label>
+    <div class="price-box">
+        <span id="starsDisplay">⭐ 100</span> — <span class="price-value" id="priceDisplay">170 ₽</span>
     </div>
 
     <div class="slider-container">
-        <input type="range" id="starsSlider" min="100" max="5000" step="50" value="100">
+        <input type="range" id="priceSlider" min="0" max="5" step="1" value="0">
     </div>
 
-    <button class="buy-btn" onclick="redirectToTG()">Купить Stars</button>
+    <button class="buy-btn" onclick="orderStars()">Купить и оплатить</button>
+
+    <div class="features">
+        ✅ Мгновенно • 💎 1000+ отправлено • 👤 @kaoface
+    </div>
 </div>
 
 <script>
-    const slider = document.getElementById('starsSlider');
-    const input = document.getElementById('starsAmount');
-    
-    // Твой аккаунт для связи
-    const myTelegram = "ТВОЙ_ЮЗЕРНЕЙМ"; 
+    // Массив данных из твоего прайса
+    const pricelist = [
+        { stars: 100, price: 170 },
+        { stars: 150, price: 240 },
+        { stars: 250, price: 445 },
+        { stars: 500, price: 830 },
+        { stars: 1000, price: 1540 },
+        { stars: 2500, price: 3700 }
+    ];
 
-    // Синхронизация слайдера и поля ввода
+    const slider = document.getElementById('priceSlider');
+    const starsDisplay = document.getElementById('starsDisplay');
+    const priceDisplay = document.getElementById('priceDisplay');
+
     slider.oninput = function() {
-        input.value = this.value;
-    }
-    input.oninput = function() {
-        slider.value = this.value;
-    }
+        const data = pricelist[this.value];
+        starsDisplay.innerText = `⭐ ${data.stars}`;
+        priceDisplay.innerText = `${data.price} ₽`;
+    };
 
-    function redirectToTG() {
+    function orderStars() {
         const user = document.getElementById('username').value;
-        const amount = document.getElementById('starsAmount').value;
-
-        if(!user || !amount) {
-            alert("Пожалуйста, заполните все поля");
+        const currentData = pricelist[slider.value];
+        
+        if(!user) {
+            alert("Пожалуйста, введите ваш Telegram username");
             return;
         }
 
-        // Формируем текст сообщения
-        const message = `Привет! Я хочу купить ${amount} звёзд для аккаунта @${user.replace('@', '')}.`;
-        const encodedMessage = encodeURIComponent(message);
+        const cleanUser = user.replace('@', '');
+        const message = `Привет! Заказываю звёзды в Moon Stars.\n\n⭐ Количество: ${currentData.stars}\n💰 Цена: ${currentData.price} ₽\n👤 Для аккаунта: @${cleanUser}`;
         
-        // Перенаправление в Telegram
-        window.location.href = `https://t.me/${myTelegram}?text=${encodedMessage}`;
+        const telegramUrl = `https://t.me/kaoface?text=${encodeURIComponent(message)}`;
+        window.location.href = telegramUrl;
     }
 </script>
 
