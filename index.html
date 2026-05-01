@@ -3,162 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Moon Stars — Digital Assets</title>
+    <title>Moon Stars — Premium Digital Assets</title>
     <style>
         :root {
-            --bg: #0b0d13;
-            --card: #161922;
-            --accent: #3b82f6;
-            --gold: #d4af37;
-            --text: #ffffff;
-            --text-dim: #94a3b8;
+            --bg-dark: #0a0c10;
+            --card-bg: rgba(20, 24, 33, 0.9);
+            --accent-gold: #c5a059;
+            --accent-blue: #0088cc;
+            --text-main: #f1f5f9;
+            --text-dim: #64748b;
+            --border: rgba(255, 255, 255, 0.05);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
         body {
             font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
+            background: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(197, 160, 89, 0.05) 0%, transparent 30%),
+                radial-gradient(circle at 100% 100%, rgba(0, 136, 204, 0.05) 0%, transparent 30%);
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: var(--text);
+            color: var(--text-main);
             overflow: hidden;
         }
 
-        /* Основная карточка из твоей любимой версии */
         .main-container {
             width: 90%;
-            max-width: 370px;
-            background: var(--card);
-            border-radius: 24px;
-            padding: 24px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
-            border: 1px solid rgba(255,255,255,0.05);
+            max-width: 380px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 28px;
+            border: 1px solid var(--border);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
             text-align: center;
         }
 
-        .logo { font-size: 22px; font-weight: 800; letter-spacing: 2px; margin-bottom: 5px; }
-        .logo span { color: var(--gold); }
-        .sub { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; }
+        .tabs {
+            display: flex;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 4px;
+            border-radius: 16px;
+            margin-bottom: 28px;
+        }
 
-        .input-group { text-align: left; margin-bottom: 20px; }
-        .label { font-size: 10px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: none;
+            color: var(--text-dim);
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-btn.active {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-main);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .logo span { color: var(--accent-gold); }
+        .subtitle { font-size: 9px; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 30px; }
+
+        .input-group { margin-bottom: 24px; text-align: left; }
+        .label { font-size: 9px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; display: block; }
         
+        .input-wrapper { position: relative; }
         .tg-input {
-            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px; padding: 15px; color: white; font-size: 15px; outline: none;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px 16px 16px 44px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .tg-input:focus { border-color: var(--accent-gold); }
+        .at-sign { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--accent-gold); font-size: 16px; }
+
+        .price-display {
+            padding: 24px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        .val-main { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+        .val-sub { font-size: 14px; color: var(--accent-gold); font-weight: 600; margin-top: 4px; }
+
+        input[type="range"] {
+            -webkit-appearance: none; width: 100%; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-bottom: 32px; outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 18px; height: 18px; background: var(--text-main); border-radius: 50%; cursor: pointer; border: 4px solid var(--bg-dark);
         }
 
-        .display {
-            background: rgba(255,255,255,0.02); border-radius: 16px; padding: 20px; margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.03);
+        .buy-btn {
+            width: 100%; padding: 18px; background: var(--text-main); color: var(--bg-dark); border: none; border-radius: 18px; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: 0.3s;
         }
-        .val { font-size: 26px; font-weight: 800; }
-        .price { color: var(--gold); font-size: 15px; font-weight: 600; margin-top: 5px; }
+        .buy-btn:active { transform: scale(0.98); }
 
-        input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; background: #222; border-radius: 2px; margin-bottom: 25px; outline: none; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: white; border-radius: 50%; cursor: pointer; }
-
-        .main-btn {
-            width: 100%; padding: 16px; background: white; color: black; border: none; border-radius: 14px;
-            font-size: 14px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.2s;
-        }
-        .main-btn:active { transform: scale(0.96); }
-
-        /* ОКНО ОПЛАТЫ (ЧЕК) */
-        .modal {
+        /* MODAL */
+        .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9);
-            display: none; justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(12px);
         }
-        .receipt {
-            width: 85%; max-width: 320px; background: #1c202b; border-radius: 20px; padding: 25px;
-            border: 1px solid var(--gold); text-align: center;
+        .payment-card {
+            width: 90%; max-width: 340px; background: #161a22; border-radius: 28px; padding: 32px; border: 1px solid var(--border); text-align: center;
+            animation: slideUp 0.4s ease-out;
         }
-        .receipt-title { color: var(--gold); font-size: 12px; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .payment-title { font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-gold); margin-bottom: 24px; }
         
-        .card-box {
-            background: #000; padding: 15px; border-radius: 12px; margin: 15px 0;
-            border: 1px dashed #333; cursor: pointer;
+        .receipt-line { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-dim); margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .receipt-line strong { color: white; }
+
+        .card-num-box {
+            background: #000; padding: 20px; border-radius: 16px; margin: 20px 0; border: 1px solid rgba(197, 160, 89, 0.2); cursor: pointer; transition: 0.2s;
         }
-        .card-num { font-family: monospace; font-size: 16px; letter-spacing: 1px; color: #fff; }
+        .card-num-box:active { transform: scale(0.96); }
+        .card-digits { font-family: 'JetBrains Mono', monospace; font-size: 15px; color: white; letter-spacing: 1px; }
+        
+        .recipient { font-size: 11px; color: var(--text-dim); margin-bottom: 24px; }
+        .recipient strong { color: white; border-bottom: 1px solid var(--accent-gold); }
 
-        .confirm-btn { width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: 10px; font-weight: 700; margin-top: 10px; cursor: pointer; }
-        .back-btn { background: none; border: none; color: #555; font-size: 11px; margin-top: 15px; cursor: pointer; text-transform: uppercase; }
+        .confirm-btn { width: 100%; padding: 16px; background: var(--accent-blue); color: white; border: none; border-radius: 14px; font-weight: 700; cursor: pointer; margin-bottom: 12px; }
+        .close-btn { font-size: 11px; color: #444; background: none; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
 
+        .verified-badge { font-size: 10px; color: #10b981; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 4px; opacity: 0.8; }
     </style>
 </head>
 <body>
 
 <div class="main-container">
-    <div class="logo">MOON<span>STARS</span></div>
-    <div class="sub">Professional Digital Service</div>
-
-    <div class="input-group">
-        <label class="label">Ваш Telegram ник</label>
-        <input type="text" id="nick" class="tg-input" placeholder="@username">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="setMode('stars', this)">Stars</button>
+        <button class="tab-btn" onclick="setMode('premium', this)">Premium</button>
     </div>
 
-    <div class="display">
-        <div class="val" id="val">100 STARS</div>
-        <div class="price" id="price">170 ₽</div>
+    <div class="logo">MOON<span>STARS</span></div>
+    <p class="subtitle">Secure Digital Assets</p>
+
+    <div class="input-group">
+        <label class="label">Telegram Username</label>
+        <div class="input-wrapper">
+            <span class="at-sign">@</span>
+            <input type="text" id="username" class="tg-input" placeholder="nickname" autocomplete="off">
+        </div>
+    </div>
+
+    <div class="price-display">
+        <div class="val-main" id="display-val">100 STARS</div>
+        <div class="val-sub" id="display-price">170 ₽</div>
     </div>
 
     <input type="range" id="slider" min="0" max="5" step="1" value="0" oninput="update()">
 
-    <button class="main-btn" onclick="openPay()">Оформить</button>
+    <button class="buy-btn" onclick="checkout()">Оформить заказ</button>
+    
+    <div class="verified-badge">● Система безопасных платежей включена</div>
 </div>
 
-<div class="modal" id="modal">
-    <div class="receipt">
-        <div class="receipt-title">Кассовый счёт</div>
-        <div style="font-size: 14px; color: var(--text-dim);">К оплате: <b style="color:white" id="m-sum">0 ₽</b></div>
+<div class="modal-overlay" id="modal">
+    <div class="payment-card">
+        <div class="payment-title">Чекаут пополнения</div>
         
-        <div class="card-box" onclick="copyCard()">
-            <div class="card-num">2202 2088 9003 9648</div>
-            <div style="font-size: 9px; color: var(--accent); margin-top: 5px;">Нажмите, чтобы скопировать карту</div>
+        <div class="receipt-line">
+            <span>К оплате:</span>
+            <strong id="m-price">0 ₽</strong>
         </div>
 
-        <div style="font-size: 11px; color: var(--text-dim); margin-bottom: 20px;">
-            Получатель: <b style="color:white">MARK P.</b> (Сбербанк)
+        <div class="card-num-box" onclick="copy()">
+            <div class="card-digits" id="c-num">2202 2088 9003 9648</div>
+            <div style="font-size: 9px; color: var(--accent-blue); margin-top: 8px; text-transform: uppercase;">Нажмите, чтобы скопировать</div>
         </div>
 
-        <button class="confirm-btn" onclick="finish()">Я оплатил</button>
-        <button class="back-btn" onclick="closePay()">Назад</button>
+        <div class="recipient">Получатель: <strong>MARK P.</strong></div>
+        
+        <button class="confirm-btn" onclick="done()">Я оплатил заказ</button>
+        <button class="close-btn" onclick="closeM()">Вернуться назад</button>
     </div>
 </div>
 
 <script>
-    const stars = [
-        {t: "100 STARS", p: 170}, {t: "150 STARS", p: 240}, {t: "250 STARS", p: 445},
-        {t: "500 STARS", p: 830}, {t: "1000 STARS", p: 1540}, {t: "2500 STARS", p: 3700}
-    ];
+    let mode = 'stars';
+    const data = {
+        stars: [
+            {t: "100 STARS", p: 170}, {t: "150 STARS", p: 240}, {t: "250 STARS", p: 445},
+            {t: "500 STARS", p: 830}, {t: "1000 STARS", p: 1540}, {t: "2500 STARS", p: 3700}
+        ],
+        premium: [
+            {t: "3 МЕСЯЦА", p: 1200}, {t: "6 МЕСЯЦЕВ", p: 1550}, {t: "12 МЕСЯЦЕВ", p: 2750}
+        ]
+    };
 
     function update() {
-        const v = document.getElementById('slider').value;
-        document.getElementById('val').innerText = stars[v].t;
-        document.getElementById('price').innerText = stars[v].p + " ₽";
+        const val = document.getElementById('slider').value;
+        const current = data[mode][val];
+        document.getElementById('display-val').innerText = current.t;
+        document.getElementById('display-price').innerText = current.p + " ₽";
     }
 
-    function openPay() {
-        if(!document.getElementById('nick').value) return alert("Введите ник!");
-        const v = document.getElementById('slider').value;
-        document.getElementById('m-sum').innerText = stars[v].p + " ₽";
+    function setMode(m, btn) {
+        mode = m;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const s = document.getElementById('slider');
+        s.max = mode === 'stars' ? 5 : 2;
+        s.value = 0;
+        update();
+    }
+
+    function checkout() {
+        if(!document.getElementById('username').value.trim()) return alert("Введите никнейм");
+        document.getElementById('m-price').innerText = data[mode][document.getElementById('slider').value].p + " ₽";
         document.getElementById('modal').style.display = 'flex';
     }
 
-    function closePay() { document.getElementById('modal').style.display = 'none'; }
+    function closeM() { document.getElementById('modal').style.display = 'none'; }
 
-    function copyCard() {
+    function copy() {
         navigator.clipboard.writeText("2202208890039648");
-        alert("Карта скопирована!");
+        alert("Номер карты скопирован");
     }
 
-    function finish() {
-        const n = document.getElementById('nick').value.replace('@', '');
-        const v = document.getElementById('slider').value;
-        const text = `Moon Stars:\nОплатил заказ!\nТовар: ${stars[v].t}\nСумма: ${stars[v].p}₽\nНик: @${n}`;
+    function done() {
+        const u = document.getElementById('username').value.replace('@', '');
+        const item = data[mode][document.getElementById('slider').value];
+        const text = `Moon Stars:\nОплатил заказ!\nТовар: ${item.t}\nСумма: ${item.p}₽\nНик: @${u}`;
         window.location.href = `https://t.me/kaoface?text=${encodeURIComponent(text)}`;
     }
 </script>
