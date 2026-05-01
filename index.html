@@ -3,260 +3,355 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Moon Stars — Digital Assets</title>
+    <title>Moon Stars — Магазин Цифровых Товаров</title>
     <style>
         :root {
-            /* Новая «взрослая» палитра */
-            --dark-space: #05070a;
-            --glass-bg: rgba(23, 28, 41, 0.8);
+            --bg-dark: #07090e;
+            --card-bg: rgba(17, 21, 31, 0.95);
+            --accent-gold: #d4af37;
             --accent-blue: #3b82f6;
-            --accent-gold: #c5a059; /* Благородное золото */
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
-            --border-light: rgba(255, 255, 255, 0.08);
+            --text-white: #ffffff;
+            --text-gray: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: var(--dark-space);
-            background-image: radial-gradient(circle at top right, rgba(59, 130, 246, 0.05), transparent),
-                              radial-gradient(circle at bottom left, rgba(197, 160, 89, 0.03), transparent);
-            margin: 0;
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: var(--bg-dark);
+            /* Анимированный фон для "жизни" */
+            background: linear-gradient(135deg, #07090e 0%, #0f172a 100%);
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            color: var(--text-main);
-            padding: 20px;
+            color: var(--text-white);
+            overflow: hidden; /* Чтобы ничего не дергалось на мобилках */
         }
 
-        .main-card {
-            width: 100%;
-            max-width: 400px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 32px;
-            border: 1px solid var(--border-light);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        .main-container {
+            width: 90%;
+            max-width: 380px;
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            z-index: 10;
         }
 
-        /* Тонкие, строгие табы */
+        /* Табы */
         .tabs {
             display: flex;
-            gap: 8px;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
             padding: 4px;
-            border-radius: 12px;
-            margin-bottom: 32px;
-            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
         }
 
         .tab-btn {
             flex: 1;
-            padding: 8px;
+            padding: 10px;
             border: none;
             background: none;
-            color: var(--text-dim);
-            font-weight: 500;
-            font-size: 13px;
+            color: var(--text-gray);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
-            border-radius: 8px;
-            transition: 0.2s;
+            border-radius: 10px;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .tab-btn.active {
             background: rgba(255, 255, 255, 0.05);
-            color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            color: var(--text-white);
         }
 
-        .header { margin-bottom: 28px; text-align: left; }
-        .logo-title {
+        /* Заголовок */
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .logo {
             font-size: 20px;
-            font-weight: 700;
+            font-weight: 800;
             letter-spacing: 2px;
-            color: var(--text-main);
             text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-bottom: 4px;
         }
-        .logo-title span { color: var(--accent-gold); }
 
-        .subtitle { font-size: 12px; color: var(--text-dim); margin-top: 6px; letter-spacing: 0.5px; }
+        .logo span { color: var(--accent-gold); }
 
-        .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 8px; display: block; }
+        .subtitle {
+            font-size: 11px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-        .input-group { position: relative; margin-bottom: 28px; }
+        /* Поле ввода */
+        .input-block {
+            margin-bottom: 20px;
+        }
+
+        .label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
         .tg-input {
             width: 100%;
-            padding: 14px 14px 14px 40px;
-            border-radius: 12px;
             background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--border-light);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 14px 14px 40px;
             color: white;
             font-size: 15px;
             outline: none;
             transition: 0.3s;
         }
-        .tg-input:focus { border-color: var(--accent-blue); background: rgba(0, 0, 0, 0.3); }
-        .at-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--accent-blue); font-weight: 600; }
 
-        .display-card {
-            padding: 24px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%);
-            border-radius: 16px;
-            border: 1px solid var(--border-light);
-            margin-bottom: 24px;
-            text-align: center;
+        .tg-input:focus {
+            border-color: var(--accent-blue);
+            background: rgba(0, 0, 0, 0.4);
         }
-        .main-val { font-size: 24px; font-weight: 700; color: white; margin-bottom: 4px; }
-        .price-val { font-size: 14px; color: var(--accent-gold); font-weight: 500; letter-spacing: 1px; }
 
-        /* Минималистичный слайдер */
+        .at-sign {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-blue);
+            font-weight: 700;
+        }
+
+        /* Витрина цены */
+        .price-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 24px;
+            transition: transform 0.2s ease;
+        }
+
+        .price-card.pulse { transform: scale(1.02); }
+
+        .val-main {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .val-sub {
+            font-size: 14px;
+            color: var(--accent-gold);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Слайдер */
+        .slider-container {
+            margin-bottom: 30px;
+            padding: 0 4px;
+        }
+
         input[type="range"] {
             -webkit-appearance: none;
             width: 100%;
             height: 4px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 2px;
-            margin-bottom: 32px;
             outline: none;
         }
+
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             background: white;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+            border: 2px solid var(--bg-dark);
         }
 
-        .buy-btn {
+        /* Кнопка */
+        .main-btn {
             width: 100%;
             padding: 16px;
             background: white;
             color: black;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
             cursor: pointer;
             transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
-        .buy-btn:hover { background: #e2e8f0; transform: translateY(-1px); }
-        .buy-btn:disabled { opacity: 0.3; }
 
-        .live-counter {
-            margin-top: 20px;
+        .main-btn:active { transform: scale(0.97); }
+
+        /* Футер */
+        .status-bar {
+            margin-top: 16px;
             font-size: 11px;
-            color: var(--text-dim);
+            color: var(--text-gray);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
-        .dot { width: 4px; height: 4px; background: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981; }
 
-        .footer { margin-top: 24px; font-size: 10px; color: #475569; text-transform: uppercase; letter-spacing: 1px; }
+        .dot {
+            width: 4px;
+            height: 4px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        .copyright {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 9px;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
 
-<div class="main-card">
+<div class="main-container">
     <div class="tabs">
-        <button class="tab-btn active" id="starsTab" onclick="switchTab('stars')">STARS</button>
-        <button class="tab-btn" id="premiumTab" onclick="switchTab('premium')">PREMIUM</button>
+        <button class="tab-btn active" onclick="switchMode('stars', this)">Звезды</button>
+        <button class="tab-btn" onclick="switchMode('premium', this)">Премиум</button>
     </div>
 
     <div class="header">
-        <div class="logo-title"><span>MOON</span> STARS</div>
-        <p class="subtitle" id="serviceSubtitle">PROFESSIONAL DIGITAL SERVICE</p>
+        <div class="logo"><span>MOON</span> STARS</div>
+        <p class="subtitle" id="sub-label">ПОПОЛНЕНИЕ ТЕЛЕГРАМ ЗВЕЗД</p>
     </div>
 
-    <label class="label">ID ПОЛУЧАТЕЛЯ</label>
-    <div class="input-group">
-        <span class="at-icon">@</span>
-        <input type="text" id="username" class="tg-input" placeholder="nickname" autocomplete="off">
+    <div class="input-block">
+        <label class="label">Юзернейм получателя</label>
+        <div class="input-wrapper">
+            <span class="at-sign">@</span>
+            <input type="text" id="username" class="tg-input" placeholder="nickname" autocomplete="off">
+        </div>
     </div>
 
-    <div class="display-card">
-        <div id="displayTitle" class="main-val">100 STARS</div>
-        <div id="displayPrice" class="price-val">170 ₽</div>
+    <div class="price-card" id="price-card">
+        <div class="val-main" id="display-val">100 STARS</div>
+        <div class="val-sub" id="display-price">170 ₽</div>
     </div>
 
-    <input type="range" id="mainSlider" min="0" max="5" step="1" value="0">
+    <div class="slider-container">
+        <input type="range" id="slider" min="0" max="5" step="1" value="0">
+    </div>
 
-    <button class="buy-btn" id="buyBtn" onclick="sendOrder()">Оформить заказ</button>
+    <button class="main-btn" onclick="order()">Оформить заказ</button>
 
-    <div class="live-counter">
+    <div class="status-bar">
         <div class="dot"></div>
-        В обработке: <span id="orderCount">12</span> активных заявок
+        <span id="active-orders">14 активных заявок в очереди</span>
     </div>
 
-    <div class="footer">Secure checkout • Powered by @kaoface</div>
+    <p class="copyright">Безопасная оплата • @kaoface</p>
 </div>
 
 <script>
-    let currentMode = 'stars';
-    const starsPrices = [
-        { val: "100 STARS", price: 170, raw: 100 },
-        { val: "150 STARS", price: 240, raw: 150 },
-        { val: "250 STARS", price: 445, raw: 250 },
-        { val: "500 STARS", price: 830, raw: 500 },
-        { val: "1000 STARS", price: 1540, raw: 1000 },
-        { val: "2500 STARS", price: 3700, raw: 2500 }
-    ];
-    const premiumPrices = [
-        { val: "3 MONTHS", price: 1200, raw: "3 мес" },
-        { val: "6 MONTHS", price: 1550, raw: "6 мес" },
-        { val: "12 MONTHS", price: 2750, raw: "1 год" }
+    let mode = 'stars';
+    const stars = [
+        {title: "100 STARS", price: "170 ₽", raw: 100},
+        {title: "150 STARS", price: "240 ₽", raw: 150},
+        {title: "250 STARS", price: "445 ₽", raw: 250},
+        {title: "500 STARS", price: "830 ₽", raw: 500},
+        {title: "1000 STARS", price: "1540 ₽", raw: 1000},
+        {title: "2500 STARS", price: "3700 ₽", raw: 2500}
     ];
 
-    const slider = document.getElementById('mainSlider');
-    const displayTitle = document.getElementById('displayTitle');
-    const displayPrice = document.getElementById('displayPrice');
-    const subtitle = document.getElementById('serviceSubtitle');
-    const usernameInput = document.getElementById('username');
-    const buyBtn = document.getElementById('buyBtn');
+    const premium = [
+        {title: "3 МЕСЯЦА", price: "1200 ₽", raw: "3 мес"},
+        {title: "6 МЕСЯЦЕВ", price: "1550 ₽", raw: "6 мес"},
+        {title: "12 МЕСЯЦЕВ", price: "2750 ₽", raw: "12 мес"}
+    ];
 
-    function switchTab(mode) {
-        currentMode = mode;
+    const slider = document.getElementById('slider');
+    const displayVal = document.getElementById('display-val');
+    const displayPrice = document.getElementById('display-price');
+    const priceCard = document.getElementById('price-card');
+    const subLabel = document.getElementById('sub-label');
+
+    function switchMode(newMode, btn) {
+        mode = newMode;
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
         if(mode === 'stars') {
-            document.getElementById('starsTab').classList.add('active');
-            subtitle.innerText = "PROFESSIONAL STARS TOP-UP";
-            slider.max = starsPrices.length - 1;
+            slider.max = 5;
+            subLabel.innerText = "ПОПОЛНЕНИЕ ТЕЛЕГРАМ ЗВЕЗД";
         } else {
-            document.getElementById('premiumTab').classList.add('active');
-            subtitle.innerText = "TELEGRAM PREMIUM ACCESS";
-            slider.max = premiumPrices.length - 1;
+            slider.max = 2;
+            subLabel.innerText = "ПОДПИСКА TELEGRAM PREMIUM";
         }
         slider.value = 0;
-        updateUI();
+        update();
     }
 
-    function updateUI() {
-        const data = currentMode === 'stars' ? starsPrices[slider.value] : premiumPrices[slider.value];
-        displayTitle.innerText = data.val;
-        displayPrice.innerText = `${data.price} ₽`;
+    function update() {
+        const data = mode === 'stars' ? stars[slider.value] : premium[slider.value];
+        displayVal.innerText = data.title;
+        displayPrice.innerText = data.price;
+        
+        // Визуальный эффект при смене
+        priceCard.classList.add('pulse');
+        setTimeout(() => priceCard.classList.remove('pulse'), 200);
     }
 
-    slider.addEventListener('input', updateUI);
+    slider.addEventListener('input', update);
 
-    function sendOrder() {
-        const user = usernameInput.value.trim().replace('@', '');
-        const data = currentMode === 'stars' ? starsPrices[slider.value] : premiumPrices[slider.value];
-        if(!user) return;
-        const text = `Moon Stars Order:\nItem: ${data.val}\nPrice: ${data.price} RUB\nUser: @${user}`;
-        window.location.href = `https://t.me/kaoface?text=${encodeURIComponent(text)}`;
+    function order() {
+        const user = document.getElementById('username').value.trim().replace('@', '');
+        const data = mode === 'stars' ? stars[slider.value] : premium[slider.value];
+        
+        if(!user) {
+            alert("Пожалуйста, введите никнейм!");
+            return;
+        }
+
+        const msg = `Moon Stars Заказ:\nТовар: ${data.title}\nЦена: ${data.price}\nПолучатель: @${user}`;
+        window.location.href = `https://t.me/kaoface?text=${encodeURIComponent(msg)}`;
     }
 
-    document.getElementById('orderCount').innerText = Math.floor(Math.random() * 15 + 5);
+    // Рандомное число заявок для "жизни"
+    document.getElementById('active-orders').innerText = Math.floor(Math.random() * 10 + 10) + " активных заявок в очереди";
 </script>
+
 </body>
 </html>
