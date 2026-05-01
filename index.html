@@ -3,36 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Moon Stars — Магазин Цифровых Товаров</title>
+    <title>Moon Stars — Оплата заказа</title>
     <style>
         :root {
             --bg-dark: #07090e;
-            --card-bg: rgba(17, 21, 31, 0.95);
+            --card-bg: rgba(17, 21, 31, 0.98);
             --accent-gold: #d4af37;
             --accent-blue: #3b82f6;
             --text-white: #ffffff;
             --text-gray: #94a3b8;
-            --border: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--bg-dark);
-            /* Анимированный фон для "жизни" */
             background: linear-gradient(135deg, #07090e 0%, #0f172a 100%);
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: var(--text-white);
-            overflow: hidden; /* Чтобы ничего не дергалось на мобилках */
+            overflow: hidden;
         }
 
         .main-container {
@@ -43,206 +37,68 @@
             padding: 24px;
             border: 1px solid var(--border);
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            backdrop-filter: blur(10px);
-            z-index: 10;
+            backdrop-filter: blur(15px);
+            position: relative;
         }
 
-        /* Табы */
-        .tabs {
-            display: flex;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 4px;
-            border-radius: 14px;
-            margin-bottom: 24px;
-            border: 1px solid var(--border);
-        }
+        /* Темы */
+        .tabs { display: flex; background: rgba(0, 0, 0, 0.3); padding: 4px; border-radius: 14px; margin-bottom: 24px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: none; color: var(--text-gray); font-weight: 600; font-size: 11px; text-transform: uppercase; cursor: pointer; border-radius: 10px; transition: 0.3s; }
+        .tab-btn.active { background: rgba(255, 255, 255, 0.05); color: var(--text-white); }
 
-        .tab-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            background: none;
-            color: var(--text-gray);
-            font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .tab-btn.active {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-white);
-        }
-
-        /* Заголовок */
-        .header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
+        .header { text-align: center; margin-bottom: 24px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
         .logo span { color: var(--accent-gold); }
 
-        .subtitle {
-            font-size: 11px;
-            color: var(--text-gray);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        /* Ввод */
+        .input-block { margin-bottom: 20px; text-align: left; }
+        .label { font-size: 10px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; display: block; }
+        .input-wrapper { position: relative; }
+        .tg-input { width: 100%; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border); border-radius: 14px; padding: 14px 14px 14px 40px; color: white; font-size: 15px; outline: none; }
+        .at-sign { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--accent-blue); font-weight: 700; }
 
-        /* Поле ввода */
-        .input-block {
-            margin-bottom: 20px;
-        }
-
-        .label {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--text-gray);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .input-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        .tg-input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 14px 14px 14px 40px;
-            color: white;
-            font-size: 15px;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        .tg-input:focus {
-            border-color: var(--accent-blue);
-            background: rgba(0, 0, 0, 0.4);
-        }
-
-        .at-sign {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--accent-blue);
-            font-weight: 700;
-        }
-
-        /* Витрина цены */
-        .price-card {
-            background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 24px;
-            transition: transform 0.2s ease;
-        }
-
-        .price-card.pulse { transform: scale(1.02); }
-
-        .val-main {
-            font-size: 26px;
-            font-weight: 800;
-            margin-bottom: 4px;
-        }
-
-        .val-sub {
-            font-size: 14px;
-            color: var(--accent-gold);
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
+        /* Дисплей */
+        .price-card { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 18px; padding: 20px; text-align: center; margin-bottom: 24px; }
+        .val-main { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+        .val-sub { font-size: 14px; color: var(--accent-gold); font-weight: 600; }
 
         /* Слайдер */
-        .slider-container {
-            margin-bottom: 30px;
-            padding: 0 4px;
+        .slider-container { margin-bottom: 30px; }
+        input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 2px; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: white; border-radius: 50%; cursor: pointer; border: 2px solid var(--bg-dark); }
+
+        .main-btn { width: 100%; padding: 16px; background: white; color: black; border: none; border-radius: 14px; font-size: 14px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+
+        /* МОДАЛЬНОЕ ОКНО ОПЛАТЫ */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none; justify-content: center; align-items: center; z-index: 100;
+            backdrop-filter: blur(8px);
         }
 
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            outline: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-            border: 2px solid var(--bg-dark);
-        }
-
-        /* Кнопка */
-        .main-btn {
-            width: 100%;
-            padding: 16px;
-            background: white;
-            color: black;
-            border: none;
-            border-radius: 14px;
-            font-size: 14px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .main-btn:active { transform: scale(0.97); }
-
-        /* Футер */
-        .status-bar {
-            margin-top: 16px;
-            font-size: 11px;
-            color: var(--text-gray);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .dot {
-            width: 4px;
-            height: 4px;
-            background: #10b981;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #10b981;
-        }
-
-        .copyright {
-            margin-top: 24px;
+        .payment-modal {
+            width: 90%; max-width: 340px;
+            background: #1a1f2c; border-radius: 24px;
+            padding: 24px; border: 1px solid var(--accent-gold);
             text-align: center;
-            font-size: 9px;
-            color: #475569;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
+
+        .payment-header { color: var(--accent-gold); font-size: 14px; font-weight: 800; margin-bottom: 20px; text-transform: uppercase; }
+        
+        .card-box {
+            background: #0d1117; padding: 15px; border-radius: 12px;
+            margin-bottom: 15px; border: 1px dashed #333; position: relative;
+        }
+        .card-num { font-family: monospace; font-size: 16px; color: white; letter-spacing: 1px; }
+        .copy-btn { font-size: 10px; color: var(--accent-blue); background: none; border: none; cursor: pointer; margin-top: 5px; text-transform: uppercase; }
+
+        .pay-info { font-size: 12px; color: var(--text-gray); margin-bottom: 20px; line-height: 1.5; }
+        .pay-info strong { color: white; }
+
+        .confirm-btn { width: 100%; padding: 14px; background: var(--accent-blue); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-bottom: 10px; }
+        .cancel-btn { background: none; border: none; color: #555; font-size: 12px; cursor: pointer; }
+
     </style>
 </head>
 <body>
@@ -255,102 +111,102 @@
 
     <div class="header">
         <div class="logo"><span>MOON</span> STARS</div>
-        <p class="subtitle" id="sub-label">ПОПОЛНЕНИЕ ТЕЛЕГРАМ ЗВЕЗД</p>
+        <p style="font-size: 10px; color: var(--text-gray); letter-spacing: 1px;" id="sub-label">ПОПОЛНЕНИЕ ТЕЛЕГРАМ ЗВЕЗД</p>
     </div>
 
     <div class="input-block">
-        <label class="label">Юзернейм получателя</label>
+        <label class="label">Юзернейм в Telegram</label>
         <div class="input-wrapper">
             <span class="at-sign">@</span>
-            <input type="text" id="username" class="tg-input" placeholder="nickname" autocomplete="off">
+            <input type="text" id="username" class="tg-input" placeholder="nickname">
         </div>
     </div>
 
-    <div class="price-card" id="price-card">
+    <div class="price-card">
         <div class="val-main" id="display-val">100 STARS</div>
-        <div class="val-sub" id="display-price">170 ₽</div>
+        <div id="display-price" class="val-sub">170 ₽</div>
     </div>
 
     <div class="slider-container">
-        <input type="range" id="slider" min="0" max="5" step="1" value="0">
+        <input type="range" id="slider" min="0" max="5" step="1" value="0" oninput="update()">
     </div>
 
-    <button class="main-btn" onclick="order()">Оформить заказ</button>
+    <button class="main-btn" onclick="openPayment()">Оформить заказ</button>
+</div>
 
-    <div class="status-bar">
-        <div class="dot"></div>
-        <span id="active-orders">14 активных заявок в очереди</span>
+<div class="modal-overlay" id="modal">
+    <div class="payment-modal">
+        <div class="payment-header">Оплата заказа</div>
+        <div class="pay-info">
+            Переведите <strong id="modal-amount">0 ₽</strong> на карту Сбербанка:
+        </div>
+        
+        <div class="card-box">
+            <div class="card-num" id="card-num">2202 2088 9003 9648</div>
+            <button class="copy-btn" onclick="copyCard()">Скопировать номер</button>
+        </div>
+        
+        <div class="pay-info">
+            Получатель: <strong>MARK P.</strong><br>
+            После оплаты нажмите кнопку ниже.
+        </div>
+
+        <button class="confirm-btn" onclick="confirmPay()">Я оплатил(а)</button>
+        <button class="cancel-btn" onclick="closePayment()">Отмена</button>
     </div>
-
-    <p class="copyright">Безопасная оплата • @kaoface</p>
 </div>
 
 <script>
     let mode = 'stars';
     const stars = [
-        {title: "100 STARS", price: "170 ₽", raw: 100},
-        {title: "150 STARS", price: "240 ₽", raw: 150},
-        {title: "250 STARS", price: "445 ₽", raw: 250},
-        {title: "500 STARS", price: "830 ₽", raw: 500},
-        {title: "1000 STARS", price: "1540 ₽", raw: 1000},
-        {title: "2500 STARS", price: "3700 ₽", raw: 2500}
+        {t: "100 STARS", p: 170}, {t: "150 STARS", p: 240}, {t: "250 STARS", p: 445},
+        {t: "500 STARS", p: 830}, {t: "1000 STARS", p: 1540}, {t: "2500 STARS", p: 3700}
     ];
-
     const premium = [
-        {title: "3 МЕСЯЦА", price: "1200 ₽", raw: "3 мес"},
-        {title: "6 МЕСЯЦЕВ", price: "1550 ₽", raw: "6 мес"},
-        {title: "12 МЕСЯЦЕВ", price: "2750 ₽", raw: "12 мес"}
+        {t: "3 МЕСЯЦА", p: 1200}, {t: "6 МЕСЯЦЕВ", p: 1550}, {t: "1 ГОД", p: 2750}
     ];
 
-    const slider = document.getElementById('slider');
-    const displayVal = document.getElementById('display-val');
-    const displayPrice = document.getElementById('display-price');
-    const priceCard = document.getElementById('price-card');
-    const subLabel = document.getElementById('sub-label');
+    function update() {
+        const s = document.getElementById('slider');
+        const data = mode === 'stars' ? stars[s.value] : premium[s.value];
+        document.getElementById('display-val').innerText = data.t;
+        document.getElementById('display-price').innerText = data.p + " ₽";
+    }
 
-    function switchMode(newMode, btn) {
-        mode = newMode;
+    function switchMode(m, btn) {
+        mode = m;
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        
-        if(mode === 'stars') {
-            slider.max = 5;
-            subLabel.innerText = "ПОПОЛНЕНИЕ ТЕЛЕГРАМ ЗВЕЗД";
-        } else {
-            slider.max = 2;
-            subLabel.innerText = "ПОДПИСКА TELEGRAM PREMIUM";
-        }
-        slider.value = 0;
+        const s = document.getElementById('slider');
+        s.max = mode === 'stars' ? 5 : 2;
+        s.value = 0;
+        document.getElementById('sub-label').innerText = mode === 'stars' ? "ПОПОЛНЕНИЕ ТЕЛЕГРАМ ЗВЕЗД" : "TELEGRAM PREMIUM ACCESS";
         update();
     }
 
-    function update() {
-        const data = mode === 'stars' ? stars[slider.value] : premium[slider.value];
-        displayVal.innerText = data.title;
-        displayPrice.innerText = data.price;
+    function openPayment() {
+        const user = document.getElementById('username').value.trim();
+        if(!user) { alert("Введите юзернейм!"); return; }
         
-        // Визуальный эффект при смене
-        priceCard.classList.add('pulse');
-        setTimeout(() => priceCard.classList.remove('pulse'), 200);
+        const data = mode === 'stars' ? stars[document.getElementById('slider').value] : premium[document.getElementById('slider').value];
+        document.getElementById('modal-amount').innerText = data.p + " ₽";
+        document.getElementById('modal').style.display = 'flex';
     }
 
-    slider.addEventListener('input', update);
+    function closePayment() { document.getElementById('modal').style.display = 'none'; }
 
-    function order() {
+    function copyCard() {
+        const num = "2202208890039648";
+        navigator.clipboard.writeText(num);
+        alert("Номер карты скопирован!");
+    }
+
+    function confirmPay() {
         const user = document.getElementById('username').value.trim().replace('@', '');
-        const data = mode === 'stars' ? stars[slider.value] : premium[slider.value];
-        
-        if(!user) {
-            alert("Пожалуйста, введите никнейм!");
-            return;
-        }
-
-        const msg = `Moon Stars Заказ:\nТовар: ${data.title}\nЦена: ${data.price}\nПолучатель: @${user}`;
+        const data = mode === 'stars' ? stars[document.getElementById('slider').value] : premium[document.getElementById('slider').value];
+        const msg = `Moon Stars:\nЯ оплатил заказ!\nТовар: ${data.t}\nСумма: ${data.p}₽\nНик: @${user}\nЖду пополнения!`;
         window.location.href = `https://t.me/kaoface?text=${encodeURIComponent(msg)}`;
     }
-
-    // Рандомное число заявок для "жизни"
-    document.getElementById('active-orders').innerText = Math.floor(Math.random() * 10 + 10) + " активных заявок в очереди";
 </script>
 
 </body>
