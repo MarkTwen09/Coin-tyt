@@ -16,6 +16,28 @@
             --border: rgba(255, 255, 255, 0.05);
         }
 
+        /* АНИМАЦИЯ ЗАХОДА */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
         body {
@@ -29,13 +51,52 @@
             color: var(--text-main); padding: 20px 0; overflow-x: hidden;
         }
 
+        /* ИНДИКАТОР СТАТУСА */
+        .status-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(33, 160, 56, 0.1);
+            border: 1px solid rgba(33, 160, 56, 0.3);
+            padding: 6px 12px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #21a038;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #21a038;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        .status-text {
+            font-size: 10px;
+            font-weight: 700;
+            color: #21a038;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         .header-logo { text-align: center; margin-bottom: 20px; }
         .logo { font-size: 20px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; }
         .logo span { color: var(--accent-gold); }
 
-        /* СЛАЙДЕР СЕРВИСОВ (РУЛЕТКА) */
+        /* СЛАЙДЕР (РУЛЕТКА) */
         .slider-wrapper { width: 100%; overflow: hidden; margin-bottom: 25px; position: relative; }
-        .services-slider { display: flex; gap: 15px; padding: 0 20px; scroll-behavior: smooth; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+        .services-slider { display: flex; gap: 15px; padding: 0 20px; scroll-behavior: smooth; overflow-x: auto; scrollbar-width: none; }
         .services-slider::-webkit-scrollbar { display: none; }
         .service-card { min-width: 85%; height: 150px; border-radius: 28px; padding: 24px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; text-decoration: none; color: white; flex-shrink: 0; }
         .vpn-card { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
@@ -45,7 +106,7 @@
         .card-desc { font-size: 12px; opacity: 0.9; margin-top: 4px; }
         .card-arrow { position: absolute; top: 24px; right: 24px; font-size: 20px; opacity: 0.7; }
 
-        /* ОСНОВНОЙ КОНТЕЙНЕР */
+        /* КОНТЕЙНЕР */
         .main-container { width: 90%; max-width: 380px; background: var(--card-bg); backdrop-filter: blur(25px); border-radius: 32px; padding: 28px; border: 1px solid var(--border); box-shadow: 0 40px 100px rgba(0,0,0,0.8); text-align: center; margin-bottom: 24px; }
         .tabs-container { position: relative; display: flex; background: rgba(0, 0, 0, 0.4); padding: 4px; border-radius: 16px; margin-bottom: 28px; }
         .tab-slider { position: absolute; top: 4px; left: 4px; height: calc(100% - 8px); width: calc(50% - 4px); background: rgba(255, 255, 255, 0.05); border-radius: 12px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -91,11 +152,17 @@
 </head>
 <body>
 
-<div class="header-logo">
+<!-- ИНДИКАТОР -->
+<div class="status-badge reveal">
+    <div class="status-dot"></div>
+    <div class="status-text">Работает / 24/7</div>
+</div>
+
+<div class="header-logo reveal delay-1">
     <div class="logo">MOON<span>STARS</span></div>
 </div>
 
-<div class="slider-wrapper">
+<div class="slider-wrapper reveal delay-2">
     <div class="services-slider" id="serv-slider">
         <a href="https://t.me/Tgeshka_vpn" class="service-card vpn-card" target="_blank">
             <span class="card-arrow">↗</span>
@@ -116,7 +183,7 @@
     </div>
 </div>
 
-<div class="main-container">
+<div class="main-container reveal delay-3">
     <div class="tabs-container">
         <div class="tab-slider" id="slider-bg"></div>
         <button class="tab-btn active" onclick="setMode('stars', 0)">Stars</button>
@@ -147,35 +214,29 @@
     <button class="buy-btn" onclick="checkout()">Оформить заказ</button>
 </div>
 
-<div class="faq-section">
-    <div style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 800; margin-bottom: 12px; letter-spacing: 1px;">Часто задаваемые вопросы</div>
+<div class="faq-section reveal delay-4">
+    <div style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 800; margin-bottom: 12px; letter-spacing: 1px;">Вопросы</div>
     <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">Как быстро придут Stars? <span>+</span></button>
-        <div class="faq-answer">Обычно начисление занимает от 5 до 15 минут после подтверждения оплаты.</div>
-    </div>
-    <div class="faq-item">
-        <button class="faq-question" onclick="toggleFaq(this)">Это безопасно? <span>+</span></button>
-        <div class="faq-answer">Да, мы используем официальные методы покупки. Ваш аккаунт в безопасности.</div>
+        <div class="faq-answer">Начисление занимает от 5 до 15 минут.</div>
     </div>
 </div>
 
-<div class="ref-card">
-    <div style="font-weight: 800; font-size: 14px;">Партнерская программа</div>
-    <div class="ref-btn" onclick="copyRef()">Скопировать ссылку</div>
-    <a href="https://t.me/kaoface" class="ref-btn" style="color: var(--accent-gold); border-color: rgba(197,160,89,0.3)">Поддержка</a>
+<div class="ref-card reveal delay-4">
+    <div style="font-weight: 800; font-size: 14px;">Партнерка</div>
+    <div class="ref-btn" onclick="copyRef()">Ссылка</div>
 </div>
 
 <div class="modal-overlay" id="modal">
     <div class="payment-card">
         <div class="pay-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#21A038" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
         <div class="pay-title">Оплата</div>
-        <div class="pay-steps">1. <b>Скопируйте</b> номер карты.<br>2. Переведите <b>точную сумму</b>.<br>3. Нажмите <b>«Я оплатил»</b>.</div>
         <div class="card-box" onclick="copyCard()">
             <div class="card-num">2202 2088 9003 9648</div>
             <div class="copy-hint" id="copy-text">Нажмите, чтобы скопировать</div>
         </div>
         <button class="done-btn" onclick="done()">Я оплатил</button>
-        <button onclick="document.getElementById('modal').style.display='none'" style="background:none; border:none; color:var(--text-dim); margin-top:20px; cursor:pointer; font-size:12px;">Отмена</button>
+        <button onclick="document.getElementById('modal').style.display='none'" style="background:none; border:none; color:var(--text-dim); margin-top:20px; font-size:12px;">Отмена</button>
     </div>
 </div>
 
@@ -187,19 +248,19 @@
         premium: [{t:"3 МЕСЯЦА", p:1200}, {t:"6 МЕСЯЦЕВ", p:1550}, {t:"12 МЕСЯЦЕВ", p:2750}]
     };
 
-    // ВОССТАНОВЛЕННАЯ РУЛЕТКА
+    // РУЛЕТКА
     const servSlider = document.getElementById('serv-slider');
     let scrollPos = 0;
     let isPaused = false;
 
     function autoScroll() {
         if (!isPaused) {
-            scrollPos += 1;
+            scrollPos += 0.8;
             if (scrollPos >= servSlider.scrollWidth - servSlider.clientWidth) scrollPos = 0;
             servSlider.scrollLeft = scrollPos;
         }
     }
-    let scrollInterval = setInterval(autoScroll, 30);
+    setInterval(autoScroll, 30);
 
     servSlider.addEventListener('touchstart', () => isPaused = true);
     servSlider.addEventListener('touchend', () => {
