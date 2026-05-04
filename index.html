@@ -3,105 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Moon Stars — Light Glass Edition</title>
+    <title>Moon Stars — Premium Digital Assets</title>
     <style>
         :root {
-            /* Светлая палитра */
-            --bg-light: #f0f2f5;
-            --glass-white: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.4);
-            --accent-gold: #b08d4a;
-            --accent-blue: #007aff;
+            --bg-dark: #0a0c10;
+            --card-bg: rgba(20, 24, 33, 0.9);
+            --accent-gold: #c5a059;
+            --accent-blue: #0088cc;
             --accent-sber: #21a038;
-            --accent-sale: #ff3b30;
-            --text-main: #1c1c1e;
-            --text-dim: #8e8e93;
-            --shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            --accent-sale: #ff4757;
+            --text-main: #f1f5f9;
+            --text-dim: #64748b;
+            --border: rgba(255, 255, 255, 0.05);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-light);
-            /* Мягкий светлый градиент на фоне */
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-dark);
             background-image: 
-                radial-gradient(circle at 0% 0%, rgba(0, 122, 255, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 100% 100%, rgba(176, 141, 74, 0.08) 0%, transparent 40%);
+                radial-gradient(circle at 0% 0%, rgba(197, 160, 89, 0.05) 0%, transparent 30%),
+                radial-gradient(circle at 100% 100%, rgba(0, 136, 204, 0.05) 0%, transparent 30%);
             min-height: 100vh;
             display: flex; flex-direction: column; align-items: center;
             color: var(--text-main); padding: 20px 0; overflow-x: hidden;
         }
 
         .header-logo { text-align: center; margin-bottom: 20px; }
-        .logo { font-size: 20px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; color: var(--text-main); }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; }
         .logo span { color: var(--accent-gold); }
 
         /* СЛАЙДЕР СЕРВИСОВ */
-        .slider-wrapper { width: 100%; overflow: hidden; margin-bottom: 25px; }
-        .services-slider { display: flex; gap: 15px; padding: 0 20px; overflow-x: auto; scrollbar-width: none; }
+        .slider-wrapper { width: 100%; overflow: hidden; margin-bottom: 25px; position: relative; }
+        .services-slider { display: flex; gap: 15px; padding: 0 20px; scroll-behavior: smooth; overflow-x: auto; scrollbar-width: none; }
         .services-slider::-webkit-scrollbar { display: none; }
-        .service-card { min-width: 85%; height: 140px; border-radius: 28px; padding: 24px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; text-decoration: none; color: white; flex-shrink: 0; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .vpn-card { background: linear-gradient(135deg, #ff9f0a 0%, #ff3b30 100%); }
-        .shop-card { background: linear-gradient(135deg, #007aff 0%, #5856d6 100%); }
-        .card-tag { position: absolute; top: 20px; left: 24px; font-size: 10px; font-weight: 800; text-transform: uppercase; background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 10px; }
+        .service-card { min-width: 85%; height: 150px; border-radius: 28px; padding: 24px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; text-decoration: none; color: white; flex-shrink: 0; }
+        .vpn-card { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .shop-card { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
+        .card-tag { position: absolute; top: 24px; left: 24px; font-size: 10px; font-weight: 800; text-transform: uppercase; background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 10px; }
         .card-title { font-size: 20px; font-weight: 800; }
-        .card-arrow { position: absolute; top: 20px; right: 24px; font-size: 18px; opacity: 0.8; }
+        .card-desc { font-size: 12px; opacity: 0.9; margin-top: 4px; }
+        .card-arrow { position: absolute; top: 24px; right: 24px; font-size: 20px; opacity: 0.7; }
 
-        /* ГЛАВНЫЙ КОНТЕЙНЕР (СТЕКЛО) */
-        .main-container { 
-            width: 90%; max-width: 380px; 
-            background: var(--glass-white); 
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 32px; padding: 28px; 
-            border: 1px solid var(--glass-border); 
-            box-shadow: var(--shadow);
-            text-align: center; margin-bottom: 24px; 
-        }
-
-        /* ТАБЫ */
-        .tabs-container { position: relative; display: flex; background: rgba(0, 0, 0, 0.05); padding: 4px; border-radius: 16px; margin-bottom: 28px; }
-        .tab-slider { position: absolute; top: 4px; left: 4px; height: calc(100% - 8px); width: calc(50% - 4px); background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* ГЛАВНЫЙ КОНТЕЙНЕР */
+        .main-container { width: 90%; max-width: 380px; background: var(--card-bg); backdrop-filter: blur(25px); border-radius: 32px; padding: 28px; border: 1px solid var(--border); box-shadow: 0 40px 100px rgba(0,0,0,0.8); text-align: center; margin-bottom: 24px; }
+        .tabs-container { position: relative; display: flex; background: rgba(0, 0, 0, 0.4); padding: 4px; border-radius: 16px; margin-bottom: 28px; }
+        .tab-slider { position: absolute; top: 4px; left: 4px; height: calc(100% - 8px); width: calc(50% - 4px); background: rgba(255, 255, 255, 0.05); border-radius: 12px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .tab-btn { flex: 1; padding: 12px; border: none; background: none; color: var(--text-dim); font-weight: 700; font-size: 11px; text-transform: uppercase; cursor: pointer; position: relative; z-index: 2; }
         .tab-btn.active { color: var(--text-main); }
 
-        /* ВВОД НИКА */
-        .tg-input { width: 100%; background: #fff; border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 16px 16px 16px 44px; color: var(--text-main); outline: none; font-size: 15px; font-weight: 600; }
-        .at-sign { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--accent-blue); font-weight: 700; }
-        
-        #profile-box { display: none; align-items: center; justify-content: space-between; background: #fff; border: 1px solid rgba(0,0,0,0.05); padding: 12px 16px; border-radius: 18px; }
-        .profile-avatar { width: 36px; height: 36px; background: var(--accent-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; }
+        #profile-box { display: none; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); padding: 12px 16px; border-radius: 18px; margin-top: 10px; }
+        .profile-avatar { width: 36px; height: 36px; background: var(--accent-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #000; }
+        .tg-input { width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 16px; padding: 16px 16px 16px 44px; color: white; outline: none; }
+        .at-sign { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--accent-gold); }
 
-        /* ЦЕННИК */
-        .price-display { padding: 24px; background: #fff; border-radius: 24px; border: 1px solid rgba(0,0,0,0.03); margin: 24px 0; position: relative; overflow: hidden; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02); }
+        .price-display { padding: 24px; background: rgba(255,255,255,0.02); border-radius: 24px; border: 1px solid var(--border); margin: 24px 0; position: relative; overflow: hidden; }
         .sale-badge { position: absolute; top: 10px; right: -25px; background: var(--accent-sale); color: white; font-size: 9px; font-weight: 900; padding: 4px 30px; transform: rotate(45deg); text-transform: uppercase; }
-        .val-main { font-size: 28px; font-weight: 800; color: var(--text-main); }
-        .val-sub { font-size: 18px; color: var(--accent-sale); font-weight: 800; margin-top: 5px; }
+        .val-main { font-size: 28px; font-weight: 800; }
+        .val-sub { font-size: 16px; color: var(--accent-sale); font-weight: 800; }
 
-        input[type="range"] { -webkit-appearance: none; width: 100%; height: 6px; background: rgba(0,0,0,0.05); border-radius: 10px; margin-bottom: 32px; outline: none; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; background: #fff; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.05); cursor: pointer; }
+        input[type="range"] { -webkit-appearance: none; width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-bottom: 32px; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; background: #fff; border-radius: 50%; border: 5px solid var(--bg-dark); }
 
-        .buy-btn { width: 100%; padding: 20px; background: var(--text-main); color: #fff; border: none; border-radius: 20px; font-size: 14px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
-        .buy-btn:active { transform: scale(0.97); opacity: 0.9; }
+        .buy-btn { width: 100%; padding: 18px; background: #fff; color: #000; border: none; border-radius: 18px; font-size: 13px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
 
-        /* FAQ И ПАРТНЕРКА (СВЕТЛЫЕ) */
-        .faq-item { background: var(--glass-white); border-radius: 18px; margin-bottom: 8px; border: 1px solid var(--glass-border); overflow: hidden; width: 90%; max-width: 380px; }
-        .faq-question { padding: 18px; width: 100%; text-align: left; background: none; border: none; color: var(--text-main); font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; cursor: pointer; }
-        .faq-answer { padding: 0 18px; max-height: 0; overflow: hidden; transition: 0.3s; color: var(--text-dim); font-size: 13px; line-height: 1.5; }
-        .faq-item.active .faq-answer { padding: 0 18px 18px 18px; max-height: 100px; }
+        /* FAQ И ПАРТНЕРКА */
+        .faq-section { width: 90%; max-width: 380px; margin-bottom: 30px; }
+        .faq-item { background: rgba(255, 255, 255, 0.02); border-radius: 16px; margin-bottom: 8px; border: 1px solid var(--border); overflow: hidden; }
+        .faq-question { padding: 16px; width: 100%; text-align: left; background: none; border: none; color: var(--text-main); font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .faq-answer { padding: 0 16px; max-height: 0; overflow: hidden; transition: 0.3s ease-out; color: var(--text-dim); font-size: 12px; line-height: 1.6; }
+        .faq-item.active .faq-answer { padding: 0 16px 16px 16px; max-height: 200px; }
 
-        .ref-card { width: 90%; max-width: 380px; background: #fff; border-radius: 24px; padding: 24px; border: 1px solid var(--glass-border); margin: 20px 0; text-align: center; box-shadow: var(--shadow); }
-        .ref-btn { display: block; width: 100%; padding: 14px; background: rgba(0,122,255,0.05); color: var(--accent-blue); border: none; border-radius: 14px; font-size: 12px; font-weight: 700; text-decoration: none; margin-top: 10px; }
+        .ref-card { width: 90%; max-width: 380px; background: linear-gradient(135deg, rgba(197, 160, 89, 0.1) 0%, rgba(0, 136, 204, 0.05) 100%); border-radius: 28px; padding: 24px; border: 1px solid rgba(197, 160, 89, 0.15); margin-bottom: 24px; text-align: center; }
+        .ref-btn { display: block; width: 100%; padding: 14px; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2); border-radius: 14px; color: #fff; font-size: 12px; font-weight: 600; text-decoration: none; margin-top: 10px; cursor: pointer; }
 
-        /* МОДАЛКА (СВЕТЛАЯ) */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
-        .payment-card { width: 92%; max-width: 350px; background: #fff; border-radius: 35px; padding: 30px 20px; border: 1px solid rgba(0,0,0,0.05); text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
-        .pay-steps { text-align: left; background: #f9f9fb; border-radius: 20px; padding: 18px; margin-bottom: 20px; font-size: 12px; color: #3a3a3c; }
-        .pay-steps b { color: var(--accent-sber); }
-        .card-box { background: #f2f2f7; border-radius: 20px; padding: 20px; cursor: pointer; margin-bottom: 12px; }
-        .card-num { font-family: monospace; font-size: 17px; font-weight: 700; color: var(--text-main); letter-spacing: 1px; }
-        .sber-btn { display: block; width: 100%; padding: 18px; background: var(--accent-sber); color: #fff; border: none; border-radius: 20px; font-size: 14px; font-weight: 800; text-decoration: none; text-transform: uppercase; margin-bottom: 12px; }
-        .done-btn { width: 100%; padding: 18px; background: #fff; color: var(--text-main); border: 1px solid rgba(0,0,0,0.1); border-radius: 20px; font-size: 14px; font-weight: 800; text-transform: uppercase; }
+        /* МОДАЛКА ОПЛАТЫ (ВОССТАНОВЛЕННАЯ) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(20px); }
+        .payment-card { width: 92%; max-width: 350px; background: #12141a; border-radius: 35px; padding: 30px 20px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
+        .pay-icon { width: 44px; height: 44px; background: rgba(33, 160, 56, 0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+        .pay-title { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+        .pay-steps { text-align: left; background: rgba(255,255,255,0.03); border-radius: 16px; padding: 16px; margin-bottom: 20px; font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+        .pay-steps b { color: var(--accent-gold); }
+        .card-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 18px; cursor: pointer; margin-bottom: 12px; transition: 0.2s; }
+        .card-box:active { transform: scale(0.98); background: rgba(255,255,255,0.05); }
+        .card-num { font-family: monospace; font-size: 17px; font-weight: 700; color: #fff; letter-spacing: 1px; }
+        .copy-hint { font-size: 9px; color: var(--text-dim); font-weight: 800; margin-top: 6px; text-transform: uppercase; }
+        .sber-btn { display: block; width: 100%; padding: 18px; background: #21a038; color: #fff; border: none; border-radius: 20px; font-size: 14px; font-weight: 800; text-decoration: none; text-transform: uppercase; margin-bottom: 12px; }
+        .done-btn { width: 100%; padding: 18px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border); border-radius: 20px; font-size: 14px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -111,16 +100,22 @@
 </div>
 
 <div class="slider-wrapper">
-    <div class="services-slider">
+    <div class="services-slider" id="serv-slider">
         <a href="https://t.me/Tgeshka_vpn" class="service-card vpn-card" target="_blank">
             <span class="card-arrow">↗</span>
             <div class="card-tag">Безопасность</div>
-            <div class="card-title">Tgeshka VPN</div>
+            <div>
+                <div class="card-title">Tgeshka VPN</div>
+                <div class="card-desc">Безлимитный доступ</div>
+            </div>
         </a>
         <a href="https://marktwen09.github.io/Coin-tyt/" class="service-card shop-card" target="_blank">
             <span class="card-arrow">↗</span>
             <div class="card-tag">Маркетплейс</div>
-            <div class="card-title">Moon Shop</div>
+            <div>
+                <div class="card-title">Moon Shop</div>
+                <div class="card-desc">Донат и товары</div>
+            </div>
         </a>
     </div>
 </div>
@@ -133,7 +128,7 @@
     </div>
 
     <div style="position: relative; text-align: left; margin-bottom: 20px;">
-        <label style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 800; margin-bottom: 8px; display: block;">Никнейм в Telegram</label>
+        <label style="font-size: 9px; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 8px; display: block;">Telegram Username</label>
         <div id="input-box" style="position: relative;">
             <span class="at-sign">@</span>
             <input type="text" id="username" class="tg-input" placeholder="Введите ник" oninput="handleInput(this)">
@@ -141,9 +136,9 @@
         <div id="profile-box">
             <div style="display: flex; align-items: center; gap: 12px;">
                 <div class="profile-avatar" id="p-avatar">?</div>
-                <div id="p-name" style="font-weight: 700;">Username</div>
+                <div id="p-name" style="font-weight: 600;">Username</div>
             </div>
-            <button onclick="resetUser()" style="background:none; border:none; color:var(--text-dim); font-size:24px;">×</button>
+            <button onclick="resetUser()" style="background:none; border:none; color:var(--text-dim); font-size:20px;">×</button>
         </div>
     </div>
 
@@ -157,32 +152,44 @@
     <button class="buy-btn" onclick="checkout()">Оформить со скидкой</button>
 </div>
 
-<div class="faq-item">
-    <button class="faq-question" onclick="toggleFaq(this)">Как быстро придут Stars? <span>+</span></button>
-    <div class="faq-answer">Начисление происходит в ручном режиме админом @kaoface в течение 5-15 минут.</div>
+<div class="faq-section">
+    <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">Как быстро придут Stars? <span>+</span></button>
+        <div class="faq-answer">Обычно начисление занимает от 5 до 15 минут после оплаты.</div>
+    </div>
+    <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">Это безопасно? <span>+</span></button>
+        <div class="faq-answer">Да, мы используем официальные методы покупки. Ваш аккаунт в безопасности.</div>
+    </div>
 </div>
 
 <div class="ref-card">
     <div style="font-weight: 800; font-size: 14px;">Партнерская программа</div>
     <div class="ref-btn" onclick="copyRef()">Скопировать ссылку</div>
+    <a href="https://t.me/kaoface" class="ref-btn" style="color: var(--accent-gold); border-color: rgba(197,160,89,0.3)">Поддержка</a>
 </div>
 
-<!-- МОДАЛКА ОПЛАТЫ -->
+<!-- ВОССТАНОВЛЕННАЯ МОДАЛКА -->
 <div class="modal-overlay" id="modal">
     <div class="payment-card">
-        <div class="pay-title">Оплата заказа</div>
+        <div class="pay-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#21A038" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+        <div class="pay-title">Оплата</div>
+        
         <div class="pay-steps">
             1. Нажмите <b>«Оплатить в Сбере»</b>.<br>
             2. Переведите <b>сумму заказа</b>.<br>
-            3. Нажмите <b>«Я оплатил»</b> для связи.
+            3. Нажмите <b>«Я оплатил»</b> для связи в ТГ.
         </div>
+        
         <a href="https://www.sberbank.com/sms/pbpn?requisiteNumber=79888486675" class="sber-btn">Оплатить в Сбере</a>
+
         <div class="card-box" onclick="copyCard()">
             <div class="card-num">2202 2088 9003 9648</div>
-            <div style="font-size: 9px; color: var(--text-dim); margin-top: 8px; font-weight: 800;" id="copy-text">НАЖМИТЕ ДЛЯ КОПИРОВАНИЯ</div>
+            <div class="copy-hint" id="copy-text">Нажмите, чтобы скопировать карту</div>
         </div>
+
         <button class="done-btn" onclick="done()">Я оплатил</button>
-        <button onclick="document.getElementById('modal').style.display='none'" style="background:none; border:none; color:var(--text-dim); margin-top:20px; cursor:pointer; font-size:12px; font-weight: 700;">ЗАКРЫТЬ</button>
+        <button onclick="document.getElementById('modal').style.display='none'" style="background:none; border:none; color:var(--text-dim); margin-top:20px; cursor:pointer; font-size:12px;">Отмена</button>
     </div>
 </div>
 
@@ -190,7 +197,6 @@
     let mode = 'stars';
     let confirmedUser = "";
     
-    // ТВОИ АКТУАЛЬНЫЕ ЦЕНЫ
     const data = {
         stars: [
             {t:"100 STARS", p:155}, {t:"155 STARS", p:220}, {t:"250 STARS", p:370}, {t:"500 STARS", p:690}, 
@@ -244,7 +250,7 @@
     function copyCard() {
         navigator.clipboard.writeText("2202208890039648");
         document.getElementById('copy-text').innerText = "СКОПИРОВАНО!";
-        setTimeout(() => { document.getElementById('copy-text').innerText = "НАЖМИТЕ ДЛЯ КОПИРОВАНИЯ"; }, 2000);
+        setTimeout(() => { document.getElementById('copy-text').innerText = "Нажмите, чтобы скопировать карту"; }, 2000);
     }
 
     function copyRef() {
@@ -259,10 +265,11 @@
 
     function done() {
         const item = data[mode][document.getElementById('slider').value];
-        const text = `🚀 НОВЫЙ ЗАКАЗ\n\nТовар: ${item.t}\nСумма: ${item.p}₽\nКлиент: @${confirmedUser}`;
+        const text = `🚀 НОВЫЙ ЗАКАЗ (АКЦИЯ)\n\nТовар: ${item.t}\nСумма: ${item.p}₽\nКлиент: @${confirmedUser}`;
         window.location.href = `https://t.me/kaoface?text=${encodeURIComponent(text)}`;
     }
 </script>
 
 </body>
 </html>
+
