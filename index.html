@@ -3,361 +3,655 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jack Daniel's Factory Simulator</title>
+    <title>Jack Daniel's Tennessee Whiskey Simulator</title>
     <style>
         :root {
-            --bg-color: #111;
-            --panel-color: #1a1a1a;
-            --accent-color: #ffb74d; /* Золотой/виски оттенок */
-            --text-color: #fff;
-            --text-muted: #aaa;
+            --bg-color: #050505; /* Почти черный */
+            --panel-color: #121212;
+            --accent-color: #f1c40f; /* Яркий золотой */
+            --barrel-color: #8e6e46;
+            --text-color: #e0e0e0;
+            --text-muted: #888;
+            --border-color: #333;
         }
 
         body {
-            font-family: 'Courier New', Courier, monospace; /* Придает крафтовый стиль */
+            font-family: 'Courier New', Courier, monospace;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
+        /* --- Стилизация Заголовка --- */
         header {
             text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--accent-color);
+            margin-bottom: 20px;
+            border-bottom: 3px double var(--accent-color);
             padding-bottom: 10px;
-            width: dashed;
-            max-width: 600px;
             width: 100%;
+            max-width: 800px;
+            background: rgba(0,0,0,0.5);
         }
 
         h1 {
             margin: 0;
-            font-size: 2rem;
-            letter-spacing: 2px;
+            font-size: 2.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0 #000, -1px -1px 0 var(--accent-color);
         }
 
         .brand-sub {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
-            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            max-width: 600px;
+        /* --- Основной контейнер --- */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
             width: 100%;
+            max-width: 800px;
         }
 
-        .stats-panel, .action-panel, .shop-panel {
+        @media (min-width: 600px) {
+            .main-grid { grid-template-columns: 2fr 1fr; }
+            .shop-panel { grid-column: 1 / -1; }
+        }
+
+        .panel {
             background-color: var(--panel-color);
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.7);
         }
 
+        h2 {
+            margin: 0 0 15px 0;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- Панель Статистики --- */
         .stats {
             display: flex;
             justify-content: space-around;
-            font-size: 1.2rem;
+            gap: 10px;
         }
 
-        .stat-box span {
-            display: block;
+        .stat-box {
             text-align: center;
+            flex: 1;
+            padding: 10px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.6rem;
             font-weight: bold;
+            color: #fff;
+        }
+
+        .stat-value.highlight {
             color: var(--accent-color);
-            font-size: 1.5rem;
-            margin-top: 5px;
+        }
+
+        /* --- Визуализация Цеха (Factory Floor) --- */
+        .factory-floor {
+            height: 200px;
+            background: repeating-linear-gradient(45deg, #111, #111 10px, #161616 10px, #161616 20px);
+            border: 2px inset #222;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 10px;
+            gap: 5px;
+        }
+
+        .factory-floor::before {
+            content: "ЦЕХ ВЫДЕРЖКИ";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 0.7rem;
+            color: #333;
+        }
+
+        /* CSS Бочка */
+        .barrel-icon {
+            width: 30px;
+            height: 40px;
+            background-color: var(--barrel-color);
+            border-radius: 6px / 10px;
+            position: relative;
+            border: 2px solid #5d4037;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+            transition: transform 0.1s ease;
+        }
+
+        .barrel-icon::before, .barrel-icon::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: #444; /* Обручи */
+            left: 0;
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+        }
+        .barrel-icon::before { top: 8px; }
+        .barrel-icon::after { bottom: 8px; }
+
+        /* Анимация появления бочки */
+        @keyframes spawnBarrel {
+            0% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+            70% { transform: translateY(5px) scale(1.1); opacity: 1; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .barrel-spawn {
+            animation: spawnBarrel 0.4s ease-out forwards;
+        }
+
+        /* --- Кнопки и Действия --- */
+        .action-area {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         button {
-            background-color: transparent;
+            background-color: #222;
             color: var(--text-color);
-            border: 2px solid var(--text-color);
-            padding: 12px 24px;
+            border: 1px solid var(--border-color);
+            padding: 12px;
             font-family: inherit;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s ease;
-            width: 100%;
-            border-radius: 4px;
             text-transform: uppercase;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        button:hover {
-            background-color: var(--text-color);
+        button:hover:not(:disabled) {
+            background-color: var(--accent-color);
             color: #000;
+            border-color: var(--accent-color);
         }
 
         button:disabled {
-            border-color: #444;
-            color: #444;
+            opacity: 0.4;
             cursor: not-allowed;
         }
 
         .main-click-btn {
-            border-color: var(--accent-color);
+            background: linear-gradient(135deg, #333, #111);
+            border: 2px solid var(--accent-color);
             color: var(--accent-color);
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-
-        .main-click-btn:hover {
-            background-color: var(--accent-color);
-            color: #000;
-        }
-
-        .shop-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #333;
-        }
-
-        .shop-item:last-child {
-            border-bottom: none;
-        }
-
-        .item-info h3 {
-            margin: 0 0 5px 0;
             font-size: 1rem;
         }
 
-        .item-info p {
-            margin: 0;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .buy-btn {
-            width: auto;
-            padding: 8px 16px;
-            font-size: 0.9rem;
-        }
-
-        /* Прогресс бар для наглядности */
         .progress-container {
             width: 100%;
-            background-color: #333;
-            height: 4px;
-            margin-top: 15px;
-            border-radius: 2px;
+            background-color: #1a1a1a;
+            height: 6px;
+            border-radius: 3px;
             overflow: hidden;
+            border: 1px solid #333;
         }
         .progress-bar {
             width: 0%;
             height: 100%;
-            background-color: var(--accent-color);
-            transition: width 0.1s linear;
+            background: linear-gradient(90deg, var(--barrel-color), var(--accent-color));
+            transition: width 0.05s linear;
         }
+
+        /* --- Магазин Улучшений (Графический) --- */
+        .shop-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .shop-item {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .item-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        /* Визуализация иконок апгрейдов через CSS/Emoji */
+        .item-icon-visual {
+            width: 50px;
+            height: 50px;
+            background: #000;
+            border: 2px solid #333;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            position: relative;
+        }
+
+        .item-info h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #fff;
+        }
+
+        .item-info .item-desc {
+            margin: 2px 0 0 0;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .item-stats-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            background: rgba(0,0,0,0.3);
+            padding: 5px;
+        }
+
+        .buy-btn {
+            width: 100%;
+            font-size: 0.8rem;
+            padding: 8px;
+        }
+
+        /* CSS иконки для апгрейдов */
+        .icon-distiller::before { content: "👨‍🍳"; } /* Фермер/Повар */
+        .icon-grain::before { content: "🌽"; }
+        .icon-filter::before { content: "⬛"; color: #444; font-size: 1.2rem;} /* Уголь */
+        .icon-filter::after { content: "💧"; position: absolute; font-size: 1rem; bottom: 5px; right: 5px;}
+        .icon-still::before { content: "⚗️"; } /* Перегонный куб */
+
     </style>
 </head>
 <body>
 
     <header>
         <h1>JACK DANIEL'S</h1>
-        <div class="brand-sub">Симулятор Винокурни v1.0</div>
+        <div class="brand-sub">TENNESSEE WHISKEY SIMULATOR</div>
     </header>
 
-    <div class="container">
-        <div class="stats-panel">
-            <div class="stats">
-                <div class="stat-box">Баланс: <span id="money">$0</span></div>
-                <div class="stat-box">Склад: <span id="barrels">0 бочек</span></div>
+    <div class="main-grid">
+        
+        <!-- ЛЕВАЯ КОЛОНКА: ПРОИЗВОДСТВО -->
+        <div class="production-zone">
+            <div class="panel">
+                <h2><span>🏭</span>Производственный Цех</h2>
+                
+                <!-- Визуализация бочек на складе -->
+                <div class="factory-floor" id="factory-floor">
+                    <!-- Сюда JS будет добавлять <div class="barrel-icon"> -->
+                </div>
+
+                <div class="action-area">
+                    <button class="main-click-btn" id="click-btn">
+                        <span>🪵</span> Сварить бочку (клик)
+                    </button>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar" id="p-bar"></div>
+                    </div>
+
+                    <button id="sell-btn" disabled>
+                        <span>💰</span> Продать бутылки
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="action-panel">
-            <button class="main-click-btn" id="click-btn">Сварить бочку виски</button>
-            <button id="sell-btn" disabled>Продать всю партию</button>
-            <div class="progress-container">
-                <div class="progress-bar" id="p-bar"></div>
+        <!-- ПРАВАЯ КОЛОНКА: СТАТУС -->
+        <div class="status-zone">
+            <div class="panel">
+                <h2><span>📊</span>Активы</h2>
+                <div class="stats">
+                    <div class="stat-box">
+                        <span class="stat-label">Капитал</span>
+                        <span class="stat-value highlight" id="money">$0</span>
+                    </div>
+                </div>
+                <div class="stats" style="margin-top:10px;">
+                    <div class="stat-box">
+                        <span class="stat-label">Бочки (Склад)</span>
+                        <span class="stat-value" id="barrels">0</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Цена/Бочка</span>
+                        <span class="stat-value" id="barrel-price">$10</span>
+                    </div>
+                </div>
+                <div style="font-size:0.7rem; color:#555; text-align:center; margin-top:10px;">
+                    Авто-производство: <span id="total-cps">0</span> б/сек
+                </div>
             </div>
         </div>
 
-        <div class="shop-panel">
-            <h2 style="margin-top:0; font-size: 1.2rem; border-bottom: 1px solid #444; padding-bottom: 5px;">Модернизация завода</h2>
-            
+        <!-- НИЖНЯЯ ПАНЕЛЬ: МАГАЗИН -->
+        <div class="shop-panel panel">
+            <h2 style="grid-column: 1/-1;"><span>🛒</span> Модернизация винокурни</h2>
+
+            <!-- Апгрейд 1: Ручной труд -->
             <div class="shop-item">
-                <div class="item-info">
-                    <h3>Младший дистиллятор</h3>
-                    <p>Автоматически делает 0.2 бочки в сек.</p>
-                    <p>Цена: <span id="up1-cost" style="color:var(--accent-color)">$15</span> | Кол-во: <span id="up1-count">0</span></p>
+                <div class="item-header">
+                    <div class="item-icon-visual icon-distiller"></div>
+                    <div class="item-info">
+                        <h3>Подмастерье</h3>
+                        <p class="item-desc">Помогает мешать затор.</p>
+                    </div>
                 </div>
-                <button class="buy-btn" id="up1-btn">Нанять</button>
+                <div class="item-stats-row">
+                    <span>СпС: +0.1 б/с</span>
+                    <span>Ур: <b id="up1-count">0</b></span>
+                </div>
+                <button class="buy-btn" id="up1-btn">Нанять [$<span id="up1-cost">15</span>]</button>
             </div>
 
+            <!-- Апгрейд 2: Сырье -->
             <div class="shop-item">
-                <div class="item-info">
-                    <h3>Угольный фильтр</h3>
-                    <p>Повышает цену продажи бочки на $5.</p>
-                    <p>Цена: <span id="up2-cost" style="color:var(--accent-color)">$100</span> | Уровень: <span id="up2-count">0</span></p>
+                <div class="item-header">
+                    <div class="item-icon-visual icon-grain"></div>
+                    <div class="item-info">
+                        <h3>Отборная Кукуруза</h3>
+                        <p class="item-desc">Варка идет быстрее.</p>
+                    </div>
                 </div>
-                <button class="buy-btn" id="up2-btn">Купить</button>
+                <div class="item-stats-row">
+                    <span>Клик: +1 бочка</span>
+                    <span>Ур: <b id="up2-count">0</b></span>
+                </div>
+                <button class="buy-btn" id="up2-btn">Улучшить [$<span id="up2-cost">50</span>]</button>
             </div>
 
+            <!-- Апгрейд 3: Фильтрация -->
             <div class="shop-item">
-                <div class="item-info">
-                    <h3>Дубовый цех (Склад)</h3>
-                    <p>Автоматически делает 1.5 бочки в сек.</p>
-                    <p>Цена: <span id="up3-cost" style="color:var(--accent-color)">$500</span> | Кол-во: <span id="up3-count">0</span></p>
+                <div class="item-header">
+                    <div class="item-icon-visual icon-filter"></div>
+                    <div class="item-info">
+                        <h3>Уголь Клена</h3>
+                        <p class="item-desc">Знаменитый Lincoln County Process. Виски дороже.</p>
+                    </div>
                 </div>
-                <button class="buy-btn" id="up3-btn">Построить</button>
+                <div class="item-stats-row">
+                    <span>Цена: +$10/б</span>
+                    <span>Ур: <b id="up3-count">0</b></span>
+                </div>
+                <button class="buy-btn" id="up3-btn">Прожечь [$<span id="up3-cost">150</span>]</button>
             </div>
+
+            <!-- Апгрейд 4: Автоматизация -->
+            <div class="shop-item">
+                <div class="item-header">
+                    <div class="item-icon-visual icon-still"></div>
+                    <div class="item-info">
+                        <h3>Медный Куб</h3>
+                        <p class="item-desc">Мощный перегонный аппарат.</p>
+                    </div>
+                </div>
+                <div class="item-stats-row">
+                    <span>СпС: +2.0 б/с</span>
+                    <span>Ур: <b id="up4-count">0</b></span>
+                </div>
+                <button class="buy-btn" id="up4-btn">Собрать [$<span id="up4-cost">1000</span>]</button>
+            </div>
+
         </div>
     </div>
 
     <script>
-        // Игровое состояние
+        // Глобальное состояние игры
         let game = {
             money: 0,
             barrels: 0,
-            barrelPrice: 10,
+            barrelPriceBase: 10,
             
-            // Рабочие (авто-бочки в сек)
-            workers: {
-                distiller: { count: 0, cost: 15, cps: 0.2 },
-                factory: { count: 0, cost: 500, cps: 1.5 }
-            },
-            
-            // Улучшения клика/цены
+            // Сила клика (сколько бочек за раз)
+            clickPower: 1,
+            // Время варки руками (мс)
+            clickDuration: 1000, 
+
+            // Автоматизация (бочки в секунду - BPS)
+            bps: 0,
+
+            // Данные апгрейдов
             upgrades: {
-                filter: { count: 0, cost: 100, priceBonus: 5 }
+                distiller: { count: 0, cost: 15, bpsBonus: 0.1, costMult: 1.15 },
+                grain:     { count: 0, cost: 50, clickBonus: 1, costMult: 1.4 },
+                filter:    { count: 0, cost: 150, priceBonus: 10, costMult: 1.7 },
+                still:     { count: 0, cost: 1000, bpsBonus: 2.0, costMult: 1.3 }
             }
         };
 
-        // DOM элементы
-        const moneyEl = document.getElementById('money');
-        const barrelsEl = document.getElementById('barrels');
-        const clickBtn = document.getElementById('click-btn');
-        const sellBtn = document.getElementById('sell-btn');
-        const pBar = document.getElementById('p-bar');
-
-        const up1Btn = document.getElementById('up1-btn');
-        const up1Cost = document.getElementById('up1-cost');
-        const up1Count = document.getElementById('up1-count');
-
-        const up2Btn = document.getElementById('up2-btn');
-        const up2Cost = document.getElementById('up2-cost');
-        const up2Count = document.getElementById('up2-count');
-
-        const up3Btn = document.getElementById('up3-btn');
-        const up3Cost = document.getElementById('up3-cost');
-        const up3Count = document.getElementById('up3-count');
-
-        // Обновление интерфейса
-        function updateUI() {
-            moneyEl.innerText = `$${Math.floor(game.money)}`;
-            barrelsEl.innerText = `${Math.floor(game.barrels)} шт`;
+        // DOM Кэш
+        const ui = {
+            money: document.getElementById('money'),
+            barrels: document.getElementById('barrels'),
+            price: document.getElementById('barrel-price'),
+            totalCps: document.getElementById('total-cps'),
+            floor: document.getElementById('factory-floor'),
+            pBar: document.getElementById('p-bar'),
+            btnClick: document.getElementById('click-btn'),
+            btnSell: document.getElementById('sell-btn'),
             
-            // Кнопка продажи
-            if (game.barrels >= 1) {
-                sellBtn.disabled = false;
-                sellBtn.innerText = `Продать партию за $${Math.floor(game.barrels * game.barrelPrice)}`;
-            } else {
-                sellBtn.disabled = true;
-                sellBtn.innerText = `Продать всю партию`;
-            }
+            up1: { btn: document.getElementById('up1-btn'), cost: document.getElementById('up1-cost'), count: document.getElementById('up1-count') },
+            up2: { btn: document.getElementById('up2-btn'), cost: document.getElementById('up2-cost'), count: document.getElementById('up2-count') },
+            up3: { btn: document.getElementById('up3-btn'), cost: document.getElementById('up3-cost'), count: document.getElementById('up3-count') },
+            up4: { btn: document.getElementById('up4-btn'), cost: document.getElementById('up4-cost'), count: document.getElementById('up4-count') },
+        };
 
-            // Доступность кнопок магазина
-            up1Btn.disabled = game.money < game.workers.distiller.cost;
-            up2Btn.disabled = game.money < game.upgrades.filter.cost;
-            up3Btn.disabled = game.money < game.workers.factory.cost;
+        // Вспомогательная функция форматирования денег
+        function fMoney(val) {
+            if (val < 1000) return '$' + val.toFixed(1);
+            if (val < 1000000) return '$' + (val/1000).toFixed(1) + 'k';
+            return '$' + (val/1000000).toFixed(2) + 'M';
         }
 
-        // Ручной клик (Варка виски с анимацией)
+        // Обновление всей числовой части UI
+        function updateUI() {
+            ui.money.innerText = fMoney(game.money);
+            ui.barrels.innerText = Math.floor(game.barrels);
+            
+            let currentPrice = game.barrelPriceBase + (game.upgrades.filter.count * game.upgrades.filter.priceBonus);
+            ui.price.innerText = `$${currentPrice}`;
+
+            ui.totalCps.innerText = game.bps.toFixed(1);
+
+            // Кнопка продажи
+            if (game.barrels >= 1) {
+                ui.btnSell.disabled = false;
+                let revenue = Math.floor(game.barrels) * currentPrice;
+                ui.btnSell.innerHTML = `<span>🍾</span> Продать на ${fMoney(revenue)}`;
+            } else {
+                ui.btnSell.disabled = true;
+                ui.btnSell.innerHTML = `<span>🍾</span> Склад пуст`;
+            }
+
+            // Обновление кнопок магазина (цена и доступность)
+            updateShopBtn(ui.up1, game.upgrades.distiller);
+            updateShopBtn(ui.up2, game.upgrades.grain);
+            updateShopBtn(ui.up3, game.upgrades.filter);
+            updateShopBtn(ui.up4, game.upgrades.still);
+            
+            updateVisualBarrels();
+        }
+
+        function updateShopBtn(uiEl, data) {
+            uiEl.cost.innerText = Math.floor(data.cost);
+            uiEl.count.innerText = data.count;
+            uiEl.btn.disabled = game.money < data.cost;
+        }
+
+        // --- ЛОГИКА ВИЗУАЛИЗАЦИИ БОЧЕК В ЦЕХУ ---
+        let lastVisualBarrels = 0;
+        function updateVisualBarrels() {
+            let currentBarrels = Math.floor(game.barrels);
+            // Лимит отображения, чтобы не повесить браузер (макс 50 бочек визуально)
+            let visualLimit = Math.min(currentBarrels, 50);
+            
+            // Если бочек стало больше, добавляем новые с анимацией
+            if (visualLimit > lastVisualBarrels) {
+                for (let i = 0; i < (visualLimit - lastVisualBarrels); i++) {
+                    const barrelDiv = document.createElement('div');
+                    barrelDiv.className = 'barrel-icon barrel-spawn';
+                    // Случайный небольшой поворот для реализма
+                    let rot = (Math.random() - 0.5) * 10;
+                    barrelDiv.style.transform = `rotate(${rot}deg)`;
+                    ui.floor.appendChild(barrelDiv);
+                    
+                    // Убираем класс анимации через полсекунды, чтобы не грузить проц
+                    setTimeout(() => barrelDiv.classList.remove('barrel-spawn'), 500);
+                }
+            } 
+            // Если продали все, очищаем цех
+            else if (currentBarrels === 0 && ui.floor.childElementCount > 0) {
+                ui.floor.innerHTML = ''; 
+            }
+            lastVisualBarrels = visualLimit;
+        }
+
+
+        // --- ЛОГИКА ДЕЙСТВИЙ ---
+
+        // Ручной клик с прогресс-баром
         let isClicking = false;
-        clickBtn.addEventListener('click', () => {
+        ui.btnClick.addEventListener('click', () => {
             if (isClicking) return;
             isClicking = true;
-            clickBtn.disabled = true;
+            ui.btnClick.disabled = true;
+            ui.btnClick.innerHTML = "<span>🔥</span> Ждем созревания...";
             
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                pBar.style.width = `${progress}%`;
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    game.barrels += 1;
-                    pBar.style.width = '0%';
+            let startTime = Date.now();
+            
+            const pInterval = setInterval(() => {
+                let elapsed = Date.now() - startTime;
+                let percent = (elapsed / game.clickDuration) * 100;
+                
+                if (percent >= 100) {
+                    clearInterval(pInterval);
+                    ui.pBar.style.width = '0%';
+                    game.barrels += game.clickPower;
                     isClicking = false;
-                    clickBtn.disabled = false;
+                    ui.btnClick.disabled = false;
+                    ui.btnClick.innerHTML = `<span>🪵</span> Сварить бочку (+${game.clickPower})`;
                     updateUI();
+                } else {
+                    ui.pBar.style.width = `${percent}%`;
                 }
-            }, 50); // Скорость варки руками — 0.5 сек.
+            }, 50); // Частота обновления бара
         });
 
-        // Продажа виски
-        sellBtn.addEventListener('click', () => {
-            if (game.barrels >= 1) {
-                let revenue = Math.floor(game.barrels) * game.barrelPrice;
-                game.money += revenue;
-                game.barrels -= Math.floor(game.barrels);
+        // Продажа
+        ui.btnSell.addEventListener('click', () => {
+            let currentPrice = game.barrelPriceBase + (game.upgrades.filter.count * game.upgrades.filter.priceBonus);
+            let bToSell = Math.floor(game.barrels);
+            if (bToSell >= 1) {
+                game.money += bToSell * currentPrice;
+                game.barrels -= bToSell;
                 updateUI();
             }
         });
 
-        // Покупка Дистиллятора
-        up1Btn.addEventListener('click', () => {
-            if (game.money >= game.workers.distiller.cost) {
-                game.money -= game.workers.distiller.cost;
-                game.workers.distiller.count++;
-                game.workers.distiller.cost = Math.floor(game.workers.distiller.cost * 1.3);
+        // --- ЛОГИКА ПОКУПОК ---
+
+        // Функция-шаблон для покупки апгрейда
+        function buyUpgrade(upgradeKey) {
+            let up = game.upgrades[upgradeKey];
+            if (game.money >= up.cost) {
+                game.money -= up.cost;
+                up.count++;
                 
-                up1Cost.innerText = `$${game.workers.distiller.cost}`;
-                up1Count.innerText = game.workers.distiller.count;
-                updateUI();
-            }
-        });
-
-        // Покупка Фильтра (Увеличение цены)
-        up2Btn.addEventListener('click', () => {
-            if (game.money >= game.upgrades.filter.cost) {
-                game.money -= game.upgrades.filter.cost;
-                game.upgrades.filter.count++;
-                game.barrelPrice += game.upgrades.filter.priceBonus;
-                game.upgrades.filter.cost = Math.floor(game.upgrades.filter.cost * 1.5);
+                // Применяем бонусы
+                if (up.bpsBonus) game.bps += up.bpsBonus;
+                if (up.clickBonus) game.clickPower += up.clickBonus;
                 
-                up2Cost.innerText = `$${game.upgrades.filter.cost}`;
-                up2Count.innerText = game.upgrades.filter.count;
-                updateUI();
-            }
-        });
-
-        // Покупка Цеха
-        up3Btn.addEventListener('click', () => {
-            if (game.money >= game.workers.factory.cost) {
-                game.money -= game.workers.factory.cost;
-                game.workers.factory.count++;
-                game.workers.factory.cost = Math.floor(game.workers.factory.cost * 1.4);
+                // Удорожание
+                up.cost = up.cost * up.costMult;
                 
-                up3Cost.innerText = `$${game.workers.factory.cost}`;
-                up3Count.innerText = game.workers.factory.count;
                 updateUI();
             }
-        });
+        }
 
-        // Гейм-луп для автоматического дохода (каждые 100мс)
+        ui.up1.btn.addEventListener('click', () => buyUpgrade('distiller'));
+        ui.up2.btn.addEventListener('click', () => buyUpgrade('grain'));
+        ui.up3.btn.addEventListener('click', () => buyUpgrade('filter'));
+        ui.up4.btn.addEventListener('click', () => buyUpgrade('still'));
+
+
+        // --- ГЕЙМ-ЛУП (Авто-производство) ---
+        let lastTick = Date.now();
         setInterval(() => {
-            let passiveProduction = (game.workers.distiller.count * game.workers.distiller.cps) + 
-                                     (game.workers.factory.count * game.workers.factory.cps);
-            
-            // Добавляем долю за 0.1 секунды
-            game.barrels += passiveProduction * 0.1;
-            updateUI();
-        }, 100);
+            let now = Date.now();
+            let delta = (now - lastTick) / 1000; // кол-во секунд прошедших
+            lastTick = now;
 
-        // Первичный запуск UI
+            if (game.bps > 0) {
+                game.barrels += game.bps * delta;
+                // Обновляем только текст бочек и кнопку продажи, чтобы не перерисовывать весь UI часто
+                ui.barrels.innerText = Math.floor(game.barrels);
+                
+                let currentPrice = game.barrelPriceBase + (game.upgrades.filter.count * game.upgrades.filter.priceBonus);
+                if (game.barrels >= 1) {
+                    ui.btnSell.disabled = false;
+                    let revenue = Math.floor(game.barrels) * currentPrice;
+                    ui.btnSell.innerHTML = `<span>🍾</span> Продать на ${fMoney(revenue)}`;
+                }
+                
+                updateVisualBarrels(); // Проверяем, нужно ли добавить бочки визуально
+            }
+            
+            // Каждые 2 секунды проверяем доступность кнопок магазина (если накопились деньги от авто-бочек)
+            if (Math.random() < 0.05) updateUI(); 
+
+        }, 100); // Тик каждые 100мс
+
+        // Старт
         updateUI();
+
     </script>
 </body>
 </html>
