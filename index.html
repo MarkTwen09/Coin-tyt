@@ -2,273 +2,523 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Moon Stars — Premium Digital Assets</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Симулятор Правителя России</title>
     <style>
         :root {
-            --bg-dark: #0a0c10;
-            --card-bg: rgba(20, 24, 33, 0.9);
-            --accent-gold: #c5a059;
-            --accent-blue: #0088cc;
-            --accent-sber: #21a038;
-            --accent-sale: #ff4757;
-            --text-main: #f1f5f9;
-            --text-dim: #64748b;
-            --border: rgba(255, 255, 255, 0.05);
+            --bg-color: #f4f4f9;
+            --panel-color: #ffffff;
+            --primary-color: #0055a5; /* Синий преобладающий */
+            --accent-color: #e52b50;  /* Красный акцент */
+            --success-color: #2ecc71;
+            --text-color: #333;
         }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(197, 160, 89, 0.05) 0%, transparent 30%),
-                radial-gradient(circle at 100% 100%, rgba(0, 136, 204, 0.05) 0%, transparent 30%);
-            min-height: 100vh;
-            display: flex; flex-direction: column; align-items: center;
-            color: var(--text-main); padding: 20px 0; overflow-x: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
         }
 
-        .header-logo { text-align: center; margin-bottom: 20px; }
-        .logo { font-size: 20px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; }
-        .logo span { color: var(--accent-gold); }
+        #game-container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--panel-color);
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
 
-        /* СЛАЙДЕР СЕРВИСОВ */
-        .slider-wrapper { width: 100%; overflow: hidden; margin-bottom: 25px; position: relative; }
-        .services-slider { display: flex; gap: 15px; padding: 0 20px; scroll-behavior: smooth; overflow-x: auto; scrollbar-width: none; }
-        .services-slider::-webkit-scrollbar { display: none; }
-        .service-card { min-width: 85%; height: 150px; border-radius: 28px; padding: 24px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; text-decoration: none; color: white; flex-shrink: 0; }
-        .vpn-card { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-        .shop-card { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
-        .card-tag { position: absolute; top: 24px; left: 24px; font-size: 10px; font-weight: 800; text-transform: uppercase; background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 10px; }
-        .card-title { font-size: 20px; font-weight: 800; }
-        .card-desc { font-size: 12px; opacity: 0.9; margin-top: 4px; }
-        .card-arrow { position: absolute; top: 24px; right: 24px; font-size: 20px; opacity: 0.7; }
+        /* Верхняя панель ресурсов */
+        .top-bar {
+            background: var(--primary-color);
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 14px;
+            font-weight: bold;
+            border-bottom: 3px solid var(--accent-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
 
-        /* ГЛАВНЫЙ КОНТЕЙНЕР */
-        .main-container { width: 90%; max-width: 380px; background: var(--card-bg); backdrop-filter: blur(25px); border-radius: 32px; padding: 28px; border: 1px solid var(--border); box-shadow: 0 40px 100px rgba(0,0,0,0.8); text-align: center; margin-bottom: 24px; }
-        .tabs-container { position: relative; display: flex; background: rgba(0, 0, 0, 0.4); padding: 4px; border-radius: 16px; margin-bottom: 28px; }
-        .tab-slider { position: absolute; top: 4px; left: 4px; height: calc(100% - 8px); width: calc(50% - 4px); background: rgba(255, 255, 255, 0.05); border-radius: 12px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .tab-btn { flex: 1; padding: 12px; border: none; background: none; color: var(--text-dim); font-weight: 700; font-size: 11px; text-transform: uppercase; cursor: pointer; position: relative; z-index: 2; }
-        .tab-btn.active { color: var(--text-main); }
+        .stat-item {
+            text-align: center;
+        }
 
-        #profile-box { display: none; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); padding: 12px 16px; border-radius: 18px; margin-top: 10px; }
-        .profile-avatar { width: 36px; height: 36px; background: var(--accent-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #000; }
-        .tg-input { width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 16px; padding: 16px 16px 16px 44px; color: white; outline: none; }
-        .at-sign { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--accent-gold); }
+        /* Главный экран и вкладки */
+        .content {
+            padding: 15px;
+            flex-grow: 1;
+            margin-bottom: 80px;
+        }
 
-        .price-display { padding: 24px; background: rgba(255,255,255,0.02); border-radius: 24px; border: 1px solid var(--border); margin: 24px 0; position: relative; overflow: hidden; }
-        .sale-badge { position: absolute; top: 10px; right: -25px; background: var(--accent-sale); color: white; font-size: 9px; font-weight: 900; padding: 4px 30px; transform: rotate(45deg); text-transform: uppercase; }
-        .val-main { font-size: 28px; font-weight: 800; }
-        .val-sub { font-size: 16px; color: var(--accent-sale); font-weight: 800; }
+        .screen {
+            display: none;
+        }
 
-        input[type="range"] { -webkit-appearance: none; width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-bottom: 32px; outline: none; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; background: #fff; border-radius: 50%; border: 5px solid var(--bg-dark); }
+        .screen.active {
+            display: block;
+        }
 
-        .buy-btn { width: 100%; padding: 18px; background: #fff; color: #000; border: none; border-radius: 18px; font-size: 13px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+        h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+            font-size: 20px;
+        }
 
-        /* FAQ И ПАРТНЕРКА */
-        .faq-section { width: 90%; max-width: 380px; margin-bottom: 30px; }
-        .faq-item { background: rgba(255, 255, 255, 0.02); border-radius: 16px; margin-bottom: 8px; border: 1px solid var(--border); overflow: hidden; }
-        .faq-question { padding: 16px; width: 100%; text-align: left; background: none; border: none; color: var(--text-main); font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .faq-answer { padding: 0 16px; max-height: 0; overflow: hidden; transition: 0.3s ease-out; color: var(--text-dim); font-size: 12px; line-height: 1.6; }
-        .faq-item.active .faq-answer { padding: 0 16px 16px 16px; max-height: 200px; }
+        /* Карточки и элементы управления */
+        .card {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
 
-        .ref-card { width: 90%; max-width: 380px; background: linear-gradient(135deg, rgba(197, 160, 89, 0.1) 0%, rgba(0, 136, 204, 0.05) 100%); border-radius: 28px; padding: 24px; border: 1px solid rgba(197, 160, 89, 0.15); margin-bottom: 24px; text-align: center; }
-        .ref-btn { display: block; width: 100%; padding: 14px; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2); border-radius: 14px; color: #fff; font-size: 12px; font-weight: 600; text-decoration: none; margin-top: 10px; cursor: pointer; }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
 
-        /* МОДАЛКА ОПЛАТЫ (ВОССТАНОВЛЕННАЯ) */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(20px); }
-        .payment-card { width: 92%; max-width: 350px; background: #12141a; border-radius: 35px; padding: 30px 20px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
-        .pay-icon { width: 44px; height: 44px; background: rgba(33, 160, 56, 0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
-        .pay-title { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 12px; }
-        .pay-steps { text-align: left; background: rgba(255,255,255,0.03); border-radius: 16px; padding: 16px; margin-bottom: 20px; font-size: 12px; color: var(--text-dim); line-height: 1.5; }
-        .pay-steps b { color: var(--accent-gold); }
-        .card-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 18px; cursor: pointer; margin-bottom: 12px; transition: 0.2s; }
-        .card-box:active { transform: scale(0.98); background: rgba(255,255,255,0.05); }
-        .card-num { font-family: monospace; font-size: 17px; font-weight: 700; color: #fff; letter-spacing: 1px; }
-        .copy-hint { font-size: 9px; color: var(--text-dim); font-weight: 800; margin-top: 6px; text-transform: uppercase; }
-        .sber-btn { display: block; width: 100%; padding: 18px; background: #21a038; color: #fff; border: none; border-radius: 20px; font-size: 14px; font-weight: 800; text-decoration: none; text-transform: uppercase; margin-bottom: 12px; }
-        .done-btn { width: 100%; padding: 18px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border); border-radius: 20px; font-size: 14px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #003d77;
+        }
+
+        button.btn-spend {
+            background: var(--accent-color);
+        }
+        button.btn-spend:hover {
+            background: #b31e3b;
+        }
+
+        /* Кнопка Следующий День */
+        .next-day-trigger {
+            background: linear-gradient(135deg, #ff9f43, #ff5252);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            user-select: none;
+        }
+
+        .next-day-trigger:active {
+            transform: scale(0.98);
+        }
+
+        /* Модальное окно событий */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            width: 85%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            color: var(--accent-color);
+        }
+
+        .event-choices button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        /* Нижнее меню навигации */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 480px;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 10;
+        }
+
+        .nav-btn {
+            background: none;
+            color: #555;
+            border: none;
+            padding: 5px 10px;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-weight: normal;
+        }
+
+        .nav-btn.active {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .nav-btn span {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
     </style>
 </head>
 <body>
 
-<div class="header-logo">
-    <div class="logo">MOON<span>STARS</span></div>
-</div>
-
-<div class="slider-wrapper">
-    <div class="services-slider" id="serv-slider">
-        <a href="https://t.me/Tgeshka_vpn" class="service-card vpn-card" target="_blank">
-            <span class="card-arrow">↗</span>
-            <div class="card-tag">Безопасность</div>
-            <div>
-                <div class="card-title">Tgeshka VPN</div>
-                <div class="card-desc">Безлимитный доступ</div>
-            </div>
-        </a>
-        <a href="https://marktwen09.github.io/Coin-tyt/" class="service-card shop-card" target="_blank">
-            <span class="card-arrow">↗</span>
-            <div class="card-tag">Маркетплейс</div>
-            <div>
-                <div class="card-title">Moon Shop</div>
-                <div class="card-desc">Донат и товары</div>
-            </div>
-        </a>
-    </div>
-</div>
-
-<div class="main-container">
-    <div class="tabs-container">
-        <div class="tab-slider" id="slider-bg"></div>
-        <button class="tab-btn active" onclick="setMode('stars', 0)">Stars</button>
-        <button class="tab-btn" onclick="setMode('premium', 100)">Premium</button>
-    </div>
-
-    <div style="position: relative; text-align: left; margin-bottom: 20px;">
-        <label style="font-size: 9px; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 8px; display: block;">Telegram Username</label>
-        <div id="input-box" style="position: relative;">
-            <span class="at-sign">@</span>
-            <input type="text" id="username" class="tg-input" placeholder="Введите ник" oninput="handleInput(this)">
+<div id="game-container">
+    
+    <!-- Верхняя панель (Ресурсы) -->
+    <div class="top-bar">
+        <div class="stat-item">
+            👥 Население<br><span id="stat-pop">146.0</span> млн
         </div>
-        <div id="profile-box">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <div class="profile-avatar" id="p-avatar">?</div>
-                <div id="p-name" style="font-weight: 600;">Username</div>
-            </div>
-            <button onclick="resetUser()" style="background:none; border:none; color:var(--text-dim); font-size:20px;">×</button>
+        <div class="stat-item">
+            📅 Дата<br><span id="stat-date">01 янв 2026</span>
+        </div>
+        <div class="stat-item">
+            💰 Бюджет<br><span id="stat-money">500</span> млрд ₽
         </div>
     </div>
 
-    <div class="price-display">
-        <div class="sale-badge">SALE</div>
-        <div class="val-main" id="display-val">100 STARS</div>
-        <div class="val-sub" id="display-price">155 ₽</div>
-    </div>
-
-    <input type="range" id="slider" min="0" max="10" step="1" value="0" oninput="update()">
-    <button class="buy-btn" onclick="checkout()">Оформить со скидкой</button>
-</div>
-
-<div class="faq-section">
-    <div class="faq-item">
-        <button class="faq-question" onclick="toggleFaq(this)">Как быстро придут Stars? <span>+</span></button>
-        <div class="faq-answer">Обычно начисление занимает от 5 до 15 минут после оплаты.</div>
-    </div>
-    <div class="faq-item">
-        <button class="faq-question" onclick="toggleFaq(this)">Это безопасно? <span>+</span></button>
-        <div class="faq-answer">Да, мы используем официальные методы покупки. Ваш аккаунт в безопасности.</div>
-    </div>
-</div>
-
-<div class="ref-card">
-    <div style="font-weight: 800; font-size: 14px;">Партнерская программа</div>
-    <div class="ref-btn" onclick="copyRef()">Скопировать ссылку</div>
-    <a href="https://t.me/kaoface" class="ref-btn" style="color: var(--accent-gold); border-color: rgba(197,160,89,0.3)">Поддержка</a>
-</div>
-
-<!-- ВОССТАНОВЛЕННАЯ МОДАЛКА -->
-<div class="modal-overlay" id="modal">
-    <div class="payment-card">
-        <div class="pay-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#21A038" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
-        <div class="pay-title">Оплата</div>
+    <!-- Основной контент -->
+    <div class="content">
         
-        <div class="pay-steps">
-            1. Нажмите <b>«Оплатить в Сбере»</b>.<br>
-            2. Переведите <b>сумму заказа</b>.<br>
-            3. Нажмите <b>«Я оплатил»</b> для связи в ТГ.
-        </div>
-        
-        <a href="https://www.sberbank.com/sms/pbpn?requisiteNumber=79888486675" class="sber-btn">Оплатить в Сбере</a>
+        <!-- ЭКРАН 1: Главная -->
+        <div id="screen-main" class="screen active">
+            <h2>Кремль</h2>
+            <div class="card">
+                <p><strong>Правитель:</strong> Вы (Президент)</p>
+                <p><strong>Текущий статус страны:</strong> Развитие</p>
+                <p><strong>Доход в день:</strong> <span id="main-income" style="color:green">+5</span> млрд ₽</p>
+            </div>
 
-        <div class="card-box" onclick="copyCard()">
-            <div class="card-num">2202 2088 9003 9648</div>
-            <div class="copy-hint" id="copy-text">Нажмите, чтобы скопировать карту</div>
+            <!-- Лента последних новостей -->
+            <div class="card">
+                <h3>📰 Последние новости</h3>
+                <p id="news-feed" style="font-style: italic; color: #555;">В стране всё спокойно. Начните новый день.</p>
+            </div>
+
+            <!-- Главная кнопка клика -->
+            <div class="next-day-trigger" onclick="nextDay()">
+                ☀️ ПЕРЕЙТИ НА СЛЕДУЮЩИЙ ДЕНЬ<br>
+                <span style="font-size: 12px; font-weight: normal;">x1 день за тап</span>
+            </div>
         </div>
 
-        <button class="done-btn" onclick="done()">Я оплатил</button>
-        <button onclick="document.getElementById('modal').style.display='none'" style="background:none; border:none; color:var(--text-dim); margin-top:20px; cursor:pointer; font-size:12px;">Отмена</button>
+        <!-- ЭКРАН 2: Расходы / Реформы -->
+        <div id="screen-upgrades" class="screen">
+            <h2>Реформы и инвестиции</h2>
+            
+            <div class="card">
+                <div class="flex-between">
+                    <div>
+                        <strong>🏥 Медицина</strong><br>
+                        <small>Увеличивает прирост населения</small>
+                    </div>
+                    <button class="btn-spend" onclick="buyUpgrade('medicine', 50)">Улучшить (50 млрд)</button>
+                </div>
+                <div class="flex-between">
+                    <span>Текущий уровень: <span id="lvl-medicine">0</span></span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="flex-between">
+                    <div>
+                        <strong>🎓 Образование</strong><br>
+                        <small>Увеличивает ежедневный доход</small>
+                    </div>
+                    <button class="btn-spend" onclick="buyUpgrade('education', 60)">Улучшить (60 млрд)</button>
+                </div>
+                <div class="flex-between">
+                    <span>Текущий уровень: <span id="lvl-education">0</span></span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="flex-between">
+                    <div>
+                        <strong>🚀 Наука и космос</strong><br>
+                        <small>Повышает международный престиж</small>
+                    </div>
+                    <button class="btn-spend" onclick="buyUpgrade('science', 100)">Инвестировать (100 млрд)</button>
+                </div>
+                <div class="flex-between">
+                    <span>Текущий уровень: <span id="lvl-science">0</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 3: Склад и Торговля -->
+        <div id="screen-trade" class="screen">
+            <h2>Государственная торговля</h2>
+            <p>Экспортируйте ресурсы для быстрого пополнения казны.</p>
+            
+            <div class="card">
+                <div class="flex-between">
+                    <span>🛢️ Нефть (Запас: <span id="trade-oil">100</span> барр.)</span>
+                    <button onclick="sellResource('oil', 10)">Продать за 15 млрд</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="flex-between">
+                    <span>🌾 Пшеница (Запас: <span id="trade-grain">100</span> т.)</span>
+                    <button onclick="sellResource('grain', 5)">Продать за 5 млрд</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 4: Армия -->
+        <div id="screen-military" class="screen">
+            <h2>Вооруженные силы</h2>
+            <div class="card">
+                <p><strong>Численность армии:</strong> <span id="military-size">1.2</span> млн чел.</p>
+                <p>Безопасность границ обеспечена.</p>
+                <button class="btn-spend" onclick="buyUpgrade('army', 80)">Модернизировать армию (80 млрд)</button>
+            </div>
+        </div>
+
     </div>
+
+    <!-- Модальное окно случайных событий -->
+    <div id="event-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="event-title">Событие!</h3>
+            <p id="event-text">Описание происходящего в стране...</p>
+            <div id="event-choices" class="event-choices">
+                <!-- Кнопки выбора будут добавляться через JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Нижнее навигационное меню -->
+    <div class="bottom-nav">
+        <button class="nav-btn active" onclick="switchScreen('main', this)"><span>🏛️</span>Кремль</button>
+        <button class="nav-btn" onclick="switchScreen('upgrades', this)"><span>📊</span>Расходы</button>
+        <button class="nav-btn" onclick="switchScreen('trade', this)"><span>📦</span>Торговля</button>
+        <button class="nav-btn" onclick="switchScreen('military', this)"><span>🛡️</span>Армия</button>
+    </div>
+
 </div>
 
 <script>
-    let mode = 'stars';
-    let confirmedUser = "";
-    
-    const data = {
-        stars: [
-            {t:"100 STARS", p:155}, {t:"155 STARS", p:220}, {t:"250 STARS", p:370}, {t:"500 STARS", p:690}, 
-            {t:"1000 STARS", p:1390}, {t:"2500 STARS", p:3380}, {t:"3000 STARS", p:4025}, 
-            {t:"3500 STARS", p:4700}, {t:"4000 STARS", p:5350}, {t:"4500 STARS", p:6030}, {t:"5000 STARS", p:6695}
-        ],
-        premium: [{t:"3 МЕСЯЦА", p:1200}, {t:"6 МЕСЯЦЕВ", p:1550}, {t:"12 МЕСЯЦЕВ", p:2750}]
+    // Игровые переменные (Стейт)
+    let gameState = {
+        population: 146.0,
+        money: 500,
+        income: 5,
+        currentDate: new Date(2026, 0, 1), // 1 января 2026 года
+        upgrades: {
+            medicine: 0,
+            education: 0,
+            science: 0,
+            army: 0
+        },
+        resources: {
+            oil: 120,
+            grain: 200
+        }
     };
 
-    function toggleFaq(btn) {
-        btn.parentElement.classList.toggle('active');
-        btn.querySelector('span').innerText = btn.parentElement.classList.contains('active') ? '−' : '+';
+    // Список случайных событий
+    const randomEvents = [
+        {
+            title: "📈 Скачок цен на нефть",
+            text: "Мировые цены на энергоносители резко выросли. Куда направим сверхдоходы?",
+            choices: [
+                { text: "Вложить в бюджет (+50 млрд ₽)", action: () => { gameState.money += 50; updateUI(); } },
+                { text: "Раздать социальные выплаты населению", action: () => { gameState.population += 0.5; updateUI(); } }
+            ]
+        },
+        {
+            title: "🔬 Прорыв в Сколково",
+            text: "Наши ученые разработали новый тип отечественных процессоров.",
+            choices: [
+                { text: "Выделить грант на производство (-30 млрд ₽, +2 к доходу)", action: () => { gameState.money -= 30; gameState.income += 2; updateUI(); } },
+                { text: "Просто похвалить в новостях", action: () => { } }
+            ]
+        },
+        {
+            title: "🌾 Рекордный урожай",
+            text: "На юге страны собран исторический максимум зерновых.",
+            choices: [
+                { text: "Отправить излишки на склад (+50 пшеницы)", action: () => { gameState.resources.grain += 50; updateUI(); } }
+            ]
+        },
+        {
+            title: "⛈️ Наводнение в Сибири",
+            text: "Из-за проливных дождей затопило несколько регионов. Требуется помощь.",
+            choices: [
+                { text: "Выделить средства на ликвидацию (-40 млрд ₽)", action: () => { gameState.money -= 40; updateUI(); } },
+                { text: "Сэкономить средства (-0.2 млн населения)", action: () => { gameState.population -= 0.2; updateUI(); } }
+            ]
+        }
+    ];
+
+    // Короткие ежедневные новости для ленты
+    const dailyNews = [
+        "В Москве открыли новую линию беспилотного метро.",
+        "Российские космонавты успешно провели запуск нового модуля.",
+        "Курс рубля демонстрирует стабильность.",
+        "Пройден пик инфляции, экономика адаптировалась.",
+        "В регионах полным ходом идет программа газификации."
+    ];
+
+    // Обновление интерфейса
+    function updateUI() {
+        document.getElementById('stat-pop').innerText = gameState.population.toFixed(1);
+        document.getElementById('stat-money').innerText = gameState.money;
+        document.getElementById('main-income').innerText = (gameState.income >= 0 ? "+" : "") + gameState.income;
+        
+        // Форматирование даты
+        let options = { day: 'numeric', month: 'short', year: 'numeric' };
+        document.getElementById('stat-date').innerText = gameState.currentDate.toLocaleDateString('ru-RU', options);
+
+        // Уровни апгрейдов
+        document.getElementById('lvl-medicine').innerText = gameState.upgrades.medicine;
+        document.getElementById('lvl-education').innerText = gameState.upgrades.education;
+        document.getElementById('lvl-science').innerText = gameState.upgrades.science;
+
+        // Склад
+        document.getElementById('trade-oil').innerText = gameState.resources.oil;
+        document.getElementById('trade-grain').innerText = gameState.resources.grain;
+        document.getElementById('military-size').innerText = (1.2 + (gameState.upgrades.army * 0.1)).toFixed(1);
     }
 
-    function handleInput(input) {
-        let val = input.value.trim().replace('@', '');
-        if (val.length > 3) {
-            setTimeout(() => { if(input.value.length > 3) showProfile(val); }, 800);
+    // Переключение экранов
+    function switchScreen(screenId, btn) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        
+        document.getElementById(`screen-${screenId}`).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    // Покупка улучшений
+    function buyUpgrade(type, cost) {
+        if (gameState.money >= cost) {
+            gameState.money -= cost;
+            gameState.upgrades[type]++;
+            
+            // Эффекты от апгрейдов
+            if (type === 'education') gameState.income += 1;
+            if (type === 'medicine') gameState.population += 0.2;
+            
+            updateUI();
+        } else {
+            alert("Недостаточно денег в бюджете страны!");
         }
     }
 
-    function showProfile(name) {
-        confirmedUser = name;
-        document.getElementById('input-box').style.display = 'none';
-        document.getElementById('profile-box').style.display = 'flex';
-        document.getElementById('p-name').innerText = name;
-        document.getElementById('p-avatar').innerText = name.charAt(0).toUpperCase();
+    // Продажа ресурсов
+    function sellResource(res, amount) {
+        if (gameState.resources[res] >= amount) {
+            gameState.resources[res] -= amount;
+            if (res === 'oil') gameState.money += 15;
+            if (res === 'grain') gameState.money += 5;
+            updateUI();
+        } else {
+            alert("На складах нет столько ресурсов!");
+        }
     }
 
-    function resetUser() {
-        confirmedUser = "";
-        document.getElementById('username').value = "";
-        document.getElementById('input-box').style.display = 'block';
-        document.getElementById('profile-box').style.display = 'none';
+    // Ход (Следующий день)
+    function nextDay() {
+        // Добавляем 1 день к дате
+        gameState.currentDate.setDate(gameState.currentDate.getDate() + 1);
+        
+        // Начисление дохода
+        gameState.money += gameState.income;
+        
+        // Небольшой фоновый прирост населения от медицины
+        gameState.population += 0.01 + (gameState.upgrades.medicine * 0.005);
+
+        // Фоновый прирост ресурсов
+        gameState.resources.oil += 2;
+        gameState.resources.grain += 4;
+
+        // Случайное событие с шансом 25%
+        if (Math.random() < 0.25) {
+            triggerRandomEvent();
+        } else {
+            // Иначе просто меняем строчку новостей
+            let randomNews = dailyNews[Math.floor(Math.random() * dailyNews.length)];
+            document.getElementById('news-feed').innerText = randomNews;
+        }
+
+        updateUI();
     }
 
-    function update() {
-        const val = document.getElementById('slider').value;
-        document.getElementById('display-val').innerText = data[mode][val].t;
-        document.getElementById('display-price').innerText = data[mode][val].p + " ₽";
+    // Вызов модального окна события
+    function triggerRandomEvent() {
+        let event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
+        document.getElementById('event-title').innerText = event.title;
+        document.getElementById('event-text').innerText = event.text;
+        
+        let choicesContainer = document.getElementById('event-choices');
+        choicesContainer.innerHTML = ""; // Очищаем старые кнопки
+
+        event.choices.forEach(choice => {
+            let btn = document.createElement('button');
+            btn.innerText = choice.text;
+            btn.onclick = () => {
+                choice.action();
+                document.getElementById('event-modal').style.display = 'none';
+            };
+            choicesContainer.appendChild(btn);
+        });
+
+        document.getElementById('event-modal').style.display = 'flex';
     }
 
-    function setMode(m, pos) {
-        mode = m;
-        document.getElementById('slider-bg').style.transform = `translateX(${pos}%)`;
-        document.getElementById('slider').max = data[mode].length - 1;
-        document.getElementById('slider').value = 0;
-        update();
-    }
-
-    function copyCard() {
-        navigator.clipboard.writeText("2202208890039648");
-        document.getElementById('copy-text').innerText = "СКОПИРОВАНО!";
-        setTimeout(() => { document.getElementById('copy-text').innerText = "Нажмите, чтобы скопировать карту"; }, 2000);
-    }
-
-    function copyRef() {
-        navigator.clipboard.writeText(window.location.href);
-        alert("Ссылка скопирована!");
-    }
-
-    function checkout() {
-        if(!confirmedUser) return alert("Введите Username");
-        document.getElementById('modal').style.display = 'flex';
-    }
-
-    function done() {
-        const item = data[mode][document.getElementById('slider').value];
-        const text = `🚀 НОВЫЙ ЗАКАЗ (АКЦИЯ)\n\nТовар: ${item.t}\nСумма: ${item.p}₽\nКлиент: @${confirmedUser}`;
-        window.location.href = `https://t.me/kaoface?text=${encodeURIComponent(text)}`;
-    }
+    // Инициализация при старте
+    updateUI();
 </script>
-
 </body>
 </html>
