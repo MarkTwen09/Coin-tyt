@@ -148,7 +148,7 @@
             background: #0d1117;
         }
 
-        /* Кастомизация всплывающих окон Leaflet под темную тему */
+        /* Кастомизация всплывающих окон Leaflet */
         .leaflet-popup-content-wrapper {
             background: #161b22 !important;
             color: #c9d1d9 !important;
@@ -261,7 +261,7 @@
             <h2>🏛️ Ситуационный центр</h2>
             <div class="card">
                 <div class="flex-between">
-                    <span>Политический режим:</span>
+                    <span>Политический regime:</span>
                     <strong style="color: var(--text-gold);">Президентская Республика</strong>
                 </div>
                 <div class="flex-between" style="margin-top: 10px;">
@@ -281,13 +281,12 @@
             </div>
         </div>
 
-        <!-- КАРТА И ВОЙНА (OPENSTREETMAP) -->
+        <!-- КАРТА И ВОЙНА -->
         <div id="scr-map" class="screen">
             <h2>🗺️ Глобальная Экспансия</h2>
             <p style="font-size: 13px; color:#8b949e; margin-top:-10px;">Нажимайте на маркеры целей прямо на карте OpenStreetMap.</p>
             
             <div class="map-container-wrapper">
-                <!-- Сюда встраивается OSM Карта -->
                 <div id="map"></div>
             </div>
 
@@ -349,7 +348,7 @@
 
     </div>
 
-    <!-- ОКНО СОБЫТИЙ -->
+    <!-- ОКНО СОБЫТИЙ С ВЫБОРОМ -->
     <div id="modal-window" class="modal">
         <div class="modal-content">
             <h3 id="modal-title">Глобальное событие</h3>
@@ -383,16 +382,61 @@
         captured: { Finland: false, Ukraine: false, Kazakhstan: false }
     };
 
-    // Настоящие географические координаты целей на карте OpenStreetMap
+    // Параметры соседей на карте OpenStreetMap
     const countries = {
         'Хельсинки (Финляндия)': { id: 'Finland', lat: 60.1699, lng: 24.9384, power: 12, incomeBonus: 4, text: 'Северный сосед с сильной береговой обороной.' },
         'Киев (Украина)': { id: 'Ukraine', lat: 50.4501, lng: 30.5234, power: 18, incomeBonus: 6, text: 'Крупный узел с развитой инфраструктурой.' },
         'Астана (Казахстан)': { id: 'Kazakhstan', lat: 51.1605, lng: 71.4704, power: 10, incomeBonus: 5, text: 'Обширные степные территории и ресурсы.' }
     };
 
+    // База данных случайных интерактивных ивентов с решениями
+    const randomEvents = [
+        {
+            title: "📈 Скачок цен на нефть",
+            text: "Мировые энергетические биржи фиксируют дефицит топлива. Куда направим полученные сверхдоходы от экспорта сырья?",
+            choices: [
+                { text: "Зачислить в госбюджет (+80B ₽)", action: () => { state.money += 80; } },
+                { text: "Субсидировать внутреннее производство (+3 к доходу)", action: () => { state.baseIncome += 3; } }
+            ]
+        },
+        {
+            title: "🧪 Прорыв отечественного ВПК",
+            text: "Инженеры представили прототип гиперзвукового оборонного комплекса нового поколения. Требуются инвестиции для массового производства.",
+            choices: [
+                { text: "Выделить средства (-50B ₽, +2 к уровню армии)", action: () => { if(state.money >= 50) { state.money -= 50; state.upgrades.mil += 2; } } },
+                { text: "Заморозить проект ради экономии казны", action: () => {} }
+            ]
+        },
+        {
+            title: "🌾 Рекордные показатели агросектора",
+            text: "Благодаря хорошей погоде, уборочная кампания на юге показала исторический максимум урожайности.",
+            choices: [
+                { text: "Заполнить госрезервы (+80 пшеницы)", action: () => { state.res.grain += 80; } },
+                { text: "Направить на экспорт по сниженным ценам (+20B ₽)", action: () => { state.money += 20; } }
+            ]
+        },
+        {
+            title: "⛈️ Чрезвычайное происшествие",
+            text: "В Сибири из-за паводков пострадала инфраструктура нескольких моногородов. Местные власти просят финансовой помощи у Кремля.",
+            choices: [
+                { text: "Профинансировать полное восстановление (-40B ₽)", action: () => { if(state.money >= 40) state.money -= 40; else state.money = 0; } },
+                { text: "Выделить минимальные компенсации (-0.3М населения)", action: () => { state.pop -= 0.3; } }
+            ]
+        }
+    ];
+
+    // Короткие ежедневные новости для информационной ленты
+    const dailyNews = [
+        "Промышленный сектор отчитался о выполнении квартальных планов.",
+        "Центробанк сообщает о стабильности макроэкономических показателей.",
+        "Граждане поддерживают текущий внешнеполитический курс страны.",
+        "Зафиксирован рост активности на внутренних товарных биржах.",
+        "Строительство новых логистических хабов завершено с опережением графика.",
+        "Отечественные IT-компании представили замену зарубежному ПО."
+    ];
+
     let selectedTarget = null;
     let map = null;
-    let mapMarkers = {};
 
     function getIncome() {
         let warBonus = 0;
@@ -419,35 +463,26 @@
         document.getElementById('res-grain').innerText = state.res.grain;
     }
 
-    // Инициализация карты Leaflet OpenStreetMap
+    // Инициализация карты OpenStreetMap
     function initMap() {
-        if (map) return; // Чтобы не пересоздавать карту повторно
+        if (map) return;
 
-        // Центрируем карту на европейскую часть России
         map = L.map('map').setView([55.7558, 37.6173], 3);
 
-        // Подключаем стильный темный слой карты (CartoDB Dark Matter), чтобы подходил под дизайн игры
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        // Добавляем маркер Кремля (База игрока)
         L.marker([55.7520, 37.6175]).addTo(map)
             .bindPopup("<b style='color:#1f6feb;'>Москва (Кремль)</b><br>Ваша столица.");
 
-        // Генерируем точки для атаки на карте
         for (let name in countries) {
             let data = countries[name];
             let marker = L.marker([data.lat, data.lng]).addTo(map);
-            
-            marker.bindPopup(`<b>${name}</b><br>Нажмите на вкладку под картой для планирования атаки.`);
-            
-            // Клик по маркеру открывает панель планирования атаки
+            marker.bindPopup(`<b>${name}</b><br>Нажмите на вкладку под картой для управления войсками.`);
             marker.on('click', function() {
                 selectCountry(name);
             });
-
-            mapMarkers[data.id] = marker;
         }
     }
 
@@ -457,7 +492,6 @@
         document.getElementById(`scr-${screenId}`).classList.add('active');
         btn.classList.add('active');
 
-        // Карту Leaflet нужно обновлять при показе скрытого экрана, чтобы она прогрузилась корректно
         if (screenId === 'map') {
             setTimeout(() => {
                 initMap();
@@ -473,12 +507,12 @@
         document.getElementById('target-info').innerText = `${selectedTarget.text} Сила защиты: ${selectedTarget.power} ед.`;
         
         if (state.captured[selectedTarget.id]) {
-            document.getElementById('win-chance').innerText = "Статус: Территория интегрирована в империю";
+            document.getElementById('win-chance').innerText = "Статус: Регион под полным контролем империи";
             document.getElementById('attack-btn').style.display = 'none';
         } else {
             let myPower = 10 + (state.upgrades.mil * 5);
             let chance = Math.floor((myPower / (myPower + selectedTarget.power)) * 100);
-            if(chance > 95) chance = 95; // Максимальный шанс 95%
+            if(chance > 95) chance = 95;
             document.getElementById('win-chance').innerText = `Вероятность успеха: ${chance}%`;
             document.getElementById('attack-btn').style.display = 'block';
         }
@@ -493,12 +527,12 @@
         if (Math.random() * 100 <= chance) {
             state.captured[selectedTarget.id] = true;
             state.money += 50; 
-            showModal("⚔️ Успех операции", `Регион перешел под наш полный контроль. Получены контрибуции (+50B ₽). Налоги региона зачисляются в наш ежедневный доход.`);
+            showInteractiveModal("⚔️ Успех операции", `Регион интегрирован. Взяты трофеи (+50B ₽). Налоги региона подключены к суточному доходу империи.`, null);
             document.getElementById('target-card').style.display = 'none';
         } else {
             state.money -= 40;
             if(state.money < 0) state.money = 0;
-            showModal("❌ Операция сорвана", `Защита цели устояла. Потери бюджета на реорганизацию подразделений составили -40B ₽.`);
+            showInteractiveModal("❌ Операция сорвана", `Оборона цели устояла. Потери бюджета на восстановление техники составили -40B ₽.`, null);
         }
         updateUI();
     }
@@ -510,7 +544,7 @@
             if(type === 'med') state.pop += 1.2;
             updateUI();
         } else {
-            showModal("Кабинет Министров", "Недостаточно средств на проведение реформы.");
+            showInteractiveModal("Кабинет Министров", "Недостаточно средств на проведение государственной реформы.", null);
         }
     }
 
@@ -520,31 +554,59 @@
             state.money += profit;
             updateUI();
         } else {
-            showModal("Торговый сектор", "Недостаточно товаров на экспорт.");
+            showInteractiveModal("Торговый сектор", "Недостаточно стратегических запасов сырья для продажи.", null);
         }
     }
 
+    // Игровой клик (Следующий день)
     function processDay() {
         state.days++;
         state.money += getIncome();
         
+        // Ресурсы капают каждый день
         state.res.oil += 5 + (state.upgrades.prod);
         state.res.grain += 8 + (state.upgrades.prod);
         state.pop += 0.01;
+
+        // Механика триггера случайных событий (шанс 30% при клике)
+        if (Math.random() < 0.3) {
+            let randomEv = randomEvents[Math.floor(Math.random() * randomEvents.length)];
+            showInteractiveModal(randomEv.title, randomEv.text, randomEv.choices);
+        } else {
+            // Если ивент с выбором не выпал, просто пускаем бегущую строку новостей на главном экране
+            let randomNews = dailyNews[Math.floor(Math.random() * dailyNews.length)];
+            document.getElementById('news').innerText = randomNews;
+        }
         updateUI();
     }
 
-    function showModal(title, text) {
+    // Конструктор интерактивных модальных окон
+    function showInteractiveModal(title, text, choices = null) {
         document.getElementById('modal-title').innerText = title;
         document.getElementById('modal-text').innerText = text;
         let optContainer = document.getElementById('modal-options');
         optContainer.innerHTML = "";
 
-        let closeBtn = document.createElement('button');
-        closeBtn.innerText = "Принять";
-        closeBtn.className = "modal-close";
-        closeBtn.onclick = () => { document.getElementById('modal-window').style.display = 'none'; };
-        optContainer.appendChild(closeBtn);
+        if (choices) {
+            // Если у ивента есть варианты выбора (интерактивный ивент)
+            choices.forEach(choice => {
+                let btn = document.createElement('button');
+                btn.innerText = choice.text;
+                btn.onclick = () => {
+                    choice.action();
+                    document.getElementById('modal-window').style.display = 'none';
+                    updateUI();
+                };
+                optContainer.appendChild(btn);
+            });
+        } else {
+            // Если это обычное информационное окно
+            let closeBtn = document.createElement('button');
+            closeBtn.innerText = "Принять решение";
+            closeBtn.className = "modal-close";
+            closeBtn.onclick = () => { document.getElementById('modal-window').style.display = 'none'; };
+            optContainer.appendChild(closeBtn);
+        }
         
         document.getElementById('modal-window').style.display = 'flex';
     }
