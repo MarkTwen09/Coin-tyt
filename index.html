@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Империя: Симулятор Правителя</title>
+    <title>Империя: Симулятор Правителя Pro</title>
     
-    <!-- Подключаем стили Leaflet для карты OpenStreetMap -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
@@ -21,467 +20,334 @@
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-dark);
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            background-image: radial-gradient(#1f2937 1px, transparent 1px);
-            background-size: 24px 24px;
+            display: flex; justify-content: center;
         }
 
         #game-container {
-            width: 100%;
-            max-width: 450px;
-            background: #161b22;
-            min-height: 100vh;
+            width: 100%; max-width: 450px;
+            background: #161b22; min-height: 100vh;
             border-left: 1px solid var(--border-color);
             border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
             position: relative;
-            box-shadow: 0 0 30px rgba(0,0,0,0.7);
         }
 
-        /* Верхняя премиум-панель */
         .top-bar {
             background: rgba(13, 17, 23, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
-            padding: 12px;
-            display: flex;
-            justify-content: space-around;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            padding: 12px; display: flex; justify-content: space-around;
+            position: sticky; top: 0; z-index: 1000;
         }
 
-        .stat-box {
-            text-align: center;
-            font-size: 12px;
-            color: #8b949e;
-        }
-
-        .stat-value {
-            display: block;
-            font-size: 15px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-top: 2px;
-        }
-
+        .stat-box { text-align: center; font-size: 11px; color: #8b949e; }
+        .stat-value { display: block; font-size: 14px; font-weight: 700; color: #ffffff; }
         .stat-value.gold { color: var(--text-gold); }
         .stat-value.green { color: #39d353; }
 
-        /* Контентная зона */
-        .content {
-            padding: 16px;
-            flex-grow: 1;
-            margin-bottom: 75px;
-        }
-
-        .screen { display: none; animation: fadeIn 0.3s ease; }
+        .content { padding: 16px; flex-grow: 1; margin-bottom: 75px; }
+        .screen { display: none; animation: fadeIn 0.2s ease; }
         .screen.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        h2 {
-            font-size: 20px;
-            font-weight: 600;
-            color: #fff;
-            margin-top: 0;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        h2 { font-size: 18px; color: #fff; margin-top: 0; margin-bottom: 15px; }
+        .card { background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
 
-        /* Карточки */
-        .card {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            backdrop-filter: blur(5px);
-        }
+        /* Ползунок налогов */
+        .tax-slider { width: 100%; margin: 10px 0; accent-color: var(--primary-blue); }
 
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        /* Прогресс-бары классов */
+        .class-rate { margin-bottom: 10px; }
+        .bar-bg { width: 100%; height: 6px; background: #21262d; border-radius: 3px; margin-top: 4px; overflow: hidden; }
+        .bar-fill { height: 100%; background: var(--success-green); transition: width 0.3s; }
 
-        /* Кнопки */
-        button {
-            background: var(--primary-blue);
-            color: #fff;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        button:hover { filter: brightness(1.2); }
-        button:active { transform: scale(0.97); }
+        button { background: var(--primary-blue); color: #fff; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; }
         button.danger { background: var(--accent-red); }
 
-        /* Стили для контейнера карты OpenStreetMap */
-        .map-container-wrapper {
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 16px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-        }
+        #map { width: 100%; height: 230px; background: #0d1117; border-radius: 8px; }
 
-        #map {
-            width: 100%;
-            height: 250px;
-            background: #0d1117;
-        }
-
-        /* Кастомизация всплывающих окон Leaflet */
-        .leaflet-popup-content-wrapper {
-            background: #161b22 !important;
-            color: #c9d1d9 !important;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-        }
-        .leaflet-popup-tip {
-            background: #161b22 !important;
-        }
-
-        /* Кнопка тапа */
         .btn-next-day {
-            background: linear-gradient(135deg, #1f6feb, #238636);
-            color: white;
-            text-align: center;
-            padding: 18px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(31, 111, 235, 0.3);
-            transition: all 0.2s;
-            border: 1px solid rgba(255,255,255,0.1);
+            background: linear-gradient(135deg, #1f6feb, #238636); color: white; text-align: center;
+            padding: 15px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 10px;
         }
 
-        .btn-next-day:active {
-            transform: scale(0.97);
-        }
-
-        /* Навигация */
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 450px;
-            background: rgba(13, 17, 23, 0.95);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0;
-            z-index: 1000;
+            position: fixed; bottom: 0; width: 100%; max-width: 450px;
+            background: #0d1117; border-top: 1px solid var(--border-color);
+            display: flex; justify-content: space-around; padding: 6px 0; z-index: 1000;
         }
+        .nav-btn { background: none; color: #8b949e; border: none; font-size: 11px; display: flex; flex-direction: column; align-items: center; width: 25%; }
+        .nav-btn.active { color: var(--primary-blue); font-weight: 700; }
 
-        .nav-btn {
-            background: none;
-            color: #8b949e;
-            border: none;
-            font-size: 11px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            font-weight: 500;
-            width: 20%;
-        }
-
-        .nav-btn.active {
-            color: var(--primary-blue);
-            font-weight: 700;
-        }
-
-        .nav-btn .icon { font-size: 20px; }
-
-        /* Модальные окна */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(4px);
-            z-index: 2000;
-            justify-content: center; align-items: center;
-        }
-
-        .modal-content {
-            background: #161b22;
-            border: 1px solid var(--border-color);
-            padding: 24px;
-            border-radius: 16px;
-            width: 85%;
-            max-width: 360px;
-            text-align: center;
-        }
-
-        .modal-content h3 { margin-top: 0; color: #fff; }
-        .modal-close {
-            background: #21262d;
-            margin-top: 15px;
-            width: 100%;
-        }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: #161b22; border: 1px solid var(--border-color); padding: 20px; border-radius: 12px; width: 85%; max-width: 340px; text-align: center; }
     </style>
 </head>
 <body>
 
 <div id="game-container">
     
-    <!-- СТАТИСТИКА -->
     <div class="top-bar">
         <div class="stat-box">👥 Нация<span class="stat-value" id="pop">146.0М</span></div>
-        <div class="stat-box">📅 Срок правления<span class="stat-value green" id="days">День 1</span></div>
+        <div class="stat-box">📅 Срок<span class="stat-value green" id="days">День 1</span></div>
         <div class="stat-box">💰 Казна<span class="stat-value gold" id="money">500.0B</span></div>
     </div>
 
-    <!-- ЭКРАНЫ -->
     <div class="content">
         
-        <!-- КРЕМЛЬ (ГЛАВНАЯ) -->
+        <!-- КРЕМЛЬ -->
         <div id="scr-main" class="screen active">
             <h2>🏛️ Ситуационный центр</h2>
+            
+            <!-- Налоговая система -->
             <div class="card">
                 <div class="flex-between">
-                    <span>Политический regime:</span>
-                    <strong style="color: var(--text-gold);">Президентская Республика</strong>
+                    <span>Гос. налог: <strong id="tax-val" style="color:var(--text-gold);">15%</strong></span>
+                    <span id="income-text" style="color: #39d353;">+5.0B ₽</span>
                 </div>
-                <div class="flex-between" style="margin-top: 10px;">
-                    <span>Баланс геополитики:</span>
-                    <span id="income-text" style="color: #39d353;">+5.0B ₽ / день</span>
+                <input type="range" min="5" max="35" step="5" value="15" class="tax-slider" id="tax-input" oninput="changeTax(this.value)">
+                <small style="color:#8b949e; font-size:11px;">Высокий налог злит бедных и снижает их закупки. Низкий — снижает доход.</small>
+            </div>
+
+            <!-- Слои общества -->
+            <div class="card">
+                <h3 style="margin-top:0; font-size:14px; color:#8b949e;">📊 Настроения сословий</h3>
+                
+                <div class="class-rate">
+                    <div class="flex-between><span style="font-size:13px;">🔴 Рабочий класс (Бедные)</span><span id="rate-poor">80%</span></div>
+                    <div class="bar-bg"><div class="bar-fill" id="bar-poor" style="width: 80%;"></div></div>
+                </div>
+                <div class="class-rate">
+                    <div class="flex-between><span style="font-size:13px;">🟡 Средний класс</span><span id="rate-mid">80%</span></div>
+                    <div class="bar-bg"><div class="bar-fill" id="bar-mid" style="width: 80%;"></div></div>
+                </div>
+                <div class="class-rate">
+                    <div class="flex-between><span style="font-size:13px;">🟢 Олигархия</span><span id="rate-rich">80%</span></div>
+                    <div class="bar-bg"><div class="bar-fill" id="bar-rich" style="width: 80%;"></div></div>
                 </div>
             </div>
 
             <div class="card">
-                <h3 style="margin-top:0; font-size:14px; color:#8b949e;">📡 Сводка новостей</h3>
-                <p id="news" style="font-style: italic; font-size: 14px; color: #c9d1d9; margin: 0;">Страна готова к расширению влияния. Откройте вкладку «Экспансия».</p>
+                <h3 style="margin-top:0; font-size:13px; color:#8b949e;">📡 Новости</h3>
+                <p id="news" style="font-style: italic; font-size: 13px; margin: 0;">Стабильная обстановка в столице.</p>
             </div>
 
-            <div class="btn-next-day" onclick="processDay()">
-                ⚙️ УПРАВЛЯТЬ ГОСУДАРСТВОМ
-                <div style="font-size: 11px; font-weight: normal; margin-top: 4px; opacity: 0.8;">Завершить текущие сутки и собрать налоги</div>
-            </div>
+            <div class="btn-next-day" onclick="processDay()">⚙️ СДЕЛАТЬ ХОД (ПРОЖИТЬ ДЕНЬ)</div>
         </div>
 
-        <!-- КАРТА И ВОЙНА -->
+        <!-- КАРТА -->
         <div id="scr-map" class="screen">
-            <h2>🗺️ Глобальная Экспансия</h2>
-            <p style="font-size: 13px; color:#8b949e; margin-top:-10px;">Нажимайте на маркеры целей прямо на карте OpenStreetMap.</p>
-            
-            <div class="map-container-wrapper">
+            <h2>🗺️ Военная экспансия</h2>
+            <div style="border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin-bottom: 12px;">
                 <div id="map"></div>
             </div>
-
             <div class="card" id="target-card" style="display: none;">
-                <h3 id="target-name" style="margin-top:0; color:#fff;">Выбранная цель</h3>
-                <p style="font-size:13px;" id="target-info">Загрузка данных...</p>
+                <h3 id="target-name" style="margin-top:0;">Цель</h3>
+                <p style="font-size:12px;" id="target-info"></p>
                 <div class="flex-between">
-                    <span style="font-size:13px; font-weight:bold; color:var(--text-gold);" id="win-chance">Шанс победы: --</span>
-                    <button class="danger" id="attack-btn" onclick="launchAttack()">Приказать атаковать</button>
+                    <span style="font-size:13px; font-weight:bold; color:var(--text-gold);" id="win-chance">--</span>
+                    <button class="danger" id="attack-btn" onclick="launchAttack()">Атака</button>
                 </div>
             </div>
         </div>
 
-        <!-- МОДЕРНИЗАЦИЯ -->
+        <!-- РЕФОРМЫ -->
         <div id="scr-upgrades" class="screen">
-            <h2>📈 Модернизация систем</h2>
-            
+            <h2>📈 Реформы систем</h2>
             <div class="card flex-between">
-                <div>
-                    <strong>🏥 Медицинский кластер</strong><br>
-                    <small style="color:#8b949e;">Рождаемость населения</small>
-                </div>
+                <div><strong>🏥 Медицина</strong><br><small style="color:#8b949e;">Растет лояльность бедных</small></div>
                 <button onclick="buyUpgrade('med', 60)">Lvl <span id="lvl-med">0</span> (-60B)</button>
             </div>
-
             <div class="card flex-between">
-                <div>
-                    <strong>🏭 Промышленность</strong><br>
-                    <small style="color:#8b949e;">Увеличивает базовые налоги</small>
-                </div>
+                <div><strong>🏭 Пром-зона</strong><br><small style="color:#8b949e;">Повышает добычу сырья</small></div>
                 <button onclick="buyUpgrade('prod', 80)">Lvl <span id="lvl-prod">0</span> (-80B)</button>
             </div>
-
             <div class="card flex-between">
-                <div>
-                    <strong>🛡️ Оборонный комплекс</strong><br>
-                    <small style="color:#8b949e;">Сила армии и шанс побед</small>
-                </div>
+                <div><strong>🛡️ Армия</strong><br><small style="color:#8b949e;">Шанс успешных спецопераций</small></div>
                 <button onclick="buyUpgrade('mil', 100)">Lvl <span id="lvl-mil">0</span> (-100B)</button>
             </div>
         </div>
 
-        <!-- ТОРГОВЛЯ -->
+        <!-- БИРЖА -->
         <div id="scr-trade" class="screen">
-            <h2>📦 Сырьевая биржа</h2>
-            <div class="card">
-                <div class="flex-between">
-                    <span>🛢️ Нефть: <strong id="res-oil">100</strong> ед.</span>
-                    <button onclick="sellResource('oil', 25, 40)">Экспорт (40B)</button>
-                </div>
+            <h2>📦 Экономика и Запасы</h2>
+            <p style="font-size: 12px; color:#8b949e; margin-top:-10px;">Население автоматически скупает у государства еду и нефть каждый ход.</p>
+            <div class="card flex-between">
+                <span>🛢️ Нефть: <strong id="res-oil">100</strong> ед.</span>
+                <button onclick="sellResource('oil', 25, 40)">Экспорт корпорациям (40B)</button>
             </div>
-            <div class="card">
-                <div class="flex-between">
-                    <span>🌾 Пшеница: <strong id="res-grain">100</strong> ед.</span>
-                    <button onclick="sellResource('grain', 30, 20)">Экспорт (20B)</button>
-                </div>
+            <div class="card flex-between">
+                <span>🌾 Пшеница: <strong id="res-grain">150</strong> ед.</span>
+                <button onclick="sellResource('grain', 30, 20)">Продать на внешнем рынке (20B)</button>
             </div>
         </div>
 
     </div>
 
-    <!-- ОКНО СОБЫТИЙ С ВЫБОРОМ -->
+    <!-- МOДАЛКА -->
     <div id="modal-window" class="modal">
         <div class="modal-content">
-            <h3 id="modal-title">Глобальное событие</h3>
-            <p id="modal-text" style="font-size:14px; color:#c9d1d9; margin: 15px 0; line-height:1.4;">Текст...</p>
-            <div id="modal-options" style="display:flex; flex-direction:column; gap:10px;"></div>
+            <h3 id="modal-title">Событие</h3>
+            <p id="modal-text" style="font-size:13px; color:#c9d1d9; margin: 12px 0;"></p>
+            <div id="modal-options" style="display:flex; flex-direction:column; gap:8px;"></div>
         </div>
     </div>
 
     <!-- НАВИГАЦИЯ -->
     <div class="bottom-nav">
-        <button class="nav-btn active" onclick="tab('main', this)"><span class="icon">🏛️</span>Кремль</button>
-        <button class="nav-btn" onclick="tab('map', this)"><span class="icon">🗺️</span>Экспансия</button>
-        <button class="nav-btn" onclick="tab('upgrades', this)"><span class="icon">📈</span>Реформы</button>
-        <button class="nav-btn" onclick="tab('trade', this)"><span class="icon">📦</span>Биржа</button>
+        <button class="nav-btn active" onclick="tab('main', this)">🏛️ Кремль</button>
+        <button class="nav-btn" onclick="tab('map', this)">🗺️ Экспансия</button>
+        <button class="nav-btn" onclick="tab('upgrades', this)">📈 Реформы</button>
+        <button class="nav-btn" onclick="tab('trade', this)">📦 Биржа</button>
     </div>
 
 </div>
 
-<!-- Скрипты Leaflet карты -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
-    // Игровое состояние
     let state = {
-        pop: 146.0,
-        days: 1,
-        money: 500,
-        baseIncome: 5,
+        pop: 146.0, days: 1, money: 500, baseIncome: 10, tax: 15,
+        classes: { poor: 80, mid: 80, rich: 80 },
         upgrades: { med: 0, prod: 0, mil: 0 },
         res: { oil: 100, grain: 150 },
-        captured: { Finland: false, Ukraine: false, Kazakhstan: false }
+        captured: { Finland: false, Ukraine: false, Kazakhstan: false },
+        gameOver: false
     };
 
-    // Параметры соседей на карте OpenStreetMap
     const countries = {
-        'Хельсинки (Финляндия)': { id: 'Finland', lat: 60.1699, lng: 24.9384, power: 12, incomeBonus: 4, text: 'Северный сосед с сильной береговой обороной.' },
-        'Киев (Украина)': { id: 'Ukraine', lat: 50.4501, lng: 30.5234, power: 18, incomeBonus: 6, text: 'Крупный узел с развитой инфраструктурой.' },
-        'Астана (Казахстан)': { id: 'Kazakhstan', lat: 51.1605, lng: 71.4704, power: 10, incomeBonus: 5, text: 'Обширные степные территории и ресурсы.' }
+        'Хельсинки': { id: 'Finland', lat: 60.1699, lng: 24.9384, power: 15, incomeBonus: 5 },
+        'Киев': { id: 'Ukraine', lat: 50.4501, lng: 30.5234, power: 22, incomeBonus: 8 },
+        'Астана': { id: 'Kazakhstan', lat: 51.1605, lng: 71.4704, power: 12, incomeBonus: 6 }
     };
 
-    // База данных случайных интерактивных ивентов с решениями
-    const randomEvents = [
-        {
-            title: "📈 Скачок цен на нефть",
-            text: "Мировые энергетические биржи фиксируют дефицит топлива. Куда направим полученные сверхдоходы от экспорта сырья?",
-            choices: [
-                { text: "Зачислить в госбюджет (+80B ₽)", action: () => { state.money += 80; } },
-                { text: "Субсидировать внутреннее производство (+3 к доходу)", action: () => { state.baseIncome += 3; } }
-            ]
-        },
-        {
-            title: "🧪 Прорыв отечественного ВПК",
-            text: "Инженеры представили прототип гиперзвукового оборонного комплекса нового поколения. Требуются инвестиции для массового производства.",
-            choices: [
-                { text: "Выделить средства (-50B ₽, +2 к уровню армии)", action: () => { if(state.money >= 50) { state.money -= 50; state.upgrades.mil += 2; } } },
-                { text: "Заморозить проект ради экономии казны", action: () => {} }
-            ]
-        },
-        {
-            title: "🌾 Рекордные показатели агросектора",
-            text: "Благодаря хорошей погоде, уборочная кампания на юге показала исторический максимум урожайности.",
-            choices: [
-                { text: "Заполнить госрезервы (+80 пшеницы)", action: () => { state.res.grain += 80; } },
-                { text: "Направить на экспорт по сниженным ценам (+20B ₽)", action: () => { state.money += 20; } }
-            ]
-        },
-        {
-            title: "⛈️ Чрезвычайное происшествие",
-            text: "В Сибири из-за паводков пострадала инфраструктура нескольких моногородов. Местные власти просят финансовой помощи у Кремля.",
-            choices: [
-                { text: "Профинансировать полное восстановление (-40B ₽)", action: () => { if(state.money >= 40) state.money -= 40; else state.money = 0; } },
-                { text: "Выделить минимальные компенсации (-0.3М населения)", action: () => { state.pop -= 0.3; } }
-            ]
-        }
-    ];
-
-    // Короткие ежедневные новости для информационной ленты
-    const dailyNews = [
-        "Промышленный сектор отчитался о выполнении квартальных планов.",
-        "Центробанк сообщает о стабильности макроэкономических показателей.",
-        "Граждане поддерживают текущий внешнеполитический курс страны.",
-        "Зафиксирован рост активности на внутренних товарных биржах.",
-        "Строительство новых логистических хабов завершено с опережением графика.",
-        "Отечественные IT-компании представили замену зарубежному ПО."
-    ];
-
-    let selectedTarget = null;
     let map = null;
 
     function getIncome() {
-        let warBonus = 0;
-        for (let key in state.captured) {
-            if (state.captured[key]) {
-                let cObj = Object.values(countries).find(c => c.id === key);
-                if (cObj) warBonus += cObj.incomeBonus;
-            }
-        }
-        return state.baseIncome + (state.upgrades.prod * 2) + warBonus;
+        let taxModifier = state.tax / 15; 
+        let basic = (state.baseIncome + (state.upgrades.prod * 3)) * taxModifier;
+        return basic;
+    }
+
+    function changeTax(val) {
+        state.tax = parseInt(val);
+        document.getElementById('tax-val').innerText = val + "%";
+        updateUI();
     }
 
     function updateUI() {
+        if(state.gameOver) return;
         document.getElementById('pop').innerText = state.pop.toFixed(1) + "М";
         document.getElementById('days').innerText = "День " + state.days;
         document.getElementById('money').innerText = state.money.toFixed(1) + "B";
-        document.getElementById('income-text').innerText = "+" + getIncome().toFixed(1) + "B ₽ / день";
+        document.getElementById('income-text').innerText = "+" + getIncome().toFixed(1) + "B";
         
+        // Обновление лояльности
+        const cl = ['poor', 'mid', 'rich'];
+        cl.forEach(c => {
+            if(state.classes[c] > 100) state.classes[c] = 100;
+            if(state.classes[c] < 0) state.classes[c] = 0;
+            document.getElementById(`rate-${c}`).innerText = state.classes[c] + "%";
+            document.getElementById(`bar-${c}`).style.width = state.classes[c] + "%";
+            
+            // Цвет бара в зависимости от лояльности
+            let fill = document.getElementById(`bar-${c}`);
+            if(state.classes[c] < 30) fill.style.background = '#da3633';
+            else if(state.classes[c] < 60) fill.style.background = '#ffd700';
+            else fill.style.background = '#238636';
+        });
+
         document.getElementById('lvl-med').innerText = state.upgrades.med;
         document.getElementById('lvl-prod').innerText = state.upgrades.prod;
         document.getElementById('lvl-mil').innerText = state.upgrades.mil;
-
         document.getElementById('res-oil').innerText = state.res.oil;
         document.getElementById('res-grain').innerText = state.res.grain;
+
+        checkLoseCondition();
     }
 
-    // Инициализация карты OpenStreetMap
+    function checkLoseCondition() {
+        if (state.classes.poor <= 0 || state.classes.mid <= 0 || state.classes.rich <= 0) {
+            state.gameOver = true;
+            showModal("🚨 ГОСУДАРСТВЕННЫЙ ПЕРЕВОРОТ", "Лояльность одного из сословий упала до нуля. На улицах начались беспорядки, правительство свергнуто. Игра окончена!", [
+                { text: "Начать заново", action: () => { location.reload(); } }
+            ]);
+        }
+    }
+
+    function processDay() {
+        if(state.gameOver) return;
+        state.days++;
+        state.money += getIncome();
+
+        // Приход ресурсов
+        state.res.oil += 10 + (state.upgrades.prod * 2);
+        state.res.grain += 15 + (state.upgrades.prod * 3);
+
+        // МЕХАНИКА ЗАКУПКИ И ПОТРЕБЛЕНИЯ НАСЕЛЕНИЕМ
+        // Рабочий класс закупает (потребляет) зерно
+        if (state.res.grain >= 20) {
+            state.res.grain -= 20;
+            state.money += 5; // Платят копейку в бюджет
+            state.classes.poor += 2;
+        } else {
+            state.classes.poor -= 12; // Голод! Лояльность жестко падает
+            document.getElementById('news').innerText = "🔴 Дефицит хлеба вызвал стачки рабочих!";
+        }
+
+        // Эффект налогов на настроение
+        if(state.tax > 20) {
+            state.classes.poor -= 6;
+            state.classes.mid -= 3;
+        } else if(state.tax <= 5) {
+            state.classes.poor += 4;
+            state.classes.mid += 2;
+        }
+
+        // Олигархи хотят прибыли. Если у нас много денег в казне — они довольны, если мало — злятся
+        if(state.money < 100) state.classes.rich -= 5;
+        else state.classes.rich += 1;
+
+        updateUI();
+    }
+
+    function buyUpgrade(type, cost) {
+        if (state.money >= cost) {
+            state.money -= cost;
+            state.upgrades[type]++;
+            if(type === 'med') state.classes.poor += 15;
+            updateUI();
+        }
+    }
+
+    function sellResource(type, amt, profit) {
+        if (state.res[type] >= amt) {
+            state.res[type] -= amt;
+            state.money += profit;
+            if(type === 'oil') state.classes.rich += 5; // Олигархи в доле с экспорта нефтепродуктов
+            updateUI();
+        }
+    }
+
     function initMap() {
         if (map) return;
-
         map = L.map('map').setView([55.7558, 37.6173], 3);
-
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-
-        L.marker([55.7520, 37.6175]).addTo(map)
-            .bindPopup("<b style='color:#1f6feb;'>Москва (Кремль)</b><br>Ваша столица.");
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OSM' }).addTo(map);
 
         for (let name in countries) {
             let data = countries[name];
             let marker = L.marker([data.lat, data.lng]).addTo(map);
-            marker.bindPopup(`<b>${name}</b><br>Нажмите на вкладку под картой для управления войсками.`);
-            marker.on('click', function() {
-                selectCountry(name);
+            marker.on('click', () => {
+                document.getElementById('target-card').style.display = 'block';
+                document.getElementById('target-name').innerText = name;
+                let myPower = 10 + (state.upgrades.mil * 5);
+                let chance = Math.floor((myPower / (myPower + data.power)) * 100);
+                document.getElementById('win-chance').innerText = `Шанс успеха: ${chance}%`;
             });
         }
     }
@@ -491,123 +357,20 @@
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(`scr-${screenId}`).classList.add('active');
         btn.classList.add('active');
-
-        if (screenId === 'map') {
-            setTimeout(() => {
-                initMap();
-                map.invalidateSize(); 
-            }, 100);
-        }
+        if (screenId === 'map') { setTimeout(() => { initMap(); map.invalidateSize(); }, 100); }
     }
 
-    function selectCountry(name) {
-        selectedTarget = countries[name];
-        document.getElementById('target-card').style.display = 'block';
-        document.getElementById('target-name').innerText = name;
-        document.getElementById('target-info').innerText = `${selectedTarget.text} Сила защиты: ${selectedTarget.power} ед.`;
-        
-        if (state.captured[selectedTarget.id]) {
-            document.getElementById('win-chance').innerText = "Статус: Регион под полным контролем империи";
-            document.getElementById('attack-btn').style.display = 'none';
-        } else {
-            let myPower = 10 + (state.upgrades.mil * 5);
-            let chance = Math.floor((myPower / (myPower + selectedTarget.power)) * 100);
-            if(chance > 95) chance = 95;
-            document.getElementById('win-chance').innerText = `Вероятность успеха: ${chance}%`;
-            document.getElementById('attack-btn').style.display = 'block';
-        }
-    }
-
-    function launchAttack() {
-        if (!selectedTarget) return;
-        
-        let myPower = 10 + (state.upgrades.mil * 5);
-        let chance = Math.floor((myPower / (myPower + selectedTarget.power)) * 100);
-        
-        if (Math.random() * 100 <= chance) {
-            state.captured[selectedTarget.id] = true;
-            state.money += 50; 
-            showInteractiveModal("⚔️ Успех операции", `Регион интегрирован. Взяты трофеи (+50B ₽). Налоги региона подключены к суточному доходу империи.`, null);
-            document.getElementById('target-card').style.display = 'none';
-        } else {
-            state.money -= 40;
-            if(state.money < 0) state.money = 0;
-            showInteractiveModal("❌ Операция сорвана", `Оборона цели устояла. Потери бюджета на восстановление техники составили -40B ₽.`, null);
-        }
-        updateUI();
-    }
-
-    function buyUpgrade(type, cost) {
-        if (state.money >= cost) {
-            state.money -= cost;
-            state.upgrades[type]++;
-            if(type === 'med') state.pop += 1.2;
-            updateUI();
-        } else {
-            showInteractiveModal("Кабинет Министров", "Недостаточно средств на проведение государственной реформы.", null);
-        }
-    }
-
-    function sellResource(type, amt, profit) {
-        if (state.res[type] >= amt) {
-            state.res[type] -= amt;
-            state.money += profit;
-            updateUI();
-        } else {
-            showInteractiveModal("Торговый сектор", "Недостаточно стратегических запасов сырья для продажи.", null);
-        }
-    }
-
-    // Игровой клик (Следующий день)
-    function processDay() {
-        state.days++;
-        state.money += getIncome();
-        
-        // Ресурсы капают каждый день
-        state.res.oil += 5 + (state.upgrades.prod);
-        state.res.grain += 8 + (state.upgrades.prod);
-        state.pop += 0.01;
-
-        // Механика триггера случайных событий (шанс 30% при клике)
-        if (Math.random() < 0.3) {
-            let randomEv = randomEvents[Math.floor(Math.random() * randomEvents.length)];
-            showInteractiveModal(randomEv.title, randomEv.text, randomEv.choices);
-        } else {
-            // Если ивент с выбором не выпал, просто пускаем бегущую строку новостей на главном экране
-            let randomNews = dailyNews[Math.floor(Math.random() * dailyNews.length)];
-            document.getElementById('news').innerText = randomNews;
-        }
-        updateUI();
-    }
-
-    // Конструктор интерактивных модальных окон
-    function showInteractiveModal(title, text, choices = null) {
+    function showModal(title, text, choices) {
         document.getElementById('modal-title').innerText = title;
         document.getElementById('modal-text').innerText = text;
         let optContainer = document.getElementById('modal-options');
         optContainer.innerHTML = "";
-
-        if (choices) {
-            // Если у ивента есть варианты выбора (интерактивный ивент)
-            choices.forEach(choice => {
-                let btn = document.createElement('button');
-                btn.innerText = choice.text;
-                btn.onclick = () => {
-                    choice.action();
-                    document.getElementById('modal-window').style.display = 'none';
-                    updateUI();
-                };
-                optContainer.appendChild(btn);
-            });
-        } else {
-            // Если это обычное информационное окно
-            let closeBtn = document.createElement('button');
-            closeBtn.innerText = "Принять решение";
-            closeBtn.className = "modal-close";
-            closeBtn.onclick = () => { document.getElementById('modal-window').style.display = 'none'; };
-            optContainer.appendChild(closeBtn);
-        }
-        
+        choices.forEach(choice => {
+            let btn = document.createElement('button');
+            btn.innerText = choice.text;
+            btn.onclick = () => { choice.action(); document.getElementById('modal-window').style.display = 'none'; };
+            optContainer.appendChild(btn);
+        });
         document.getElementById('modal-window').style.display = 'flex';
     }
 
