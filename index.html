@@ -3,208 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Симулятор Правителя России</title>
+    <title>Империя: Симулятор Правителя</title>
     <style>
         :root {
-            --bg-color: #f4f4f9;
-            --panel-color: #ffffff;
-            --primary-color: #0055a5; /* Синий преобладающий */
-            --accent-color: #e52b50;  /* Красный акцент */
-            --success-color: #2ecc71;
-            --text-color: #333;
+            --bg-dark: #0d1117;
+            --panel-bg: rgba(22, 27, 34, 0.85);
+            --border-color: #30363d;
+            --text-main: #c9d1d9;
+            --text-gold: #ffd700;
+            --primary-blue: #1f6feb;
+            --accent-red: #da3633;
+            --success-green: #238636;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
             margin: 0;
             padding: 0;
-            color: var(--text-color);
+            color: var(--text-main);
             display: flex;
             justify-content: center;
+            background-image: radial-gradient(#1f2937 1px, transparent 1px);
+            background-size: 24px 24px;
         }
 
         #game-container {
             width: 100%;
-            max-width: 480px;
-            background: var(--panel-color);
+            max-width: 450px;
+            background: #161b22;
             min-height: 100vh;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
             position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.7);
         }
 
-        /* Верхняя панель ресурсов */
+        /* Верхняя премиум-панель */
         .top-bar {
-            background: var(--primary-color);
-            color: white;
-            padding: 10px;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px;
             display: flex;
             justify-content: space-around;
-            font-size: 14px;
-            font-weight: bold;
-            border-bottom: 3px solid var(--accent-color);
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 100;
         }
 
-        .stat-item {
+        .stat-box {
             text-align: center;
+            font-size: 12px;
+            color: #8b949e;
         }
 
-        /* Главный экран и вкладки */
-        .content {
-            padding: 15px;
-            flex-grow: 1;
-            margin-bottom: 80px;
-        }
-
-        .screen {
-            display: none;
-        }
-
-        .screen.active {
+        .stat-value {
             display: block;
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 2px;
+        }
+
+        .stat-value.gold { color: var(--text-gold); }
+        .stat-value.green { color: #39d353; }
+
+        /* Контентная зона */
+        .content {
+            padding: 16px;
+            flex-grow: 1;
+            margin-bottom: 75px;
+        }
+
+        .screen { display: none; animation: fadeIn 0.3s ease; }
+        .screen.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         h2 {
-            margin-top: 0;
-            color: var(--primary-color);
-            border-bottom: 2px solid #eee;
-            padding-bottom: 5px;
             font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            margin-top: 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* Карточки и элементы управления */
+        /* Стильные карточки */
         .card {
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 15px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(5px);
         }
 
         .flex-between {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
         }
 
+        /* Кнопки */
         button {
-            background: var(--primary-color);
-            color: white;
+            background: var(--primary-blue);
+            color: #fff;
             border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
         }
 
-        button:hover {
-            background: #003d77;
-        }
+        button:hover { filter: brightness(1.2); }
+        button:active { transform: scale(0.97); }
 
-        button.btn-spend {
-            background: var(--accent-color);
-        }
-        button.btn-spend:hover {
-            background: #b31e3b;
-        }
+        button.danger { background: var(--accent-red); }
 
-        /* Кнопка Следующий День */
-        .next-day-trigger {
-            background: linear-gradient(135deg, #ff9f43, #ff5252);
-            color: white;
-            text-align: center;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            user-select: none;
-        }
-
-        .next-day-trigger:active {
-            transform: scale(0.98);
-        }
-
-        /* Модальное окно событий */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 100;
+        /* Карта */
+        .map-wrapper {
+            background: #0d1117;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
             justify-content: center;
             align-items: center;
+            margin-bottom: 15px;
         }
 
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            width: 85%;
-            max-width: 400px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            text-align: center;
-        }
-
-        .modal-content h3 {
-            margin-top: 0;
-            color: var(--accent-color);
-        }
-
-        .event-choices button {
-            display: block;
+        .world-map {
             width: 100%;
-            margin: 10px 0;
-            padding: 10px;
-            font-size: 14px;
+            height: auto;
+            max-height: 220px;
         }
 
-        /* Нижнее меню навигации */
+        .country-shape {
+            fill: #21262d;
+            stroke: #30363d;
+            stroke-width: 1.5;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .country-shape:hover {
+            fill: #388bfd;
+            filter: drop-shadow(0 0 5px rgba(56, 139, 253, 0.5));
+        }
+
+        .country-shape.player {
+            fill: #1f6feb;
+            stroke: #58a6ff;
+        }
+
+        .country-shape.captured {
+            fill: #238636;
+            stroke: #39d353;
+        }
+
+        /* Кнопка тапа */
+        .btn-next-day {
+            background: linear-gradient(135deg, #1f6feb, #238636);
+            color: white;
+            text-align: center;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(31, 111, 235, 0.3);
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .btn-next-day:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 5px rgba(31, 111, 235, 0.2);
+        }
+
+        /* Навигация */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             width: 100%;
-            max-width: 480px;
-            background: #fff;
-            border-top: 1px solid #ddd;
+            max-width: 450px;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
-            z-index: 10;
+            padding: 8px 0;
+            z-index: 100;
         }
 
         .nav-btn {
             background: none;
-            color: #555;
+            color: #8b949e;
             border: none;
-            padding: 5px 10px;
-            font-size: 12px;
+            font-size: 11px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-weight: normal;
+            gap: 4px;
+            font-weight: 500;
+            width: 20%;
         }
 
         .nav-btn.active {
-            color: var(--primary-color);
-            font-weight: bold;
+            color: var(--primary-blue);
+            font-weight: 700;
         }
 
-        .nav-btn span {
-            font-size: 18px;
-            margin-bottom: 2px;
+        .nav-btn .icon {
+            font-size: 20px;
+        }
+
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center; align-items: center;
+        }
+
+        .modal-content {
+            background: #161b22;
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            border-radius: 16px;
+            width: 85%;
+            max-width: 360px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .modal-content h3 { margin-top: 0; color: #fff; }
+        .modal-close {
+            background: #21262d;
+            margin-top: 15px;
+            width: 100%;
         }
     </style>
 </head>
@@ -212,312 +262,320 @@
 
 <div id="game-container">
     
-    <!-- Верхняя панель (Ресурсы) -->
     <div class="top-bar">
-        <div class="stat-item">
-            👥 Население<br><span id="stat-pop">146.0</span> млн
-        </div>
-        <div class="stat-item">
-            📅 Дата<br><span id="stat-date">01 янв 2026</span>
-        </div>
-        <div class="stat-item">
-            💰 Бюджет<br><span id="stat-money">500</span> млрд ₽
-        </div>
+        <div class="stat-box">👥 Нация<span class="stat-value" id="pop">146.0М</span></div>
+        <div class="stat-box">📅 Срок правления<span class="stat-value green" id="days">День 1</span></div>
+        <div class="stat-box">💰 Казна<span class="stat-value gold" id="money">500.0B</span></div>
     </div>
 
-    <!-- Основной контент -->
     <div class="content">
         
-        <!-- ЭКРАН 1: Главная -->
-        <div id="screen-main" class="screen active">
-            <h2>Кремль</h2>
+        <div id="scr-main" class="screen active">
+            <h2>🏛️ Ситуационный центр</h2>
             <div class="card">
-                <p><strong>Правитель:</strong> Вы (Президент)</p>
-                <p><strong>Текущий статус страны:</strong> Развитие</p>
-                <p><strong>Доход в день:</strong> <span id="main-income" style="color:green">+5</span> млрд ₽</p>
+                <div class="flex-between">
+                    <span>Политический режим:</span>
+                    <strong style="color: var(--text-gold);">Суверенная Республика</strong>
+                </div>
+                <div class="flex-between" style="margin-top: 10px;">
+                    <span>Баланс геополитики:</span>
+                    <span id="income-text" style="color: #39d353;">+5.0B ₽ / день</span>
+                </div>
             </div>
 
-            <!-- Лента последних новостей -->
             <div class="card">
-                <h3>📰 Последние новости</h3>
-                <p id="news-feed" style="font-style: italic; color: #555;">В стране всё спокойно. Начните новый день.</p>
+                <h3 style="margin-top:0; font-size:14px; color:#8b949e;">📡 Сводка новостей</h3>
+                <p id="news" style="font-style: italic; font-size: 14px; color: #c9d1d9; margin: 0;">Страна готова к великим свершениям. Отдайте первый приказ.</p>
             </div>
 
-            <!-- Главная кнопка клика -->
-            <div class="next-day-trigger" onclick="nextDay()">
-                ☀️ ПЕРЕЙТИ НА СЛЕДУЮЩИЙ ДЕНЬ<br>
-                <span style="font-size: 12px; font-weight: normal;">x1 день за тап</span>
+            <div class="btn-next-day" onclick="processDay()">
+                ⚙️ УПРАВЛЯТЬ ГОСУДАРСТВОМ
+                <div style="font-size: 11px; font-weight: normal; margin-top: 4px; opacity: 0.8;">Завершить текущие сутки и собрать налоги</div>
             </div>
         </div>
 
-        <!-- ЭКРАН 2: Расходы / Реформы -->
-        <div id="screen-upgrades" class="screen">
-            <h2>Реформы и инвестиции</h2>
+        <div id="scr-map" class="screen">
+            <h2>🗺️ Геополитическая экспансия</h2>
+            <p style="font-size: 13px; color:#8b949e; margin-top:-10px;">Выберите страну на карте для планирования спецоперации.</p>
             
-            <div class="card">
-                <div class="flex-between">
-                    <div>
-                        <strong>🏥 Медицина</strong><br>
-                        <small>Увеличивает прирост населения</small>
-                    </div>
-                    <button class="btn-spend" onclick="buyUpgrade('medicine', 50)">Улучшить (50 млрд)</button>
-                </div>
-                <div class="flex-between">
-                    <span>Текущий уровень: <span id="lvl-medicine">0</span></span>
-                </div>
+            <div class="map-wrapper">
+                <svg class="world-map" viewBox="0 0 400 200">
+                    <path class="country-shape player" d="M 120 40 Q 180 30 260 35 L 340 50 L 320 90 L 180 80 Z" onclick="selectCountry('Россия')"></path>
+                    <path id="geo-West" class="country-shape" d="M 60 50 L 115 42 L 125 75 L 70 85 Z" onclick="selectCountry('Западный Союз')"></path>
+                    <path id="geo-South" class="country-shape" d="M 140 85 L 200 83 L 220 120 L 150 130 Z" onclick="selectCountry('Южная Республика')"></path>
+                    <path id="geo-East" class="country-shape" d="M 230 87 L 310 93 L 290 150 L 210 140 Z" onclick="selectCountry('Восточный Сектор')"></path>
+                </svg>
             </div>
 
-            <div class="card">
+            <div class="card" id="target-card" style="display: none;">
+                <h3 id="target-name" style="margin-top:0; color:#fff;">Выбранная цель</h3>
+                <p style="font-size:13px;" id="target-info">Сила обороны: --</p>
                 <div class="flex-between">
-                    <div>
-                        <strong>🎓 Образование</strong><br>
-                        <small>Увеличивает ежедневный доход</small>
-                    </div>
-                    <button class="btn-spend" onclick="buyUpgrade('education', 60)">Улучшить (60 млрд)</button>
-                </div>
-                <div class="flex-between">
-                    <span>Текущий уровень: <span id="lvl-education">0</span></span>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="flex-between">
-                    <div>
-                        <strong>🚀 Наука и космос</strong><br>
-                        <small>Повышает международный престиж</small>
-                    </div>
-                    <button class="btn-spend" onclick="buyUpgrade('science', 100)">Инвестировать (100 млрд)</button>
-                </div>
-                <div class="flex-between">
-                    <span>Текущий уровень: <span id="lvl-science">0</span></span>
+                    <span style="font-size:13px; font-weight:bold; color:var(--text-gold);" id="win-chance">Шанс победы: --</span>
+                    <button class="danger" id="attack-btn" onclick="launchAttack()">Приказать атаковать</button>
                 </div>
             </div>
         </div>
 
-        <!-- ЭКРАН 3: Склад и Торговля -->
-        <div id="screen-trade" class="screen">
-            <h2>Государственная торговля</h2>
-            <p>Экспортируйте ресурсы для быстрого пополнения казны.</p>
+        <div id="scr-upgrades" class="screen">
+            <h2>📈 Модернизация систем</h2>
             
-            <div class="card">
-                <div class="flex-between">
-                    <span>🛢️ Нефть (Запас: <span id="trade-oil">100</span> барр.)</span>
-                    <button onclick="sellResource('oil', 10)">Продать за 15 млрд</button>
+            <div class="card flex-between">
+                <div>
+                    <strong>🏥 Медицинский кластер</strong><br>
+                    <small style="color:#8b949e;">Рождаемость населения</small>
                 </div>
+                <button onclick="buyUpgrade('med', 60)">Lvl <span id="lvl-med">0</span> (-60B)</button>
             </div>
 
-            <div class="card">
-                <div class="flex-between">
-                    <span>🌾 Пшеница (Запас: <span id="trade-grain">100</span> т.)</span>
-                    <button onclick="sellResource('grain', 5)">Продать за 5 млрд</button>
+            <div class="card flex-between">
+                <div>
+                    <strong>🏭 Промышленность</strong><br>
+                    <small style="color:#8b949e;">Увеличивает базовые налоги</small>
                 </div>
+                <button onclick="buyUpgrade('prod', 80)">Lvl <span id="lvl-prod">0</span> (-80B)</button>
+            </div>
+
+            <div class="card flex-between">
+                <div>
+                    <strong>🛡️ Оборонный комплекс</strong><br>
+                    <small style="color:#8b949e;">Сила армии и шанс побед</small>
+                </div>
+                <button onclick="buyUpgrade('mil', 100)">Lvl <span id="lvl-mil">0</span> (-100B)</button>
             </div>
         </div>
 
-        <!-- ЭКРАН 4: Армия -->
-        <div id="screen-military" class="screen">
-            <h2>Вооруженные силы</h2>
+        <div id="scr-trade" class="screen">
+            <h2>📦 Сырьевая биржа</h2>
             <div class="card">
-                <p><strong>Численность армии:</strong> <span id="military-size">1.2</span> млн чел.</p>
-                <p>Безопасность границ обеспечена.</p>
-                <button class="btn-spend" onclick="buyUpgrade('army', 80)">Модернизировать армию (80 млрд)</button>
+                <div class="flex-between">
+                    <span>🛢️ Энергоносители: <strong id="res-oil">100</strong> ед.</span>
+                    <button onclick="sellResource('oil', 25, 40)">Экспорт (40B)</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="flex-between">
+                    <span>🌾 Агрокультура: <strong id="res-grain">100</strong> ед.</span>
+                    <button onclick="sellResource('grain', 30, 20)">Экспорт (20B)</button>
+                </div>
             </div>
         </div>
 
     </div>
 
-    <!-- Модальное окно случайных событий -->
-    <div id="event-modal" class="modal">
+    <div id="modal-window" class="modal">
         <div class="modal-content">
-            <h3 id="event-title">Событие!</h3>
-            <p id="event-text">Описание происходящего в стране...</p>
-            <div id="event-choices" class="event-choices">
-                <!-- Кнопки выбора будут добавляться через JS -->
-            </div>
+            <h3 id="modal-title">Глобальное событие</h3>
+            <p id="modal-text" style="font-size:14px; color:#span-text; margin: 15px 0; line-height:1.4;">Текст...</p>
+            <div id="modal-options" style="display:flex; flex-direction:column; gap:10px;"></div>
         </div>
     </div>
 
-    <!-- Нижнее навигационное меню -->
     <div class="bottom-nav">
-        <button class="nav-btn active" onclick="switchScreen('main', this)"><span>🏛️</span>Кремль</button>
-        <button class="nav-btn" onclick="switchScreen('upgrades', this)"><span>📊</span>Расходы</button>
-        <button class="nav-btn" onclick="switchScreen('trade', this)"><span>📦</span>Торговля</button>
-        <button class="nav-btn" onclick="switchScreen('military', this)"><span>🛡️</span>Армия</button>
+        <button class="nav-btn active" onclick="tab('main', this)"><span class="icon">🏛️</span>Кремль</button>
+        <button class="nav-btn" onclick="tab('map', this)"><span class="icon">🗺️</span>Экспансия</button>
+        <button class="nav-btn" onclick="tab('upgrades', this)"><span class="icon">📈</span>Реформы</button>
+        <button class="nav-btn" onclick="tab('trade', this)"><span class="icon">📦</span>Биржа</button>
     </div>
 
 </div>
 
 <script>
-    // Игровые переменные (Стейт)
-    let gameState = {
-        population: 146.0,
+    // Базовое состояние
+    let state = {
+        pop: 146.0,
+        days: 1,
         money: 500,
-        income: 5,
-        currentDate: new Date(2026, 0, 1), // 1 января 2026 года
-        upgrades: {
-            medicine: 0,
-            education: 0,
-            science: 0,
-            army: 0
-        },
-        resources: {
-            oil: 120,
-            grain: 200
-        }
+        baseIncome: 5,
+        upgrades: { med: 0, prod: 0, mil: 0 },
+        res: { oil: 100, grain: 150 },
+        captured: { West: false, South: false, East: false }
     };
 
-    // Список случайных событий
-    const randomEvents = [
+    // Параметры соседей для механики войны
+    const countries = {
+        'Западный Союз': { id: 'West', power: 15, incomeBonus: 4, text: 'Высокотехнологичный оборонительный пакт.' },
+        'Южная Республика': { id: 'South', power: 8, incomeBonus: 2, text: 'Аграрный регион с нестабильной властью.' },
+        'Восточный Сектор': { id: 'East', power: 35, incomeBonus: 8, text: 'Мощный индустриальный конгломерат.' }
+    };
+
+    let selectedTarget = null;
+
+    const eventsList = [
         {
-            title: "📈 Скачок цен на нефть",
-            text: "Мировые цены на энергоносители резко выросли. Куда направим сверхдоходы?",
-            choices: [
-                { text: "Вложить в бюджет (+50 млрд ₽)", action: () => { gameState.money += 50; updateUI(); } },
-                { text: "Раздать социальные выплаты населению", action: () => { gameState.population += 0.5; updateUI(); } }
+            t: "⚡ Энергетический кризис на Западе",
+            d: "Мировой рынок требует срочных поставок сырья. Из-за этого цены взлетели.",
+            opts: [
+                { text: "Продать запасы нефти (+60B ₽)", act: () => { state.money += 60; } },
+                { text: "Приберечь ресурсы для себя (+2 к доходу)", act: () => { state.baseIncome += 2; } }
             ]
         },
         {
-            title: "🔬 Прорыв в Сколково",
-            text: "Наши ученые разработали новый тип отечественных процессоров.",
-            choices: [
-                { text: "Выделить грант на производство (-30 млрд ₽, +2 к доходу)", action: () => { gameState.money -= 30; gameState.income += 2; updateUI(); } },
-                { text: "Просто похвалить в новостях", action: () => { } }
-            ]
-        },
-        {
-            title: "🌾 Рекордный урожай",
-            text: "На юге страны собран исторический максимум зерновых.",
-            choices: [
-                { text: "Отправить излишки на склад (+50 пшеницы)", action: () => { gameState.resources.grain += 50; updateUI(); } }
-            ]
-        },
-        {
-            title: "⛈️ Наводнение в Сибири",
-            text: "Из-за проливных дождей затопило несколько регионов. Требуется помощь.",
-            choices: [
-                { text: "Выделить средства на ликвидацию (-40 млрд ₽)", action: () => { gameState.money -= 40; updateUI(); } },
-                { text: "Сэкономить средства (-0.2 млн населения)", action: () => { gameState.population -= 0.2; updateUI(); } }
+            t: "🛸 Технологический рывок",
+            d: "Отечественное КБ создало передовые ИИ-системы для управления промышленностью.",
+            opts: [
+                { text: "Внедрить повсеместно (-40B ₽, +4 к доходу)", act: () => { if(state.money>=40){state.money-=40; state.baseIncome+=4;} } },
+                { text: "Продать патенты за рубеж (+30B ₽)", act: () => { state.money += 30; } }
             ]
         }
     ];
 
-    // Короткие ежедневные новости для ленты
-    const dailyNews = [
-        "В Москве открыли новую линию беспилотного метро.",
-        "Российские космонавты успешно провели запуск нового модуля.",
-        "Курс рубля демонстрирует стабильность.",
-        "Пройден пик инфляции, экономика адаптировалась.",
-        "В регионах полным ходом идет программа газификации."
-    ];
-
-    // Обновление интерфейса
-    function updateUI() {
-        document.getElementById('stat-pop').innerText = gameState.population.toFixed(1);
-        document.getElementById('stat-money').innerText = gameState.money;
-        document.getElementById('main-income').innerText = (gameState.income >= 0 ? "+" : "") + gameState.income;
-        
-        // Форматирование даты
-        let options = { day: 'numeric', month: 'short', year: 'numeric' };
-        document.getElementById('stat-date').innerText = gameState.currentDate.toLocaleDateString('ru-RU', options);
-
-        // Уровни апгрейдов
-        document.getElementById('lvl-medicine').innerText = gameState.upgrades.medicine;
-        document.getElementById('lvl-education').innerText = gameState.upgrades.education;
-        document.getElementById('lvl-science').innerText = gameState.upgrades.science;
-
-        // Склад
-        document.getElementById('trade-oil').innerText = gameState.resources.oil;
-        document.getElementById('trade-grain').innerText = gameState.resources.grain;
-        document.getElementById('military-size').innerText = (1.2 + (gameState.upgrades.army * 0.1)).toFixed(1);
+    function getIncome() {
+        let warBonus = 0;
+        for (let key in state.captured) {
+            if (state.captured[key]) {
+                // Ищем по id объекта страны бонус
+                let cObj = Object.values(countries).find(c => c.id === key);
+                if (cObj) warBonus += cObj.incomeBonus;
+            }
+        }
+        return state.baseIncome + (state.upgrades.prod * 2) + warBonus;
     }
 
-    // Переключение экранов
-    function switchScreen(screenId, btn) {
+    function updateUI() {
+        document.getElementById('pop').innerText = state.pop.toFixed(1) + "М";
+        document.getElementById('days').innerText = "День " + state.days;
+        document.getElementById('money').innerText = state.money.toFixed(1) + "B";
+        document.getElementById('income-text').innerText = "+" + getIncome().toFixed(1) + "B ₽ / день";
+        
+        document.getElementById('lvl-med').innerText = state.upgrades.med;
+        document.getElementById('lvl-prod').innerText = state.upgrades.prod;
+        document.getElementById('lvl-mil').innerText = state.upgrades.mil;
+
+        document.getElementById('res-oil').innerText = state.res.oil;
+        document.getElementById('res-grain').innerText = state.res.grain;
+
+        // Раскраска карты по результатам завоеваний
+        for(let key in state.captured) {
+            if(state.captured[key]) {
+                let path = document.getElementById(`geo-${key}`);
+                if(path) path.setAttribute('class', 'country-shape captured');
+            }
+        }
+    }
+
+    function tab(screenId, btn) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        
-        document.getElementById(`screen-${screenId}`).classList.add('active');
+        document.getElementById(`scr-${screenId}`).classList.add('active');
         btn.classList.add('active');
     }
 
-    // Покупка улучшений
     function buyUpgrade(type, cost) {
-        if (gameState.money >= cost) {
-            gameState.money -= cost;
-            gameState.upgrades[type]++;
-            
-            // Эффекты от апгрейдов
-            if (type === 'education') gameState.income += 1;
-            if (type === 'medicine') gameState.population += 0.2;
-            
+        if (state.money >= cost) {
+            state.money -= cost;
+            state.upgrades[type]++;
+            if(type === 'med') state.pop += 1.5;
             updateUI();
         } else {
-            alert("Недостаточно денег в бюджете страны!");
+            showModal("Уведомление", "В казне государства не хватает средств на эту реформу.");
         }
     }
 
-    // Продажа ресурсов
-    function sellResource(res, amount) {
-        if (gameState.resources[res] >= amount) {
-            gameState.resources[res] -= amount;
-            if (res === 'oil') gameState.money += 15;
-            if (res === 'grain') gameState.money += 5;
+    function sellResource(type, amt, profit) {
+        if (state.res[type] >= amt) {
+            state.res[type] -= amt;
+            state.money += profit;
             updateUI();
         } else {
-            alert("На складах нет столько ресурсов!");
+            showModal("Биржа", "Недостаточно сырья на складах для выполнения внешнеторгового контракта.");
         }
     }
 
-    // Ход (Следующий день)
-    function nextDay() {
-        // Добавляем 1 день к дате
-        gameState.currentDate.setDate(gameState.currentDate.getDate() + 1);
-        
-        // Начисление дохода
-        gameState.money += gameState.income;
-        
-        // Небольшой фоновый прирост населения от медицины
-        gameState.population += 0.01 + (gameState.upgrades.medicine * 0.005);
-
-        // Фоновый прирост ресурсов
-        gameState.resources.oil += 2;
-        gameState.resources.grain += 4;
-
-        // Случайное событие с шансом 25%
-        if (Math.random() < 0.25) {
-            triggerRandomEvent();
-        } else {
-            // Иначе просто меняем строчку новостей
-            let randomNews = dailyNews[Math.floor(Math.random() * dailyNews.length)];
-            document.getElementById('news-feed').innerText = randomNews;
+    // Выбор страны на карте
+    function selectCountry(name) {
+        if (name === 'Россия') {
+            showModal("Главный Штаб", "Это ваша суверенная территория. Оборона на высшем уровне.");
+            return;
         }
 
+        selectedTarget = countries[name];
+        document.getElementById('target-card').style.display = 'block';
+        document.getElementById('target-name').innerText = name;
+        document.getElementById('target-info').innerText = `${selectedTarget.text} Обороноспособность: ${selectedTarget.power} ед.`;
+        
+        if (state.captured[selectedTarget.id]) {
+            document.getElementById('win-chance').innerText = "Статус: Регион под вашим контролем";
+            document.getElementById('attack-btn').style.display = 'none';
+        } else {
+            let myPower = 10 + (state.upgrades.mil * 5);
+            let chance = Math.floor((myPower / (myPower + selectedTarget.power)) * 100);
+            document.getElementById('win-chance').innerText = `Шанс на успех операции: ${chance}%`;
+            document.getElementById('attack-btn').style.display = 'block';
+        }
+    }
+
+    // Механика Войны (Атака)
+    function launchAttack() {
+        if (!selectedTarget) return;
+        
+        let myPower = 10 + (state.upgrades.mil * 5);
+        let chance = Math.floor((myPower / (myPower + selectedTarget.power)) * 100);
+        
+        if (Math.random() * 100 <= chance) {
+            state.captured[selectedTarget.id] = true;
+            state.money += 40; //Трофеи
+            showModal("⚔️ Победа!", `Военная операция прошла успешно. Контроль над регионом установлен. Получены трофеи (+40B ₽). Ежедневный доход вырос.`);
+            document.getElementById('target-card').style.display = 'none';
+        } else {
+            state.money -= 50; // Потери бюджета
+            if(state.money < 0) state.money = 0;
+            showModal("❌ Отступление", `Оборона цели оказалась сильнее ожидаемого. Наши войска перегруппированы на исходные рубежи. Потери бюджета на восстановление техники: -50B ₽.`);
+        }
         updateUI();
     }
 
-    // Вызов модального окна события
-    function triggerRandomEvent() {
-        let event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
-        document.getElementById('event-title').innerText = event.title;
-        document.getElementById('event-text').innerText = event.text;
+    // Клик дня
+    function processDay() {
+        state.days++;
+        state.money += getIncome();
         
-        let choicesContainer = document.getElementById('event-choices');
-        choicesContainer.innerHTML = ""; // Очищаем старые кнопки
+        // Фоновая генерация ресурсов
+        state.res.oil += 5 + (state.upgrades.prod);
+        state.res.grain += 8 + (state.upgrades.prod);
+        state.pop += 0.02;
 
-        event.choices.forEach(choice => {
-            let btn = document.createElement('button');
-            btn.innerText = choice.text;
-            btn.onclick = () => {
-                choice.action();
-                document.getElementById('event-modal').style.display = 'none';
-            };
-            choicesContainer.appendChild(btn);
-        });
-
-        document.getElementById('event-modal').style.display = 'flex';
+        // Шанс ивента
+        if (Math.random() < 0.3) {
+            let ev = eventsList[Math.floor(Math.random() * eventsList.length)];
+            showModal(ev.t, ev.d, ev.opts);
+        } else {
+            const shortNews = [
+                "Промышленный сектор отчитался о выполнении планов.",
+                "Центробанк сообщает о стабильности макроэкономических показателей.",
+                "Граждане поддерживают текущий политический курс.",
+                "Зафиксирован рост активности на внутренних биржах."
+            ];
+            document.getElementById('news').innerText = shortNews[Math.floor(Math.random() * shortNews.length)];
+        }
+        updateUI();
     }
 
-    // Инициализация при старте
+    // Модалка управления
+    function showModal(title, text, options = null) {
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-text').innerText = text;
+        let optContainer = document.getElementById('modal-options');
+        optContainer.innerHTML = "";
+
+        if (options) {
+            options.forEach(o => {
+                let b = document.createElement('button');
+                b.innerText = o.text;
+                b.onclick = () => { o.act(); document.getElementById('modal-window').style.display = 'none'; updateUI(); };
+                optContainer.appendChild(b);
+            });
+        } else {
+            let closeBtn = document.createElement('button');
+            closeBtn.innerText = "Принять к сведению";
+            closeBtn.className = "modal-close";
+            closeBtn.onclick = () => { document.getElementById('modal-window').style.display = 'none'; };
+            optContainer.appendChild(closeBtn);
+        }
+        document.getElementById('modal-window').style.display = 'flex';
+    }
+
+    // Старт
     updateUI();
 </script>
 </body>
