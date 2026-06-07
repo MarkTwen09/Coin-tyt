@@ -3,291 +3,491 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oil investor: Russia Edition</title>
+    <title>RosNeft Trader Pro – Симулятор Инвестора</title>
+    <!-- Подключаем Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-color: #0d1117;
-            --panel-bg: #161b22;
-            --accent-neon: #00ffcc;
-            --text-main: #c9d1d9;
-            --btn-green: #238636;
-            --btn-red: #da3633;
+            --bg-main: #0b0e11;
+            --bg-panel: #151a22;
+            --bg-card: #1e2530;
+            --border-color: #2b3545;
+            --text-white: #ffffff;
+            --text-gray: #848e9c;
+            --crypto-green: #0ecb81;
+            --crypto-red: #f6465d;
+            --accent-blue: #2f80ed;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-white);
             margin: 0;
-            padding: 20px;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        /* Сетка терминала */
+        .terminal-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            grid-template-rows: auto 450px 1fr;
+            gap: 12px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Шапка терминала */
+        .header-panel {
+            grid-column: 1 / -1;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px 20px;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
         }
 
-        h1 {
-            color: var(--accent-neon);
-            text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
-            margin-bottom: 5px;
+        .ticker-info {
+            display: flex;
+            gap: 30px;
         }
 
-        .subtitle {
-            color: #8b949e;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
+        .ticker-stat span {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            display: block;
         }
 
-        .container {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-            max-width: 1200px;
-            width: 100%;
+        .ticker-stat strong {
+            font-size: 1.1rem;
         }
 
-        @media (max-width: 768px) {
-            .container { grid-template-columns: 1fr; }
-        }
-
+        /* Панели */
         .panel {
-            background: var(--panel-bg);
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-
-        .news-ticker {
-            grid-column: 1 / -1;
-            background: #21262d;
-            border-left: 4px solid var(--accent-neon);
-            padding: 15px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
             border-radius: 6px;
-            font-weight: bold;
-            min-height: 24px;
+            padding: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
-        .stats-grid {
+        .panel-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-gray);
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        /* Кнопки торговли */
+        .trade-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: #21262d;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid #30363d;
-        }
-
-        .stat-card span {
-            display: block;
-            font-size: 0.85rem;
-            color: #8b949e;
-            text-transform: uppercase;
-        }
-
-        .stat-card strong {
-            display: block;
-            font-size: 1.4rem;
-            color: #fff;
-            margin-top: 5px;
-        }
-
-        .actions {
-            display: flex;
             gap: 10px;
+            margin-bottom: 15px;
         }
 
-        button {
-            flex: 1;
-            padding: 15px;
+        .btn {
+            padding: 12px;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.1s, opacity 0.2s;
-            color: #fff;
+            color: white;
+            font-size: 0.95rem;
+            transition: opacity 0.15s;
         }
 
-        button:active { transform: scale(0.98); }
+        .btn:hover { opacity: 0.9; }
+        .btn-buy { background: var(--crypto-green); }
+        .btn-sell { background: var(--crypto-red); }
+        .btn-accent { background: var(--accent-blue); }
 
-        .btn-buy { background-color: var(--btn-green); }
-        .btn-buy:hover { opacity: 0.9; }
+        /* Элементы инвентаря / бизнеса */
+        .biz-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+            max-height: 280px;
+        }
 
-        .btn-sell { background-color: var(--btn-red); }
-        .btn-sell:hover { opacity: 0.9; }
+        .biz-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-        .chart-container {
-            position: relative;
-            height: 350px;
-            width: 100%;
+        .biz-info div { font-weight: bold; font-size: 0.9rem;}
+        .biz-info span { font-size: 0.75rem; color: var(--text-gray); }
+
+        /* Лента геополитики */
+        .news-feed {
+            height: 120px;
+            overflow-y: auto;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .news-item {
+            padding: 6px 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .news-time { color: var(--accent-blue); margin-right: 8px; }
+
+        /* Графики */
+        .chart-box { position: relative; flex-grow: 1; height: 90%; }
+
+        @media (max-width: 1024px) {
+            .terminal-grid { grid-template-columns: 1fr; }
+            .header-panel { flex-direction: column; gap: 15px; }
         }
     </style>
 </head>
 <body>
 
-    <h1>NEFT RUSSIA INVESTOR</h1>
-    <div class="subtitle">Симулятор торговли нефтью в эпоху санкций и ограничений</div>
-
-    <div class="container">
-        <div class="panel news-ticker" id="news-box">
-            Загрузка геополитической обстановки...
-        </div>
-
-        <div class="panel">
-            <h3 style="margin-top:0; color: #fff;">График стоимости Urals (за баррель)</h3>
-            <div class="chart-container">
-                <canvas id="oilChart"></canvas>
+    <div class="terminal-grid">
+        
+        <!-- НАЧАЛО: ШАПКА -->
+        <header class="header-panel">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <h2 style="margin: 0; color: var(--crypto-green); font-size: 1.3rem;">ROSNEFT PRO TERMINAL</h2>
+                <span style="background: #2b3545; padding: 3px 8px; border-radius: 3px; font-size: 0.75rem;">URALS/USD</span>
             </div>
-        </div>
-
-        <div class="panel" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-                <h3 style="margin-top:0; color: #fff;">Портфель инвестора</h3>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <span>Баланс</span>
-                        <strong id="balance-val">10 000 $</strong>
-                    </div>
-                    <div class="stat-card">
-                        <span>Текущий курс</span>
-                        <strong id="price-val" style="color: var(--accent-neon);">60.00 $</strong>
-                    </div>
+            <div class="ticker-info">
+                <div class="ticker-stat">
+                    <span>Текущая цена Urals</span>
+                    <strong id="price-top" style="color: var(--crypto-green);">65.00 $</strong>
                 </div>
-                <div class="stats-grid">
-                    <div class="stat-card" style="grid-column: 1 / -1;">
-                        <span>Куплено нефти</span>
-                        <strong id="oil-val">0 bbl</strong>
-                    </div>
+                <div class="ticker-stat">
+                    <span>Курс Валют</span>
+                    <strong id="rub-rate">92.40 ₽ / 1$</strong>
+                </div>
+                <div class="ticker-stat">
+                    <span>Добыча холдинга</span>
+                    <strong id="production-rate" style="color: var(--accent-blue);">0 bbl/сек</strong>
                 </div>
             </div>
+        </header>
 
-            <div class="actions">
-                <button class="btn-buy" onclick="buyOil()">КУПИТЬ</button>
-                <button class="btn-sell" onclick="sellOil()">ПРОДАТЬ</button>
+        <!-- ГРАФИК ЦЕНЫ (СВЕЧНОЙ ИМИТАТОР + ОБЪЕМЫ) -->
+        <main class="panel">
+            <div class="panel-title">Интерактивный биржевой график (Urals Oil / Свечной режим)</div>
+            <div class="chart-box">
+                <canvas id="mainChart"></canvas>
             </div>
-        </div>
+        </main>
+
+        <!-- ТОРГОВЫЙ ПРИКАЗ И СЧЕТА -->
+        <aside class="panel">
+            <div class="panel-title">Управление капиталом</div>
+            
+            <div style="margin-bottom: 15px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom: 5px;">
+                    <span style="color:var(--text-gray)">Долларовый счет:</span>
+                    <strong id="balance-usd" style="color: #fff;">10 000.00 $</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom: 15px;">
+                    <span style="color:var(--text-gray)">Рублевый счет:</span>
+                    <strong id="balance-rub" style="color: #fff;">0.00 ₽</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom: 5px; background: #1f2633; padding: 8px; border-radius:4px;">
+                    <span style="color:var(--text-gray)">Нефть на складах:</span>
+                    <strong id="oil-inventory" style="color: var(--crypto-green);">0 bbl</strong>
+                </div>
+            </div>
+
+            <div class="trade-group">
+                <button class="btn btn-buy" onclick="tradeOil('buy')">КУПИТЬ 1 bbl</button>
+                <button class="btn btn-sell" onclick="tradeOil('sell')">ПРОДАТЬ 1 bbl</button>
+            </div>
+
+            <div class="panel-title" style="margin-top:10px; font-size:0.8rem;">Конвертация валюты</div>
+            <div class="trade-group">
+                <button class="btn btn-accent" style="font-size: 0.8rem;" onclick="convertCurrency('usd2rub')">USD ➔ ₽ (Все)</button>
+                <button class="btn btn-accent" style="font-size: 0.8rem; background: #4a5568;" onclick="convertCurrency('rub2usd')">₽ ➔ USD (Все)</button>
+            </div>
+        </aside>
+
+        <!-- ЛЕНТА ГЕОПОЛИТИКИ И САНКЦИЙ -->
+        <section class="panel">
+            <div class="panel-title">Сводки Минфина США и Геополитика (Влияние на маржу)</div>
+            <div class="news-feed" id="newsFeed">
+                <div class="news-item"><span class="news-time">[Система]</span> Рынки открыты. Начните экспансию российской энергетики.</div>
+            </div>
+        </section>
+
+        <!-- ИНВЕСТИЦИОННЫЕ АКТИВЫ (БИЗНЕС) -->
+        <section class="panel">
+            <div class="panel-title">Промышленные Активы (За ₽)</div>
+            <div class="biz-list">
+                
+                <div class="biz-item">
+                    <div class="biz-info">
+                        <div id="pump-title">Сибирская вышка (0)</div>
+                        <span>Добыча: +1 баррель/сек</span><br>
+                        <span style="color: var(--crypto-green);" id="pump-cost">Цена: 50 000 ₽</span>
+                    </div>
+                    <button class="btn btn-accent" style="padding: 6px 12px;" onclick="buyAsset('pump')">Купить</button>
+                </div>
+
+                <div class="biz-item">
+                    <div class="biz-info">
+                        <div id="refinery-title">НПЗ «Родина» (0)</div>
+                        <span>Доход: +1 500 ₽/сек</span><br>
+                        <span style="color: var(--crypto-green);" id="refinery-cost">Цена: 250 000 ₽</span>
+                    </div>
+                    <button class="btn btn-accent" style="padding: 6px 12px;" onclick="buyAsset('refinery')">Купить</button>
+                </div>
+
+                <div class="biz-item">
+                    <div class="biz-info">
+                        <div id="tanker-title">Танкер Совкомфлота (0)</div>
+                        <span>Защита от санкций на 10%</span><br>
+                        <span style="color: var(--crypto-green);" id="tanker-cost">Цена: 600 000 ₽</span>
+                    </div>
+                    <button class="btn btn-accent" style="padding: 6px 12px;" onclick="buyAsset('tanker')">Купить</button>
+                </div>
+
+            </div>
+        </section>
+
     </div>
 
     <script>
-        // Игровые переменные
-        let balance = 10000;
-        let oilOwned = 0;
-        let currentPrice = 60.0;
-        
-        // Данные для графика
-        const priceHistory = [62, 61, 59, 60, 58, 60];
-        const timeLabels = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
+        // Экономические показатели холдинга
+        let cashUSD = 10000.00;
+        let cashRUB = 0.00;
+        let oilInventory = 0;
+        let usdToRubRate = 92.40;
 
-        // Пул новостей, влияющих на рынок
-        const newsEvents = [
-            { text: "⚡ ЕС вводит новый пакет санкций против российского экспорта нефти!", impact: -5 },
-            { text: "🔥 Крупный азиатский хаб заключил долгосрочный контракт на закупку Urals!", impact: 6 },
-            { text: "📊 ОПЕК+ договорились о дополнительном сокращении добычи.", impact: 4 },
-            { text: "⚓ Шторм в Новороссийске временно заблокировал отгрузку танкеров.", impact: -2 },
-            { text: "🛡️ Индия увеличила закупки российской нефти со скидкой, обходя потолок цен.", impact: 3 },
-            { text: "📉 Мировая экономика замедляется, спрос на энергоресурсы падает.", impact: -4 }
+        // Текущие параметры рынка нефти
+        let currentPrice = 65.00;
+        let baseVolatility = 1.5; 
+
+        // Активы во владении
+        let assets = {
+            pump: { count: 0, cost: 50000, baseCost: 50000 },
+            refinery: { count: 0, cost: 250000, baseCost: 250000 },
+            tanker: { count: 0, cost: 600000, baseCost: 600000 }
+        };
+
+        // База данных для имитации японских свечей (High, Low, Open, Close)
+        let chartData = { labels: [], open: [], high: [], low: [], close: [] };
+
+        // Инициализация массивов для отображения
+        for(let i=0; i<20; i++) {
+            chartData.labels.push("");
+            chartData.open.push(65);
+            chartData.high.push(65.5);
+            chartData.low.push(64.5);
+            chartData.close.push(65);
+        }
+
+        // Новости и их математическое влияние
+        const geopoliticalEvents = [
+            { text: "⚠️ Минфин США вводит санкции против 'теневого флота' РФ. Логистика усложнена.", impactPrice: -8, impactRub: 4.5 },
+            { text: "🤝 Китай заявляет о готовности выкупить любые объемы выпадающего экспорта Urals.", impactPrice: 6, impactRub: -2.0 },
+            { text: "🔥 Произошел форс-мажор на крупном нефтепроводе в Европе. Дефицит сырья!", impactPrice: 11, impactRub: -3.5 },
+            { text: "🇷🇺 ЦБ РФ поднимает ключевую ставку для стабилизации национальной валюты.", impactPrice: 0, impactRub: -6.0 },
+            { text: "🇺🇸 США распечатывают свои стратегические нефтяные резервы для снижения цен.", impactPrice: -5.5, impactRub: 1.5 },
+            { text: "📊 Индийские НПЗ требуют повышенную скидку на российскую нефть.", impactPrice: -3.2, impactRub: 0.8 }
         ];
 
-        // Инициализация графика Chart.js
-        const ctx = document.getElementById('oilChart').getContext('2d');
-        const oilChart = new Chart(ctx, {
-            type: 'line',
+        // Инициализация продвинутого двухслойного графика Chart.js
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        const mainChart = new Chart(ctx, {
+            type: 'bar', // Используем бары для имитации свечного разбега
             data: {
-                labels: timeLabels,
-                datasets: [{
-                    label: 'Цена Urals ($)',
-                    data: priceHistory,
-                    borderColor: '#00ffcc',
-                    borderWidth: 3,
-                    backgroundColor: 'rgba(0, 255, 204, 0.1)',
-                    fill: true,
-                    tension: 0.3,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#00ffcc'
-                }]
+                labels: chartData.labels,
+                datasets: [
+                    {
+                        label: 'Цена закрытия',
+                        data: chartData.close,
+                        type: 'line',
+                        borderColor: '#0ecb81',
+                        borderWidth: 2,
+                        pointRadius: 2,
+                        tension: 0.1,
+                        backgroundColor: 'transparent'
+                    },
+                    {
+                        label: 'Разброс цен (High/Low)',
+                        data: chartData.high,
+                        backgroundColor: 'rgba(142, 158, 175, 0.15)',
+                        borderWidth: 0,
+                        barPercentage: 0.4
+                    }
+                ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    x: { grid: { color: '#30363d' }, ticks: { color: '#8b949e' } },
-                    y: { grid: { color: '#30363d' }, ticks: { color: '#8b949e' } }
+                    x: { grid: { color: '#1f2633' }, ticks: { display: false } },
+                    y: { grid: { color: '#1f2633' }, ticks: { color: '#848e9c' }, position: 'right' }
                 },
-                plugins: {
-                    legend: { display: false }
-                }
+                plugins: { legend: { display: false } }
             }
         });
 
-        // Обновление интерфейса текста
-        function updateUI() {
-            document.getElementById('balance-val').innerText = balance.toFixed(2) + ' $';
-            document.getElementById('price-val').innerText = currentPrice.toFixed(2) + ' $';
-            document.getElementById('oil-val').innerText = oilOwned + ' bbl';
-        }
-
-        // Логика покупки
-        function buyOil() {
-            if (balance >= currentPrice) {
-                balance -= currentPrice;
-                oilOwned += 1;
-                updateUI();
-            } else {
-                alert("Не хватает бабок на баррель!");
-            }
-        }
-
-        // Логика продажи
-        function sellOil() {
-            if (oilOwned > 0) {
-                balance += currentPrice;
-                oilOwned -= 1;
-                updateUI();
-            } else {
-                alert("У тебя нет нефти на продажу!");
-            }
-        }
-
-        // Игровой цикл: изменение цены каждые 3 секунды
-        setInterval(() => {
-            // Базовое случайное колебание цены (-2 до +2 долларов)
-            let change = (Math.random() * 4) - 2;
+        // Функция обновления UI
+        function updateTerminalUI() {
+            document.getElementById('price-top').innerText = currentPrice.toFixed(2) + ' $';
+            document.getElementById('rub-rate').innerText = usdToRubRate.toFixed(2) + ' ₽ / 1$';
+            document.getElementById('balance-usd').innerText = cashUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' $';
+            document.getElementById('balance-rub').innerText = cashRUB.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ₽';
+            document.getElementById('oil-inventory').innerText = oilInventory.toLocaleString() + ' bbl';
             
-            // Шанс 20% на генерацию крупного инфоповода
-            if (Math.random() < 0.2) {
-                const randomNews = newsEvents[Math.floor(Math.random() * newsEvents.length)];
-                document.getElementById('news-box').innerText = randomNews.text;
-                change += randomNews.impact; // Добавляем влияние санкции/события
+            // Расчет общей скорости добычи
+            let totalProd = assets.pump.count * 1;
+            document.getElementById('production-rate').innerText = totalProd + ' bbl/сек';
+
+            // Обновление цен и счетчиков активов
+            document.getElementById('pump-title').innerText = `Сибирская вышка (${assets.pump.count})`;
+            document.getElementById('pump-cost').innerText = `Цена: ${assets.pump.cost.toLocaleString()} ₽`;
+            
+            document.getElementById('refinery-title').innerText = `НПЗ «Родина» (${assets.refinery.count})`;
+            document.getElementById('refinery-cost').innerText = `Цена: ${assets.refinery.cost.toLocaleString()} ₽`;
+
+            document.getElementById('tanker-title').innerText = `Танкер Совкомфлота (${assets.tanker.count})`;
+            document.getElementById('tanker-cost').innerText = `Цена: ${assets.tanker.cost.toLocaleString()} ₽`;
+        }
+
+        // Торговые операции (Нефть)
+        function tradeOil(type) {
+            if (type === 'buy') {
+                if (cashUSD >= currentPrice) {
+                    cashUSD -= currentPrice;
+                    oilInventory += 1;
+                }
+            } else if (type === 'sell') {
+                if (oilInventory > 0) {
+                    oilInventory -= 1;
+                    cashUSD += currentPrice;
+                }
+            }
+            updateTerminalUI();
+        }
+
+        // Конвертация валют (Все средства сразу)
+        function convertCurrency(direction) {
+            if (direction === 'usd2rub') {
+                if (cashUSD > 0) {
+                    cashRUB += cashUSD * usdToRubRate;
+                    cashUSD = 0;
+                }
+            } else if (direction === 'rub2usd') {
+                if (cashRUB > 0) {
+                    cashUSD += cashRUB / usdToRubRate;
+                    cashRUB = 0;
+                }
+            }
+            updateTerminalUI();
+        }
+
+        // Покупка инфраструктурных объектов
+        function buyAsset(type) {
+            let asset = assets[type];
+            if (cashRUB >= asset.cost) {
+                cashRUB -= asset.cost;
+                asset.count++;
+                // Каждая последующая покупка дороже на 30% (рыночный спрос)
+                asset.cost = Math.floor(asset.baseCost * Math.pow(1.3, asset.count));
+                updateTerminalUI();
+            } else {
+                addNewsLog("❌ Недостаточно средств на рублевом счете для покупки актива!");
+            }
+        }
+
+        // Логгер новостей в терминал
+        function addNewsLog(text) {
+            const feed = document.getElementById('newsFeed');
+            const now = new Date();
+            const timeStr = (now.getHours()<10?'0':'')+now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes()+':'+(now.getSeconds()<10?'0':'')+now.getSeconds();
+            
+            feed.innerHTML = `<div class="news-item"><span class="news-time">[${timeStr}]</span> ${text}</div>` + feed.innerHTML;
+            
+            // Чтобы память не перегружать, храним последние 15 новостей
+            if (feed.children.length > 15) feed.removeChild(feed.lastChild);
+        }
+
+        // Главный экономический тик движка игры (раз в 2 секунды)
+        setInterval(() => {
+            let openPrice = currentPrice;
+            
+            // Базовая рыночная волатильность
+            let change = (Math.random() * baseVolatility * 2) - baseVolatility;
+            
+            // Шанс на геополитический шок (15%)
+            if (Math.random() < 0.15) {
+                let event = geopoliticalEvents[Math.floor(Math.random() * geopoliticalEvents.length)];
+                
+                // Эффект защиты танкеров: если у нас есть танкеры, негативный эффект санкций на цену уменьшается
+                let currentImpact = event.impactPrice;
+                if (currentImpact < 0 && assets.tanker.count > 0) {
+                    let mitigation = Math.min(assets.tanker.count * 0.10, 0.70); // Максимум 70% защиты
+                    currentImpact = currentImpact * (1 - mitigation);
+                }
+
+                change += currentImpact;
+                usdToRubRate += event.impactRub;
+                addNewsLog(event.text);
             }
 
             currentPrice += change;
-            if (currentPrice < 10) currentPrice = 10; // Чтобы цена в ноль не ушла
+            if (currentPrice < 15) currentPrice = 15; // Дно цены (себестоимость добычи)
+            if (usdToRubRate < 50) usdToRubRate = 50;
 
-            // Обновляем данные графика
-            const now = new Date();
-            const timeStr = now.getHours() + ':' + (now.getMinutes()<10?'0':'') + now.getMinutes() + ':' + (now.getSeconds()<10?'0':'') + now.getSeconds();
-            
-            oilChart.data.labels.push(timeStr);
-            oilChart.data.datasets[0].data.push(currentPrice);
+            // Расчет свечных параметров для графика
+            let closePrice = currentPrice;
+            let highPrice = Math.max(openPrice, closePrice) + (Math.random() * 0.5);
+            let lowPrice = Math.min(openPrice, closePrice) - (Math.random() * 0.5);
 
-            // Ограничиваем график 15-ю точками, чтобы он не сжимался бесконечно
-            if (oilChart.data.labels.length > 15) {
-                oilChart.data.labels.shift();
-                oilChart.data.datasets[0].data.shift();
+            // Сдвиг данных на графике
+            chartData.close.push(closePrice);
+            chartData.high.push(highPrice);
+            chartData.close.shift();
+            chartData.high.shift();
+
+            // Меняем цвет графика в зависимости от тренда
+            if (closePrice >= openPrice) {
+                mainChart.data.datasets[0].borderColor = '#0ecb81';
+            } else {
+                mainChart.data.datasets[0].borderColor = '#f6465d';
             }
 
-            oilChart.update();
-            updateUI();
-        }, 3000);
+            mainChart.update();
+            updateTerminalUI();
+        }, 2000);
 
-        // Первый запуск UI
-        updateUI();
+        // Пассивное производство активов (каждую 1 секунду)
+        setInterval(() => {
+            // Вышки добывают сырую нефть
+            if (assets.pump.count > 0) {
+                oilInventory += assets.pump.count * 1;
+            }
+            // НПЗ генерируют чистую рублевую прибыль напрямую на счет
+            if (assets.refinery.count > 0) {
+                cashRUB += assets.refinery.count * 1500;
+            }
+            updateTerminalUI();
+        }, 1000);
+
+        // Инициализация при загрузке страницы
+        updateTerminalUI();
     </script>
 </body>
 </html>
