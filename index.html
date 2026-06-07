@@ -2,760 +2,273 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mines Luxury Premium</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Moon Stars — Premium Digital Assets</title>
     <style>
         :root {
-            --bg-main: #060709;
-            --panel-bg: rgba(13, 17, 24, 0.85);
-            --panel-border: rgba(255, 183, 3, 0.25);
-            --gold-primary: #ffb703;
-            --gold-glow: #ffea00;
-            --cyan-glow: #00f0ff;
-            --gem-color: #00ffaa;
-            --mine-color: #ff3344;
-            --text-white: #f1f5f9;
-            --text-muted: #475569;
+            --bg-dark: #0a0c10;
+            --card-bg: rgba(20, 24, 33, 0.9);
+            --accent-gold: #c5a059;
+            --accent-blue: #0088cc;
+            --accent-sber: #21a038;
+            --accent-sale: #ff4757;
+            --text-main: #f1f5f9;
+            --text-dim: #64748b;
+            --border: rgba(255, 255, 255, 0.05);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
         body {
-            background: radial-gradient(circle at 50% 30%, #111622 0%, var(--bg-main) 80%);
-            color: var(--text-white);
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(197, 160, 89, 0.05) 0%, transparent 30%),
+                radial-gradient(circle at 100% 100%, rgba(0, 136, 204, 0.05) 0%, transparent 30%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            perspective: 1000px;
-            overflow: hidden;
+            display: flex; flex-direction: column; align-items: center;
+            color: var(--text-main); padding: 20px 0; overflow-x: hidden;
         }
 
-        /* Эффект тряски экрана при взрыве */
-        .shake-anim {
-            animation: screenShake 0.4s ease-in-out;
-        }
+        .header-logo { text-align: center; margin-bottom: 20px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; }
+        .logo span { color: var(--accent-gold); }
 
-        .game-wrapper {
-            width: 100%;
-            max-width: 1000px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            transform-style: preserve-3d;
-        }
+        /* СЛАЙДЕР СЕРВИСОВ */
+        .slider-wrapper { width: 100%; overflow: hidden; margin-bottom: 25px; position: relative; }
+        .services-slider { display: flex; gap: 15px; padding: 0 20px; scroll-behavior: smooth; overflow-x: auto; scrollbar-width: none; }
+        .services-slider::-webkit-scrollbar { display: none; }
+        .service-card { min-width: 85%; height: 150px; border-radius: 28px; padding: 24px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; text-decoration: none; color: white; flex-shrink: 0; }
+        .vpn-card { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .shop-card { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
+        .card-tag { position: absolute; top: 24px; left: 24px; font-size: 10px; font-weight: 800; text-transform: uppercase; background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 10px; }
+        .card-title { font-size: 20px; font-weight: 800; }
+        .card-desc { font-size: 12px; opacity: 0.9; margin-top: 4px; }
+        .card-arrow { position: absolute; top: 24px; right: 24px; font-size: 20px; opacity: 0.7; }
 
-        /* Премиальный Верхний Бар */
-        .header-panel {
-            background: var(--panel-bg);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        /* ГЛАВНЫЙ КОНТЕЙНЕР */
+        .main-container { width: 90%; max-width: 380px; background: var(--card-bg); backdrop-filter: blur(25px); border-radius: 32px; padding: 28px; border: 1px solid var(--border); box-shadow: 0 40px 100px rgba(0,0,0,0.8); text-align: center; margin-bottom: 24px; }
+        .tabs-container { position: relative; display: flex; background: rgba(0, 0, 0, 0.4); padding: 4px; border-radius: 16px; margin-bottom: 28px; }
+        .tab-slider { position: absolute; top: 4px; left: 4px; height: calc(100% - 8px); width: calc(50% - 4px); background: rgba(255, 255, 255, 0.05); border-radius: 12px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .tab-btn { flex: 1; padding: 12px; border: none; background: none; color: var(--text-dim); font-weight: 700; font-size: 11px; text-transform: uppercase; cursor: pointer; position: relative; z-index: 2; }
+        .tab-btn.active { color: var(--text-main); }
 
-        .brand-logo {
-            font-size: 26px;
-            font-weight: 900;
-            letter-spacing: 4px;
-            background: linear-gradient(135deg, #ffffff 30%, var(--gold-primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px rgba(255,183,3,0.3));
-        }
+        #profile-box { display: none; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); padding: 12px 16px; border-radius: 18px; margin-top: 10px; }
+        .profile-avatar { width: 36px; height: 36px; background: var(--accent-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #000; }
+        .tg-input { width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 16px; padding: 16px 16px 16px 44px; color: white; outline: none; }
+        .at-sign { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--accent-gold); }
 
-        .balance-container {
-            text-align: right;
-        }
+        .price-display { padding: 24px; background: rgba(255,255,255,0.02); border-radius: 24px; border: 1px solid var(--border); margin: 24px 0; position: relative; overflow: hidden; }
+        .sale-badge { position: absolute; top: 10px; right: -25px; background: var(--accent-sale); color: white; font-size: 9px; font-weight: 900; padding: 4px 30px; transform: rotate(45deg); text-transform: uppercase; }
+        .val-main { font-size: 28px; font-weight: 800; }
+        .val-sub { font-size: 16px; color: var(--accent-sale); font-weight: 800; }
 
-        .balance-title {
-            font-size: 10px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 4px;
-        }
+        input[type="range"] { -webkit-appearance: none; width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-bottom: 32px; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; background: #fff; border-radius: 50%; border: 5px solid var(--bg-dark); }
 
-        .balance-value {
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-shadow: 0 0 20px rgba(255,255,255,0.1);
-        }
+        .buy-btn { width: 100%; padding: 18px; background: #fff; color: #000; border: none; border-radius: 18px; font-size: 13px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
 
-        .balance-value span {
-            color: var(--gold-primary);
-            text-shadow: 0 0 15px rgba(255,183,3,0.5);
-        }
+        /* FAQ И ПАРТНЕРКА */
+        .faq-section { width: 90%; max-width: 380px; margin-bottom: 30px; }
+        .faq-item { background: rgba(255, 255, 255, 0.02); border-radius: 16px; margin-bottom: 8px; border: 1px solid var(--border); overflow: hidden; }
+        .faq-question { padding: 16px; width: 100%; text-align: left; background: none; border: none; color: var(--text-main); font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .faq-answer { padding: 0 16px; max-height: 0; overflow: hidden; transition: 0.3s ease-out; color: var(--text-dim); font-size: 12px; line-height: 1.6; }
+        .faq-item.active .faq-answer { padding: 0 16px 16px 16px; max-height: 200px; }
 
-        /* Главный интерфейс */
-        .main-layout {
-            display: flex;
-            background: var(--panel-bg);
-            backdrop-filter: blur(25px);
-            border: 1px solid var(--panel-border);
-            border-radius: 28px;
-            padding: 35px;
-            box-shadow: 0 30px 70px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255,255,255,0.05);
-            gap: 35px;
-        }
+        .ref-card { width: 90%; max-width: 380px; background: linear-gradient(135deg, rgba(197, 160, 89, 0.1) 0%, rgba(0, 136, 204, 0.05) 100%); border-radius: 28px; padding: 24px; border: 1px solid rgba(197, 160, 89, 0.15); margin-bottom: 24px; text-align: center; }
+        .ref-btn { display: block; width: 100%; padding: 14px; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2); border-radius: 14px; color: #fff; font-size: 12px; font-weight: 600; text-decoration: none; margin-top: 10px; cursor: pointer; }
 
-        /* Панель управления */
-        .control-sidebar {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-width: 300px;
-        }
-
-        .inputs-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .field-box label {
-            font-size: 11px;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 700;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .input-premium-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .input-premium {
-            width: 100%;
-            background: #090d14;
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 14px;
-            padding: 16px;
-            color: #fff;
-            font-size: 18px;
-            font-weight: 700;
-            outline: none;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
-        }
-
-        .input-premium:focus {
-            border-color: var(--gold-primary);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 0 15px rgba(255,183,3,0.2);
-        }
-
-        .input-badge {
-            position: absolute;
-            right: 20px;
-            font-weight: 700;
-            color: #475569;
-        }
-
-        /* Сетка быстрых ставок */
-        .bet-presets {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .preset-btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255,255,255,0.05);
-            color: #cbd5e1;
-            border-radius: 8px;
-            padding: 8px 0;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .preset-btn:hover {
-            background: rgba(255,255,255,0.08);
-            border-color: rgba(255,255,255,0.15);
-            color: #fff;
-        }
-
-        /* Информационный Экран статистики */
-        .score-board {
-            background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 100%);
-            border: 1px solid rgba(255,255,255,0.03);
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .score-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .score-lbl { color: #64748b; font-size: 14px; font-weight: 500;}
-        .score-val { font-weight: 700; color: #fff; font-size: 15px;}
-        .score-val.gold-glow {
-            color: var(--gold-primary);
-            font-size: 22px;
-            text-shadow: 0 0 15px rgba(255,183,3,0.4);
-        }
-
-        /* Кнопки Действий */
-        .trigger-btn {
-            width: 100%;
-            padding: 18px;
-            border-radius: 14px;
-            border: none;
-            font-size: 16px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            margin-top: 25px;
-        }
-
-        .btn-start-round {
-            background: linear-gradient(135deg, #ffc300 0%, #ff9100 100%);
-            color: #000;
-            box-shadow: 0 8px 25px rgba(255,145,0,0.3);
-        }
-
-        .btn-start-round:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(255,145,0,0.5);
-        }
-
-        .btn-cashout-round {
-            background: linear-gradient(135deg, #00ff87 0%, #60efff 100%);
-            color: #090d14;
-            box-shadow: 0 8px 25px rgba(0,255,135,0.3);
-            display: none;
-        }
-
-        .btn-cashout-round:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(0,255,135,0.5);
-        }
-
-        .trigger-btn:disabled {
-            opacity: 0.15;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-
-        /* СУПЕР 3D ПОЛЕ И ЯЧЕЙКИ */
-        .board-wrapper {
-            flex: 1.3;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .mines-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 14px;
-            width: 100%;
-            max-width: 480px;
-            aspect-ratio: 1/1;
-        }
-
-        .cell-3d {
-            background: radial-gradient(135deg, #1b2332 0%, #0f141d 100%);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 16px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        /* Блик на ячейке */
-        .cell-3d::after {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.08) 50%, transparent 55%);
-            transform: rotate(45deg);
-            transition: transform 0.6s ease;
-        }
-
-        .cell-3d:hover:not(.revealed):not(.disabled) {
-            transform: translateY(-4px) scale(1.02);
-            border-color: rgba(255,183,3,0.4);
-            box-shadow: 0 12px 20px rgba(0,0,0,0.6), 0 0 15px rgba(255,183,3,0.1);
-        }
-
-        .cell-3d:hover:not(.revealed):not(.disabled)::after {
-            transform: translate(25%, 25%) rotate(45deg);
-        }
-
-        .cell-3d:active:not(.revealed):not(.disabled) {
-            transform: translateY(1px) scale(0.98);
-        }
-
-        /* Состояния раскрытия */
-        .cell-3d.revealed {
-            cursor: default;
-            background: #090b10;
-            border-color: rgba(255,255,255,0.02);
-            box-shadow: inset 0 4px 10px rgba(0,0,0,0.8);
-            transform: none !important;
-        }
-
-        /* Стилизация Алмазов */
-        .cell-3d.has-gem {
-            border-color: var(--gem-color);
-            background: radial-gradient(circle at 50% 50%, rgba(0, 255, 170, 0.15) 0%, #070a0f 100%);
-            animation: crystalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards;
-        }
-
-        /* Стилизация Взрывных Мин */
-        .cell-3d.has-mine {
-            border-color: var(--mine-color);
-            background: radial-gradient(circle at 50% 50%, rgba(255, 51, 68, 0.25) 0%, #070a0f 100%);
-            animation: minePop 0.3s ease-out forwards;
-        }
-
-        .cell-3d svg {
-            width: 50%;
-            height: 50%;
-            transition: all 0.3s;
-            z-index: 2;
-        }
-
-        .cell-3d.has-gem svg {
-            filter: drop-shadow(0 0 15px rgba(0, 255, 170, 0.8)) drop-shadow(0 0 5px #fff);
-        }
-
-        .cell-3d.has-mine svg {
-            filter: drop-shadow(0 0 20px rgba(255, 51, 68, 0.9));
-        }
-
-        .cell-3d.lost-reveal {
-            opacity: 0.35;
-        }
-
-        /* ЭФФЕКТ ЧАСТИЦ КРИСТАЛЛА (Sparkle) */
-        .sparkle {
-            position: absolute;
-            width: 4px; height: 4px;
-            background: var(--gem-color);
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-            animation: sparkOut 0.5s ease-out forwards;
-        }
-
-        /* Высококачественные Анимации */
-        @keyframes crystalPop {
-            0% { transform: scale(0.6) rotate(-15deg); filter: brightness(3); }
-            80% { transform: scale(1.05) rotate(5deg); }
-            100% { transform: scale(1) rotate(0deg); filter: brightness(1); }
-        }
-
-        @keyframes minePop {
-            0% { transform: scale(0.8); filter: brightness(5); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); filter: brightness(1); }
-        }
-
-        @keyframes sparkOut {
-            0% { opacity: 1; transform: translate(0, 0) scale(1); }
-            100% { opacity: 0; transform: translate(var(--x), var(--y)) scale(0.2); }
-        }
-
-        @keyframes screenShake {
-            0%, 100% { transform: translateX(0) translateY(0); }
-            20% { transform: translateX(-8px) translateY(4px); }
-            40% { transform: translateX(8px) translateY(-4px); }
-            60% { transform: translateX(-6px) translateY(-2px); }
-            80% { transform: translateX(6px) translateY(2px); }
-        }
-
-        @media (max-width: 820px) {
-            .main-layout { flex-direction: column; padding: 20px; }
-            .control-sidebar { width: 100%; }
-            .mines-grid { max-width: 100%; }
-        }
+        /* МОДАЛКА ОПЛАТЫ (ВОССТАНОВЛЕННАЯ) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(20px); }
+        .payment-card { width: 92%; max-width: 350px; background: #12141a; border-radius: 35px; padding: 30px 20px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
+        .pay-icon { width: 44px; height: 44px; background: rgba(33, 160, 56, 0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+        .pay-title { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+        .pay-steps { text-align: left; background: rgba(255,255,255,0.03); border-radius: 16px; padding: 16px; margin-bottom: 20px; font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+        .pay-steps b { color: var(--accent-gold); }
+        .card-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 18px; cursor: pointer; margin-bottom: 12px; transition: 0.2s; }
+        .card-box:active { transform: scale(0.98); background: rgba(255,255,255,0.05); }
+        .card-num { font-family: monospace; font-size: 17px; font-weight: 700; color: #fff; letter-spacing: 1px; }
+        .copy-hint { font-size: 9px; color: var(--text-dim); font-weight: 800; margin-top: 6px; text-transform: uppercase; }
+        .sber-btn { display: block; width: 100%; padding: 18px; background: #21a038; color: #fff; border: none; border-radius: 20px; font-size: 14px; font-weight: 800; text-decoration: none; text-transform: uppercase; margin-bottom: 12px; }
+        .done-btn { width: 100%; padding: 18px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border); border-radius: 20px; font-size: 14px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="game-wrapper" id="stage-wrapper">
-        <!-- Верхняя Панель -->
-        <div class="header-panel">
-            <div class="brand-logo">MINES PREMIER</div>
-            <div class="balance-container">
-                <div class="balance-title">Капитал Личного Счета</div>
-                <div class="balance-value" id="balance-view">1 000 <span>₽</span></div>
+<div class="header-logo">
+    <div class="logo">MOON<span>STARS</span></div>
+</div>
+
+<div class="slider-wrapper">
+    <div class="services-slider" id="serv-slider">
+        <a href="https://t.me/Tgeshka_vpn" class="service-card vpn-card" target="_blank">
+            <span class="card-arrow">↗</span>
+            <div class="card-tag">Безопасность</div>
+            <div>
+                <div class="card-title">Tgeshka VPN</div>
+                <div class="card-desc">Безлимитный доступ</div>
             </div>
+        </a>
+        <a href="https://marktwen09.github.io/Coin-tyt/" class="service-card shop-card" target="_blank">
+            <span class="card-arrow">↗</span>
+            <div class="card-tag">Маркетплейс</div>
+            <div>
+                <div class="card-title">Moon Shop</div>
+                <div class="card-desc">Донат и товары</div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="main-container">
+    <div class="tabs-container">
+        <div class="tab-slider" id="slider-bg"></div>
+        <button class="tab-btn active" onclick="setMode('stars', 0)">Stars</button>
+        <button class="tab-btn" onclick="setMode('premium', 100)">Premium</button>
+    </div>
+
+    <div style="position: relative; text-align: left; margin-bottom: 20px;">
+        <label style="font-size: 9px; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 8px; display: block;">Telegram Username</label>
+        <div id="input-box" style="position: relative;">
+            <span class="at-sign">@</span>
+            <input type="text" id="username" class="tg-input" placeholder="Введите ник" oninput="handleInput(this)">
         </div>
-
-        <!-- Основной Контент -->
-        <div class="main-layout">
-            <div class="control-sidebar">
-                <div class="inputs-stack">
-                    
-                    <div class="field-box">
-                        <label>Размер Инвестиции</label>
-                        <div class="input-premium-wrapper">
-                            <input type="number" id="bet-field" class="input-premium" value="100" min="10">
-                            <span class="input-badge">₽</span>
-                        </div>
-                        <div class="bet-presets">
-                            <button class="preset-btn" onclick="changeBet('min')">MIN</button>
-                            <button class="preset-btn" onclick="changeBet('x2')">X2</button>
-                            <button class="preset-btn" onclick="changeBet('1/2')">1/2</button>
-                            <button class="preset-btn" onclick="changeBet('max')">MAX</button>
-                        </div>
-                    </div>
-
-                    <div class="field-box">
-                        <label>Количество Угроз (Мин)</label>
-                        <div class="input-premium-wrapper">
-                            <input type="number" id="mines-field" class="input-premium" value="3" min="1" max="24">
-                        </div>
-                    </div>
-
-                    <div class="score-board">
-                        <div class="score-row">
-                            <span class="score-lbl">Множитель сделки</span>
-                            <span id="mult-view" class="score-val gold-glow">x0.00</span>
-                        </div>
-                        <div class="score-row">
-                            <span class="score-lbl">Чистая прибыль</span>
-                            <span id="profit-view" class="score-val" style="color: var(--gem-color);">0 ₽</span>
-                        </div>
-                        <div class="score-row">
-                            <span class="score-lbl">Алмазов извлечено</span>
-                            <span id="gems-view" class="score-val">0 / 0</span>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div>
-                    <button id="action-trigger" class="trigger-btn btn-start-round">Начать Раунд</button>
-                    <button id="cashout-trigger" class="trigger-btn btn-cashout-round">Вывести Прибыль</button>
-                </div>
+        <div id="profile-box">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div class="profile-avatar" id="p-avatar">?</div>
+                <div id="p-name" style="font-weight: 600;">Username</div>
             </div>
-
-            <!-- Зона Поля -->
-            <div class="board-wrapper">
-                <div class="mines-grid" id="grid-container"></div>
-            </div>
+            <button onclick="resetUser()" style="background:none; border:none; color:var(--text-dim); font-size:20px;">×</button>
         </div>
     </div>
 
-    <script>
-        // Высококачественный Аудио Движок (Web Audio API)
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playPremiumSound(type) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
+    <div class="price-display">
+        <div class="sale-badge">SALE</div>
+        <div class="val-main" id="display-val">100 STARS</div>
+        <div class="val-sub" id="display-price">155 ₽</div>
+    </div>
 
-            if (type === 'click') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(500, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.08);
-                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.08);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.08);
-            } else if (type === 'gem') {
-                // Двойной перелив кристалла
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-                osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.06); // A5
-                osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.2); 
-                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.25);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.25);
-            } else if (type === 'cashout') {
-                // Восходящий мажорный аккорд
-                const notes = [523.25, 659.25, 783.99, 1046.5];
-                notes.forEach((freq, idx) => {
-                    const o = audioCtx.createOscillator();
-                    const g = audioCtx.createGain();
-                    o.connect(g); g.connect(audioCtx.destination);
-                    o.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.05);
-                    g.gain.setValueAtTime(0.06, audioCtx.currentTime + idx * 0.05);
-                    g.gain.linearRampToValueAtTime(0, audioCtx.currentTime + idx * 0.05 + 0.3);
-                    o.start(); o.stop(audioCtx.currentTime + idx * 0.05 + 0.3);
-                });
-            } else if (type === 'boom') {
-                // Мощный взрыв с басом
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(90, audioCtx.currentTime);
-                osc.frequency.linearRampToValueAtTime(20, audioCtx.currentTime + 0.4);
-                gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.4);
-            }
+    <input type="range" id="slider" min="0" max="10" step="1" value="0" oninput="update()">
+    <button class="buy-btn" onclick="checkout()">Оформить со скидкой</button>
+</div>
+
+<div class="faq-section">
+    <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">Как быстро придут Stars? <span>+</span></button>
+        <div class="faq-answer">Обычно начисление занимает от 5 до 15 минут после оплаты.</div>
+    </div>
+    <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">Это безопасно? <span>+</span></button>
+        <div class="faq-answer">Да, мы используем официальные методы покупки. Ваш аккаунт в безопасности.</div>
+    </div>
+</div>
+
+<div class="ref-card">
+    <div style="font-weight: 800; font-size: 14px;">Партнерская программа</div>
+    <div class="ref-btn" onclick="copyRef()">Скопировать ссылку</div>
+    <a href="https://t.me/kaoface" class="ref-btn" style="color: var(--accent-gold); border-color: rgba(197,160,89,0.3)">Поддержка</a>
+</div>
+
+<!-- ВОССТАНОВЛЕННАЯ МОДАЛКА -->
+<div class="modal-overlay" id="modal">
+    <div class="payment-card">
+        <div class="pay-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#21A038" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+        <div class="pay-title">Оплата</div>
+        
+        <div class="pay-steps">
+            1. Нажмите <b>«Оплатить в Сбере»</b>.<br>
+            2. Переведите <b>сумму заказа</b>.<br>
+            3. Нажмите <b>«Я оплатил»</b> для связи в ТГ.
+        </div>
+        
+        <a href="https://www.sberbank.com/sms/pbpn?requisiteNumber=79888486675" class="sber-btn">Оплатить в Сбере</a>
+
+        <div class="card-box" onclick="copyCard()">
+            <div class="card-num">2202 2088 9003 9648</div>
+            <div class="copy-hint" id="copy-text">Нажмите, чтобы скопировать карту</div>
+        </div>
+
+        <button class="done-btn" onclick="done()">Я оплатил</button>
+        <button onclick="document.getElementById('modal').style.display='none'" style="background:none; border:none; color:var(--text-dim); margin-top:20px; cursor:pointer; font-size:12px;">Отмена</button>
+    </div>
+</div>
+
+<script>
+    let mode = 'stars';
+    let confirmedUser = "";
+    
+    const data = {
+        stars: [
+            {t:"100 STARS", p:155}, {t:"155 STARS", p:220}, {t:"250 STARS", p:370}, {t:"500 STARS", p:690}, 
+            {t:"1000 STARS", p:1390}, {t:"2500 STARS", p:3380}, {t:"3000 STARS", p:4025}, 
+            {t:"3500 STARS", p:4700}, {t:"4000 STARS", p:5350}, {t:"4500 STARS", p:6030}, {t:"5000 STARS", p:6695}
+        ],
+        premium: [{t:"3 МЕСЯЦА", p:1200}, {t:"6 МЕСЯЦЕВ", p:1550}, {t:"12 МЕСЯЦЕВ", p:2750}]
+    };
+
+    function toggleFaq(btn) {
+        btn.parentElement.classList.toggle('active');
+        btn.querySelector('span').innerText = btn.parentElement.classList.contains('active') ? '−' : '+';
+    }
+
+    function handleInput(input) {
+        let val = input.value.trim().replace('@', '');
+        if (val.length > 3) {
+            setTimeout(() => { if(input.value.length > 3) showProfile(val); }, 800);
         }
+    }
 
-        // Объемные кастомные SVG-шаблоны
-        const GEM_SVG_PREMIUM = `
-        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M32 2L10 22L32 62L54 22L32 2Z" fill="url(#gem-main-grad)"/>
-            <path d="M32 2L22 22L32 62L42 22L32 2Z" fill="url(#gem-core-grad)"/>
-            <path d="M10 22H54L32 2L10 22Z" fill="rgba(255,255,255,0.2)"/>
-            <defs>
-                <linearGradient id="gem-main-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#00ffcc"/><stop offset="50%" stop-color="#00a3ff"/><stop offset="100%" stop-color="#0055ff"/>
-                </linearGradient>
-                <linearGradient id="gem-core-grad" x1="50%" y1="0%" x2="50%" y2="100%">
-                    <stop offset="0%" stop-color="#ffffff"/><stop offset="30%" stop-color="#00ffaa"/><stop offset="100%" stop-color="#0044cc"/>
-                </linearGradient>
-            </defs>
-        </svg>`;
+    function showProfile(name) {
+        confirmedUser = name;
+        document.getElementById('input-box').style.display = 'none';
+        document.getElementById('profile-box').style.display = 'flex';
+        document.getElementById('p-name').innerText = name;
+        document.getElementById('p-avatar').innerText = name.charAt(0).toUpperCase();
+    }
 
-        const MINE_SVG_PREMIUM = `
-        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="32" cy="32" r="18" fill="url(#mine-sphere)" stroke="#ff1a35" stroke-width="1.5"/>
-            <circle cx="32" cy="32" r="6" fill="#ff3344"><animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite"/></circle>
-            <path d="M32 4V10M32 54V60M4 32H10M54 32H60M12 12L17 17M47 47L52 52M12 52L17 47M47 12L52 17" stroke="#ff3344" stroke-width="3" stroke-linecap="round"/>
-            <defs>
-                <radialGradient id="mine-sphere" cx="35%" cy="35%" r="70%">
-                    <stop offset="0%" stop-color="#ff6b81"/><stop offset="40%" stop-color="#2d0006"/><stop offset="100%" stop-color="#050001"/>
-                </radialGradient>
-            </defs>
-        </svg>`;
+    function resetUser() {
+        confirmedUser = "";
+        document.getElementById('username').value = "";
+        document.getElementById('input-box').style.display = 'block';
+        document.getElementById('profile-box').style.display = 'none';
+    }
 
-        // Инициализация Стейта
-        let balance = 1000;
-        let betValue = 100;
-        let minesAmount = 3;
-        let isRoundActive = false;
-        let logicMap = [];
-        let gemsFoundCount = 0;
-        let maxGemsAvailable = 22;
+    function update() {
+        const val = document.getElementById('slider').value;
+        document.getElementById('display-val').innerText = data[mode][val].t;
+        document.getElementById('display-price').innerText = data[mode][val].p + " ₽";
+    }
 
-        const gridContainer = document.getElementById('grid-container');
-        const actionTrigger = document.getElementById('action-trigger');
-        const cashoutTrigger = document.getElementById('cashout-trigger');
-        const betField = document.getElementById('bet-field');
-        const minesField = document.getElementById('mines-field');
-        const balanceView = document.getElementById('balance-view');
-        const multView = document.getElementById('mult-view');
-        const profitView = document.getElementById('profit-view');
-        const gemsView = document.getElementById('gems-view');
-        const stageWrapper = document.getElementById('stage-wrapper');
+    function setMode(m, pos) {
+        mode = m;
+        document.getElementById('slider-bg').style.transform = `translateX(${pos}%)`;
+        document.getElementById('slider').max = data[mode].length - 1;
+        document.getElementById('slider').value = 0;
+        update();
+    }
 
-        function generateBlankGrid() {
-            gridContainer.innerHTML = '';
-            for(let i=0; i<25; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'cell-3d disabled';
-                cell.dataset.index = i;
-                gridContainer.appendChild(cell);
-            }
-        }
+    function copyCard() {
+        navigator.clipboard.writeText("2202208890039648");
+        document.getElementById('copy-text').innerText = "СКОПИРОВАНО!";
+        setTimeout(() => { document.getElementById('copy-text').innerText = "Нажмите, чтобы скопировать карту"; }, 2000);
+    }
 
-        function changeBet(type) {
-            if(isRoundActive) return;
-            let current = parseInt(betField.value) || 100;
-            if(type === 'min') current = 10;
-            if(type === 'x2') current *= 2;
-            if(type === '1/2') current = Math.floor(current / 2);
-            if(type === 'max') current = balance;
+    function copyRef() {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Ссылка скопирована!");
+    }
 
-            current = Math.max(10, Math.min(current, balance));
-            betField.value = current;
-            playPremiumSound('click');
-        }
+    function checkout() {
+        if(!confirmedUser) return alert("Введите Username");
+        document.getElementById('modal').style.display = 'flex';
+    }
 
-        function getFairMultiplier(mines, gems) {
-            if (gems === 0) return 0.00;
-            let prob = 1;
-            for (let i = 0; i < gems; i++) {
-                prob *= (25 - mines - i) / (25 - i);
-            }
-            return Math.max(1.01, (0.97 / prob)).toFixed(2); // 97% RTP Математика
-        }
+    function done() {
+        const item = data[mode][document.getElementById('slider').value];
+        const text = `🚀 НОВЫЙ ЗАКАЗ (АКЦИЯ)\n\nТовар: ${item.t}\nСумма: ${item.p}₽\nКлиент: @${confirmedUser}`;
+        window.location.href = `https://t.me/kaoface?text=${encodeURIComponent(text)}`;
+    }
+</script>
 
-        function syncUI() {
-            const currentMult = getFairMultiplier(minesAmount, gemsFoundCount);
-            multView.innerText = `x${currentMult}`;
-            
-            const calculatedProfit = Math.floor(betValue * currentMult);
-            profitView.innerText = isRoundActive && gemsFoundCount > 0 ? `${calculatedProfit.toLocaleString()} ₽` : `0 ₽`;
-            gemsView.innerText = `${gemsFoundCount} / ${maxGemsAvailable}`;
-            balanceView.innerHTML = `${balance.toLocaleString()} <span>₽</span>`;
-        }
-
-        // Эффект взрыва частиц при нахождении кристалла
-        function createSparkles(targetElement) {
-            for (let i = 0; i < 12; i++) {
-                const spark = document.createElement('div');
-                spark.className = 'sparkle';
-                const angle = Math.random() * Math.PI * 2;
-                const distance = 30 + Math.random() * 45;
-                spark.style.setProperty('--x', `${Math.cos(angle) * distance}px`);
-                spark.style.setProperty('--y', `${Math.sin(angle) * distance}px`);
-                spark.style.left = `calc(50% - 2px)`;
-                spark.style.top = `calc(50% - 2px)`;
-                targetElement.appendChild(spark);
-                setTimeout(() => spark.remove(), 500);
-            }
-        }
-
-        function startRound() {
-            betValue = parseInt(betField.value);
-            minesAmount = parseInt(minesField.value);
-
-            if(isNaN(betValue) || betValue < 10) return alert('Минимум инвестиций — 10 ₽');
-            if(betValue > balance) return alert('Ваш капитал меньше суммы сделки');
-            if(isNaN(minesAmount) || minesAmount < 1 || minesAmount > 24) return alert('Выберите количество мин от 1 до 24');
-
-            balance -= betValue;
-            isRoundActive = true;
-            gemsFoundCount = 0;
-            maxGemsAvailable = 25 - minesAmount;
-
-            betField.disabled = true;
-            minesField.disabled = true;
-            actionTrigger.style.display = 'none';
-            cashoutTrigger.style.display = 'block';
-            cashoutTrigger.disabled = true;
-
-            syncUI();
-            playPremiumSound('click');
-
-            // Заполнение карты
-            logicMap = Array(25).fill('gem');
-            let minesPlanted = 0;
-            while(minesPlanted < minesAmount) {
-                let rIdx = Math.floor(Math.random() * 25);
-                if(logicMap[rIdx] !== 'mine') {
-                    logicMap[rIdx] = 'mine';
-                    minesPlanted++;
-                }
-            }
-
-            const cells = document.querySelectorAll('.cell-3d');
-            cells.forEach(cell => {
-                cell.className = 'cell-3d';
-                cell.innerHTML = '';
-                cell.style.opacity = '1';
-                cell.addEventListener('click', cellInteraction);
-            });
-        }
-
-        function cellInteraction(e) {
-            if(!isRoundActive) return;
-            const cell = e.currentTarget;
-            const index = parseInt(cell.dataset.index);
-
-            if(cell.classList.contains('revealed')) return;
-
-            if(logicMap[index] === 'mine') {
-                // Подрыв на мине
-                cell.classList.add('revealed', 'has-mine');
-                cell.innerHTML = MINE_SVG_PREMIUM;
-                
-                // Тряска экрана и звук взрыва
-                stageWrapper.classList.add('shake-anim');
-                playPremiumSound('boom');
-                setTimeout(() => stageWrapper.classList.remove('shake-anim'), 400);
-
-                finishGame(false);
-            } else {
-                // Алмаз успешно открыт
-                cell.classList.add('revealed', 'has-gem');
-                cell.innerHTML = GEM_SVG_PREMIUM;
-                createSparkles(cell);
-                gemsFoundCount++;
-                cashoutTrigger.disabled = false;
-                playPremiumSound('gem');
-                syncUI();
-
-                if(gemsFoundCount === maxGemsAvailable) {
-                    finishGame(true);
-                }
-            }
-        }
-
-        function finishGame(isWinner) {
-            isRoundActive = false;
-            actionTrigger.style.display = 'block';
-            cashoutTrigger.style.display = 'none';
-            betField.disabled = false;
-            minesField.disabled = false;
-
-            if(isWinner) {
-                const multiplier = getFairMultiplier(minesAmount, gemsFoundCount);
-                const finalPayout = Math.floor(betValue * multiplier);
-                balance += finalPayout;
-                playPremiumSound('cashout');
-            }
-
-            // Потоковое красивое вскрытие поля (очередью с задержкой)
-            const cells = document.querySelectorAll('.cell-3d');
-            cells.forEach((cell, idx) => {
-                cell.removeEventListener('click', cellInteraction);
-                if(!cell.classList.contains('revealed')) {
-                    setTimeout(() => {
-                        cell.classList.add('revealed', 'lost-reveal');
-                        if(logicMap[idx] === 'mine') {
-                            cell.innerHTML = MINE_SVG_PREMIUM;
-                        } else {
-                            cell.innerHTML = GEM_SVG_PREMIUM;
-                        }
-                    }, idx * 30); // Эффект «Волны сканирования»
-                }
-            });
-
-            syncUI();
-            verifyCapital();
-        }
-
-        cashoutTrigger.addEventListener('click', () => {
-            if(isRoundActive && gemsFoundCount > 0) finishGame(true);
-        });
-
-        function verifyCapital() {
-            if (balance < 10) {
-                setTimeout(() => {
-                    if (confirm('Ваш инвестиционный баланс исчерпан. Зачислить венчурный бонус в размере 500 ₽?')) {
-                        balance = 500;
-                        syncUI();
-                        playPremiumSound('cashout');
-                    }
-                }, 1200);
-            }
-        }
-
-        actionTrigger.addEventListener('click', startRound);
-
-        // Инициализация при старте
-        generateBlankGrid();
-        syncUI();
-    </script>
 </body>
 </html>
