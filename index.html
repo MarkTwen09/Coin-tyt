@@ -3,484 +3,430 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ruble Empire — Premium Simulator</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Mines Game | Cyber Edition</title>
     <style>
         :root {
-            --bg-dark: #090a0f;
-            --bg-card: #12141c;
-            --neon-gold: #ffb703;
-            --neon-green: #00f5d4;
-            --neon-red: #ff0054;
-            --neon-blue: #9b5de5;
-            --text-main: #ffffff;
-            --text-muted: #6c757d;
+            --bg-color: #0b0c10;
+            --panel-bg: rgba(31, 40, 51, 0.6);
+            --cyan-neon: #66fcf1;
+            --dark-cyan: #45a29e;
+            --text-color: #c5a6ff;
+            --mine-color: #ff4d4d;
+            --gem-color: #00ffcc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        /* Ограничитель под размер стильного мобильного приложения/планшета */
-        .app-container {
-            width: 100%;
-            max-width: 480px;
-            background: var(--bg-dark);
+            background-color: var(--bg-color);
+            color: #fff;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            position: relative;
-            padding-bottom: 80px; /* Место под нижнее меню */
+            justify-content: center;
+            align-items: center;
+            background-image: radial-gradient(circle at 50% 50%, #1f2833 0%, #0b0c10 80%);
+            padding: 20px;
         }
 
-        /* Стильная шапка */
-        .app-header {
-            padding: 24px 20px;
-            background: linear-gradient(180deg, rgba(18,20,28,1) 0%, rgba(9,10,15,1) 100%);
-            border-bottom: 1px solid #1f222e;
+        .game-container {
+            display: flex;
+            flex-direction: row;
+            background: var(--panel-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(102, 252, 241, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7), 0 0 15px rgba(102, 252, 241, 0.1);
+            max-width: 850px;
+            width: 100%;
+            gap: 24px;
+        }
+
+        /* Боковая панель управления */
+        .control-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-width: 220px;
+        }
+
+        .brand-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--cyan-neon);
+            text-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
+            margin-bottom: 20px;
             text-align: center;
         }
 
-        .balance-title {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        .input-group {
+            margin-bottom: 15px;
         }
 
-        .balance-big {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: var(--neon-gold);
-            margin: 5px 0;
-            text-shadow: 0 0 20px rgba(255, 183, 3, 0.2);
-        }
-
-        .sub-balances {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            font-size: 0.95rem;
-            color: #e0e0e0;
-            margin-top: 10px;
-        }
-
-        /* Стили карточек и контента */
-        .content-section {
-            padding: 20px;
-            display: none; /* Переключается через табы */
-        }
-
-        .content-section.active {
+        .input-group label {
             display: block;
+            font-size: 12px;
+            color: #85929E;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
         }
 
-        .card {
-            background: var(--bg-card);
-            border: 1px solid #1f222e;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 15px;
+        .input-style {
+            width: 100%;
+            background: rgba(11, 12, 16, 0.8);
+            border: 1px solid var(--dark-cyan);
+            border-radius: 8px;
+            padding: 12px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
         }
 
-        .card-title {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: var(--text-main);
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* Большие понятные кнопки */
-        .btn-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+        .input-style:focus {
+            border-color: var(--cyan-neon);
+            box-shadow: 0 0 8px rgba(102, 252, 241, 0.4);
         }
 
         .btn {
-            background: #1f222e;
-            border: none;
-            border-radius: 12px;
-            padding: 16px;
-            color: white;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-        }
-
-        .btn-green { background: var(--neon-green); color: #000; }
-        .btn-red { background: var(--neon-red); color: #fff; }
-        .btn-blue { background: var(--neon-blue); color: #fff; }
-
-        .btn:active { transform: scale(0.95); }
-
-        /* График */
-        .chart-container {
-            height: 180px;
-            position: relative;
-            margin-bottom: 15px;
-        }
-
-        /* Список элементов (Трофеи / Валюты) */
-        .list-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #1f222e;
-        }
-        .list-item:last-child { border: none; }
-
-        .item-info {
-            display: flex;
-            flex-direction: column;
-        }
-        .item-name { font-weight: 600; font-size: 1rem; }
-        .item-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
-
-        /* Нижнее меню навигации (Таб-бар) */
-        .tab-bar {
-            position: fixed;
-            bottom: 0;
             width: 100%;
-            max-width: 480px;
-            background: rgba(18, 20, 28, 0.95);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid #1f222e;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            height: 70px;
-            z-index: 100;
+            padding: 14px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 10px;
         }
 
-        .tab-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            font-weight: 600;
+        .btn-primary {
+            background: var(--cyan-neon);
+            color: #0b0c10;
+            box-shadow: 0 4px 15px rgba(102, 252, 241, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #fff;
+            box-shadow: 0 4px 20px rgba(102, 252, 241, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn-cashout {
+            background: #ffb703;
+            color: #0b0c10;
+            box-shadow: 0 4px 15px rgba(255, 183, 3, 0.3);
+            display: none;
+        }
+
+        .btn-cashout:hover:not(:disabled) {
+            background: #ffdd67;
+            box-shadow: 0 4px 20px rgba(255, 183, 3, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .stats-box {
+            background: rgba(11, 12, 16, 0.5);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+            border-left: 3px solid var(--cyan-neon);
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .stat-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: var(--cyan-neon);
+        }
+
+        /* Игровое поле */
+        .grid-panel {
+            flex: 2;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 10px;
+            aspect-ratio: 1 / 1;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .cell {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
             cursor: pointer;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            gap: 4px;
+            align-items: center;
+            font-size: 24px;
+            transition: all 0.2s ease;
+            position: relative;
+            user-select: none;
         }
 
-        .tab-btn.active {
-            color: var(--neon-gold);
+        .cell:hover:not(.revealed):not(.disabled) {
+            background: rgba(102, 252, 241, 0.1);
+            border-color: var(--cyan-neon);
+            transform: scale(1.03);
         }
 
-        .tab-icon {
-            font-size: 1.3rem;
+        .cell.revealed {
+            cursor: default;
+            background: rgba(11, 12, 16, 0.9);
         }
 
-        /* Уведомления */
-        .news-ticker {
-            background: #161922;
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            color: #e0e0e0;
-            border-left: 4px solid var(--neon-gold);
-            margin-bottom: 15px;
+        .cell.gem {
+            color: var(--gem-color);
+            border-color: var(--gem-color);
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.6);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .cell.mine {
+            color: var(--mine-color);
+            border-color: var(--mine-color);
+            background: rgba(255, 77, 77, 0.15);
+            text-shadow: 0 0 10px rgba(255, 77, 77, 0.6);
+            animation: shake 0.3s linear;
+        }
+
+        /* Анимации */
+        @keyframes popIn {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-4px); }
+            40%, 80% { transform: translateX(4px); }
+        }
+
+        /* Адаптив под мобилки */
+        @mixin phone {
+            @media (max-width: 680px) { @content; }
+        }
+
+        @media (max-width: 680px) {
+            .game-container {
+                flex-direction: column;
+                padding: 16px;
+            }
+            .grid-panel {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        
-        <!-- ГЛАВНЫЙ СЧЕТ (ВСЕГДА СВЕРХУ) -->
-        <div class="app-header">
-            <div class="balance-title">Ваш Главный Капитал</div>
-            <div class="balance-big" id="main-rub">0 ₽</div>
-            <div class="sub-balances">
-                <span id="main-usd">💵 5 000 $</span>
-                <span id="main-oil">🛢️ 0 баррелей</span>
-            </div>
-        </div>
-
-        <!-- ВКЛАДКА 1: БИРЖА (АКТИВНАЯ ПО УМОЛЧАНИЮ) -->
-        <div id="sec-market" class="content-section active">
-            <div class="news-ticker" id="news-text">
-                📈 Рынок стабилен. Покупайте нефть за доллары, чтобы заработать первый капитал!
-            </div>
-
-            <div class="card">
-                <div class="card-title">
-                    <span>Нефть Urals</span>
-                    <span id="oil-price" style="color: var(--neon-green);">65.00 $</span>
-                </div>
-                <div class="chart-container">
-                    <canvas id="minimalChart"></canvas>
-                </div>
-                <div class="btn-grid">
-                    <button class="btn btn-green" onclick="buyOil()">КУПИТЬ 10 🛢️</button>
-                    <button class="btn btn-red" onclick="sellOil()">ПРОДАТЬ ВСЁ</button>
-                </div>
-            </div>
-
-            <button class="btn btn-blue" style="width: 100%;" onclick="exchangeToRuble()">💱 Обменять все $ на Рубли (₽)</button>
-        </div>
-
-        <!-- ВКЛАДКА 2: ВОЙНА ВАЛЮТ -->
-        <div id="sec-war" class="content-section">
-            <div class="card">
-                <div class="card-title">Мировой рейтинг валют</div>
-                <div id="currency-list">
-                    <!-- Сюда рендерятся валюты -->
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">Атака капиталом (За ₽)</div>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top:-10px;">Тратьте рубли, чтобы искусственно обрушить доллар и поднять рубль на 1 место.</p>
-                <button class="btn btn-red" style="width: 100%;" onclick="crashDollar()">💥 Обрушить Доллар | 100 000 ₽</button>
-            </div>
-        </div>
-
-        <!-- ВКЛАДКА 3: ТРОФЕИ -->
-        <div id="sec-trophies" class="content-section">
-            <div class="card">
-                <div class="card-title">Элитные Достижения холдинга</div>
+    <div class="game-container">
+        <div class="control-panel">
+            <div>
+                <div class="brand-title">MINES WEB3</div>
                 
-                <div class="list-item">
-                    <div class="item-info">
-                        <span class="item-name" id="t1-name">Золото ЦБ (0)</span>
-                        <span class="item-desc">+1 000 ₽/сек пассивно</span>
-                    </div>
-                    <button class="btn btn-green" style="padding: 8px 16px; font-size:0.85rem;" onclick="buyTrophy('gold')">50к ₽</button>
+                <div class="input-group">
+                    <label for="mines-count">Количество мин (1 - 24)</label>
+                    <input type="number" id="mines-count" class="input-style" value="3" min="1" max="24">
                 </div>
 
-                <div class="list-item">
-                    <div class="item-info">
-                        <span class="item-name" id="t2-name">Вышка в Сибири (0)</span>
-                        <span class="item-desc">+10 000 ₽/сек пассивно</span>
+                <div class="stats-box">
+                    <div class="stat-row">
+                        <span>Множитель:</span>
+                        <span id="multiplier-val" class="stat-value">x1.00</span>
                     </div>
-                    <button class="btn btn-green" style="padding: 8px 16px; font-size:0.85rem;" onclick="buyTrophy('siberia')">250к ₽</button>
-                </div>
-
-                <div class="list-item">
-                    <div class="item-info">
-                        <span class="item-name" id="t3-name">Газпром 51% (0)</span>
-                        <span class="item-desc">+50 000 ₽/сек пассивно</span>
+                    <div class="stat-row">
+                        <span>Алмазы:</span>
+                        <span id="gems-found" class="stat-value">0 / 0</span>
                     </div>
-                    <button class="btn btn-green" style="padding: 8px 16px; font-size:0.85rem;" onclick="buyTrophy('gazprom')">1 млн ₽</button>
                 </div>
+            </div>
 
+            <div>
+                <button id="start-btn" class="btn btn-primary">Начать игру</button>
+                <button id="cashout-btn" class="btn btn-cashout">Забрать куш</button>
             </div>
         </div>
 
-        <!-- НИЖНЕЕ МЕНЮ (ТАБ-БАР) -->
-        <nav class="tab-bar">
-            <button class="tab-btn active" onclick="switchTab('sec-market', this)">
-                <span class="tab-icon">🛢️</span>
-                <span>Биржа</span>
-            </button>
-            <button class="tab-btn" onclick="switchTab('sec-war', this)">
-                <span class="tab-icon">⚔️</span>
-                <span>Война валют</span>
-            </button>
-            <button class="tab-btn" onclick="switchTab('sec-trophies', this)">
-                <span class="tab-icon">🏆</span>
-                <span>Трофеи</span>
-            </button>
-        </nav>
-
+        <div class="grid-panel" id="grid"></div>
     </div>
 
     <script>
-        // Игровые ресурсы
-        let rub = 0;
-        let usd = 5000;
-        let oil = 0;
+        const grid = document.getElementById('grid');
+        const startBtn = document.getElementById('start-btn');
+        const cashoutBtn = document.getElementById('cashout-btn');
+        const minesInput = document.getElementById('mines-count');
+        const multiplierVal = document.getElementById('multiplier-val');
+        const gemsFoundTxt = document.getElementById('gems-found');
 
-        // Состояние рынка
-        let oilPrice = 65.00;
-        let usdRate = 94.50; // Рейтинг доллара
+        const GRID_SIZE = 25;
+        let board = []; 
+        let isGameActive = false;
+        let minesCount = 3;
+        let revealedGems = 0;
+        let totalGems = 22;
 
-        // Трофеи
-        let trophies = {
-            gold: { count: 0, cost: 50000, income: 1000 },
-            siberia: { count: 0, cost: 250000, income: 10000 },
-            gazprom: { count: 0, cost: 1000000, income: 50000 }
-        };
+        // Генерация сетки при запуске страницы
+        function createVisualGrid() {
+            grid.innerHTML = '';
+            for (let i = 0; i < GRID_SIZE; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell', 'disabled');
+                cell.dataset.index = i;
+                grid.appendChild(cell);
+            }
+        }
 
-        // Новости
-        const newsList = [
-            "⚡ ОПЕК+ снижает добычу! Нефть дорожает.",
-            "⚠️ Введены новые пошлины на экспорт нефти.",
-            "🇷🇺 Азиатские рынки подтвердили закупки нашей нефти.",
-            "📉 Мировые фондовые рынки лихорадит, доллар нестабилен."
-        ];
+        // Формула расчета множителя (как в реальных играх)
+        function getMultiplier(mines, gems) {
+            if (gems === 0) return 1.00;
+            let p = 1;
+            for (let i = 0; i < gems; i++) {
+                p *= (GRID_SIZE - mines - i) / (GRID_SIZE - i);
+            }
+            return (0.95 / p).toFixed(2); // 0.95 — это RTP (возврат игроку 95%)
+        }
 
-        // Красивый неоновый график (минимум деталей)
-        const ctx = document.getElementById('minimalChart').getContext('2d');
-        const minimalChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: Array(10).fill(''),
-                datasets: [{
-                    data: Array(10).fill(65),
-                    borderColor: '#00f5d4',
-                    borderWidth: 3,
-                    pointRadius: 0,
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: 'rgba(0, 245, 212, 0.05)'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { x: { display: false }, y: { display: false } },
-                plugins: { legend: { display: false } }
+        function startGame() {
+            minesCount = parseInt(minesInput.value);
+            if (isNaN(minesCount) || minesCount < 1 || minesCount > 24) {
+                alert('Введите корректное число мин от 1 до 24!');
+                return;
+            }
+
+            // Настройки состояния
+            isGameActive = true;
+            revealedGems = 0;
+            totalGems = GRID_SIZE - minesCount;
+            
+            // Интерфейс
+            startBtn.style.display = 'none';
+            cashoutBtn.style.display = 'block';
+            cashoutBtn.disabled = true;
+            minesInput.disabled = true;
+            updateStats();
+
+            // Генерация мин на поле
+            board = Array(GRID_SIZE).fill('gem');
+            let placedMines = 0;
+            while (placedMines < minesCount) {
+                let randIndex = Math.floor(Math.random() * GRID_SIZE);
+                if (board[randIndex] !== 'mine') {
+                    board[randIndex] = 'mine';
+                    placedMines++;
+                }
+            }
+
+            // Активация ячеек для клика
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                cell.className = 'cell'; 
+                cell.innerHTML = '';
+                cell.addEventListener('click', handleCellClick);
+            });
+        }
+
+        function handleCellClick(e) {
+            if (!isGameActive) return;
+            const cell = e.currentTarget;
+            const idx = parseInt(cell.dataset.index);
+
+            if (cell.classList.contains('revealed')) return;
+
+            if (board[idx] === 'mine') {
+                // Взрыв!
+                cell.classList.add('revealed', 'mine');
+                cell.innerHTML = '💣';
+                gameOver(false);
+            } else {
+                // Алмаз
+                cell.classList.add('revealed', 'gem');
+                cell.innerHTML = '💎';
+                revealedGems++;
+                cashoutBtn.disabled = false;
+                updateStats();
+
+                if (revealedGems === totalGems) {
+                    gameOver(true); // Забрали все гемы
+                }
+            }
+        }
+
+        function updateStats() {
+            const currentMult = getMultiplier(minesCount, revealedGems);
+            multiplierVal.innerText = `x${currentMult}`;
+            gemsFoundTxt.innerText = `${revealedGems} / ${totalGems}`;
+        }
+
+        function gameOver(isWin) {
+            isGameActive = false;
+            startBtn.style.display = 'block';
+            cashoutBtn.style.display = 'none';
+            minesInput.disabled = false;
+
+            // Показываем где что было
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach((cell, idx) => {
+                cell.removeEventListener('click', handleCellClick);
+                if (!cell.classList.contains('revealed')) {
+                    cell.classList.add('revealed');
+                    if (board[idx] === 'mine') {
+                        cell.innerHTML = '💣';
+                        cell.style.opacity = '0.5';
+                    } else {
+                        cell.innerHTML = '💎';
+                        cell.style.opacity = '0.3';
+                    }
+                }
+            });
+
+            setTimeout(() => {
+                if (isWin) {
+                    alert(`Отлично! Вы забрали куш с множителем ${getMultiplier(minesCount, revealedGems)}x!`);
+                } else {
+                    alert('Бум! Вы подорвались на мине. Попробуйте еще раз!');
+                }
+            }, 200);
+        }
+
+        // Кнопка забрать деньги
+        cashoutBtn.addEventListener('click', () => {
+            if (revealedGems > 0 && isGameActive) {
+                gameOver(true);
             }
         });
 
-        // Переключение вкладок (Просто и плавно)
-        function switchTab(sectionId, btn) {
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            
-            document.getElementById(sectionId).classList.add('active');
-            btn.classList.add('active');
-        }
+        startBtn.addEventListener('click', startGame);
 
-        // Обновление цифр на экране
-        function updateUI() {
-            document.getElementById('main-rub').innerText = rub.toLocaleString() + ' ₽';
-            document.getElementById('main-usd').innerText = '💵 ' + usd.toLocaleString() + ' $';
-            document.getElementById('main-oil').innerText = '🛢️ ' + oil.toLocaleString() + ' баррелей';
-            document.getElementById('oil-price').innerText = oilPrice.toFixed(2) + ' $';
-
-            // Имена трофеев
-            document.getElementById('t1-name').innerText = `Золото ЦБ (${trophies.gold.count})`;
-            document.getElementById('t2-name').innerText = `Вышка в Сибири (${trophies.siberia.count})`;
-            document.getElementById('t3-name').innerText = `Газпром 51% (${trophies.gazprom.count})`;
-
-            // Рендер рейтинга валют
-            let rubStrength = 100000 / (usdRate || 1); // Имитация силы рубля
-            let html = `
-                <div class="list-item">
-                    <span class="item-name">🥇 Рубль (₽)</span>
-                    <span style="color: var(--neon-gold); font-weight:700;">${rubStrength.toFixed(0)} PTS</span>
-                </div>
-                <div class="list-item">
-                    <span class="item-name">🥈 Доллар ($)</span>
-                    <span style="color: var(--neon-red); font-weight:700;">${usdRate.toFixed(1)} PTS</span>
-                </div>
-            `;
-            document.getElementById('currency-list').innerHTML = html;
-        }
-
-        // Логика нефти
-        function buyOil() {
-            let cost = oilPrice * 10;
-            if (usd >= cost) {
-                usd -= cost;
-                oil += 10;
-                updateUI();
-            } else {
-                alert("Недостаточно долларов ($) для покупки 10 баррелей!");
-            }
-        }
-
-        function sellOil() {
-            if (oil > 0) {
-                usd += oil * oilPrice;
-                oil = 0;
-                updateUI();
-            } else {
-                alert("У вас нет нефти для продажи!");
-            }
-        }
-
-        // Обмен всей валюты в Рубли
-        function exchangeToRuble() {
-            if (usd > 0) {
-                rub += usd * 94.5;
-                usd = 0;
-                updateUI();
-                document.getElementById('news-text').innerText = "🔄 Успешно! Теперь у вас есть Рубли. Перейдите во вкладку 'Трофеи' или 'Война валют'!";
-            } else {
-                alert("У вас нет долларов для обмена!");
-            }
-        }
-
-        // Обрушение доллара
-        function crashDollar() {
-            if (rub >= 100000) {
-                rub -= 100000;
-                usdRate -= 8;
-                if (usdRate < 10) {
-                    usdRate = 10;
-                    document.getElementById('news-text').innerText = "👑 Доллар полностью сокрушен! Рубль стал главной мировой валютой!";
-                } else {
-                    document.getElementById('news-text').innerText = "💥 Бабах! Ваша финансовая атака обрушила рейтинг доллара!";
-                }
-                updateUI();
-            } else {
-                alert("Нужно минимум 100 000 ₽ для атаки на доллар!");
-            }
-        }
-
-        // Покупка трофеев
-        function buyTrophy(type) {
-            let t = trophies[type];
-            if (rub >= t.cost) {
-                rub -= t.cost;
-                t.count++;
-                t.cost = Math.floor(t.cost * 1.5); // Следующий дороже
-                updateUI();
-            } else {
-                alert("Недостаточно рублей (₽) для покупки этого актива!");
-            }
-        }
-
-        // Ежесекундный тик (Рынок и пассивный доход)
-        setInterval(() => {
-            // Изменение цены нефти
-            let change = (Math.random() * 4) - 2;
-            oilPrice += change;
-            if (oilPrice < 30) oilPrice = 30;
-
-            // Естественное колебание доллара
-            usdRate += (Math.random() * 0.6) - 0.3;
-
-            // Обновление графика
-            minimalChart.data.datasets[0].data.push(oilPrice);
-            minimalChart.data.datasets[0].data.shift();
-            minimalChart.update();
-
-            // Случайные новости (шанс 15%)
-            if (Math.random() < 0.15) {
-                document.getElementById('news-text').innerText = newsList[Math.floor(Math.random() * newsList.length)];
-            }
-
-            // Начисление пассивного дохода от трофеев
-            let totalIncome = (trophies.gold.count * trophies.gold.income) +
-                              (trophies.siberia.count * trophies.siberia.income) +
-                              (trophies.gazprom.count * trophies.gazprom.income);
-            rub += totalIncome;
-
-            updateUI();
-        }, 1500);
-
-        // Старт
-        updateUI();
+        // Первая инициализация пустого поля
+        createVisualGrid();
     </script>
 </body>
 </html>
