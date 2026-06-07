@@ -3,540 +3,483 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Empire of Ruble: Geopolitical Simulator</title>
+    <title>Ruble Empire — Premium Simulator</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-main: #06090f;
-            --bg-panel: #0d1117;
-            --bg-card: #161b22;
-            --border-color: #30363d;
-            --text-white: #f0f6fc;
-            --text-gray: #8b949e;
-            --ruble-gold: #ffd700;
-            --crypto-green: #238636;
-            --crypto-red: #da3633;
-            --accent-blue: #1f6feb;
+            --bg-dark: #090a0f;
+            --bg-card: #12141c;
+            --neon-gold: #ffb703;
+            --neon-green: #00f5d4;
+            --neon-red: #ff0054;
+            --neon-blue: #9b5de5;
+            --text-main: #ffffff;
+            --text-muted: #6c757d;
         }
 
         body {
-            font-family: '-apple-system', BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-white);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             margin: 0;
-            padding: 15px;
-        }
-
-        /* Обучающий оверлей */
-        #tutorial-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 9999;
+            padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
+        }
+
+        /* Ограничитель под размер стильного мобильного приложения/планшета */
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--bg-dark);
+            min-height: 100vh;
+            display: flex;
             flex-direction: column;
+            position: relative;
+            padding-bottom: 80px; /* Место под нижнее меню */
+        }
+
+        /* Стильная шапка */
+        .app-header {
+            padding: 24px 20px;
+            background: linear-gradient(180deg, rgba(18,20,28,1) 0%, rgba(9,10,15,1) 100%);
+            border-bottom: 1px solid #1f222e;
             text-align: center;
+        }
+
+        .balance-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .balance-big {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--neon-gold);
+            margin: 5px 0;
+            text-shadow: 0 0 20px rgba(255, 183, 3, 0.2);
+        }
+
+        .sub-balances {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.95rem;
+            color: #e0e0e0;
+            margin-top: 10px;
+        }
+
+        /* Стили карточек и контента */
+        .content-section {
             padding: 20px;
+            display: none; /* Переключается через табы */
         }
 
-        .tutorial-card {
-            background: var(--bg-panel);
-            border: 2px solid var(--ruble-gold);
-            border-radius: 12px;
-            padding: 30px;
-            max-width: 500px;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        .content-section.active {
+            display: block;
         }
 
-        /* Главная сетка */
-        .grid-container {
+        .card {
+            background: var(--bg-card);
+            border: 1px solid #1f222e;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Большие понятные кнопки */
+        .btn-grid {
             display: grid;
-            grid-template-columns: 1fr 360px;
-            gap: 15px;
-            max-width: 1600px;
-            margin: 0 auto;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
 
-        .panel {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px;
+        .btn {
+            background: #1f222e;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn-green { background: var(--neon-green); color: #000; }
+        .btn-red { background: var(--neon-red); color: #fff; }
+        .btn-blue { background: var(--neon-blue); color: #fff; }
+
+        .btn:active { transform: scale(0.95); }
+
+        /* График */
+        .chart-container {
+            height: 180px;
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        /* Список элементов (Трофеи / Валюты) */
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #1f222e;
+        }
+        .list-item:last-child { border: none; }
+
+        .item-info {
             display: flex;
             flex-direction: column;
         }
+        .item-name { font-weight: 600; font-size: 1rem; }
+        .item-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
 
-        .header {
-            grid-column: 1 / -1;
-            background: linear-gradient(90deg, #1f1f2e, #0d1117);
-            border: 1px solid var(--border-color);
-            padding: 15px 20px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .panel-title {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-gray);
-            margin: 0 0 15px 0;
-            padding-bottom: 5px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* Валютные пары */
-        .currency-row {
+        /* Нижнее меню навигации (Таб-бар) */
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 480px;
+            background: rgba(18, 20, 28, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #1f222e;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
+            height: 70px;
+            z-index: 100;
         }
 
-        .currency-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: 6px;
-            text-align: center;
-        }
-
-        /* Кнопки действий */
-        .btn {
-            padding: 10px 14px;
+        .tab-btn {
+            background: none;
             border: none;
-            border-radius: 5px;
-            font-weight: bold;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
             cursor: pointer;
-            color: #white;
-            transition: transform 0.1s, filter 0.2s;
-            color: #fff;
-        }
-        .btn:active { transform: scale(0.98); }
-        .btn-buy { background: var(--crypto-green); }
-        .btn-sell { background: var(--crypto-red); }
-        .btn-attack { background: linear-gradient(135deg, #ff7b00, #da3633); }
-        .btn-trophy { background: linear-gradient(135deg, #ffbe0b, #fb5607); color: #000; }
-
-        /* Списки трофеев и улучшений */
-        .item-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            max-height: 240px;
-            overflow-y: auto;
-        }
-
-        .item-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: center;
+            gap: 4px;
         }
 
-        /* Рейтинг валют */
-        .leaderboard {
-            background: #161b22;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-        }
-        .leader-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px;
-            border-bottom: 1px solid #30363d;
+        .tab-btn.active {
+            color: var(--neon-gold);
         }
 
-        .news-box {
-            height: 90px;
-            overflow-y: auto;
+        .tab-icon {
+            font-size: 1.3rem;
+        }
+
+        /* Уведомления */
+        .news-ticker {
+            background: #161922;
+            padding: 12px 16px;
+            border-radius: 12px;
             font-size: 0.85rem;
-            background: #04060a;
-            padding: 10px;
-            border-radius: 6px;
-            border-left: 3px solid var(--accent-blue);
-        }
-
-        .chart-wrapper { position: relative; height: 320px; width: 100%; }
-
-        /* Подсказки */
-        .hint {
-            font-size: 0.75rem;
-            color: var(--text-gray);
-            margin-top: 4px;
+            color: #e0e0e0;
+            border-left: 4px solid var(--neon-gold);
+            margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
 
-    <div id="tutorial-overlay">
-        <div class="tutorial-card">
-            <h2 style="color: var(--ruble-gold); margin-top: 0;">Привет, Инвестор! 🇷🇺</h2>
-            <p id="tutorial-text">Добро пожаловать в геополитический симулятор. Твоя главная цель — сделать <b>Рубль валютой №1 в мире</b>, обрушив доллар и евро.</p>
-            <button class="btn btn-buy" style="width: 100%; padding: 12px;" onclick="nextTutorialStep()">ПОНЯТНО, ДАЛЕЕ</button>
-        </div>
-    </div>
-
-    <div class="grid-container">
+    <div class="app-container">
         
-        <header class="header">
-            <div>
-                <h1 style="margin:0; font-size:1.4rem; color:var(--ruble-gold);">EMPIRE OF RUBLE v1.0</h1>
-                <div style="font-size:0.8rem; color:var(--text-gray);">Мировое финансовое доминирование</div>
-            </div>
-            <div style="display:flex; gap:20px; text-align:right;">
-                <div>
-                    <span style="font-size:0.75rem; color:var(--text-gray);">Мировой Статус Рубля:</span>
-                    <strong id="ruble-status" style="display:block; font-size:1.1rem; color:var(--crypto-green);">Стабильный</strong>
-                </div>
-            </div>
-        </header>
-
-        <div class="panel" id="step-market">
-            <div class="panel-title">Мониторинг Мировых Валют (Курс к корзине активов)</div>
-            
-            <div class="currency-row">
-                <div class="currency-card" style="border-top: 3px solid var(--ruble-gold);">
-                    <span style="color:var(--text-gray); font-size:0.8rem;">РУБЛЬ (₽)</span>
-                    <h3 id="rate-rub" style="margin:5px 0 0 0;">1.00</h3>
-                </div>
-                <div class="currency-card" style="border-top: 3px solid #ff4500;">
-                    <span style="color:var(--text-gray); font-size:0.8rem;">ДОЛЛАР ($)</span>
-                    <h3 id="rate-usd" style="margin:5px 0 0 0;">94.20</h3>
-                </div>
-                <div class="currency-card" style="border-top: 3px solid var(--accent-blue);">
-                    <span style="color:var(--text-gray); font-size:0.8rem;">ЕВРО (€)</span>
-                    <h3 id="rate-eur" style="margin:5px 0 0 0;">102.50</h3>
-                </div>
-            </div>
-
-            <div class="panel-title">График Котировок Urals & Мировых Трендов</div>
-            <div class="chart-wrapper">
-                <canvas id="marketChart"></canvas>
+        <!-- ГЛАВНЫЙ СЧЕТ (ВСЕГДА СВЕРХУ) -->
+        <div class="app-header">
+            <div class="balance-title">Ваш Главный Капитал</div>
+            <div class="balance-big" id="main-rub">0 ₽</div>
+            <div class="sub-balances">
+                <span id="main-usd">💵 5 000 $</span>
+                <span id="main-oil">🛢️ 0 баррелей</span>
             </div>
         </div>
 
-        <div class="panel" id="step-wallet">
-            <div class="panel-title">Твои Мультивалютные Счета</div>
-            
-            <div style="background: var(--bg-card); padding: 12px; border-radius: 6px; margin-bottom: 12px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                    <span>💵 Баланс USD ($):</span> <strong id="user-usd">5 000 $</strong>
+        <!-- ВКЛАДКА 1: БИРЖА (АКТИВНАЯ ПО УМОЛЧАНИЮ) -->
+        <div id="sec-market" class="content-section active">
+            <div class="news-ticker" id="news-text">
+                📈 Рынок стабилен. Покупайте нефть за доллары, чтобы заработать первый капитал!
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span>Нефть Urals</span>
+                    <span id="oil-price" style="color: var(--neon-green);">65.00 $</span>
                 </div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                    <span>💶 Баланс EUR (€):</span> <strong id="user-eur">2 000 €</strong>
+                <div class="chart-container">
+                    <canvas id="minimalChart"></canvas>
                 </div>
-                <div style="display:flex; justify-content:space-between; border-top: 1px solid #30363d; padding-top:5px; margin-top:5px;">
-                    <span style="color:var(--ruble-gold)">🇷🇺 Баланс РУБ (₽):</span> <strong id="user-rub" style="color:var(--ruble-gold)">0 ₽</strong>
-                </div>
-                <div style="display:flex; justify-content:space-between; margin-top:5px; font-size:0.85rem;">
-                    <span>🛢️ Нефть на складе:</span> <strong id="user-oil" style="color:var(--crypto-green)">0 bbl</strong>
+                <div class="btn-grid">
+                    <button class="btn btn-green" onclick="buyOil()">КУПИТЬ 10 🛢️</button>
+                    <button class="btn btn-red" onclick="sellOil()">ПРОДАТЬ ВСЁ</button>
                 </div>
             </div>
 
-            <div class="panel-title">Спекуляции (За Доллары)</div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
-                <button class="btn btn-buy" onclick="tradeOil('buy')">Купить 10 bbl</button>
-                <button class="btn btn-sell" onclick="tradeOil('sell')">Продать все bbl</button>
-            </div>
-
-            <div class="panel-title">Конвертация в Рубли</div>
-            <button class="btn" style="background:var(--accent-blue); margin-bottom:15px;" onclick="allInRuble()">Обменять всю валюту на Рубли (₽)</button>
-
-            <div class="panel-title" id="step-attack">Атака на иностранные валюты (За ₽)</div>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-                <button class="btn btn-attack" onclick="attackCurrency('usd')">💥 Обрушить Доллар (-$5.00) | Цена: 150к ₽</button>
-                <button class="btn btn-attack" onclick="attackCurrency('eur')">💥 Обрушить Евро (-€5.00) | Цена: 150к ₽</button>
-            </div>
-            <div class="hint">Снижает мировой авторитет конкурентов и поднимает Рубль наверх!</div>
+            <button class="btn btn-blue" style="width: 100%;" onclick="exchangeToRuble()">💱 Обменять все $ на Рубли (₽)</button>
         </div>
 
-        <div class="panel">
-            <div class="panel-title">Мировой Табель о Рангах Валют</div>
-            <div class="leaderboard" id="leaderboard-box">
+        <!-- ВКЛАДКА 2: ВОЙНА ВАЛЮТ -->
+        <div id="sec-war" class="content-section">
+            <div class="card">
+                <div class="card-title">Мировой рейтинг валют</div>
+                <div id="currency-list">
+                    <!-- Сюда рендерятся валюты -->
                 </div>
+            </div>
 
-            <div class="panel-title">Сводки геополитических новостей</div>
-            <div class="news-box" id="news-feed">
-                [Система] Агентство Bloomberg готовит отчет. Начните скупать нефть, переводите прибыль в рубли и сокрушите доллар!
+            <div class="card">
+                <div class="card-title">Атака капиталом (За ₽)</div>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top:-10px;">Тратьте рубли, чтобы искусственно обрушить доллар и поднять рубль на 1 место.</p>
+                <button class="btn btn-red" style="width: 100%;" onclick="crashDollar()">💥 Обрушить Доллар | 100 000 ₽</button>
             </div>
         </div>
 
-        <div class="panel" id="step-trophies">
-            <div class="panel-title">🏆 Серьезные Государственные Трофеи</div>
-            <div class="item-list">
+        <!-- ВКЛАДКА 3: ТРОФЕИ -->
+        <div id="sec-trophies" class="content-section">
+            <div class="card">
+                <div class="card-title">Элитные Достижения холдинга</div>
                 
-                <div class="item-card">
-                    <div>
-                        <strong id="t1-title">Золотой Запас ЦБ (0)</strong>
-                        <div class="hint">Пассивный доход: +2 000 ₽/сек</div>
+                <div class="list-item">
+                    <div class="item-info">
+                        <span class="item-name" id="t1-name">Золото ЦБ (0)</span>
+                        <span class="item-desc">+1 000 ₽/сек пассивно</span>
                     </div>
-                    <button class="btn btn-trophy" onclick="buyTrophy('gold')">100 000 ₽</button>
+                    <button class="btn btn-green" style="padding: 8px 16px; font-size:0.85rem;" onclick="buyTrophy('gold')">50к ₽</button>
                 </div>
 
-                <div class="item-card">
-                    <div>
-                        <strong id="t2-title">Контроль Газпрома (0)</strong>
-                        <div class="hint">Пассивный доход: +15 000 ₽/сек</div>
+                <div class="list-item">
+                    <div class="item-info">
+                        <span class="item-name" id="t2-name">Вышка в Сибири (0)</span>
+                        <span class="item-desc">+10 000 ₽/сек пассивно</span>
                     </div>
-                    <button class="btn btn-trophy" onclick="buyTrophy('gaz')">500 000 ₽</button>
+                    <button class="btn btn-green" style="padding: 8px 16px; font-size:0.85rem;" onclick="buyTrophy('siberia')">250к ₽</button>
                 </div>
 
-                <div class="item-card">
-                    <div>
-                        <strong id="t3-title">Космическая Программа (0)</strong>
-                        <div class="hint">Доход: +100 000 ₽/сек + Атака сильнее</div>
+                <div class="list-item">
+                    <div class="item-info">
+                        <span class="item-name" id="t3-name">Газпром 51% (0)</span>
+                        <span class="item-desc">+50 000 ₽/сек пассивно</span>
                     </div>
-                    <button class="btn btn-trophy" onclick="buyTrophy('space')">3 000 000 ₽</button>
+                    <button class="btn btn-green" style="padding: 8px 16px; font-size:0.85rem;" onclick="buyTrophy('gazprom')">1 млн ₽</button>
                 </div>
 
             </div>
         </div>
+
+        <!-- НИЖНЕЕ МЕНЮ (ТАБ-БАР) -->
+        <nav class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab('sec-market', this)">
+                <span class="tab-icon">🛢️</span>
+                <span>Биржа</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('sec-war', this)">
+                <span class="tab-icon">⚔️</span>
+                <span>Война валют</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('sec-trophies', this)">
+                <span class="tab-icon">🏆</span>
+                <span>Трофеи</span>
+            </button>
+        </nav>
 
     </div>
 
     <script>
-        // Состояние игры
-        let usdBalance = 5000;
-        let eurBalance = 2000;
-        let rubBalance = 0;
-        let oilOwned = 0;
+        // Игровые ресурсы
+        let rub = 0;
+        let usd = 5000;
+        let oil = 0;
 
-        // Экономика мирового рынка
-        let rubRate = 1.00; // Базовая ценность рубля стабильна
-        let usdRate = 94.20;
-        let eurRate = 102.50;
-        let oilPriceUSD = 65.00; // Цена барреля нефти
+        // Состояние рынка
+        let oilPrice = 65.00;
+        let usdRate = 94.50; // Рейтинг доллара
 
         // Трофеи
         let trophies = {
-            gold: { count: 0, cost: 100000, income: 2000, label: "Золотой Запас ЦБ" },
-            gaz: { count: 0, cost: 500000, income: 15000, label: "Контроль Газпрома" },
-            space: { count: 0, cost: 3000000, income: 100000, label: "Космическая Программа" }
+            gold: { count: 0, cost: 50000, income: 1000 },
+            siberia: { count: 0, cost: 250000, income: 10000 },
+            gazprom: { count: 0, cost: 1000000, income: 50000 }
         };
 
-        // Переменные для туториала
-        let currentTutorialStep = 0;
-        const tutorialSteps = [
-            { text: "Добро пожаловать в геополитический симулятор! Твоя цель — вывести Рубль на 1-е место в мировом рейтинге, обрушив доллар и евро.", target: "" },
-            { text: "Вот блок Мирового Рынка. Здесь ты видишь текущую стоимость валют. Чем ниже опустится Доллар и Евро — тем сильнее станет Рубль!", target: "step-market" },
-            { text: "Это твои Кошельки. Изначально у тебя есть Доллары и Евро. Нажимай 'Купить 10 bbl', чтобы закупить нефть на бирже, а затем продавай её, когда цена вырастет!", target: "step-wallet" },
-            { text: "Главный секрет: когда поднимешь бабки на нефти, нажми кнопку 'Обменять всю валюту на Рубли'. Только за рубли делается реальная политика!", target: "step-wallet" },
-            { text: "Когда накопишь рубли, наноси сокрушительные удары по Доллару и Евро! Каждое нажатие обрушивает их курс на мировом рынке.", target: "step-attack" },
-            { text: "И наконец, покупай великие Трофеи. Они дают колоссальный пассивный доход в рублях каждую секунду. Удачи, покажи им силу нашей экономики!", target: "step-trophies" }
+        // Новости
+        const newsList = [
+            "⚡ ОПЕК+ снижает добычу! Нефть дорожает.",
+            "⚠️ Введены новые пошлины на экспорт нефти.",
+            "🇷🇺 Азиатские рынки подтвердили закупки нашей нефти.",
+            "📉 Мировые фондовые рынки лихорадит, доллар нестабилен."
         ];
 
-        function nextTutorialStep() {
-            currentTutorialStep++;
-            if (currentTutorialStep >= tutorialSteps.length) {
-                document.getElementById('tutorial-overlay').style.display = 'none';
-            } else {
-                document.getElementById('tutorial-text').innerHTML = tutorialSteps[currentTutorialStep].text;
-            }
-        }
-
-        // Инициализация графика котировок
-        const ctx = document.getElementById('marketChart').getContext('2d');
-        const marketChart = new Chart(ctx, {
+        // Красивый неоновый график (минимум деталей)
+        const ctx = document.getElementById('minimalChart').getContext('2d');
+        const minimalChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: Array(15).fill(''),
+                labels: Array(10).fill(''),
                 datasets: [{
-                    label: 'Нефть Urals ($)',
-                    data: Array(15).fill(65),
-                    borderColor: '#ffd700',
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.2
+                    data: Array(10).fill(65),
+                    borderColor: '#00f5d4',
+                    borderWidth: 3,
+                    pointRadius: 0,
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(0, 245, 212, 0.05)'
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                scales: {
-                    x: { grid: { color: '#21262d' } },
-                    y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e' } }
-                },
+                scales: { x: { display: false }, y: { display: false } },
                 plugins: { legend: { display: false } }
             }
         });
 
-        // Функция обновления UI
-        function updateUI() {
-            document.getElementById('rate-rub').innerText = rubRate.toFixed(2);
-            document.getElementById('rate-usd').innerText = usdRate.toFixed(2);
-            document.getElementById('rate-eur').innerText = eurRate.toFixed(2);
-
-            document.getElementById('user-usd').innerText = usdBalance.toFixed(2) + ' $';
-            document.getElementById('user-eur').innerText = eurBalance.toFixed(2) + ' €';
-            document.getElementById('user-rub').innerText = rubBalance.toLocaleString() + ' ₽';
-            document.getElementById('user-oil').innerText = oilOwned + ' bbl';
-
-            // Обновление кнопок трофеев
-            document.getElementById('t1-title').innerText = `${trophies.gold.label} (${trophies.gold.count})`;
-            document.getElementById('t2-title').innerText = `${trophies.gaz.label} (${trophies.gaz.count})`;
-            document.getElementById('t3-title').innerText = `${trophies.space.label} (${trophies.space.count})`;
-
-            renderLeaderboard();
-        }
-
-        // Сортировка валют по силе (чем меньше курс доллара/евро, тем они слабее, рубль крепок)
-        function renderLeaderboard() {
-            let list = [
-                { name: "🇷🇺 Российский Рубль", score: 500 / rubRate },
-                { name: "🇺🇸 Доллар США", score: usdRate },
-                { name: "🇪🇺 Евросоюз (Евро)", score: eurRate }
-            ];
-
-            // Сортируем: для рубля чем меньше курс бакса, тем рубль выше
-            list.sort((a, b) => b.score - a.score);
-
-            let html = '';
-            list.forEach((item, index) => {
-                let color = item.name.includes("Рубль") ? 'color: var(--ruble-gold); font-weight: bold;' : '';
-                html += `<div class="leader-item" style="${color}">
-                    <span>${index + 1}. ${item.name}</span>
-                    <span>Рейтинг силы: ${Math.floor(item.score)} pts</span>
-                </div>`;
-            });
-
-            document.getElementById('leaderboard-box').innerHTML = html;
-
-            // Изменение глобального статуса рубля
-            if(list[0].name.includes("Рубль")) {
-                document.getElementById('ruble-status').innerText = "🏆 МИРОВАЯ ДОМИНАНТА";
-                document.getElementById('ruble-status').style.color = "var(--crypto-green)";
-            } else {
-                document.getElementById('ruble-status').innerText = "Борьба за лидерство";
-                document.getElementById('ruble-status').style.color = "var(--ruble-gold)";
-            }
-        }
-
-        // Торговля нефтью
-        function tradeOil(action) {
-            if (action === 'buy') {
-                if (usdBalance >= oilPriceUSD * 10) {
-                    usdBalance -= oilPriceUSD * 10;
-                    oilOwned += 10;
-                    logNews("💼 Вы закупили партию нефти 10 баррелей.");
-                } else {
-                    alert("Не хватает долларов для закупки партии нефти!");
-                }
-            } else if (action === 'sell') {
-                if (oilOwned > 0) {
-                    let profit = oilOwned * oilPriceUSD;
-                    usdBalance += profit;
-                    logNews(`💰 Продано ${oilOwned} bbl нефти за ${profit.toFixed(2)} $.`);
-                    oilOwned = 0;
-                } else {
-                    alert("У вас нет нефти на складах!");
-                }
-            }
-            updateUI();
-        }
-
-        // Валютный перевод ВСЕГО в рубли
-        function allInRuble() {
-            let totalFromUSD = usdBalance * 94.20;
-            let totalFromEUR = eurBalance * 102.50;
+        // Переключение вкладок (Просто и плавно)
+        function switchTab(sectionId, btn) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             
-            if (totalFromUSD == 0 && totalFromEUR == 0) {
-                alert("У вас нет иностранной валюты для обмена!");
-                return;
-            }
-
-            rubBalance += totalFromUSD + totalFromEUR;
-            usdBalance = 0;
-            eurBalance = 0;
-            logNews(`🔄 Эпохальный маневр! Вы конвертировали резервы в рубли. Получено ${(totalFromUSD + totalFromEUR).toLocaleString()} ₽.`);
-            updateUI();
+            document.getElementById(sectionId).classList.add('active');
+            btn.classList.add('active');
         }
 
-        // Логика атаки и обрушения валют
-        function attackCurrency(target) {
-            let cost = 150000;
-            if (rubBalance >= cost) {
-                rubBalance -= cost;
-                // Бонус от космической программы увеличивает урон по чужой валюте
-                let damage = 5.0 + (trophies.space.count * 2);
+        // Обновление цифр на экране
+        function updateUI() {
+            document.getElementById('main-rub').innerText = rub.toLocaleString() + ' ₽';
+            document.getElementById('main-usd').innerText = '💵 ' + usd.toLocaleString() + ' $';
+            document.getElementById('main-oil').innerText = '🛢️ ' + oil.toLocaleString() + ' баррелей';
+            document.getElementById('oil-price').innerText = oilPrice.toFixed(2) + ' $';
 
-                if (target === 'usd') {
-                    usdRate -= damage;
-                    if(usdRate < 10) usdRate = 10;
-                    logNews(`💥 Рубль наносит удар по ФРС США! Доллар рухнул на -${damage.toFixed(1)} пунктов.`);
-                } else if (target === 'eur') {
-                    eurRate -= damage;
-                    if(eurRate < 10) eurRate = 10;
-                    logNews(`💥 Газовый ультиматум сработал! Евро падает на -${damage.toFixed(1)} пунктов.`);
+            // Имена трофеев
+            document.getElementById('t1-name').innerText = `Золото ЦБ (${trophies.gold.count})`;
+            document.getElementById('t2-name').innerText = `Вышка в Сибири (${trophies.siberia.count})`;
+            document.getElementById('t3-name').innerText = `Газпром 51% (${trophies.gazprom.count})`;
+
+            // Рендер рейтинга валют
+            let rubStrength = 100000 / (usdRate || 1); // Имитация силы рубля
+            let html = `
+                <div class="list-item">
+                    <span class="item-name">🥇 Рубль (₽)</span>
+                    <span style="color: var(--neon-gold); font-weight:700;">${rubStrength.toFixed(0)} PTS</span>
+                </div>
+                <div class="list-item">
+                    <span class="item-name">🥈 Доллар ($)</span>
+                    <span style="color: var(--neon-red); font-weight:700;">${usdRate.toFixed(1)} PTS</span>
+                </div>
+            `;
+            document.getElementById('currency-list').innerHTML = html;
+        }
+
+        // Логика нефти
+        function buyOil() {
+            let cost = oilPrice * 10;
+            if (usd >= cost) {
+                usd -= cost;
+                oil += 10;
+                updateUI();
+            } else {
+                alert("Недостаточно долларов ($) для покупки 10 баррелей!");
+            }
+        }
+
+        function sellOil() {
+            if (oil > 0) {
+                usd += oil * oilPrice;
+                oil = 0;
+                updateUI();
+            } else {
+                alert("У вас нет нефти для продажи!");
+            }
+        }
+
+        // Обмен всей валюты в Рубли
+        function exchangeToRuble() {
+            if (usd > 0) {
+                rub += usd * 94.5;
+                usd = 0;
+                updateUI();
+                document.getElementById('news-text').innerText = "🔄 Успешно! Теперь у вас есть Рубли. Перейдите во вкладку 'Трофеи' или 'Война валют'!";
+            } else {
+                alert("У вас нет долларов для обмена!");
+            }
+        }
+
+        // Обрушение доллара
+        function crashDollar() {
+            if (rub >= 100000) {
+                rub -= 100000;
+                usdRate -= 8;
+                if (usdRate < 10) {
+                    usdRate = 10;
+                    document.getElementById('news-text').innerText = "👑 Доллар полностью сокрушен! Рубль стал главной мировой валютой!";
+                } else {
+                    document.getElementById('news-text').innerText = "💥 Бабах! Ваша финансовая атака обрушила рейтинг доллара!";
                 }
                 updateUI();
             } else {
-                alert("Недостаточно рублей для проведения геополитической атаки! Накапливайте пассивный доход.");
+                alert("Нужно минимум 100 000 ₽ для атаки на доллар!");
             }
         }
 
-        // Покупка Трофеев холдинга
+        // Покупка трофеев
         function buyTrophy(type) {
-            let item = trophies[type];
-            if (rubBalance >= item.cost) {
-                rubBalance -= item.cost;
-                item.count++;
-                item.cost = Math.floor(item.cost * 1.4); // Рост цены
-                logNews(`🏆 Приобретен национальный трофей: ${item.label}! Мощность экономики выросла.`);
+            let t = trophies[type];
+            if (rub >= t.cost) {
+                rub -= t.cost;
+                t.count++;
+                t.cost = Math.floor(t.cost * 1.5); // Следующий дороже
                 updateUI();
             } else {
-                alert("Не хватает рублей! Продавайте нефть и конвертируйте валюту.");
+                alert("Недостаточно рублей (₽) для покупки этого актива!");
             }
         }
 
-        function logNews(text) {
-            const feed = document.getElementById('news-feed');
-            feed.innerHTML = `<div>• ${text}</div>` + feed.innerHTML;
-        }
-
-        // Главный цикл рынка (каждые 2.5 секунды)
+        // Ежесекундный тик (Рынок и пассивный доход)
         setInterval(() => {
-            // Колебания цены нефти
-            let oilChange = (Math.random() * 4) - 2;
-            oilPriceUSD += oilChange;
-            if(oilPriceUSD < 30) oilPriceUSD = 30;
+            // Изменение цены нефти
+            let change = (Math.random() * 4) - 2;
+            oilPrice += change;
+            if (oilPrice < 30) oilPrice = 30;
 
-            // Небольшой естественный отскок валют, если их не атаковать
-            usdRate += (Math.random() * 0.4) - 0.15;
-            eurRate += (Math.random() * 0.4) - 0.15;
+            // Естественное колебание доллара
+            usdRate += (Math.random() * 0.6) - 0.3;
 
-            // Обновление графика цен нефти
-            marketChart.data.datasets[0].data.push(oilPriceUSD);
-            marketChart.data.datasets[0].data.shift();
-            marketChart.update();
+            // Обновление графика
+            minimalChart.data.datasets[0].data.push(oilPrice);
+            minimalChart.data.datasets[0].data.shift();
+            minimalChart.update();
+
+            // Случайные новости (шанс 15%)
+            if (Math.random() < 0.15) {
+                document.getElementById('news-text').innerText = newsList[Math.floor(Math.random() * newsList.length)];
+            }
+
+            // Начисление пассивного дохода от трофеев
+            let totalIncome = (trophies.gold.count * trophies.gold.income) +
+                              (trophies.siberia.count * trophies.siberia.income) +
+                              (trophies.gazprom.count * trophies.gazprom.income);
+            rub += totalIncome;
 
             updateUI();
-        }, 2500);
+        }, 1500);
 
-        // Пассивный доход от серьезных трофеев (раз в секунду)
-        setInterval(() => {
-            let totalIncome = 0;
-            totalIncome += trophies.gold.count * trophies.gold.income;
-            totalIncome += trophies.gaz.count * trophies.gaz.income;
-            totalIncome += trophies.space.count * trophies.space.income;
-
-            if (totalIncome > 0) {
-                rubBalance += totalIncome;
-                updateUI();
-            }
-        }, 1000);
-
-        // Старт игры
+        // Старт
         updateUI();
     </script>
 </body>
