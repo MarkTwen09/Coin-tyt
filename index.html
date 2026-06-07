@@ -3,610 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jack Daniel's: Глобальная Империя v3.0</title>
+    <title>Oil investor: Russia Edition</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-color: #060606;
-            --panel-color: #111111;
-            --panel-sub: #161616;
-            --accent-gold: #ffb300;
-            --accent-gold-glow: rgba(255, 179, 0, 0.25);
-            --accent-green: #4caf50;
-            --accent-red: #f44336;
-            --accent-blue: #2196f3;
-            --text-color: #e0e0e0;
-            --border-color: #222;
+            --bg-color: #0d1117;
+            --panel-bg: #161b22;
+            --accent-neon: #00ffcc;
+            --text-main: #c9d1d9;
+            --btn-green: #238636;
+            --btn-red: #da3633;
         }
 
         body {
-            font-family: 'Impact', 'Arial Black', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-color);
+            color: var(--text-main);
             margin: 0;
-            padding: 10px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-            -webkit-tap-highlight-color: transparent;
         }
 
-        header {
-            width: 100%;
-            max-width: 850px;
-            text-align: center;
-            margin-bottom: 12px;
-            border-bottom: 2px solid var(--accent-gold);
-            padding-bottom: 5px;
+        h1 {
+            color: var(--accent-neon);
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+            margin-bottom: 5px;
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 2rem;
-            letter-spacing: 3px;
-            color: #fff;
-            text-shadow: 0 0 10px var(--accent-gold-glow);
-        }
-
-        .sub-header {
-            font-family: 'Courier New', monospace;
-            font-size: 0.75rem;
-            color: var(--accent-gold);
-            text-transform: uppercase;
+        .subtitle {
+            color: #8b949e;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
         }
 
         .container {
-            width: 100%;
-            max-width: 850px;
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
         }
 
-        @media (min-width: 750px) {
-            .container {
-                grid-template-columns: 1.2fr 1fr;
-            }
-            .full-width { grid-column: 1 / -1; }
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
         }
 
         .panel {
-            background: var(--panel-color);
-            border: 1px solid var(--border-color);
+            background: var(--panel-bg);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .news-ticker {
+            grid-column: 1 / -1;
+            background: #21262d;
+            border-left: 4px solid var(--accent-neon);
+            padding: 15px;
             border-radius: 6px;
-            padding: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.7);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .panel-title {
-            font-size: 1rem;
-            text-transform: uppercase;
-            color: var(--accent-gold);
-            margin: 0 0 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            letter-spacing: 1px;
-            border-bottom: 1px solid #222;
-            padding-bottom: 4px;
-        }
-
-        /* --- Финансово-сырьевой дашборд --- */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        .dash-box {
-            background: var(--panel-sub);
-            padding: 8px;
-            border-radius: 4px;
-            border-left: 3px solid var(--accent-gold);
-        }
-        .dash-box.green { border-left-color: var(--accent-green); }
-        .dash-box.blue { border-left-color: var(--accent-blue); }
-
-        .dash-label {
-            font-family: 'Courier New', monospace;
-            font-size: 0.7rem;
-            color: #777;
-            text-transform: uppercase;
-        }
-
-        .dash-value {
-            font-size: 1.3rem;
             font-weight: bold;
-            color: #fff;
+            min-height: 24px;
         }
 
-        /* --- Склад Бочек --- */
-        .warehouse-floor {
-            background: radial-gradient(circle, #1a1a1a 0%, #0a0a0a 100%);
-            height: 120px;
-            border: 1px solid #222;
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            flex-wrap: wrap-reverse;
-            gap: 4px;
-            padding: 6px;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
-        .barrel {
-            width: 20px;
-            height: 28px;
-            background: #795548;
-            border-radius: 4px / 7px;
-            border: 2px solid #3e2723;
-            position: relative;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.6);
-            animation: dropIn 0.2s ease-out forwards;
-        }
-        .barrel::before, .barrel::after {
-            content: ''; position: absolute; width: 100%; height: 2px; background: #222; left: 0;
-        }
-        .barrel::before { top: 5px; }
-        .barrel::after { bottom: 5px; }
-
-        @keyframes dropIn {
-            0% { transform: translateY(-50px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
+        .stat-card {
+            background: #21262d;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #30363d;
         }
 
-        /* --- Стили кнопок --- */
-        .btn {
-            font-family: 'Impact', sans-serif;
+        .stat-card span {
+            display: block;
+            font-size: 0.85rem;
+            color: #8b949e;
             text-transform: uppercase;
-            padding: 10px;
-            font-size: 0.9rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.1s;
-            width: 100%;
         }
-        .btn-gold { background: linear-gradient(180deg, #ffca28 0%, #ffb300 100%); color: #000; }
-        .btn-gold:hover:not(:disabled) { box-shadow: 0 0 10px var(--accent-gold-glow); }
-        .btn-dark { background: #222; color: #fff; border: 1px solid #333; }
-        .btn-dark:hover:not(:disabled) { background: #2a2a2a; border-color: var(--accent-gold); }
-        .btn-sm { padding: 5px 8px; font-size: 0.75rem; width: auto; }
-        .btn:disabled { background: #1a1a1a !important; color: #444 !important; cursor: not-allowed; border-color: #222; }
 
-        .progress-box {
-            width: 100%; background: #000; height: 6px; border-radius: 3px; margin-top: 6px; overflow: hidden;
+        .stat-card strong {
+            display: block;
+            font-size: 1.4rem;
+            color: #fff;
+            margin-top: 5px;
         }
-        .progress-fill { width: 0%; height: 100%; background: var(--accent-gold); }
 
-        /* --- Модули Систем (Списки и сетки) --- */
-        .list-container { display: flex; flex-direction: column; gap: 8px; }
-        
-        .item-row {
-            background: var(--panel-sub);
-            border: 1px solid #1f1f1f;
-            border-radius: 4px;
-            padding: 8px;
+        .actions {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
             gap: 10px;
         }
 
-        .item-info { flex: 1; }
-        .item-name { font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
-        .item-meta { font-family: 'Courier New', monospace; font-size: 0.7rem; color: #777; margin-top: 2px; }
-
-        .badge { font-size: 0.65rem; padding: 1px 4px; border-radius: 2px; font-weight: bold; text-transform: uppercase; }
-        .badge-open { background: rgba(76,175,80,0.15); color: var(--accent-green); }
-        .badge-boom { background: rgba(33,150,243,0.15); color: var(--accent-blue); }
-        .badge-sanctions { background: rgba(244,67,54,0.15); color: var(--accent-red); }
-
-        /* Лог новостей */
-        .news-box {
-            background: #000; height: 50px; overflow-y: auto; border-radius: 4px; padding: 6px;
-            font-family: 'Courier New', monospace; font-size: 0.75rem; border: 1px solid #111;
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+            color: #fff;
         }
-        .news-line { border-left: 2px solid var(--accent-blue); padding-left: 6px; margin-bottom: 2px; }
 
-        /* Эффект вылетающих денег */
-        .floating-text {
-            position: absolute; font-size: 1.3rem; font-weight: bold; color: var(--accent-green);
-            text-shadow: 0 0 5px #000; pointer-events: none; animation: floatUp 0.6s ease-out forwards; z-index: 100;
+        button:active { transform: scale(0.98); }
+
+        .btn-buy { background-color: var(--btn-green); }
+        .btn-buy:hover { opacity: 0.9; }
+
+        .btn-sell { background-color: var(--btn-red); }
+        .btn-sell:hover { opacity: 0.9; }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
         }
-        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-40px); } }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>JACK DANIEL'S</h1>
-        <div class="sub-header">GLOBAL EMPIRE • СТРАТЕГИЯ ТРЕСTA v3.0</div>
-    </header>
+    <h1>NEFT RUSSIA INVESTOR</h1>
+    <div class="subtitle">Симулятор торговли нефтью в эпоху санкций и ограничений</div>
 
     <div class="container">
-        
-        <!-- ЛЕВАЯ КОЛОНКА: БИЗНЕС И СЫРЬЕ -->
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-            
-            <!-- ПАНЕЛЬ СОСТОЯНИЯ -->
-            <div class="panel">
-                <div class="panel-title">📊 Мониторинг ресурсов</div>
-                <div class="dashboard-grid">
-                    <div class="dash-box green"><div class="dash-label">Капитал</div><div class="dash-value" id="lbl-money">$500</div></div>
-                    <div class="dash-box"><div class="dash-label">Склад виски</div><div class="dash-value" id="lbl-barrels">0 б.</div></div>
-                    <div class="dash-box blue"><div class="dash-label">Сырьё на складе</div><div class="dash-value" id="lbl-mats">20 ед.</div></div>
-                    <div class="dash-box"><div class="dash-label">Узнаваемость</div><div class="dash-value" id="lbl-brand">10%</div></div>
-                </div>
-            </div>
+        <div class="panel news-ticker" id="news-box">
+            Загрузка геополитической обстановки...
+        </div>
 
-            <!-- БИРЖА СЫРЬЯ (Пункт 2) & МАРКЕТИНГ (Пункт 3) -->
-            <div class="panel">
-                <div class="panel-title">🌾 Снабжение и PR-департамент</div>
-                <div class="list-container">
-                    <div class="item-row">
-                        <div class="item-info">
-                            <div class="item-name">Закупка зерна и бочек</div>
-                            <div class="item-meta">Текущая цена: $<span id="lbl-mat-price">10</span> за 10 ед. Спрос меняется!</div>
-                        </div>
-                        <button class="btn btn-dark btn-sm" id="btn-buy-mats">Купить (-$<span id="lbl-mat-cost-btn">10</span>)</button>
+        <div class="panel">
+            <h3 style="margin-top:0; color: #fff;">График стоимости Urals (за баррель)</h3>
+            <div class="chart-container">
+                <canvas id="oilChart"></canvas>
+            </div>
+        </div>
+
+        <div class="panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h3 style="margin-top:0; color: #fff;">Портфель инвестора</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span>Баланс</span>
+                        <strong id="balance-val">10 000 $</strong>
                     </div>
-                    <div class="item-row">
-                        <div class="item-info">
-                            <div class="item-name">Рекламная кампания</div>
-                            <div class="item-meta">Повышает мировую цену виски. Цена: $<span id="lbl-adv-cost">150</span></div>
-                        </div>
-                        <button class="btn btn-dark btn-sm" id="btn-buy-marketing">Запустить</button>
+                    <div class="stat-card">
+                        <span>Текущий курс</span>
+                        <strong id="price-val" style="color: var(--accent-neon);">60.00 $</strong>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card" style="grid-column: 1 / -1;">
+                        <span>Куплено нефти</span>
+                        <strong id="oil-val">0 bbl</strong>
                     </div>
                 </div>
             </div>
 
-            <!-- РЕЦЕПТУРА (Пункт 4) -->
-            <div class="panel">
-                <div class="panel-title">⚗️ Технологическая карта сортов</div>
-                <div class="list-container" id="recipes-list">
-                    <!-- Из JS -->
-                </div>
+            <div class="actions">
+                <button class="btn-buy" onclick="buyOil()">КУПИТЬ</button>
+                <button class="btn-sell" onclick="sellOil()">ПРОДАТЬ</button>
             </div>
-
         </div>
-
-        <!-- ПРАВАЯ КОЛОНКА: ЗАВОДЫ И ГЛОБАЛЬНЫЙ ЭКСПОРТ -->
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-            
-            <!-- ГЛАВНАЯ ВИНОКУРНЯ -->
-            <div class="panel">
-                <div class="panel-title">🏭 Производственная база Теннесси</div>
-                <div class="warehouse-floor" id="warehouse"></div>
-                <div style="margin-top: 8px;">
-                    <button class="btn btn-gold" id="btn-craft">Варить партию (-10 сырья / +5 бочек)</button>
-                    <div class="progress-box"><div class="progress-fill" id="craft-progress"></div></div>
-                </div>
-            </div>
-
-            <!-- ДИСТРИБУЦИЯ И СТРОИТЕЛЬСТВО (Пункт 1) -->
-            <div class="panel">
-                <div class="panel-title">🌐 Филиалы и внешние рынки</div>
-                <div class="list-container" id="countries-list">
-                    <!-- Из JS -->
-                </div>
-            </div>
-
-            <!-- ЛЕНТА -->
-            <div class="panel">
-                <div class="panel-title">📰 Глобальные сводки</div>
-                <div class="news-box" id="news-container">
-                    <div class="news-line">Синдикат Jack Daniel's готов к экспансии на мировые рынки. Покупайте сырье для старта.</div>
-                </div>
-            </div>
-
-        </div>
-
     </div>
 
     <script>
-        let game = {
-            money: 500,
-            barrels: 0,
-            mats: 20,
-            matPrice: 10,
-            brandRep: 10, 
-            marketingCost: 150,
-            
-            isCrafting: false,
-            craftDuration: 2500,
+        // Игровые переменные
+        let balance = 10000;
+        let oilOwned = 0;
+        let currentPrice = 60.0;
+        
+        // Данные для графика
+        const priceHistory = [62, 61, 59, 60, 58, 60];
+        const timeLabels = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
 
-            // Линейка виски (Пункт 4)
-            currentRecipe: 'old7',
-            recipes: {
-                old7: { name: "Classic Old No. 7", unlocked: true, cost: 0, priceBonus: 0 },
-                gentleman: { name: "Gentleman Jack", unlocked: false, cost: 500, priceBonus: 20 },
-                single: { name: "Single Barrel Select", unlocked: false, cost: 1500, priceBonus: 50 }
-            },
-
-            // Страны и улучшения заводов (Пункт 1)
-            countries: {
-                usa: { name: "США", built: true, cost: 0, basePrice: 30, status: "OPEN", mod: 1, autoBps: 0, upCost: 200, upLvl: 1 },
-                europe: { name: "Европа", built: false, cost: 400, basePrice: 50, status: "OPEN", mod: 1, autoBps: 0.2, upCost: 300, upLvl: 0 },
-                asia: { name: "Азия", built: false, cost: 1200, basePrice: 70, status: "OPEN", mod: 1, autoBps: 0.8, upCost: 500, upLvl: 0 },
-                latam: { name: "Латинская Америка", built: false, cost: 2500, basePrice: 40, status: "OPEN", mod: 1, autoBps: 2.0, upCost: 800, upLvl: 0 }
-            }
-        };
-
-        const evPool = [
-            { text: "🔥 Бум американских баров в Токио! Спрос в Азии вырос х2!", target: "asia", status: "BOOM", mod: 2.0 },
-            { text: "⚠️ ЕС вводит временные таможенные пошлины на ввоз алкоголя!", target: "europe", status: "SANCTIONS", mod: 0.5 },
-            { text: "📈 Политический кризис в Латинской Америке утих, рынки открыты.", target: "latam", status: "OPEN", mod: 1.0 },
-            { text: "✅ Экономический подъем в США: спрос стабильно растет.", target: "usa", status: "BOOM", mod: 1.3 },
-            { text: "🔄 Европейские торговые сети возобновили контракты.", target: "europe", status: "OPEN", mod: 1.0 }
+        // Пул новостей, влияющих на рынок
+        const newsEvents = [
+            { text: "⚡ ЕС вводит новый пакет санкций против российского экспорта нефти!", impact: -5 },
+            { text: "🔥 Крупный азиатский хаб заключил долгосрочный контракт на закупку Urals!", impact: 6 },
+            { text: "📊 ОПЕК+ договорились о дополнительном сокращении добычи.", impact: 4 },
+            { text: "⚓ Шторм в Новороссийске временно заблокировал отгрузку танкеров.", impact: -2 },
+            { text: "🛡️ Индия увеличила закупки российской нефти со скидкой, обходя потолок цен.", impact: 3 },
+            { text: "📉 Мировая экономика замедляется, спрос на энергоресурсы падает.", impact: -4 }
         ];
 
-        // Кэш DOM
-        const ui = {
-            money: document.getElementById('lbl-money'), barrels: document.getElementById('lbl-barrels'),
-            mats: document.getElementById('lbl-mats'), brand: document.getElementById('lbl-brand'),
-            matPrice: document.getElementById('lbl-mat-price'), matCostBtn: document.getElementById('lbl-mat-cost-btn'),
-            btnBuyMats: document.getElementById('btn-buy-mats'), btnMarketing: document.getElementById('btn-buy-marketing'),
-            advCost: document.getElementById('lbl-adv-cost'), warehouse: document.getElementById('warehouse'),
-            btnCraft: document.getElementById('btn-craft'), progress: document.getElementById('craft-progress'),
-            countries: document.getElementById('countries-list'), recipes: document.getElementById('recipes-list'),
-            news: document.getElementById('news-container')
-        };
+        // Инициализация графика Chart.js
+        const ctx = document.getElementById('oilChart').getContext('2d');
+        const oilChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: timeLabels,
+                datasets: [{
+                    label: 'Цена Urals ($)',
+                    data: priceHistory,
+                    borderColor: '#00ffcc',
+                    borderWidth: 3,
+                    backgroundColor: 'rgba(0, 255, 204, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#00ffcc'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { color: '#30363d' }, ticks: { color: '#8b949e' } },
+                    y: { grid: { color: '#30363d' }, ticks: { color: '#8b949e' } }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
 
+        // Обновление интерфейса текста
         function updateUI() {
-            ui.money.innerText = `$${Math.floor(game.money)}`;
-            ui.barrels.innerText = `${Math.floor(game.barrels)} шт`;
-            ui.mats.innerText = `${game.mats} ед.`;
-            ui.brand.innerText = `${game.brandRep}%`;
-            ui.matPrice.innerText = game.matPrice;
-            ui.matCostBtn.innerText = game.matPrice;
-            ui.advCost.innerText = game.marketingCost;
-
-            ui.btnBuyMats.disabled = game.money < game.matPrice;
-            ui.btnMarketing.disabled = game.money < game.marketingCost;
-            ui.btnCraft.disabled = game.mats < 10 || game.isCrafting;
-
-            // Рендер стран (Пункт 1)
-            ui.countries.innerHTML = '';
-            for (let id in game.countries) {
-                let c = game.countries[id];
-                let row = document.createElement('div');
-                row.className = 'item-row';
-
-                // Расчет цены с учетом репутации и выбранного сорта виски
-                let repBonus = Math.floor(game.brandRep * 0.5);
-                let recipeBonus = game.recipes[game.currentRecipe].priceBonus;
-                let finalPrice = Math.floor((c.basePrice + repBonus + recipeBonus) * c.mod);
-
-                if (c.built) {
-                    let bClass = c.status === 'OPEN' ? 'badge-open' : (c.status === 'BOOM' ? 'badge-boom' : 'badge-sanctions');
-                    let bText = c.status === 'OPEN' ? 'Стабилен' : (c.status === 'BOOM' ? 'БУМ!' : 'ПОШЛИНЫ');
-
-                    row.innerHTML = `
-                        <div class="item-info">
-                            <div class="item-name">🇺🇸 ${c.name} <span class="badge ${bClass}">${bText}</span></div>
-                            <div class="item-meta">Цена: <b style="color:#fff">$${finalPrice}</b>/б | Выпуск: ${(c.autoBps * c.upLvl).toFixed(1)} б/с</div>
-                        </div>
-                        <div style="display:flex; gap:5px;">
-                            <button class="btn btn-dark btn-sm" onclick="upgradeFactory('${id}')" ${game.money < c.upCost ? 'disabled' : ''}>Апгрейд линии ($${c.upCost})</button>
-                            <button class="btn btn-gold btn-sm" onclick="sellTo('${id}', event)" ${game.barrels < 1 ? 'disabled' : ''}>Экспорт</button>
-                        </div>
-                    `;
-                } else {
-                    row.innerHTML = `
-                        <div class="item-info">
-                            <div class="item-name" style="color:#555;">🏢 Завод в регионе ${c.name}</div>
-                            <div class="item-meta">Запуск филиала откроет рынок и автогенерацию бочек.</div>
-                        </div>
-                        <button class="btn btn-sm btn-gold" onclick="buildFactory('${id}')" ${game.money < c.cost ? 'disabled' : ''}>Строить ($${c.cost})</button>
-                    `;
-                }
-                ui.countries.appendChild(row);
-            }
-
-            // Рендер Рецептов (Пункт 4)
-            ui.recipes.innerHTML = '';
-            for (let id in game.recipes) {
-                let r = game.recipes[id];
-                let row = document.createElement('div');
-                row.className = 'item-row';
-                
-                let isCurrent = game.currentRecipe === id;
-
-                if (r.unlocked) {
-                    row.innerHTML = `
-                        <div class="item-info">
-                            <div class="item-name" style="${isCurrent ? 'color:var(--accent-gold);' : ''}">${r.name} ${isCurrent ? '✓' : ''}</div>
-                            <div class="item-meta">Добавляет цене продажи: +$${r.priceBonus}</div>
-                        </div>
-                        ${!isCurrent ? `<button class="btn btn-dark btn-sm" onclick="selectRecipe('${id}')">Выбрать</button>` : '<span class="badge badge-open">Активен</span>'}
-                    `;
-                } else {
-                    row.innerHTML = `
-                        <div class="item-info">
-                            <div class="item-name" style="color:#555;">🔒 Рецепт: ${r.name}</div>
-                            <div class="item-meta">Увеличит ценность каждой бочки на +$${r.priceBonus}</div>
-                        </div>
-                        <button class="btn btn-dark btn-sm" onclick="unlockRecipe('${id}')" ${game.money < r.cost ? 'disabled' : ''}>Открыть ($${r.cost})</button>
-                    `;
-                }
-                ui.recipes.appendChild(row);
-            }
-
-            syncBarrels();
+            document.getElementById('balance-val').innerText = balance.toFixed(2) + ' $';
+            document.getElementById('price-val').innerText = currentPrice.toFixed(2) + ' $';
+            document.getElementById('oil-val').innerText = oilOwned + ' bbl';
         }
 
-        // Логика рынка ресурсов (Пункт 2)
-        ui.btnBuyMats.addEventListener('click', () => {
-            if (game.money >= game.matPrice) {
-                game.money -= game.matPrice;
-                game.mats += 10;
+        // Логика покупки
+        function buyOil() {
+            if (balance >= currentPrice) {
+                balance -= currentPrice;
+                oilOwned += 1;
                 updateUI();
+            } else {
+                alert("Не хватает бабок на баррель!");
             }
-        });
-
-        // Маркетинг (Пункт 3)
-        ui.btnMarketing.addEventListener('click', () => {
-            if (game.money >= game.marketingCost) {
-                game.money -= game.marketingCost;
-                game.brandRep += 5;
-                game.marketingCost = Math.floor(game.marketingCost * 1.4);
-                logNews("📣 Реклама запущена: Глобальная узнаваемость бренда выросла! Мировые цены поднялись.", "var(--accent-green)");
-                updateUI();
-            }
-        });
-
-        // Смена и покупка рецептов (Пункт 4)
-        window.unlockRecipe = function(id) {
-            let r = game.recipes[id];
-            if (game.money >= r.cost && !r.unlocked) {
-                game.money -= r.cost;
-                r.unlocked = true;
-                game.currentRecipe = id;
-                logNews(`⚗️ Мастера дистилляции освоили новую рецептуру: ${r.name}!`, "var(--accent-gold)");
-                updateUI();
-            }
-        };
-        window.selectRecipe = function(id) {
-            game.currentRecipe = id;
-            updateUI();
-        };
-
-        // Апгрейд линий заводов (Пункт 1)
-        window.upgradeFactory = function(id) {
-            let c = game.countries[id];
-            if (game.money >= c.upCost) {
-                game.money -= c.upCost;
-                c.upLvl++;
-                c.upCost = Math.floor(c.upCost * 1.5);
-                logNews(`🛠️ Завод в регионе ${c.name} модернизирован до уровня ${c.upLvl}! Станки работают быстрее.`, "var(--accent-gold)");
-                updateUI();
-            }
-        };
-
-        // Постройка заводов
-        window.buildFactory = function(id) {
-            let c = game.countries[id];
-            if (game.money >= c.cost && !c.built) {
-                game.money -= c.cost;
-                c.built = true;
-                c.upLvl = 1;
-                logNews(`🚀 Развернуто производство в регионе: ${c.name}. Началась автогенерация бочек.`, "var(--accent-green)");
-                updateUI();
-            }
-        };
-
-        // Ручная варка партии
-        ui.btnCraft.addEventListener('click', () => {
-            if (game.isCrafting || game.mats < 10) return;
-            game.isCrafting = true;
-            game.mats -= 10;
-            updateUI();
-
-            let start = Date.now();
-            let timer = setInterval(() => {
-                let diff = Date.now() - start;
-                let pct = (diff / game.craftDuration) * 100;
-                if (pct >= 100) {
-                    clearInterval(timer);
-                    ui.progress.style.width = '0%';
-                    game.barrels += 5;
-                    game.isCrafting = false;
-                    updateUI();
-                } else {
-                    ui.progress.style.width = `${pct}%`;
-                }
-            }, 40);
-        });
-
-        // Продажа
-        window.sellTo = function(id, event) {
-            if (game.barrels < 1) return;
-            let c = game.countries[id];
-            let repBonus = Math.floor(game.brandRep * 0.5);
-            let recipeBonus = game.recipes[game.currentRecipe].priceBonus;
-            let profit = Math.floor((c.basePrice + repBonus + recipeBonus) * c.mod);
-
-            game.barrels--;
-            game.money += profit;
-
-            createFloatingText(`+$${profit}`, event.clientX, event.clientY);
-            updateUI();
-        };
-
-        function createFloatingText(text, x, y) {
-            let ft = document.createElement('div');
-            ft.className = 'floating-text';
-            ft.innerText = text;
-            ft.style.left = `${x || 150}px`; ft.style.top = `${y || 200}px`;
-            document.body.appendChild(ft);
-            setTimeout(() => ft.remove(), 600);
         }
 
-        // Визуализация бочек
-        let curRendered = 0;
-        function syncBarrels() {
-            let target = Math.min(Math.floor(game.barrels), 40);
-            if (target > curRendered) {
-                for (let i = curRendered; i < target; i++) {
-                    let b = document.createElement('div'); b.className = 'barrel';
-                    b.style.transform = `rotate(${(Math.random() - 0.5) * 10}deg)`;
-                    ui.warehouse.appendChild(b);
-                }
-            } else if (target < curRendered) {
-                ui.warehouse.innerHTML = ''; curRendered = 0;
-                for (let i = 0; i < target; i++) {
-                    let b = document.createElement('div'); b.className = 'barrel';
-                    b.style.transform = `rotate(${(Math.random() - 0.5) * 10}deg)`;
-                    ui.warehouse.appendChild(b);
-                }
+        // Логика продажи
+        function sellOil() {
+            if (oilOwned > 0) {
+                balance += currentPrice;
+                oilOwned -= 1;
+                updateUI();
+            } else {
+                alert("У тебя нет нефти на продажу!");
             }
-            curRendered = target;
         }
 
-        function logNews(text, color = 'var(--accent-blue)') {
-            let line = document.createElement('div');
-            line.className = 'news-line'; line.style.borderColor = color;
-            line.innerText = `[${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'})}] ${text}`;
-            ui.news.insertBefore(line, ui.news.firstChild);
-        }
-
-        // Циклы: Ивенты, Биржа ресурсов, Автопроизводство
+        // Игровой цикл: изменение цены каждые 3 секунды
         setInterval(() => {
-            // Биржа ресурсов: цена прыгает от 6 до 22 долларов
-            game.matPrice = Math.floor(6 + Math.random() * 16);
+            // Базовое случайное колебание цены (-2 до +2 долларов)
+            let change = (Math.random() * 4) - 2;
             
-            // Геополитическое событие
-            let ev = evPool[Math.floor(Math.random() * evPool.length)];
-            game.countries[ev.target].status = ev.status;
-            game.countries[ev.target].mod = ev.mod;
+            // Шанс 20% на генерацию крупного инфоповода
+            if (Math.random() < 0.2) {
+                const randomNews = newsEvents[Math.floor(Math.random() * newsEvents.length)];
+                document.getElementById('news-box').innerText = randomNews.text;
+                change += randomNews.impact; // Добавляем влияние санкции/события
+            }
 
-            let col = ev.status === 'BOOM' ? 'var(--accent-blue)' : (ev.status === 'SANCTIONS' ? 'var(--accent-red)' : '#777');
-            logNews(ev.text, col);
+            currentPrice += change;
+            if (currentPrice < 10) currentPrice = 10; // Чтобы цена в ноль не ушла
+
+            // Обновляем данные графика
+            const now = new Date();
+            const timeStr = now.getHours() + ':' + (now.getMinutes()<10?'0':'') + now.getMinutes() + ':' + (now.getSeconds()<10?'0':'') + now.getSeconds();
+            
+            oilChart.data.labels.push(timeStr);
+            oilChart.data.datasets[0].data.push(currentPrice);
+
+            // Ограничиваем график 15-ю точками, чтобы он не сжимался бесконечно
+            if (oilChart.data.labels.length > 15) {
+                oilChart.data.labels.shift();
+                oilChart.data.datasets[0].data.shift();
+            }
+
+            oilChart.update();
             updateUI();
-        }, 16000);
+        }, 3000);
 
-        // Пассивный доход бочек от построенных заводов (каждую секунду)
-        setInterval(() => {
-            let passive = 0;
-            for (let id in game.countries) {
-                let c = game.countries[id];
-                if (c.built) passive += (c.autoBps * c.upLvl);
-            }
-            if (passive > 0) {
-                game.barrels += passive;
-                ui.barrels.innerText = `${Math.floor(game.barrels)} шт`;
-                syncBarrels();
-            }
-        }, 1000);
-
+        // Первый запуск UI
         updateUI();
     </script>
 </body>
