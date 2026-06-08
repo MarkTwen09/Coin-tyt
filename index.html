@@ -3,373 +3,571 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crematory Tycoon | Пепельный Бизнес</title>
+    <title>Ashen Empire | Мрачный Бизнес-Симулятор</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        /* Общие стили и мрачная атмосфера */
+        :root {
+            --bg-main: #0a0a0c;
+            --bg-panel: #121216;
+            --bg-card: #1a1a22;
+            --accent-fire: #ff3e00;
+            --accent-fire-glow: rgba(255, 62, 0, 0.3);
+            --accent-money: #00ff66;
+            --accent-alert: #ff0055;
+            --text-main: #e2e2e9;
+            --text-muted: #6c6c7d;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Roboto Mono', monospace;
             user-select: none;
         }
 
         body {
-            background-color: #121212;
-            color: #e0e0e0;
+            background-color: var(--bg-main);
+            color: var(--text-main);
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
         }
 
+        /* Шапка с неоновым лого */
         header {
-            background-color: #1a1a1a;
-            padding: 15px;
-            text-align: center;
-            border-bottom: 2px solid #ff5722;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+            background-color: var(--bg-panel);
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #22222a;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
         }
 
         header h1 {
-            color: #ff5722;
-            font-size: 24px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-fire);
+            font-size: 20px;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px var(--accent-fire-glow);
         }
 
-        /* Главный контейнер */
-        .main-container {
+        .top-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .top-stat-item {
+            font-size: 16px;
+        }
+
+        .top-stat-item span {
+            font-weight: bold;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        #money-display { color: var(--accent-money); text-shadow: 0 0 8px rgba(0,255,102,0.2); }
+        #alert-display { color: var(--accent-alert); }
+
+        /* Игровой интерфейс */
+        .game-layout {
             display: flex;
             flex: 1;
             overflow: hidden;
         }
 
-        /* Панели */
-        .panel {
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        /* Левая панель: Статистика и Склад */
-        #stats-panel {
-            flex: 1;
-            background-color: #161616;
-            border-right: 1px solid #2d2d2d;
-        }
-
-        .stat-box {
-            background: #222;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            border-left: 4px solid #4caf50;
-        }
-
-        .stat-box.storage {
-            border-left-color: #2196f3;
-        }
-
-        .stat-value {
-            font-size: 22px;
-            font-weight: bold;
-            color: #fff;
-            margin-top: 5px;
-        }
-
-        /* Центральная панель: Печи */
-        #action-panel {
-            flex: 2;
-            background-color: #1f1f1f;
+        /* Навигация (Вкладки) */
+        .sidebar-tabs {
+            width: 220px;
+            background-color: var(--bg-panel);
+            border-right: 1px solid #22222a;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            padding: 20px 10px;
+            gap: 10px;
         }
 
-        .btn-main {
-            background: linear-gradient(135deg, #ff5722, #bf360c);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 8px;
+        .tab-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid transparent;
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255,87,34,0.4);
-            transition: transform 0.1s, background 0.2s;
-            margin-bottom: 30px;
-            width: 80%;
-            max-width: 300px;
+            border-radius: 6px;
+            transition: all 0.2s;
         }
 
-        .btn-main:active {
-            transform: scale(0.97);
+        .tab-btn:hover {
+            color: var(--text-main);
+            background-color: rgba(255,255,255,0.02);
+        }
+
+        .tab-btn.active {
+            color: #fff;
+            background-color: var(--bg-card);
+            border-color: #333344;
+            box-shadow: inset 3px 0 0 var(--accent-fire);
+        }
+
+        /* Основной контент */
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: linear-gradient(180deg, #0d0d11 0%, #0a0a0c 100%);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Сетка печей (Главная) */
+        .furnace-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
         }
 
         .furnace-card {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 8px;
+            background-color: var(--bg-card);
+            border: 1px solid #252530;
+            border-radius: 12px;
             padding: 20px;
-            width: 80%;
-            max-width: 400px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            position: relative;
+            transition: all 0.3s;
         }
 
-        .furnace-header {
+        .furnace-card.burning {
+            border-color: var(--accent-fire);
+            box-shadow: 0 0 20px var(--accent-fire-glow);
+        }
+
+        .furnace-info {
             display: flex;
             justify-content: space-between;
             margin-bottom: 15px;
-            font-weight: bold;
         }
 
-        .progress-bar-container {
-            background-color: #333;
-            border-radius: 4px;
-            height: 20px;
-            width: 100%;
+        .furnace-name { font-weight: bold; font-size: 15px; }
+        .furnace-timer { font-family: 'Orbitron', sans-serif; color: var(--text-muted); }
+
+        .progress-bg {
+            background-color: #101014;
+            height: 12px;
+            border-radius: 6px;
             overflow: hidden;
-            position: relative;
+            margin-bottom: 15px;
+            border: 1px solid #222;
         }
 
-        .progress-bar {
-            background: linear-gradient(90deg, #ff9800, #ff5722);
+        .progress-fill {
             height: 100%;
             width: 0%;
+            background: linear-gradient(90deg, #ff7700, var(--accent-fire));
+            box-shadow: 0 0 10px var(--accent-fire);
             transition: width 0.1s linear;
         }
 
-        .furnace-status {
-            text-align: center;
-            margin-top: 10px;
+        /* Кнопки действий */
+        .action-zone {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            background: var(--bg-panel);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #22222a;
+        }
+
+        .btn-action {
+            background: #1a1a24;
+            color: #fff;
+            border: 1px solid #333344;
+            padding: 15px 25px;
             font-size: 14px;
-            color: #aaa;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
 
-        /* Правая панель: Апгрейды */
-        #shop-panel {
-            flex: 1;
-            background-color: #161616;
-            border-left: 1px solid #2d2d2d;
+        .btn-action:hover:not(:disabled) {
+            background: #222232;
+            border-color: var(--accent-fire);
         }
 
-        .shop-title {
-            font-size: 18px;
-            margin-bottom: 15px;
-            color: #ff9800;
-            text-transform: uppercase;
-            border-bottom: 1px solid #333;
-            padding-bottom: 5px;
+        .btn-action:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
         }
 
-        .upgrade-item {
-            background: #222;
-            border: 1px solid #333;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 10px;
+        .btn-action .sub {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Сетка апгрейдов */
+        .upgrade-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 600px;
+        }
+
+        .upgrade-card {
+            background: var(--bg-card);
+            border: 1px solid #252530;
+            padding: 15px 20px;
+            border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background 0.2s;
         }
 
-        .upgrade-item.disabled {
-            opacity: 0.5;
-            pointer-events: none;
-        }
+        .upg-details h3 { font-size: 15px; margin-bottom: 4px; }
+        .upg-details p { font-size: 12px; color: var(--text-muted); }
 
         .btn-buy {
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
+            background: #222230;
+            color: var(--accent-money);
+            border: 1px solid #333348;
+            padding: 10px 15px;
+            border-radius: 6px;
             font-weight: bold;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.2s;
         }
 
         .btn-buy:hover {
-            background-color: #45a049;
+            background: var(--accent-money);
+            color: #000;
         }
 
-        /* Адаптивность для мобилок */
-        @media (max-width: 768px) {
-            .main-container {
-                flex-direction: column;
-                overflow-y: auto;
-            }
-            body { overflow-y: auto; height: auto; }
-            .panel { overflow-y: visible; flex: none !important; }
+        /* Экран Game Over */
+        #game-over-screen {
+            display: none;
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(10,10,12,0.95);
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        #game-over-screen h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-alert);
+            font-size: 40px;
+            letter-spacing: 4px;
         }
     </style>
 </head>
 <body>
 
+    <div id="game-over-screen">
+        <h2>БИЗНЕС ЗАКРЫТ</h2>
+        <p>Полиция устроила облаву на ваше заведение из-за высокого уровня подозрений.</p>
+        <button class="btn-action" onclick="restartGame()">Начать сначала</button>
+    </div>
+
     <header>
-        <h1>Пепельный Бизнес Tycoon</h1>
+        <h1>ASHEN EMPIRE</h1>
+        <div class="top-stats">
+            <div class="top-stat-item">Баланс: <span id="money-display">$0</span></div>
+            <div class="top-stat-item">Подозрение: <span id="alert-display">0%</span></div>
+            <div class="top-stat-item">Очередь: <span id="orders-display" style="color: #2196f3;">0</span></div>
+        </div>
     </header>
 
-    <div class="main-container">
-        <div class="panel" id="stats-panel">
-            <div class="stat-box">
-                <div>Баланс:</div>
-                <div class="stat-value" id="money-display">$0</div>
-            </div>
-            <div class="stat-box storage">
-                <div>Очередь заказов:</div>
-                <div class="stat-value" id="orders-display">0</div>
-            </div>
+    <div class="game-layout">
+        <div class="sidebar-tabs">
+            <button class="tab-btn active" onclick="switchTab('tab-main')">🔥 Печи</button>
+            <button class="tab-btn" onclick="switchTab('tab-logistics')">📦 Поставки</button>
+            <button class="tab-btn" onclick="switchTab('tab-black')">💀 Чёрный Рынок</button>
         </div>
 
-        <div class="panel" id="action-panel">
-            <button class="btn-main" id="btn-order">Принять заказ (+1)</button>
-
-            <div class="furnace-card">
-                <div class="furnace-header">
-                    <span>Печь №1 (Базовая)</span>
-                    <span id="furnace-timer">Готова</span>
-                </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="furnace-progress"></div>
-                </div>
-                <div class="furnace-status" id="furnace-status-text">Ожидание сырья...</div>
-            </div>
-        </div>
-
-        <div class="panel" id="shop-panel">
-            <div class="shop-title">Модернизация</div>
+        <div class="content-area">
             
-            <div class="upgrade-item" id="upg-speed">
-                <div>
-                    <strong>Быстрый нагрев</strong><br>
-                    <small>Ускоряет работу на 20%</small><br>
-                    <span style="color:#4caf50;" id="upg-speed-cost">Цена: $100</span>
+            <div id="tab-main" class="tab-content active">
+                <div class="action-zone">
+                    <button class="btn-action" id="btn-get-order" onclick="addOrder('regular')">
+                        Принять обычный заказ
+                        <span class="sub">+1 в очередь (Легально)</span>
+                    </button>
+                    <button class="btn-action" id="btn-mafia-order" onclick="addOrder('mafia')" style="border-color: #551a1a;">
+                        Взять контракт мафии
+                        <span class="sub">+$200 | +15% Подозрения</span>
+                    </button>
                 </div>
-                <button class="btn-buy" onclick="buySpeed()">Купить</button>
+
+                <h2>Кремационные отсеки</h2>
+                <div class="furnace-grid" id="furnaces-container">
+                    </div>
             </div>
 
-            <div class="upgrade-item" id="upg-price">
-                <div>
-                    <strong>Элитные урны</strong><br>
-                    <small>+25% к доходу с заказа</small><br>
-                    <span style="color:#4caf50;" id="upg-price-cost">Цена: $150</span>
+            <div id="tab-logistics" class="tab-content">
+                <h2>Контракты и Автоматизация</h2>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Нанимайте водителей для автоматического притока клиентов.</p>
+                <div class="upgrade-list">
+                    <div class="upgrade-card">
+                        <div class="upg-details">
+                            <h3>Договор с водителем катафалка</h3>
+                            <p>Привозит +0.2 заказа в секунду пассивно</p>
+                        </div>
+                        <button class="btn-buy" id="buy-auto-1" onclick="buyAutoOrder()">Купить за $200</button>
+                    </div>
                 </div>
-                <button class="btn-buy" onclick="buyPrice()">Купить</button>
             </div>
+
+            <div id="tab-black" class="tab-content">
+                <h2>Теневые улучшения</h2>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Повышают доход, но увеличивают риск привлечь внимание властей.</p>
+                <div class="upgrade-list">
+                    <div class="upgrade-card">
+                        <div class="upg-details">
+                            <h3>Извлечение золотых коронок</h3>
+                            <p>+15$ чистого золота с каждого заказа</p>
+                        </div>
+                        <button class="btn-buy" id="buy-teeth" onclick="buyBlackUpgrade('teeth', 300)">Активировать: $300</button>
+                    </div>
+                    <div class="upgrade-card">
+                        <div class="upg-details">
+                            <h3>Взятка шерифу</h3>
+                            <p>Снижает уровень подозрения на 30%</p>
+                        </div>
+                        <button class="btn-buy" onclick="bribeSheriff()">Заплатить $150</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
-        // ИГРОВЫЕ ПЕРЕМЕННЫЕ
-        let state = {
-            money: 0,
+        // Состояние игры
+        let game = {
+            money: 50,
             orders: 0,
-            burnTime: 5000, // Время сжигания в мс (5 секунд)
-            income: 50,     // Базовый доход за 1 заказ
-            isBurning: false,
-            upgrades: {
-                speedLevel: 0,
-                priceLevel: 0
-            }
+            suspicion: 0,
+            autoDrivers: 0,
+            blackTeeth: false,
+            furnaces: [
+                { id: 1, name: "Печь Альфа-1", speed: 1, isBurning: false, progress: 0, currentType: 'regular' }
+            ],
+            furnacePrice: 500
         };
 
-        // Загрузка сохранения
-        if(localStorage.getItem('crematory_save')) {
-            state = JSON.parse(localStorage.getItem('crematory_save'));
+        // Загрузка
+        if(localStorage.getItem('ashen_empire_save')) {
+            game = JSON.parse(localStorage.getItem('ashen_empire_save'));
+            // Сброс флагов анимации при загрузке
+            game.furnaces.forEach(f => { f.isBurning = false; f.progress = 0; });
         }
 
-        // ЭЛЕМЕНТЫ DOM
-        const moneyDisplay = document.getElementById('money-display');
-        const ordersDisplay = document.getElementById('orders-display');
-        const btnOrder = document.getElementById('btn-order');
-        const fProgress = document.getElementById('furnace-progress');
-        const fTimer = document.getElementById('furnace-timer');
-        const fStatus = document.getElementById('furnace-status-text');
+        // Переключение вкладок
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
 
-        // ОБНОВЛЕНИЕ ИНТЕРФЕЙСА
-        function updateUI() {
-            moneyDisplay.innerText = `$${state.money}`;
-            ordersDisplay.innerText = state.orders;
+        // Рендер печей
+        function renderFurnaces() {
+            const container = document.getElementById('furnaces-container');
+            container.innerHTML = '';
             
-            // Обновление цен в магазине
-            document.getElementById('upg-speed-cost').innerText = `Цена: $${Math.floor(100 * Math.pow(1.5, state.upgrades.speedLevel))}`;
-            document.getElementById('upg-price-cost').innerText = `Цена: $${Math.floor(150 * Math.pow(1.6, state.upgrades.priceLevel))}`;
-            
-            saveGame();
+            game.furnaces.forEach(f => {
+                const card = document.createElement('div');
+                card.className = `furnace-card ${f.isBurning ? 'burning' : ''}`;
+                card.innerHTML = `
+                    <div class="furnace-info">
+                        <span class="furnace-name">${f.name}</span>
+                        <span class="furnace-timer" id="timer-${f.id}">${f.isBurning ? 'В процессе' : 'Готова'}</span>
+                    </div>
+                    <div class="progress-bg">
+                        <div class="progress-fill" id="progress-${f.id}" style="width: ${f.progress}%"></div>
+                    </div>
+                    <div style="font-size:12px; color: var(--text-muted); text-align:center;">
+                        ${f.isBurning ? 'Сжигание сырья...' : 'Ожидание...'}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Добавим кнопку покупки новой печи, если их меньше 4
+            if(game.furnaces.length < 4) {
+                const buyCard = document.createElement('div');
+                buyCard.className = 'furnace-card';
+                buyCard.style.display = 'flex';
+                buyCard.style.alignItems = 'center';
+                buyCard.style.justifyContent = 'center';
+                buyCard.innerHTML = `<button class="btn-buy" onclick="buyFurnace()">Докупить отсек: $${game.furnacePrice}</button>`;
+                container.appendChild(buyCard);
+            }
         }
 
-        // СОХРАНЕНИЕ В LOCALSTORAGE
-        function saveGame() {
-            localStorage.setItem('crematory_save', JSON.stringify(state));
-        }
-
-        // КЛИК: ПРИНЯТЬ ЗАКАЗ
-        btnOrder.addEventListener('click', () => {
-            state.orders++;
+        // Логика заказов
+        function addOrder(type) {
+            if (type === 'regular') {
+                game.orders++;
+            } else if (type === 'mafia') {
+                game.orders++;
+                game.suspicion += 15;
+                game.money += 150; // Аванс от мафии
+            }
             updateUI();
-            checkFurnace();
-        });
+            processFurnaces();
+        }
 
-        // ЛОГИКА РАБОТЫ ПЕЧИ
-        function checkFurnace() {
-            if (state.orders > 0 && !state.isBurning) {
-                state.isBurning = true;
-                state.orders--;
+        // Работа печей
+        function processFurnaces() {
+            game.furnaces.forEach(f => {
+                if (!f.isBurning && game.orders > 0) {
+                    f.isBurning = true;
+                    game.orders--;
+                    updateUI();
+                    renderFurnaces();
+
+                    let duration = 4000; // 4 секунды базовое время
+                    let start = Date.now();
+
+                    let interval = setInterval(() => {
+                        let elapsed = Date.now() - start;
+                        f.progress = (elapsed / duration) * 100;
+
+                        // Обновляем прогресс-бар напрямую в DOM для плавности
+                        let bar = document.getElementById(`progress-${f.id}`);
+                        let timerEl = document.getElementById(`timer-${f.id}`);
+                        if(bar) bar.style.width = f.progress + '%';
+                        if(timerEl) timerEl.innerText = ((duration - elapsed)/1000).toFixed(1) + 'с';
+
+                        if (f.progress >= 100) {
+                            clearInterval(interval);
+                            f.isBurning = false;
+                            f.progress = 0;
+                            
+                            // Расчет прибыли
+                            let reward = 60;
+                            if(game.blackTeeth) reward += 15; // Бонус от золотых коронок
+                            
+                            game.money += reward;
+                            
+                            // Нелегальный доход генерирует немного подозрения
+                            if(game.blackTeeth) game.suspicion += 1.5;
+
+                            updateUI();
+                            renderFurnaces();
+                            processFurnaces(); // Запуск следующего заказа, если есть
+                        }
+                    }, 50);
+                }
+            });
+        }
+
+        // Покупка печи
+        function buyFurnace() {
+            if(game.money >= game.furnacePrice && game.furnaces.length < 4) {
+                game.money -= game.furnacePrice;
+                let newId = game.furnaces.length + 1;
+                game.furnaces.push({ id: newId, name: `Печь Омега-${newId}`, speed: 1, isBurning: false, progress: 0 });
+                game.furnacePrice *= 2;
                 updateUI();
-                
-                fStatus.innerText = "Процесс кремации...";
-                let start = Date.now();
-                let duration = state.burnTime / (1 + state.upgrades.speedLevel * 0.2); // Ускорение от апгрейдов
-
-                let interval = setInterval(() => {
-                    let elapsed = Date.now() - start;
-                    let progress = (elapsed / duration) * 100;
-                    
-                    if (progress >= 100) {
-                        clearInterval(interval);
-                        fProgress.style.width = '0%';
-                        fTimer.innerText = 'Готова';
-                        fStatus.innerText = 'Ожидание сырья...';
-                        
-                        // Завершение процесса
-                        let currentIncome = Math.floor(state.income * (1 + state.upgrades.priceLevel * 0.25));
-                        state.money += currentIncome;
-                        state.isBurning = false;
-                        
-                        updateUI();
-                        checkFurnace(); // Проверяем, есть ли еще заказы в очереди
-                    } else {
-                        fProgress.style.width = progress + '%';
-                        fTimer.innerText = ((duration - elapsed) / 1000).toFixed(1) + 'с';
-                    }
-                }, 50);
+                renderFurnaces();
             }
         }
 
-        // ПОКУПКА АПГРЕЙДОВ
-        function buySpeed() {
-            let cost = Math.floor(100 * Math.pow(1.5, state.upgrades.speedLevel));
-            if (state.money >= cost) {
-                state.money -= cost;
-                state.upgrades.speedLevel++;
+        // Покупка автоматизации
+        function buyAutoOrder() {
+            let cost = 200 + (game.autoDrivers * 150);
+            if(game.money >= cost) {
+                game.money -= cost;
+                game.autoDrivers++;
+                updateUI();
+                document.getElementById('buy-auto-1').innerText = `Купить за $${200 + (game.autoDrivers * 150)}`;
+            }
+        }
+
+        // Чёрный рынок
+        function buyBlackUpgrade(type, cost) {
+            if(game.money >= cost && !game.blackTeeth) {
+                game.money -= cost;
+                game.blackTeeth = true;
+                document.getElementById('buy-teeth').innerText = "АКТИВИРОВАНО";
+                document.getElementById('buy-teeth').disabled = true;
                 updateUI();
             }
         }
 
-        function buyPrice() {
-            let cost = Math.floor(150 * Math.pow(1.6, state.upgrades.priceLevel));
-            if (state.money >= cost) {
-                state.money -= cost;
-                state.upgrades.priceLevel++;
+        function bribeSheriff() {
+            if(game.money >= 150) {
+                game.money -= 150;
+                game.suspicion = Math.max(0, game.suspicion - 30);
                 updateUI();
             }
         }
 
-        // Инициализация при старте
+        // Главный цикл (1 раз в секунду) для автоматизации и проверок
+        setInterval(() => {
+            // Пассивный приток заказов
+            if(game.autoDrivers > 0) {
+                game.orders += (game.autoDrivers * 0.2);
+                // Округляем отображение для красоты, но храним дробь
+                document.getElementById('orders-display').innerText = Math.floor(game.orders);
+                processFurnaces();
+            }
+
+            // Подозрение потихоньку падает само, если нет чёрных дел
+            if(game.suspicion > 0) {
+                game.suspicion -= 0.2;
+                if(game.suspicion < 0) game.suspicion = 0;
+                updateUI();
+            }
+
+            // Проверка на Game Over
+            if(game.suspicion >= 100) {
+                document.getElementById('game-over-screen').style.display = 'flex';
+            }
+
+            localStorage.setItem('ashen_empire_save', JSON.stringify(game));
+        }, 1000);
+
+        // Обновление статбаров
+        function updateUI() {
+            document.getElementById('money-display').innerText = `$${Math.floor(game.money)}`;
+            document.getElementById('alert-display').innerText = `${Math.min(100, Math.floor(game.suspicion))}%`;
+            document.getElementById('orders-display').innerText = Math.floor(game.orders);
+        }
+
+        function restartGame() {
+            localStorage.removeItem('ashen_empire_save');
+            location.reload();
+        }
+
+        // Старт
+        renderFurnaces();
         updateUI();
-        checkFurnace();
     </script>
 </body>
 </html>
