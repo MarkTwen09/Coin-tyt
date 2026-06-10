@@ -2,609 +2,448 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Ashen Empire: Mob Tycoon</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dota 2 HTML Lite</title>
     <style>
-        :root {
-            /* Базовая палитра: глубокий нуар и неон */
-            --bg-app: #08080a;
-            --bg-panel: #111114;
-            --bg-card: #16161b;
-            --accent-fire: #ff4500; /* Ярко-оранжевый */
-            --accent-money: #32cd32; /* Лаймовый */
-            --accent-risk: #ff1493;  /* Глубокий розовый (для криминала) */
-            --text-main: #f0f0f5;
-            --text-muted: #808090;
-            --safe-area-inset-bottom: env(safe-area-inset-bottom);
-        }
-
         * {
             box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
             margin: 0;
             padding: 0;
-            -webkit-touch-callout: none; /* Отключаем контекстное меню */
-            -webkit-user-select: none;   /* Отключаем выделение текста */
-            user-select: none;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent; /* Убираем синий блик при клике */
         }
-
         body {
-            background-color: var(--bg-app);
-            color: var(--text-main);
+            background: #0c0f12;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+        #game-container {
+            width: 100vw;
             height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Запрещаем скролл всего тела */
-        }
-
-        /* Анимированный фон с пеплом */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                radial-gradient(circle at 50% 10%, #1a1a25 0%, #08080a 70%),
-                url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHZpZXdCb3g9IjAgMCA0IDQiPjxnIGZpbGwtb2BhY2l0eT0iMC4wNSIgZmlsbD0iI2ZmZiI+PHBhdGggZD0iTTEgMWgxSDF6TTAgMGgxSDB6TTIgMmgxSDJ6TTEgM2gxSDF6TTMgM2gxSDN6TTIgMGgxSDJ6TTAgMmgxSDB6TTMgMWgxSDN6Ii8+PC9nPjwvc3ZnPg==');
-            opacity: 0.8;
-            z-index: -1;
-        }
-
-        /* --- Шапка приложении --- */
-        header {
-            background-color: rgba(17, 17, 20, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 55px 20px 15px; /* Учитываем "чёлку" айфона */
-            border-bottom: 1px solid #222;
-            position: fixed;
-            top: 0; left: 0; width: 100%;
-            z-index: 100;
-        }
-
-        .header-top {
-            display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        header h1 {
-            font-size: 18px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: #fff;
-        }
-
-        header h1 span { color: var(--accent-fire); }
-
-        .header-stats {
-            display: flex;
-            gap: 15px;
-            background: rgba(0,0,0,0.3);
-            padding: 8px 12px;
-            border-radius: 20px;
-            border: 1px solid #2a2a2a;
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        #money-display { color: var(--accent-money); }
-        #risk-display { color: var(--accent-risk); }
-
-        /* --- Основной контент --- */
-        main {
-            flex: 1;
-            margin-top: 110px; /* Отступ под шапку */
-            margin-bottom: calc(85px + var(--safe-area-inset-bottom)); /* Отступ под таббар */
-            overflow-y: auto; /* Скролл только здесь */
-            padding: 20px;
-            -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
-        }
-
-        .page {
-            display: none;
-            animation: pageIn 0.3s ease-out;
-        }
-
-        .page.active { display: block; }
-
-        @keyframes pageIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h2 {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: #fff;
-            letter-spacing: -0.5px;
-        }
-
-        /* --- Стили карточек --- */
-        .card {
-            background-color: var(--bg-card);
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 15px;
-            border: 1px solid #22222a;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: transform 0.1s;
-        }
-
-        .card:active:not(.no-press) { transform: scale(0.98); }
-
-        /* Печи */
-        .furnace-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-
-        .furnace-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            align-items: center;
-        }
-
-        .f-name { font-weight: 700; font-size: 16px; }
-        .f-status {
-            font-size: 12px;
-            padding: 4px 8px;
-            border-radius: 10px;
-            background: #2a2a35;
-            color: var(--text-muted);
-        }
-
-        .burning .f-status {
-            background: rgba(255, 69, 0, 0.15);
-            color: var(--accent-fire);
-            font-weight: bold;
-        }
-
-        .progress-wraper {
-            height: 10px;
-            background-color: #101013;
-            border-radius: 5px;
-            overflow: hidden;
+            background: radial-gradient(circle, #1a2229 0%, #0b0e11 100%);
             position: relative;
-            border: 1px solid #222;
         }
-
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #ff8c00, var(--accent-fire));
-            box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
-            transition: width 0.1s linear;
-        }
-
-        /* --- Нижнее меню (Tab Bar) --- */
-        .tab-bar {
-            position: fixed;
-            bottom: 0; left: 0; width: 100%;
-            background-color: rgba(17, 17, 20, 0.95);
-            backdrop-filter: blur(15px);
-            border-top: 1px solid #222;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 10px calc(10px + var(--safe-area-inset-bottom));
-            z-index: 100;
-        }
-
-        .tab-item {
+        /* Экран выбора героя */
+        #hero-selection {
+            position: absolute;
+            inset: 0;
+            background: rgba(12, 15, 18, 0.95);
+            z-index: 10;
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: var(--text-muted);
-            background: none;
-            border: none;
-            width: 20%;
-            gap: 4px;
-            font-size: 10px;
-            font-weight: 600;
-            transition: color 0.2s;
+            justify-content: center;
         }
-
-        .tab-item i { font-size: 20px; margin-bottom: 2px; }
-
-        .tab-item.active {
-            color: var(--accent-fire);
+        .hero-title {
+            font-size: 24px;
+            color: #e54e4e;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(229, 78, 78, 0.5);
         }
-
-        /* --- Кнопки и Улучшения --- */
-        .btn-order {
-            background: linear-gradient(135deg, #222, #16161b);
-            color: #fff;
-            border: 1px solid #333;
-            width: 100%;
-            padding: 16px;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 700;
+        .hero-list {
+            display: flex;
+            gap: 20px;
+        }
+        .hero-card {
+            width: 140px;
+            height: 200px;
+            background: #1c242d;
+            border: 2px solid #3c4856;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .hero-card:active {
+            transform: scale(0.95);
+            border-color: #e54e4e;
+        }
+        .hero-avatar {
+            font-size: 50px;
             margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
-
-        .btn-order:active { transform: scale(0.97); background: #1a1a20; }
-        .btn-order i { color: var(--accent-fire); }
-
-        .upgrade-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .upg-info h3 { font-size: 16px; margin-bottom: 2px; }
-        .upg-info p { font-size: 12px; color: var(--text-muted); }
-
-        .btn-buy {
-            background-color: var(--accent-money);
-            color: #000;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 13px;
-            white-space: nowrap;
-        }
-
-        .btn-buy:disabled { opacity: 0.3; }
-
-        /* --- Окно Game Over --- */
-        #game-over {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 200;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 30px;
+        .hero-name {
+            font-weight: bold;
+            font-size: 14px;
             text-align: center;
         }
 
-        #game-over i { font-size: 80px; color: var(--accent-risk); margin-bottom: 20px; }
-        #game-over h2 { font-size: 32px; color: #fff; margin-bottom: 10px; }
-        #game-over p { color: var(--text-muted); margin-bottom: 30px; line-height: 1.5; }
+        /* Верхний бар (Счёт, Золото) */
+        .top-bar {
+            height: 60px;
+            background: linear-gradient(to bottom, #1c242d, #12171d);
+            border-bottom: 2px solid #2e3743;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .score-board {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            background: #000;
+            padding: 5px 15px;
+            border-radius: 4px;
+            border: 1px solid #e54e4e;
+        }
+        .gold-display {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-        /* Скрываем скроллбар */
-        main::-webkit-scrollbar { display: none; }
+        /* Игровое поле (Псевдо-3D Мид) */
+        .battlefield {
+            flex-grow: 1;
+            position: relative;
+            background: linear-gradient(135deg, #1b2819 0%, #111a10 100%);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Сетка для эффекта глубины */
+        .battlefield::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            transform: perspective(500px) rotateX(60deg);
+        }
 
+        /* Персонажи */
+        .entity {
+            position: absolute;
+            bottom: 30%;
+            transition: all 0.1s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #player-hero {
+            left: 20%;
+        }
+        #enemy-creep {
+            right: 20%;
+        }
+        .model-3d {
+            font-size: 60px;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
+            animation: idle 1.5s infinite ease-in-out;
+        }
+        #enemy-creep .model-3d {
+            transform: scaleX(-1);
+        }
+        @keyframes idle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* ХП Бары */
+        .hp-bar-container {
+            width: 80px;
+            height: 8px;
+            background: #333;
+            border: 1px solid #000;
+            border-radius: 2px;
+            margin-bottom: 5px;
+            overflow: hidden;
+        }
+        .hp-bar {
+            height: 100%;
+            width: 100%;
+            transition: width 0.1s;
+        }
+        .player-hp { background: #2ecc71; }
+        .enemy-hp { background: #e74c3c; }
+
+        /* Нижняя панель (Скиллы и Закуп) */
+        .hud-panel {
+            background: #0e1217;
+            border-top: 3px solid #232d38;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .skills-row, .shop-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .btn-action {
+            width: 65px;
+            height: 65px;
+            background: #1c242d;
+            border: 2px solid #3c4856;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            position: relative;
+            cursor: pointer;
+        }
+        .btn-action:active {
+            transform: scale(0.95);
+            background: #25313d;
+        }
+        .btn-action .icon {
+            font-size: 24px;
+            margin-bottom: 2px;
+        }
+        .btn-action .cost {
+            position: absolute;
+            bottom: 2px;
+            font-size: 10px;
+            color: #ffd700;
+        }
+
+        /* Эффекты урона */
+        .damage-popup {
+            position: absolute;
+            color: #ff4d4d;
+            font-weight: bold;
+            font-size: 24px;
+            animation: floatUp 0.6s ease-out forwards;
+            text-shadow: 2px 2px 0 #000;
+            pointer-events: none;
+            z-index: 5;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-60px) scale(0.8); opacity: 0; }
+        }
+
+        /* Всплывающее золото */
+        .gold-popup {
+            position: absolute;
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 20px;
+            animation: floatUp 0.6s ease-out forwards;
+            text-shadow: 2px 2px 0 #000;
+            pointer-events: none;
+            z-index: 5;
+        }
     </style>
 </head>
 <body>
 
-    <div id="game-over">
-        <i class="fas fa-handcuffs"></i>
-        <h2>ОБЛАВА!</h2>
-        <p>Вы привлекли слишком много внимания. Полиция опечатала крематорий, бизнес конфискован.</p>
-        <button class="btn-order" onclick="restartGame()">Начать с чистого листа</button>
+<div id="game-container">
+    <div id="hero-selection">
+        <div class="hero-title">Выберите Героя</div>
+        <div class="hero-list">
+            <div class="hero-card" onclick="selectHero('Shadow Fiend', '😈', 15)">
+                <div class="hero-avatar">😈</div>
+                <div class="hero-name">Shadow Fiend</div>
+            </div>
+            <div class="hero-card" onclick="selectHero('Juggernaut', '🥷', 12)">
+                <div class="hero-avatar">🥷</div>
+                <div class="hero-name">Juggernaut</div>
+            </div>
+        </div>
     </div>
 
-    <header>
-        <div class="header-top">
-            <h1>ASHEN <span>EMPIRE</span></h1>
-            <div class="header-stats">
-                <div class="stat-item"><i class="fas fa-sack-dollar"></i> <span id="money-display">50</span></div>
-                <div class="stat-item"><i class="fas fa-eye"></i> <span id="risk-display">0%</span></div>
+    <div class="top-bar">
+        <div class="gold-display">🪙 <span id="gold-count">0</span></div>
+        <div class="score-board">KILLS: <span id="kill-count">0</span></div>
+    </div>
+
+    <div class="battlefield" id="battlefield" onclick="dealDamage(false)">
+        <div class="entity" id="player-hero">
+            <div class="hp-bar-container"><div class="hp-bar player-hp" id="player-hp-bar"></div></div>
+            <div class="model-3d" id="player-model">😈</div>
+        </div>
+
+        <div class="entity" id="enemy-creep">
+            <div class="hp-bar-container"><div class="hp-bar enemy-hp" id="enemy-hp-bar"></div></div>
+            <div class="model-3d">👹</div>
+        </div>
+    </div>
+
+    <div class="hud-panel">
+        <div class="skills-row">
+            <div class="btn-action" onclick="useSkill('cooldown1', 2, 50)" id="skill1">
+                <span class="icon">💥</span>
+                <span>Скилл 1</span>
+            </div>
+            <div class="btn-action" onclick="useSkill('cooldown2', 4, 120)" id="skill2">
+                <span class="icon">🔥</span>
+                <span>Ульта</span>
             </div>
         </div>
-    </header>
 
-    <main>
+        <div class="shop-row">
+            <div class="btn-action" onclick="buyItem('Daedalus', 150, 10, this)">
+                <span class="icon">⚔️</span>
+                <span>Daedalus</span>
+                <span class="cost">150</span>
+            </div>
+            <div class="btn-action" onclick="buyItem('Rapier', 400, 35, this)">
+                <span class="icon">🔱</span>
+                <span>Rapier</span>
+                <span class="cost">400</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Игровое состояние
+    let gameState = {
+        gold: 0,
+        kills: 0,
+        heroName: '',
+        playerDmg: 10,
+        enemyMaxHp: 50,
+        enemyHp: 50,
+        cooldown1: false,
+        cooldown2: false
+    };
+
+    // Выбор героя
+    function selectHero(name, avatar, baseDmg) {
+        gameState.heroName = name;
+        gameState.playerDmg = baseDmg;
+        document.getElementById('player-model').innerText = avatar;
+        document.getElementById('hero-selection').style.display = 'none';
+        spawnCreep();
+    }
+
+    // Респавн крипа
+    function spawnCreep() {
+        gameState.enemyMaxHp = 50 + (gameState.kills * 15); // Сложность растет
+        gameState.enemyHp = gameState.enemyMaxHp;
+        updateHpBars();
+    }
+
+    // Обновление интерфейса ХП
+    function updateHpBars() {
+        const enemyPct = (gameState.enemyHp / gameState.enemyMaxHp) * 100;
+        document.getElementById('enemy-hp-bar').style.width = Math.max(0, enemyPct) + '%';
+    }
+
+    // Клик по экрану — атака
+    function dealDamage(isSkill, skillDmg = 0) {
+        let damage = isSkill ? skillDmg : gameState.playerDmg;
         
-        <div id="page-factory" class="page active">
-            <button class="btn-order" onclick="takeManualOrder()">
-                <i class="fas fa-hand-holding-heart"></i> Принять клиента вручную
-            </button>
+        // Рандомный крит (20% шанс)
+        let isCrit = !isSkill && Math.random() < 0.2;
+        if (isCrit) {
+            damage *= 2;
+        }
+
+        gameState.enemyHp -= damage;
+        
+        // Анимация атаки героя
+        const pModel = document.getElementById('player-model');
+        pModel.style.transform = 'translateX(30px) scale(1.1)';
+        setTimeout(() => pModel.style.transform = 'none', 50);
+
+        // Появление цифр урона
+        createPopup(damage, isCrit ? 'orange' : '#ff4d4d', 'damage-popup');
+
+        if (gameState.enemyHp <= 0) {
+            handleKill();
+        } else {
+            updateHpBars();
+        }
+    }
+
+    // Обработка убийства крипа
+    function handleKill() {
+        gameState.kills++;
+        let goldEarned = 30 + Math.floor(Math.random() * 20);
+        gameState.gold += goldEarned;
+
+        document.getElementById('kill-count').innerText = gameState.kills;
+        document.getElementById('gold-count').innerText = gameState.gold;
+
+        createPopup(`+${goldEarned} 🪙`, '#ffd700', 'gold-popup');
+        
+        // Смерть врага и спавн нового
+        const eModel = document.getElementById('enemy-creep');
+        eModel.style.opacity = '0';
+        setTimeout(() => {
+            eModel.style.opacity = '1';
+            spawnCreep();
+        }, 300);
+    }
+
+    // Юз скиллов
+    function useSkill(cooldownProp, multiplier, cdTime) {
+        if (gameState[cooldownProp]) return;
+
+        gameState[cooldownProp] = true;
+        let sDmg = gameState.playerDmg * multiplier;
+        dealDamage(true, sDmg);
+
+        // Визуальное КД на кнопке
+        const btn = cooldownProp === 'cooldown1' ? document.getElementById('skill1') : document.getElementById('skill2');
+        btn.style.opacity = '0.4';
+
+        setTimeout(() => {
+            gameState[cooldownProp] = false;
+            btn.style.opacity = '1';
+        }, cdTime * 10); // Внутреннее КД
+    }
+
+    // Покупка шмоток
+    function buyItem(itemName, cost, extraDmg, buttonElement) {
+        if (gameState.gold >= cost) {
+            gameState.gold -= cost;
+            gameState.playerDmg += extraDmg;
+            document.getElementById('gold-count').innerText = gameState.gold;
             
-            <div class="card no-press" style="padding: 12px 18px; background: rgba(33, 150, 243, 0.1); border-color: #1e88e5;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="color: #90caf9; font-weight:600; font-size:14px;">Очередь в морг:</span>
-                    <span id="orders-display" style="font-size:20px; font-weight:800; color:#fff;">0</span>
-                </div>
-            </div>
-
-            <h2>Кремационные отсеки</h2>
-            <div class="furnace-grid" id="furnaces-container">
-                </div>
-        </div>
-
-        <div id="page-logistics" class="page">
-            <h2>Автопарк</h2>
-            <div class="card no-press">
-                <div class="upgrade-row">
-                    <div class="upg-info">
-                        <h3><i class="fas fa-shuttle-van" style="color: #aaa;"></i> Подержанный ПАЗ</h3>
-                        <p>Генерирует заказы пассивно</p>
-                    </div>
-                    <button class="btn-buy" id="buy-auto-1" onclick="buyAuto('van')">Купить: $200</button>
-                </div>
-            </div>
-             <div class="card no-press">
-                <div class="upgrade-row">
-                    <div class="upg-info">
-                        <h3><i class="fas fa-ambulance" style="color: #ff4444;"></i> Договор со Скорой</h3>
-                        <p>Больше клиентов пассивно</p>
-                    </div>
-                    <button class="btn-buy" id="buy-auto-2" onclick="buyAuto('amb')">Купить: $1000</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="page-shadow" class="page">
-            <h2>Теневой Бизнес</h2>
-            <div class="card no-press" style="border-color: var(--accent-risk);">
-                <div class="upgrade-row">
-                    <div class="upg-info">
-                        <h3><i class="fas fa-tooth" style="color: #ffd700;"></i> Золотые коронки</h3>
-                        <p>+$20 к доходу с каждого сжигания.<br>РИСК: +1% подозрения за заказ.</p>
-                    </div>
-                    <button class="btn-buy" id="buy-teeth" onclick="buyShadow('teeth')" style="background: var(--accent-risk); color:#fff;">Внедрить: $500</button>
-                </div>
-            </div>
+            // Стилизация купленного предмета
+            buttonElement.style.borderColor = '#2ecc71';
+            buttonElement.style.boxShadow = '0 0 10px rgba(46, 204, 113, 0.5)';
+            buttonElement.onclick = null; // Покупка в один раз для простоты
             
-            <div class="card no-press">
-                <div class="upgrade-row">
-                    <div class="upg-info">
-                        <h3><i class="fas fa-user-secret"></i> Связи в органах</h3>
-                        <p>Мгновенно сбросить 25% подозрения.</p>
-                    </div>
-                    <button class="btn-buy" onclick="reduceRisk()" style="background:#555; color:#fff;">Понюхать: $300</button>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <nav class="tab-bar">
-        <button class="tab-item active" onclick="switchTab(this, 'page-factory')">
-            <i class="fas fa-fire"></i>
-            ЦЕХ
-        </button>
-        <button class="tab-item" onclick="switchTab(this, 'page-logistics')">
-            <i class="fas fa-truck-loading"></i>
-            ЛОГИСТИКА
-        </button>
-        <button class="tab-item" onclick="switchTab(this, 'page-shadow')">
-            <i class="fas fa-user-ninja"></i>
-            ТЕНЬ
-        </button>
-    </nav>
-
-    <script>
-        // --- Глобальное состояние игры ---
-        let game = {
-            money: 50,
-            orders: 0,
-            risk: 0,
-            autoLevelVan: 0,
-            autoLevelAmb: 0,
-            hasTeethUpgrade: false,
-            furnaces: [
-                { id: 1, type: 'Базовая Печь', isBurning: false, progress: 0, time: 5000, income: 70 }
-            ],
-            prices: { newFurnace: 400, van: 200, amb: 1000 }
-        };
-
-        // Загрузка сохранения
-        const savedData = localStorage.getItem('ashen_mob_tycoon_v1');
-        if (savedData) {
-            game = JSON.parse(savedData);
-            // Флаги анимации сбрасываем
-            game.furnaces.forEach(f => { f.isBurning = false; f.progress = 0; });
+            createPopup('Куплено!', '#2ecc71', 'gold-popup');
+        } else {
+            createPopup('Не хватает золота!', '#e74c3c', 'gold-popup');
         }
+    }
 
-        // --- Навигация ---
-        function switchTab(buttonEl, pageId) {
-            // Сброс классов кнопок
-            document.querySelectorAll('.tab-item').forEach(btn => btn.classList.remove('active'));
-            buttonEl.classList.add('active');
-            // Переключение страниц
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-        }
+    // Создание всплывающего текста
+    function createPopup(text, color, className) {
+        const bf = document.getElementById('battlefield');
+        const popup = document.createElement('div');
+        popup.className = className;
+        popup.innerText = text;
+        popup.style.color = color;
+        
+        // Позиция у крипа
+        popup.style.left = '65%';
+        popup.style.top = '40%';
 
-        // --- Рендеринг печей ---
-        function renderFurnaces() {
-            const container = document.getElementById('furnaces-container');
-            container.innerHTML = '';
-
-            game.furnaces.forEach(f => {
-                const card = document.createElement('div');
-                card.className = `card no-press ${f.isBurning ? 'burning' : ''}`;
-                card.innerHTML = `
-                    <div class="furnace-header">
-                        <span class="f-name"><i class="fas fa-door-open"></i> ${f.type}</span>
-                        <span class="f-status" id="timer-${f.id}">${f.isBurning ? 'В процессе...' : 'Готова'}</span>
-                    </div>
-                    <div class="progress-wraper">
-                        <div class="progress-bar" id="bar-${f.id}" style="width: ${f.progress}%"></div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-
-            // Добавить кнопку покупки, если мест мало
-            if (game.furnaces.length < 3) {
-                const addCard = document.createElement('div');
-                addCard.className = 'card';
-                addCard.style.cssText = 'border-style: dashed; border-color: #444; background: transparent; text-align:center; padding: 25px; cursor: pointer;';
-                addCard.innerHTML = `<i class="fas fa-plus" style="font-size:24px; color:#555;"></i><br><span style="color:#aaa; font-size:14px; font-weight:600;">Купить отсек ($${game.prices.newFurnace})</span>`;
-                addCard.onclick = buyFurnace;
-                container.appendChild(addCard);
-            }
-        }
-
-        // --- Игровая Логика ---
-
-        function updateUI() {
-            document.getElementById('money-display').innerText = Math.floor(game.money);
-            document.getElementById('risk-display').innerText = Math.floor(game.risk) + '%';
-            document.getElementById('orders-display').innerText = Math.floor(game.orders);
-            
-            // Обновление кнопок покупки (доступность)
-            updateBuyButtons();
-            saveGame();
-        }
-
-        function updateBuyButtons() {
-            // Автопарк
-            document.getElementById('buy-auto-1').innerText = `Купить: $${game.prices.van}`;
-            document.getElementById('buy-auto-1').disabled = (game.money < game.prices.van || game.autoLevelVan >= 5);
-            if(game.autoLevelVan >=5) document.getElementById('buy-auto-1').innerText = "MAX";
-
-            document.getElementById('buy-auto-2').disabled = (game.money < game.prices.amb || game.autoLevelAmb >= 3);
-            if(game.autoLevelAmb >=3) document.getElementById('buy-auto-2').innerText = "MAX";
-
-            // Тень
-            if(game.hasTeethUpgrade) {
-                document.getElementById('buy-teeth').innerText = "Внедрено";
-                document.getElementById('buy-teeth').disabled = true;
-            } else {
-                document.getElementById('buy-teeth').disabled = (game.money < 500);
-            }
-        }
-
-        // Клик: Заказ вручную
-        function takeManualOrder() {
-            game.orders++;
-            updateUI();
-            checkFurnaces();
-        }
-
-        // Проверка и запуск печей
-        function checkFurnaces() {
-            game.furnaces.forEach(f => {
-                if (!f.isBurning && game.orders >= 1) {
-                    game.orders--;
-                    f.isBurning = true;
-                    renderFurnaces();
-                    updateUI();
-
-                    const start = Date.now();
-                    const duration = f.time;
-
-                    const interval = setInterval(() => {
-                        const elapsed = Date.now() - start;
-                        f.progress = (elapsed / duration) * 100;
-
-                        // UI обновляем напрямую для скорости
-                        const barEl = document.getElementById(`bar-${f.id}`);
-                        const timerEl = document.getElementById(`timer-${f.id}`);
-                        if(barEl) barEl.style.width = f.progress + '%';
-                        if(timerEl) timerEl.innerText = ((duration - elapsed)/1000).toFixed(1) + 'с';
-
-                        if (f.progress >= 100) {
-                            clearInterval(interval);
-                            f.isBurning = false;
-                            f.progress = 0;
-
-                            // Начисление денег
-                            let finalIncome = f.income;
-                            if(game.hasTeethUpgrade) {
-                                finalIncome += 20;
-                                game.risk += 1; // Риск за коронки
-                            }
-                            game.money += finalIncome;
-
-                            renderFurnaces();
-                            updateUI();
-                            checkFurnaces(); // Проверка на след заказ
-                        }
-                    }, 50); // Частота обновления анимации
-                }
-            });
-        }
-
-        // Покупки
-        function buyFurnace() {
-            if(game.money >= game.prices.newFurnace && game.furnaces.length < 3) {
-                game.money -= game.prices.newFurnace;
-                game.furnaces.push({ id: Date.now(), type: 'Расширение Е-1', isBurning: false, progress: 0, time: 4500, income: 75 });
-                game.prices.newFurnace *= 2;
-                renderFurnaces();
-                updateUI();
-            }
-        }
-
-        function buyAuto(type) {
-            if(type === 'van' && game.money >= game.prices.van && game.autoLevelVan < 5) {
-                game.money -= game.prices.van;
-                game.autoLevelVan++;
-                game.prices.van = Math.floor(game.prices.van * 1.6);
-            } else if (type === 'amb' && game.money >= game.prices.amb && game.autoLevelAmb < 3) {
-                game.money -= game.prices.amb;
-                game.autoLevelAmb++;
-                game.prices.amb = Math.floor(game.prices.amb * 2);
-            }
-            updateUI();
-        }
-
-        function buyShadow(type) {
-            if(type === 'teeth' && game.money >= 500 && !game.hasTeethUpgrade) {
-                game.money -= 500;
-                game.hasTeethUpgrade = true;
-                updateUI();
-            }
-        }
-
-        function reduceRisk() {
-            if(game.money >= 300 && game.risk > 0) {
-                game.money -= 300;
-                game.risk = Math.max(0, game.risk - 25);
-                updateUI();
-            }
-        }
-
-        // --- Главный игровой цикл (раз в секунду) ---
-        setInterval(() => {
-            // Пассивные заказы от автопарка
-            if(game.autoLevelVan > 0) game.orders += (game.autoLevelVan * 0.05); // 1 ур = 1 заказ в 20 сек
-            if(game.autoLevelAmb > 0) game.orders += (game.autoLevelAmb * 0.15); // 1 ур = 1 заказ в 6.6 сек
-            
-            // Естественное снижение риска (медленно)
-            if(game.risk > 0) game.risk -= 0.05;
-
-            // Проверка проигрыша
-            if(game.risk >= 100) {
-                document.getElementById('game-over').style.display = 'flex';
-            }
-
-            checkFurnaces(); // На всякий случай запускаем печи
-            updateUI();
-        }, 1000);
-
-        function saveGame() {
-            localStorage.setItem('ashen_mob_tycoon_v1', JSON.stringify(game));
-        }
-
-        function restartGame() {
-            localStorage.removeItem('ashen_mob_tycoon_v1');
-            location.reload();
-        }
-
-        // --- Инициализация ---
-        window.onload = () => {
-            renderFurnaces();
-            updateUI();
-        }
-
-    </script>
+        bf.appendChild(popup);
+        setTimeout(() => popup.remove(), 600);
+    }
+</script>
 </body>
 </html>
