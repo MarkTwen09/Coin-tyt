@@ -3,447 +3,392 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dota 2 HTML Lite</title>
+    <title>Dota 2 HTML Mobile</title>
     <style>
-        * {
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-user-select: none;
-            margin: 0;
-            padding: 0;
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+        body { background: #000; overflow: hidden; width: 100vw; height: 100vh; font-family: sans-serif; }
+        
+        /* Игровой экран */
+        #gameCanvas { display: block; background: #111; }
+
+        /* Интерфейс мобильного управления */
+        #ui-layer {
+            position: absolute; inset: 0; pointer-events: none;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            padding: 20px;
         }
-        body {
-            background: #0c0f12;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            color: #fff;
-            overflow: hidden;
-            height: 100vh;
+        .touch-zone { pointer-events: auto; }
+        
+        /* Виртуальный джойстик (левая рука) */
+        #joystick-container {
+            width: 120px; height: 120px; background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
         }
-        #game-container {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            background: radial-gradient(circle, #1a2229 0%, #0b0e11 100%);
-            position: relative;
-        }
-        /* Экран выбора героя */
-        #hero-selection {
-            position: absolute;
-            inset: 0;
-            background: rgba(12, 15, 18, 0.95);
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .hero-title {
-            font-size: 24px;
-            color: #e54e4e;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-            text-shadow: 0 0 10px rgba(229, 78, 78, 0.5);
-        }
-        .hero-list {
-            display: flex;
-            gap: 20px;
-        }
-        .hero-card {
-            width: 140px;
-            height: 200px;
-            background: #1c242d;
-            border: 2px solid #3c4856;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
-            padding: 15px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .hero-card:active {
-            transform: scale(0.95);
-            border-color: #e54e4e;
-        }
-        .hero-avatar {
-            font-size: 50px;
-            margin-bottom: 20px;
-        }
-        .hero-name {
-            font-weight: bold;
-            font-size: 14px;
-            text-align: center;
+        #joystick-stick {
+            width: 50px; height: 50px; background: #e54e4e;
+            border-radius: 50%; box-shadow: 0 0 10px #e54e4e;
+            transform: translate(0px, 0px);
         }
 
-        /* Верхний бар (Счёт, Золото) */
-        .top-bar {
-            height: 60px;
-            background: linear-gradient(to bottom, #1c242d, #12171d);
-            border-bottom: 2px solid #2e3743;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
+        /* Кнопки способностей (правая рука) */
+        #actions-container { display: flex; gap: 15px; }
+        .action-btn {
+            width: 65px; height: 65px; background: rgba(20, 25, 30, 0.8);
+            border: 2px solid #3c4856; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-        .score-board {
-            font-size: 18px;
-            font-weight: bold;
-            color: #fff;
-            background: #000;
-            padding: 5px 15px;
-            border-radius: 4px;
-            border: 1px solid #e54e4e;
-        }
-        .gold-display {
-            color: #ffd700;
-            font-weight: bold;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+        .action-btn:active { transform: scale(0.9); border-color: #e54e4e; }
+        #btn-ult { border-color: #ffd700; }
 
-        /* Игровое поле (Псевдо-3D Мид) */
-        .battlefield {
-            flex-grow: 1;
-            position: relative;
-            background: linear-gradient(135deg, #1b2819 0%, #111a10 100%);
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Верхняя панель состояния */
+        #top-hud {
+            position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+            background: rgba(10, 15, 20, 0.85); border: 1px solid #333;
+            padding: 5px 20px; border-radius: 20px; display: flex; gap: 20px;
+            font-weight: bold; font-size: 14px; color: #fff; pointer-events: none;
         }
-        /* Сетка для эффекта глубины */
-        .battlefield::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            top: -50%;
-            left: -50%;
-            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-            background-size: 40px 40px;
-            transform: perspective(500px) rotateX(60deg);
-        }
-
-        /* Персонажи */
-        .entity {
-            position: absolute;
-            bottom: 30%;
-            transition: all 0.1s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        #player-hero {
-            left: 20%;
-        }
-        #enemy-creep {
-            right: 20%;
-        }
-        .model-3d {
-            font-size: 60px;
-            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
-            animation: idle 1.5s infinite ease-in-out;
-        }
-        #enemy-creep .model-3d {
-            transform: scaleX(-1);
-        }
-        @keyframes idle {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        /* ХП Бары */
-        .hp-bar-container {
-            width: 80px;
-            height: 8px;
-            background: #333;
-            border: 1px solid #000;
-            border-radius: 2px;
-            margin-bottom: 5px;
-            overflow: hidden;
-        }
-        .hp-bar {
-            height: 100%;
-            width: 100%;
-            transition: width 0.1s;
-        }
-        .player-hp { background: #2ecc71; }
-        .enemy-hp { background: #e74c3c; }
-
-        /* Нижняя панель (Скиллы и Закуп) */
-        .hud-panel {
-            background: #0e1217;
-            border-top: 3px solid #232d38;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .skills-row, .shop-row {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-        .btn-action {
-            width: 65px;
-            height: 65px;
-            background: #1c242d;
-            border: 2px solid #3c4856;
-            border-radius: 6px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            position: relative;
-            cursor: pointer;
-        }
-        .btn-action:active {
-            transform: scale(0.95);
-            background: #25313d;
-        }
-        .btn-action .icon {
-            font-size: 24px;
-            margin-bottom: 2px;
-        }
-        .btn-action .cost {
-            position: absolute;
-            bottom: 2px;
-            font-size: 10px;
-            color: #ffd700;
-        }
-
-        /* Эффекты урона */
-        .damage-popup {
-            position: absolute;
-            color: #ff4d4d;
-            font-weight: bold;
-            font-size: 24px;
-            animation: floatUp 0.6s ease-out forwards;
-            text-shadow: 2px 2px 0 #000;
-            pointer-events: none;
-            z-index: 5;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-60px) scale(0.8); opacity: 0; }
-        }
-
-        /* Всплывающее золото */
-        .gold-popup {
-            position: absolute;
-            color: #ffd700;
-            font-weight: bold;
-            font-size: 20px;
-            animation: floatUp 0.6s ease-out forwards;
-            text-shadow: 2px 2px 0 #000;
-            pointer-events: none;
-            z-index: 5;
-        }
+        .gold { color: #ffd700; } .kills { color: #ff4d4d; }
     </style>
 </head>
 <body>
 
-<div id="game-container">
-    <div id="hero-selection">
-        <div class="hero-title">Выберите Героя</div>
-        <div class="hero-list">
-            <div class="hero-card" onclick="selectHero('Shadow Fiend', '😈', 15)">
-                <div class="hero-avatar">😈</div>
-                <div class="hero-name">Shadow Fiend</div>
-            </div>
-            <div class="hero-card" onclick="selectHero('Juggernaut', '🥷', 12)">
-                <div class="hero-avatar">🥷</div>
-                <div class="hero-name">Juggernaut</div>
-            </div>
-        </div>
+    <div id="top-hud">
+        <span class="kills">Kills: <span id="k-count">0</span></span>
+        <span class="gold">Gold: <span id="g-count">0</span></span>
     </div>
 
-    <div class="top-bar">
-        <div class="gold-display">🪙 <span id="gold-count">0</span></div>
-        <div class="score-board">KILLS: <span id="kill-count">0</span></div>
-    </div>
+    <canvas id="gameCanvas"></canvas>
 
-    <div class="battlefield" id="battlefield" onclick="dealDamage(false)">
-        <div class="entity" id="player-hero">
-            <div class="hp-bar-container"><div class="hp-bar player-hp" id="player-hp-bar"></div></div>
-            <div class="model-3d" id="player-model">😈</div>
+    <div id="ui-layer">
+        <!-- Джойстик передвижения -->
+        <div id="joystick-container" class="touch-zone">
+            <div id="joystick-stick"></div>
         </div>
 
-        <div class="entity" id="enemy-creep">
-            <div class="hp-bar-container"><div class="hp-bar enemy-hp" id="enemy-hp-bar"></div></div>
-            <div class="model-3d">👹</div>
+        <!-- Кнопки атаки и ульты -->
+        <div id="actions-container" class="touch-zone">
+            <div class="action-btn" id="btn-attack">⚔️</div>
+            <div class="action-btn" id="btn-ult">🔥</div>
         </div>
     </div>
-
-    <div class="hud-panel">
-        <div class="skills-row">
-            <div class="btn-action" onclick="useSkill('cooldown1', 2, 50)" id="skill1">
-                <span class="icon">💥</span>
-                <span>Скилл 1</span>
-            </div>
-            <div class="btn-action" onclick="useSkill('cooldown2', 4, 120)" id="skill2">
-                <span class="icon">🔥</span>
-                <span>Ульта</span>
-            </div>
-        </div>
-
-        <div class="shop-row">
-            <div class="btn-action" onclick="buyItem('Daedalus', 150, 10, this)">
-                <span class="icon">⚔️</span>
-                <span>Daedalus</span>
-                <span class="cost">150</span>
-            </div>
-            <div class="btn-action" onclick="buyItem('Rapier', 400, 35, this)">
-                <span class="icon">🔱</span>
-                <span>Rapier</span>
-                <span class="cost">400</span>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
-    // Игровое состояние
-    let gameState = {
-        gold: 0,
-        kills: 0,
-        heroName: '',
-        playerDmg: 10,
-        enemyMaxHp: 50,
-        enemyHp: 50,
-        cooldown1: false,
-        cooldown2: false
-    };
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
 
-    // Выбор героя
-    function selectHero(name, avatar, baseDmg) {
-        gameState.heroName = name;
-        gameState.playerDmg = baseDmg;
-        document.getElementById('player-model').innerText = avatar;
-        document.getElementById('hero-selection').style.display = 'none';
-        spawnCreep();
+// Адаптация размеров под экран телефона
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// --- ПАРАМЕТРЫ КАРТЫ (Мир игры намного больше экрана) ---
+const MapWidth = 2000;
+const MapHeight = 2000;
+
+// Камера (следует за игроком)
+const camera = { x: 0, y: 0 };
+
+// --- ИГРОК (Shadow Fiend) ---
+const player = {
+    x: 200, y: 1800, // Спавн в левом нижнем углу (База Сил Света)
+    radius: 25, speed: 4,
+    hp: 550, maxHp: 550,
+    gold: 0, kills: 0,
+    color: '#7f1d1d', text: '😈'
+};
+
+// --- ИГРОВЫЕ ОБЪЕКТЫ ---
+const towers = [
+    // Вражеские башни на миду (Т1, Т2) и Трон в верхнем правом углу
+    { x: 900, y: 1100, radius: 40, hp: 1000, maxHp: 1000, team: 'dire', type: 'tower', range: 250 },
+    { x: 1400, y: 600, radius: 40, hp: 1200, maxHp: 1200, team: 'dire', type: 'tower', range: 250 },
+    { x: 1800, y: 200, radius: 60, hp: 2500, maxHp: 2500, team: 'dire', type: 'throne', range: 300 }
+];
+
+const creeps = [];
+const projectiles = [];
+
+// Спавн вражеских крипов из Трона
+function spawnCreepWave() {
+    if (creeps.filter(c => c.team === 'dire').length < 4) {
+        creeps.push({
+            x: 1700, y: 300, radius: 18, speed: 1.5,
+            hp: 200, maxHp: 200, team: 'dire', text: '👹',
+            targetX: 200, targetY: 1800
+        });
+    }
+}
+setInterval(spawnCreepWave, 8000);
+spawnCreepWave(); // Первый спавн сразу
+
+// --- СИСТЕМА УПРАВЛЕНИЯ (МОБИЛЬНЫЙ ДЖОЙСТИК) ---
+const joystick = { active: false, startX: 0, startY: 0, moveX: 0, moveY: 0, vx: 0, vy: 0 };
+const joyContainer = document.getElementById('joystick-container');
+const joyStick = document.getElementById('joystick-stick');
+
+joyContainer.addEventListener('touchstart', (e) => {
+    joystick.active = true;
+    const t = e.touches[0];
+    const rect = joyContainer.getBoundingClientRect();
+    joystick.startX = rect.left + rect.width / 2;
+    joystick.startY = rect.top + rect.height / 2;
+});
+
+window.addEventListener('touchmove', (e) => {
+    if (!joystick.active) return;
+    const t = e.touches[0];
+    let dx = t.clientX - joystick.startX;
+    let dy = t.clientY - joystick.startY;
+    const dist = Math.hypot(dx, dy);
+    const maxDist = 40;
+
+    if (dist > maxDist) {
+        dx = (dx / dist) * maxDist;
+        dy = (dy / dist) * maxDist;
     }
 
-    // Респавн крипа
-    function spawnCreep() {
-        gameState.enemyMaxHp = 50 + (gameState.kills * 15); // Сложность растет
-        gameState.enemyHp = gameState.enemyMaxHp;
-        updateHpBars();
-    }
+    joyStick.style.transform = `translate(${dx}px, ${dy}px)`;
+    joystick.vx = dx / maxDist;
+    joystick.vy = dy / maxDist;
+});
 
-    // Обновление интерфейса ХП
-    function updateHpBars() {
-        const enemyPct = (gameState.enemyHp / gameState.enemyMaxHp) * 100;
-        document.getElementById('enemy-hp-bar').style.width = Math.max(0, enemyPct) + '%';
-    }
+window.addEventListener('touchend', () => {
+    joystick.active = false;
+    joyStick.style.transform = 'translate(0px, 0px)';
+    joystick.vx = 0;
+    joystick.vy = 0;
+});
 
-    // Клик по экрану — атака
-    function dealDamage(isSkill, skillDmg = 0) {
-        let damage = isSkill ? skillDmg : gameState.playerDmg;
-        
-        // Рандомный крит (20% шанс)
-        let isCrit = !isSkill && Math.random() < 0.2;
-        if (isCrit) {
-            damage *= 2;
+// Кнопки атаки
+document.getElementById('btn-attack').addEventListener('touchstart', () => playerAttack(false));
+document.getElementById('btn-ult').addEventListener('touchstart', () => playerAttack(true));
+
+function playerAttack(isUlt) {
+    // Ищем ближайшего врага (крипа или башню)
+    let targets = [...creeps, ...towers].filter(e => e.hp > 0);
+    let closest = null;
+    let minDist = isUlt ? 400 : 200;
+
+    targets.forEach(t => {
+        let d = Math.hypot(t.x - player.x, t.y - player.y);
+        if (d < minDist) { minDist = d; closest = t; }
+    });
+
+    if (closest) {
+        projectiles.push({
+            x: player.x, y: player.y,
+            target: closest, speed: 8,
+            damage: isUlt ? 150 : 45, color: isUlt ? '#ff5500' : '#da2222',
+            radius: isUlt ? 12 : 6
+        });
+    }
+}
+
+// --- ИГРОВОЙ ЦИКЛ И ЛОГИКА ---
+function update() {
+    // Движение игрока
+    player.x += joystick.vx * player.speed;
+    player.y += joystick.vy * player.speed;
+
+    // Ограничение границами карты
+    player.x = Math.max(player.radius, Math.min(MapWidth - player.radius, player.x));
+    player.y = Math.max(player.radius, Math.min(MapHeight - player.radius, player.y));
+
+    // Центрирование камеры на игроке
+    camera.x = player.x - canvas.width / 2;
+    camera.y = player.y - canvas.height / 2;
+    camera.x = Math.max(0, Math.min(MapWidth - canvas.width, camera.x));
+    camera.y = Math.max(0, Math.min(MapHeight - canvas.height, camera.y));
+
+    // Логика крипов
+    creeps.forEach((creep, index) => {
+        if (creep.hp <= 0) {
+            creeps.splice(index, 1);
+            player.gold += 40;
+            player.kills++;
+            document.getElementById('g-count').innerText = player.gold;
+            document.getElementById('k-count').innerText = player.kills;
+            return;
         }
+        // Идут в сторону базы игрока
+        let dx = player.x - creep.x;
+        let dy = player.y - creep.y;
+        let dist = Math.hypot(dx, dy);
 
-        gameState.enemyHp -= damage;
-        
-        // Анимация атаки героя
-        const pModel = document.getElementById('player-model');
-        pModel.style.transform = 'translateX(30px) scale(1.1)';
-        setTimeout(() => pModel.style.transform = 'none', 50);
-
-        // Появление цифр урона
-        createPopup(damage, isCrit ? 'orange' : '#ff4d4d', 'damage-popup');
-
-        if (gameState.enemyHp <= 0) {
-            handleKill();
-        } else {
-            updateHpBars();
-        }
-    }
-
-    // Обработка убийства крипа
-    function handleKill() {
-        gameState.kills++;
-        let goldEarned = 30 + Math.floor(Math.random() * 20);
-        gameState.gold += goldEarned;
-
-        document.getElementById('kill-count').innerText = gameState.kills;
-        document.getElementById('gold-count').innerText = gameState.gold;
-
-        createPopup(`+${goldEarned} 🪙`, '#ffd700', 'gold-popup');
-        
-        // Смерть врага и спавн нового
-        const eModel = document.getElementById('enemy-creep');
-        eModel.style.opacity = '0';
-        setTimeout(() => {
-            eModel.style.opacity = '1';
-            spawnCreep();
-        }, 300);
-    }
-
-    // Юз скиллов
-    function useSkill(cooldownProp, multiplier, cdTime) {
-        if (gameState[cooldownProp]) return;
-
-        gameState[cooldownProp] = true;
-        let sDmg = gameState.playerDmg * multiplier;
-        dealDamage(true, sDmg);
-
-        // Визуальное КД на кнопке
-        const btn = cooldownProp === 'cooldown1' ? document.getElementById('skill1') : document.getElementById('skill2');
-        btn.style.opacity = '0.4';
-
-        setTimeout(() => {
-            gameState[cooldownProp] = false;
-            btn.style.opacity = '1';
-        }, cdTime * 10); // Внутреннее КД
-    }
-
-    // Покупка шмоток
-    function buyItem(itemName, cost, extraDmg, buttonElement) {
-        if (gameState.gold >= cost) {
-            gameState.gold -= cost;
-            gameState.playerDmg += extraDmg;
-            document.getElementById('gold-count').innerText = gameState.gold;
+        if (dist < 150) { // Если игрок близко — агрятся на него
+            creep.x += (dx / dist) * creep.speed;
+            creep.y += (dy / dist) * creep.speed;
             
-            // Стилизация купленного предмета
-            buttonElement.style.borderColor = '#2ecc71';
-            buttonElement.style.boxShadow = '0 0 10px rgba(46, 204, 113, 0.5)';
-            buttonElement.onclick = null; // Покупка в один раз для простоты
-            
-            createPopup('Куплено!', '#2ecc71', 'gold-popup');
+            if (dist < 40 && Math.random() < 0.02) {
+                player.hp -= 10; // Наносят урон в ближнем бою
+            }
         } else {
-            createPopup('Не хватает золота!', '#e74c3c', 'gold-popup');
+            // Идут по миду к цели
+            let tDx = creep.targetX - creep.x;
+            let tDy = creep.targetY - creep.y;
+            let tDist = Math.hypot(tDx, tDy);
+            creep.x += (tDx / tDist) * creep.speed;
+            creep.y += (tDy / tDist) * creep.speed;
         }
+    });
+
+    // Логика башен (Атакуют игрока, если он в радиусе)
+    towers.forEach(tower => {
+        if (tower.hp <= 0) return;
+        let dist = Math.hypot(player.x - tower.x, player.y - tower.y);
+        if (dist < tower.range && Math.random() < 0.015) {
+            projectiles.push({
+                x: tower.x, y: tower.y,
+                target: player, speed: 5,
+                damage: 35, color: '#ff3333', radius: 8
+            });
+        }
+    });
+
+    // Полет снарядов
+    projectiles.forEach((p, index) => {
+        let dx = p.target.x - p.x;
+        let dy = p.target.y - p.y;
+        let dist = Math.hypot(dx, dy);
+
+        if (dist < 10) {
+            p.target.hp -= p.damage;
+            projectiles.splice(index, 1);
+        } else {
+            p.x += (dx / dist) * p.speed;
+            p.y += (dy / dist) * p.speed;
+        }
+    });
+
+    if (player.hp <= 0) {
+        alert("Вы погибли! Респавн на фонтане.");
+        player.hp = player.maxHp;
+        player.x = 200; player.y = 1800;
+    }
+}
+
+// --- ОТРИСОВКА ГРАФИКИ (Изометрия/Псевдо-3D) ---
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.save();
+    // Сдвиг сцены под камеру
+    ctx.translate(-camera.x, -camera.y);
+
+    // Рисуем карту (Трава/Текстура земли)
+    ctx.fillStyle = '#1b2616';
+    ctx.fillRect(0, 0, MapWidth, MapHeight);
+    
+    // Линия реки (Мидлейн диагональ)
+    ctx.strokeStyle = '#1d3557';
+    ctx.lineWidth = 120;
+    ctx.beginPath();
+    ctx.moveTo(0, MapHeight);
+    ctx.lineTo(MapWidth, 0);
+    ctx.stroke();
+
+    // Сетка для создания 3D перспективы земли
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < MapWidth; i += 100) {
+        ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, MapHeight); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(MapWidth, i); ctx.stroke();
     }
 
-    // Создание всплывающего текста
-    function createPopup(text, color, className) {
-        const bf = document.getElementById('battlefield');
-        const popup = document.createElement('div');
-        popup.className = className;
-        popup.innerText = text;
-        popup.style.color = color;
+    // Отрисовка Башен / Трона
+    towers.forEach(t => {
+        if (t.hp <= 0) {
+            ctx.fillStyle = '#333';
+            ctx.beginPath(); ctx.arc(t.x, t.y, t.radius, 0, Math.PI*2); ctx.fill();
+            return;
+        }
+        // Тень здания
+        ctx.fillStyle = 'rgba(0,0,0,0.4)';
+        ctx.fillRect(t.x - t.radius, t.y, t.radius * 2, t.radius * 1.5);
+
+        // Само здание (с градиентом под 3D колонну)
+        let grad = ctx.createLinearGradient(t.x - t.radius, t.y, t.x + t.radius, t.y);
+        grad.addColorStop(0, '#451a03'); grad.addColorStop(1, '#9a3412');
+        ctx.fillStyle = t.type === 'throne' ? '#701a75' : grad;
         
-        // Позиция у крипа
-        popup.style.left = '65%';
-        popup.style.top = '40%';
+        ctx.fillRect(t.x - t.radius, t.y - t.radius * 2, t.radius * 2, t.radius * 2);
 
-        bf.appendChild(popup);
-        setTimeout(() => popup.remove(), 600);
-    }
+        // ХП Бар над башней
+        drawHpBar(t.x - t.radius, t.y - t.radius * 2.5, t.radius * 2, t.hp, t.maxHp);
+    });
+
+    // Отрисовка крипов
+    creeps.forEach(c => {
+        ctx.font = '30px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(c.text, c.x, c.y + 10);
+        drawHpBar(c.x - 20, c.y - 30, 40, c.hp, c.maxHp);
+    });
+
+    // Отрисовка снарядов (Атак)
+    projectiles.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2); ctx.fill();
+    });
+
+    // Отрисовка Игрока (Shadow Fiend)
+    ctx.font = '45px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(player.text, player.x, player.y + 15);
+    drawHpBar(player.x - 30, player.y - 45, 60, player.hp, player.maxHp, '#2ecc71');
+
+    ctx.restore();
+
+    // ОТИСОВКА МИНИ-КАРТЫ (В левом верхнем углу экрана)
+    drawMinimap();
+}
+
+// Вспомогательная функция хп-баров
+function drawHpBar(x, y, w, hp, maxHp, color = '#e74c3c') {
+    ctx.fillStyle = '#222';
+    ctx.fillRect(x, y, w, 6);
+    let pct = (hp / maxHp) * w;
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, Math.max(0, pct), 6);
+}
+
+// Отрисовка мини-карты
+function drawMinimap() {
+    const size = 100;
+    const mx = 15; const my = 50;
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillRect(mx, my, size, size);
+    ctx.strokeStyle = '#444';
+    ctx.strokeRect(mx, my, size, size);
+
+    // Точка игрока на мини-карте
+    let px = mx + (player.x / MapWidth) * size;
+    let py = my + (player.y / MapHeight) * size;
+    ctx.fillStyle = '#00ff00';
+    ctx.beginPath(); ctx.arc(px, py, 3, 0, Math.PI*2); ctx.fill();
+
+    // Точки башен врага
+    towers.forEach(t => {
+        if (t.hp <= 0) return;
+        let tx = mx + (t.x / MapWidth) * size;
+        let ty = my + (t.y / MapHeight) * size;
+        ctx.fillStyle = '#ff0000';
+        ctx.fillRect(tx - 2, ty - 2, 4, 4);
+    });
+}
+
+// Главный цикл
+function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
+}
+loop();
 </script>
 </body>
 </html>
