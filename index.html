@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Global Military Theatre</title>
+    <title>Global Military Theatre v2</title>
     
-    <!-- Подключаем стили Leaflet для корректного отображения карты -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
         :root {
-            --panel-bg: rgba(20, 25, 31, 0.95);
+            --panel-bg: rgba(20, 25, 31, 0.96);
             --border-color: #2f363d;
             --gold: #dfa837;
+            /* Цвет твоей фракции — мягкий военный зеленый */
+            --player-color: #2e7559;
+            --player-stroke: #3b9c75;
         }
 
         * {
@@ -31,28 +33,19 @@
             color: #cbd5e1;
         }
 
-        /* Контейнер для карты во весь экран */
         #map {
             width: 100%;
             height: 100%;
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             z-index: 1;
-            background-color: #1a202c; /* Цвет океана по умолчанию до загрузки тайлов */
+            background-color: #0f141c;
         }
 
-        /* Кастомный стиль для скрытия дефолтных кнопок Leaflet, чтобы не портили интерфейс игры */
-        .leaflet-control-zoom {
-            display: none !important;
-        }
-        .leaflet-control-attribution {
-            background: rgba(0,0,0,0.5) !important;
-            color: #555 !important;
-            font-size: 9px !important;
-        }
+        .leaflet-control-zoom { display: none !important; }
+        .leaflet-control-attribution { background: rgba(0,0,0,0.7) !important; color: #444 !important; }
 
-        /* Верхний HUD (Ресурсы из Iron Order) */
+        /* HUD сверху */
         .game-hud {
             position: absolute;
             top: 0; left: 0; width: 100%;
@@ -75,7 +68,7 @@
         .res-cell { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; }
         .res-cell span { color: #fff; }
 
-        /* Нижняя выдвижная панель управления регионом */
+        /* Нижний док управления */
         .action-dock {
             position: absolute;
             bottom: 0; left: 0; width: 100%;
@@ -85,10 +78,9 @@
             border-top-right-radius: 16px;
             padding: 20px 16px;
             z-index: 100;
-            display: none; /* Показывается только при клике на страну */
+            display: none;
             box-shadow: 0 -8px 32px rgba(0,0,0,0.7);
-            transform: translateY(0);
-            animation: slideUp 0.25s cubic-bezier(0, 0, 0.2, 1);
+            animation: slideUp 0.2s cubic-bezier(0, 0, 0.2, 1);
         }
 
         @keyframes slideUp {
@@ -96,7 +88,7 @@
             to { transform: translateY(0); }
         }
 
-        .dock-title { font-size: 20px; font-weight: 800; color: #ffffff; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .dock-title { font-size: 20px; font-weight: 800; color: #ffffff; margin-bottom: 4px; }
         .dock-subtitle { font-size: 12px; color: #8b949e; text-transform: uppercase; margin-bottom: 16px; }
         
         .dock-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -109,16 +101,13 @@
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
         }
-        .game-btn:active { background: #30363d; transform: scale(0.98); }
+        .game-btn:active { background: #30363d; }
         .btn-attack { background: #852222; border-color: #b53333; color: #fff; grid-column: span 2; }
-        .btn-attack:active { background: #a52a2a; }
     </style>
 </head>
 <body>
 
-    <!-- ВЕРХНИЙ ИНТЕРФЕЙС ИГРЫ -->
     <div class="game-hud">
         <div class="hud-profile">
             <div class="hud-level">78-Й</div>
@@ -132,189 +121,129 @@
         </div>
     </div>
 
-    <!-- КАРТА, КОТОРАЯ БУДЕТ ЗАГРУЖАТЬСЯ ИЗ СЕТИ -->
     <div id="map"></div>
 
-    <!-- НИЖНЯЯ ПАНЕЛЬ ДЛЯ ВЗАИМОДЕЙСТВИЯ -->
     <div class="action-dock" id="control-dock">
         <div class="dock-title" id="country-name">Название Государства</div>
         <div class="dock-subtitle" id="country-status">Статус региона</div>
-        <div class="dock-buttons" id="action-buttons-container">
-            <!-- Сюда скрипт подкинет нужные кнопки -->
-        </div>
+        <div class="dock-buttons" id="action-buttons-container"></div>
     </div>
 
-    <!-- Подключаем сам скрипт движка Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-        // 1. ИНИЦИАЛИЗАЦИЯ КАРТЫ
-        // Устанавливаем стартовый вид на Восточную Европу и задаем лимиты зума
+        // Создаем карту и фиксируем фокус на Европе
         const map = L.map('map', {
-            center: [53.9, 27.5], // Центрируем в районе Беларуси
+            center: [53.9, 27.5], 
             zoom: 5,
-            minZoom: 4,
+            minZoom: 3,
             maxZoom: 7,
-            zoomSnap: 0.5,
-            bounceAtZoomLimits: true
+            zoomSnap: 0.5
         });
 
-        // 2. ПОДКЛЮЧЕНИЕ ТЕМНЫХ СТИЛЬНЫХ ТАЙЛОВ (CartoDB Dark Matter)
-        // Они дают идеальный монохромный тёмно-серый цвет суши и глубокий цвет воды
+        // Грузим подложку темных тайлов CartoDB
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; CartoDB'
         }).addTo(map);
 
-        // 3. ДАННЫЕ ГРАНИЦ СТРАН (GeoJSON полигоны)
-        // Настоящие координаты сглаженных контуров государств
-        const worldGeometries = {
-            "type": "FeatureCollection",
-            "features": [
-                {
-                    "type": "Feature",
-                    "properties": { "name": "Белорусская ССР", "type": "player" },
-                    "geometry": {
-                        "type": "Polygon",
-                        "coordinates": [[
-                            [23.5, 52.0], [23.9, 53.9], [25.6, 54.3], [26.6, 55.7], [28.2, 55.9],
-                            [30.1, 56.1], [31.2, 55.0], [32.8, 53.5], [31.6, 52.1], [30.5, 51.3],
-                            [27.5, 52.1], [24.0, 51.5], [23.5, 52.0]
-                        ]]
-                    }
-                },
-                {
-                    "type": "Feature",
-                    "properties": { "name": "Украинская ССР", "type": "ai" },
-                    "geometry": {
-                        "type": "Polygon",
-                        "coordinates": [[
-                            [24.0, 51.5], [27.5, 52.1], [30.5, 51.3], [31.6, 52.1], [33.0, 52.4],
-                            [34.3, 50.8], [36.7, 50.2], [39.5, 49.3], [40.1, 47.8], [37.7, 47.1],
-                            [34.5, 46.1], [32.5, 46.4], [30.2, 46.3], [28.7, 45.3], [28.2, 46.3],
-                            [26.2, 48.3], [22.2, 48.2], [22.5, 49.5], [24.0, 51.5]
-                        ]]
-                    }
-                },
-                {
-                    "type": "Feature",
-                    "properties": { "name": "Российская Империя (Запад)", "type": "ai" },
-                    "geometry": {
-                        "type": "Polygon",
-                        "coordinates": [[
-                            [31.2, 55.0], [30.1, 56.1], [28.2, 55.9], [28.0, 57.5], [30.0, 60.0],
-                            [35.0, 60.0], [40.0, 55.0], [39.5, 49.3], [36.7, 50.2], [34.3, 50.8],
-                            [33.0, 52.4], [31.6, 52.1], [32.8, 53.5], [31.2, 55.0]
-                        ]]
-                    }
-                },
-                {
-                    "type": "Feature",
-                    "properties": { "name": "Польская Республика", "type": "ai" },
-                    "geometry": {
-                        "type": "Polygon",
-                        "coordinates": [[
-                            [23.5, 52.0], [24.0, 51.5], [22.5, 49.5], [19.0, 49.4], [16.2, 50.7],
-                            [15.0, 52.3], [14.2, 53.9], [17.0, 54.5], [19.5, 54.4], [22.8, 54.2],
-                            [23.5, 52.0]
-                        ]]
-                    }
-                }
-            ]
-        };
+        // Список стран, которые мы отслеживаем в нашей игре
+        const myEmpire = "Belarus";
+        const playableCountries = ["Belarus", "Ukraine", "Poland", "Lithuania", "Latvia", "Estonia", "Russia", "Germany"];
+        
+        let geojsonLayer;
 
-        // 4. НАСТРОЙКА СТИЛЕЙ (Мягкая заливка хаки как в Iron Order)
-        // Твоя страна красится в полупрозрачный зелёный с сочным контуром, чужие — в строгий стальной
-        function styleFeature(feature) {
-            if (feature.properties.type === 'player') {
+        // Задаем стили: Твоя страна — сочный хаки, остальные — нейтральный тактический серый контур
+        function getFeatureStyle(feature) {
+            const cName = feature.properties.name;
+            if (cName === myEmpire) {
                 return {
-                    fillColor: '#2e7559',      // Тот самый благородный хаки/зеленый
-                    fillOpacity: 0.45,         // Мягкая прозрачность, видно подложку
-                    color: '#3b9c75',          // Плотная линия границы страны
+                    fillColor: '#2e7559',      // Тот самый мягкий военный зеленый
+                    fillOpacity: 0.45,         // Идеальная прозрачность поверх карты
+                    color: '#3b9c75',          // Контур твоих границ
                     weight: 2.5,
                     opacity: 1
                 };
-            } else {
+            } else if (playableCountries.includes(cName)) {
                 return {
-                    fillColor: '#3d4852',      // Стальной цвет для ИИ-держав
-                    fillOpacity: 0.2,          // Почти прозрачные, чтобы не отвлекать
-                    color: '#4a5763',          // Неброская серая граница
+                    fillColor: '#2c353d',      // Нейтральные соседние страны
+                    fillOpacity: 0.15,
+                    color: '#4e5a65',          // Четкие, аккуратные границы
                     weight: 1.5,
-                    opacity: 0.7
+                    opacity: 0.6
                 };
+            } else {
+                // Все остальные страны мира, не участвующие в сессии, делаем полностью прозрачными
+                return { fillOpacity: 0, color: 'transparent', weight: 0 };
             }
         }
 
-        // Переменная для хранения текущей выбранной на карте страны
-        let geojsonLayer;
+        // Подгружаем ОФИЦИАЛЬНЫЕ и точные границы стран мира (высокое разрешение GeoJSON)
+        fetch('https://raw.githubusercontent.com/datasets/geo-boundaries-world-110m/master/countries.geojson')
+            .then(response => response.json())
+            .then(data => {
+                geojsonLayer = L.geoJSON(data, {
+                    style: getFeatureStyle,
+                    onEachFeature: (feature, layer) => {
+                        const countryName = feature.properties.name;
+                        
+                        // Игнорируем страны, которые нам не нужны в геймплее
+                        if (!playableCountries.includes(countryName)) return;
 
-        // 5. ИНТЕРАКТИВНОСТЬ И КЛИКИ
-        function onEachFeature(feature, layer) {
-            // Подсветка при наведении или таче пальцем
-            layer.on('mouseover', function () {
-                layer.setStyle({
-                    fillOpacity: feature.properties.type === 'player' ? 0.6 : 0.4
-                });
+                        // Эффект наведения
+                        layer.on('mouseover', () => {
+                            layer.setStyle({ fillOpacity: countryName === myEmpire ? 0.6 : 0.35 });
+                        });
+                        layer.on('mouseout', () => {
+                            geojsonLayer.resetStyle(layer);
+                        });
+
+                        // Клик по стране — выезжает меню
+                        layer.on('click', (e) => {
+                            document.getElementById('control-dock').style.display = 'block';
+                            
+                            // Переводим названия на русский для красоты интерфейса
+                            let displayName = countryName;
+                            if(countryName === 'Belarus') displayName = 'Белорусская ССР';
+                            if(countryName === 'Ukraine') displayName = 'Украинская ССР';
+                            if(countryName === 'Poland') displayName = 'Польская Республика';
+                            if(countryName === 'Russia') displayName = 'Российская Федерация';
+
+                            document.getElementById('country-name').innerText = displayName;
+                            const buttonsContainer = document.getElementById('action-buttons-container');
+
+                            if (countryName === myEmpire) {
+                                document.getElementById('country-status').innerText = 'Ваша суверенная территория';
+                                buttonsContainer.innerHTML = `
+                                    <button class="game-btn" onclick="alert('Строительство начато')">🔨 Построить ДОТ</button>
+                                    <button class="game-btn" onclick="alert('Завод запущен')">🏭 На завод</button>
+                                `;
+                            } else {
+                                document.getElementById('country-status').innerText = 'Вражеская фракция (ИИ)';
+                                buttonsContainer.innerHTML = `
+                                    <button class="game-btn btn-attack" onclick="annexCountry('${countryName}', layer)">⚔️ ОБЪЯВИТЬ ВОЙНУ И НАЧАТЬ ШТУРМ</button>
+                                `;
+                            }
+                            L.DomEvent.stopPropagation(e);
+                        });
+                    }
+                }).addTo(map);
             });
-            
-            layer.on('mouseout', function () {
-                geojsonLayer.resetStyle(layer); // Возвращаем исходный стиль
-            });
 
-            // Клик по стране открывает нижний док (как на видео)
-            layer.on('click', function (e) {
-                const props = feature.properties;
-                
-                document.getElementById('control-dock').style.display = 'block';
-                document.getElementById('country-name').innerText = props.name;
-                
-                const buttonsContainer = document.getElementById('action-buttons-container');
-                
-                if (props.type === 'player') {
-                    document.getElementById('country-status').innerText = 'Ваша суверенная территория';
-                    buttonsContainer.innerHTML = `
-                        <button class="game-btn" onclick="triggerAction('Построена крепость')">🔨 Построить ДОТ</button>
-                        <button class="game-btn" onclick="triggerAction('Производство запущено')">🏭 На завод</button>
-                    `;
-                } else {
-                    document.getElementById('country-status').innerText = 'Вражеская фракция (ИИ)';
-                    buttonsContainer.innerHTML = `
-                        <button class="game-btn btn-attack" onclick="startWar('${props.name}', layer)">⚔️ ОБЪЯВИТЬ ВОЙНУ И НАЧАТЬ ШТУРМ</button>
-                    `;
-                }
-                
-                // Останавливаем всплытие события, чтобы клик не засчитался по воде
-                L.DomEvent.stopPropagation(e);
-            });
-        }
-
-        // Отрисовываем полигоны на нашей Leaflet карте
-        geojsonLayer = L.geoJSON(worldGeometries, {
-            style: styleFeature,
-            onEachFeature: onEachFeature
-        }).addTo(map);
-
-        // Закрытие дока при клике на свободную область (воду)
-        map.on('click', function() {
+        // Закрытие дока при клике на воду
+        map.on('click', () => {
             document.getElementById('control-dock').style.display = 'none';
         });
 
-        // 6. ИГРОВАЯ ЛОГИКА (Перекрашивание на лету при захвате)
-        function triggerAction(text) {
-            alert(`[ШТАБ]: ${text}`);
-        }
-
-        function startWar(name, layer) {
-            alert(`[ОПЕРАЦИЯ]: Дивизии пересекли границу государства: ${name}!`);
-            
+        // Логика захвата — перекрашивает страну на лету в твой цвет
+        function annexCountry(name, layer) {
+            alert(`[ШТАБ]: Войска выдвинулись на штурм границ!`);
             setTimeout(() => {
-                // Меняем внутренние свойства захваченного объекта
-                layer.feature.properties.type = 'player';
-                // Перерисовываем страну в наш зелёный цвет хаки
-                layer.setStyle(styleFeature(layer.feature));
-                
-                alert(`[ПОБЕДА]: ${name} капитулирует! Земли присоединены, карта обновлена.`);
+                // Меняем глобального владельца на эту страну
+                layer.feature.properties.name = myEmpire; 
+                layer.setStyle(getFeatureStyle(layer.feature));
+                alert(`[ПОБЕДА]: Территория успешно аннексирована! Границы перекрашены.`);
                 document.getElementById('control-dock').style.display = 'none';
-            }, 1500);
+            }, 1200);
         }
     </script>
 </body>
