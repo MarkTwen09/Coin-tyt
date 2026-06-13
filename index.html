@@ -2,273 +2,434 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Moon Stars — Premium Digital Assets</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Order: Cyber Strategy</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        :root {
-            --bg-dark: #0a0c10;
-            --card-bg: rgba(20, 24, 33, 0.9);
-            --accent-gold: #c5a059;
-            --accent-blue: #0088cc;
-            --accent-sber: #21a038;
-            --accent-sale: #ff4757;
-            --text-main: #f1f5f9;
-            --text-dim: #64748b;
-            --border: rgba(255, 255, 255, 0.05);
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(197, 160, 89, 0.05) 0%, transparent 30%),
-                radial-gradient(circle at 100% 100%, rgba(0, 136, 204, 0.05) 0%, transparent 30%);
-            min-height: 100vh;
-            display: flex; flex-direction: column; align-items: center;
-            color: var(--text-main); padding: 20px 0; overflow-x: hidden;
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #0b0f19;
+            color: #e2e8f0;
         }
 
-        .header-logo { text-align: center; margin-bottom: 20px; }
-        .logo { font-size: 20px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; }
-        .logo span { color: var(--accent-gold); }
+        #map {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
 
-        /* СЛАЙДЕР СЕРВИСОВ */
-        .slider-wrapper { width: 100%; overflow: hidden; margin-bottom: 25px; position: relative; }
-        .services-slider { display: flex; gap: 15px; padding: 0 20px; scroll-behavior: smooth; overflow-x: auto; scrollbar-width: none; }
-        .services-slider::-webkit-scrollbar { display: none; }
-        .service-card { min-width: 85%; height: 150px; border-radius: 28px; padding: 24px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; text-decoration: none; color: white; flex-shrink: 0; }
-        .vpn-card { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-        .shop-card { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
-        .card-tag { position: absolute; top: 24px; left: 24px; font-size: 10px; font-weight: 800; text-transform: uppercase; background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 10px; }
-        .card-title { font-size: 20px; font-weight: 800; }
-        .card-desc { font-size: 12px; opacity: 0.9; margin-top: 4px; }
-        .card-arrow { position: absolute; top: 24px; right: 24px; font-size: 20px; opacity: 0.7; }
+        /* Тактический темный фильтр для придания карте "3D/Sci-Fi" вида */
+        .leaflet-layer {
+            filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+        }
 
-        /* ГЛАВНЫЙ КОНТЕЙНЕР */
-        .main-container { width: 90%; max-width: 380px; background: var(--card-bg); backdrop-filter: blur(25px); border-radius: 32px; padding: 28px; border: 1px solid var(--border); box-shadow: 0 40px 100px rgba(0,0,0,0.8); text-align: center; margin-bottom: 24px; }
-        .tabs-container { position: relative; display: flex; background: rgba(0, 0, 0, 0.4); padding: 4px; border-radius: 16px; margin-bottom: 28px; }
-        .tab-slider { position: absolute; top: 4px; left: 4px; height: calc(100% - 8px); width: calc(50% - 4px); background: rgba(255, 255, 255, 0.05); border-radius: 12px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .tab-btn { flex: 1; padding: 12px; border: none; background: none; color: var(--text-dim); font-weight: 700; font-size: 11px; text-transform: uppercase; cursor: pointer; position: relative; z-index: 2; }
-        .tab-btn.active { color: var(--text-main); }
+        /* Интерфейс управления */
+        .gui-panel {
+            position: absolute;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid #38bdf8;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
 
-        #profile-box { display: none; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); padding: 12px 16px; border-radius: 18px; margin-top: 10px; }
-        .profile-avatar { width: 36px; height: 36px; background: var(--accent-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #000; }
-        .tg-input { width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 16px; padding: 16px 16px 16px 44px; color: white; outline: none; }
-        .at-sign { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--accent-gold); }
+        #top-bar {
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
 
-        .price-display { padding: 24px; background: rgba(255,255,255,0.02); border-radius: 24px; border: 1px solid var(--border); margin: 24px 0; position: relative; overflow: hidden; }
-        .sale-badge { position: absolute; top: 10px; right: -25px; background: var(--accent-sale); color: white; font-size: 9px; font-weight: 900; padding: 4px 30px; transform: rotate(45deg); text-transform: uppercase; }
-        .val-main { font-size: 28px; font-weight: 800; }
-        .val-sub { font-size: 16px; color: var(--accent-sale); font-weight: 800; }
+        .resource {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+            color: #38bdf8;
+        }
 
-        input[type="range"] { -webkit-appearance: none; width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-bottom: 32px; outline: none; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; background: #fff; border-radius: 50%; border: 5px solid var(--bg-dark); }
+        #control-panel {
+            bottom: 20px;
+            left: 20px;
+            width: 320px;
+            display: none;
+        }
 
-        .buy-btn { width: 100%; padding: 18px; background: #fff; color: #000; border: none; border-radius: 18px; font-size: 13px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+        #attack-panel {
+            bottom: 20px;
+            right: 20px;
+            width: 320px;
+            display: none;
+            border-color: #f43f5e;
+        }
 
-        /* FAQ И ПАРТНЕРКА */
-        .faq-section { width: 90%; max-width: 380px; margin-bottom: 30px; }
-        .faq-item { background: rgba(255, 255, 255, 0.02); border-radius: 16px; margin-bottom: 8px; border: 1px solid var(--border); overflow: hidden; }
-        .faq-question { padding: 16px; width: 100%; text-align: left; background: none; border: none; color: var(--text-main); font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .faq-answer { padding: 0 16px; max-height: 0; overflow: hidden; transition: 0.3s ease-out; color: var(--text-dim); font-size: 12px; line-height: 1.6; }
-        .faq-item.active .faq-answer { padding: 0 16px 16px 16px; max-height: 200px; }
+        h3 {
+            margin-bottom: 10px;
+            color: #38bdf8;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 5px;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
 
-        .ref-card { width: 90%; max-width: 380px; background: linear-gradient(135deg, rgba(197, 160, 89, 0.1) 0%, rgba(0, 136, 204, 0.05) 100%); border-radius: 28px; padding: 24px; border: 1px solid rgba(197, 160, 89, 0.15); margin-bottom: 24px; text-align: center; }
-        .ref-btn { display: block; width: 100%; padding: 14px; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2); border-radius: 14px; color: #fff; font-size: 12px; font-weight: 600; text-decoration: none; margin-top: 10px; cursor: pointer; }
+        .btn {
+            display: block;
+            width: 100%;
+            background: #1e293b;
+            color: #fff;
+            border: 1px solid #475569;
+            padding: 8px;
+            margin-top: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
 
-        /* МОДАЛКА ОПЛАТЫ (ВОССТАНОВЛЕННАЯ) */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(20px); }
-        .payment-card { width: 92%; max-width: 350px; background: #12141a; border-radius: 35px; padding: 30px 20px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
-        .pay-icon { width: 44px; height: 44px; background: rgba(33, 160, 56, 0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
-        .pay-title { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 12px; }
-        .pay-steps { text-align: left; background: rgba(255,255,255,0.03); border-radius: 16px; padding: 16px; margin-bottom: 20px; font-size: 12px; color: var(--text-dim); line-height: 1.5; }
-        .pay-steps b { color: var(--accent-gold); }
-        .card-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 18px; cursor: pointer; margin-bottom: 12px; transition: 0.2s; }
-        .card-box:active { transform: scale(0.98); background: rgba(255,255,255,0.05); }
-        .card-num { font-family: monospace; font-size: 17px; font-weight: 700; color: #fff; letter-spacing: 1px; }
-        .copy-hint { font-size: 9px; color: var(--text-dim); font-weight: 800; margin-top: 6px; text-transform: uppercase; }
-        .sber-btn { display: block; width: 100%; padding: 18px; background: #21a038; color: #fff; border: none; border-radius: 20px; font-size: 14px; font-weight: 800; text-decoration: none; text-transform: uppercase; margin-bottom: 12px; }
-        .done-btn { width: 100%; padding: 18px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border); border-radius: 20px; font-size: 14px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+        .btn:hover {
+            background: #38bdf8;
+            color: #0f172a;
+            border-color: #38bdf8;
+        }
+
+        .btn-attack {
+            background: #881337;
+            border-color: #f43f5e;
+        }
+        .btn-attack:hover {
+            background: #f43f5e;
+            color: #fff;
+        }
+
+        /* Выбор страны при старте */
+        #start-screen {
+            position: absolute;
+            z-index: 2000;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 15, 25, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .start-box {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #38bdf8;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 15px 0;
+            background: #0f172a;
+            color: #fff;
+            border: 1px solid #38bdf8;
+            border-radius: 4px;
+        }
+
+        .building-list {
+            font-size: 13px;
+            margin-top: 5px;
+            color: #94a3b8;
+        }
+
+        /* Кастомные маркеры городов */
+        .city-icon {
+            background: rgba(56, 189, 248, 0.2);
+            border: 2px solid #38bdf8;
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .timer-badge {
+            font-size: 11px;
+            color: #f43f5e;
+            font-weight: bold;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
 
-<div class="header-logo">
-    <div class="logo">MOON<span>STARS</span></div>
-</div>
-
-<div class="slider-wrapper">
-    <div class="services-slider" id="serv-slider">
-        <a href="https://t.me/Tgeshka_vpn" class="service-card vpn-card" target="_blank">
-            <span class="card-arrow">↗</span>
-            <div class="card-tag">Безопасность</div>
-            <div>
-                <div class="card-title">Tgeshka VPN</div>
-                <div class="card-desc">Безлимитный доступ</div>
-            </div>
-        </a>
-        <a href="https://marktwen09.github.io/Coin-tyt/" class="service-card shop-card" target="_blank">
-            <span class="card-arrow">↗</span>
-            <div class="card-tag">Маркетплейс</div>
-            <div>
-                <div class="card-title">Moon Shop</div>
-                <div class="card-desc">Донат и товары</div>
-            </div>
-        </a>
-    </div>
-</div>
-
-<div class="main-container">
-    <div class="tabs-container">
-        <div class="tab-slider" id="slider-bg"></div>
-        <button class="tab-btn active" onclick="setMode('stars', 0)">Stars</button>
-        <button class="tab-btn" onclick="setMode('premium', 100)">Premium</button>
-    </div>
-
-    <div style="position: relative; text-align: left; margin-bottom: 20px;">
-        <label style="font-size: 9px; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 8px; display: block;">Telegram Username</label>
-        <div id="input-box" style="position: relative;">
-            <span class="at-sign">@</span>
-            <input type="text" id="username" class="tg-input" placeholder="Введите ник" oninput="handleInput(this)">
-        </div>
-        <div id="profile-box">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <div class="profile-avatar" id="p-avatar">?</div>
-                <div id="p-name" style="font-weight: 600;">Username</div>
-            </div>
-            <button onclick="resetUser()" style="background:none; border:none; color:var(--text-dim); font-size:20px;">×</button>
+    <div id="start-screen">
+        <div class="start-box">
+            <h2>GLOBAL ORDER</h2>
+            <p style="color: #94a3b8; margin-top: 5px;">Выберите вашу державу</p>
+            <select id="country-select">
+                <option value="player_russia">Россия (Зеленый сектор)</option>
+                <option value="player_usa">США (Синий сектор)</option>
+                <option value="player_china">Китай (Красный сектор)</option>
+                <option value="player_germany">Германия (Желтый сектор)</option>
+            </select>
+            <button class="btn" onclick="startGame()">Начать экспансию</button>
         </div>
     </div>
 
-    <div class="price-display">
-        <div class="sale-badge">SALE</div>
-        <div class="val-main" id="display-val">100 STARS</div>
-        <div class="val-sub" id="display-price">155 ₽</div>
+    <div id="top-bar" class="gui-panel">
+        <div class="resource">💰 Бюджет: <span id="res-money">1000</span>$</div>
+        <div class="resource">📦 Сталь: <span id="res-steel">500</span>т</div>
+        <div class="resource">🎖️ Армия: <span id="res-troops">10</span> див.</div>
     </div>
 
-    <input type="range" id="slider" min="0" max="10" step="1" value="0" oninput="update()">
-    <button class="buy-btn" onclick="checkout()">Оформить со скидкой</button>
-</div>
-
-<div class="faq-section">
-    <div class="faq-item">
-        <button class="faq-question" onclick="toggleFaq(this)">Как быстро придут Stars? <span>+</span></button>
-        <div class="faq-answer">Обычно начисление занимает от 5 до 15 минут после оплаты.</div>
-    </div>
-    <div class="faq-item">
-        <button class="faq-question" onclick="toggleFaq(this)">Это безопасно? <span>+</span></button>
-        <div class="faq-answer">Да, мы используем официальные методы покупки. Ваш аккаунт в безопасности.</div>
-    </div>
-</div>
-
-<div class="ref-card">
-    <div style="font-weight: 800; font-size: 14px;">Партнерская программа</div>
-    <div class="ref-btn" onclick="copyRef()">Скопировать ссылку</div>
-    <a href="https://t.me/kaoface" class="ref-btn" style="color: var(--accent-gold); border-color: rgba(197,160,89,0.3)">Поддержка</a>
-</div>
-
-<!-- ВОССТАНОВЛЕННАЯ МОДАЛКА -->
-<div class="modal-overlay" id="modal">
-    <div class="payment-card">
-        <div class="pay-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#21A038" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
-        <div class="pay-title">Оплата</div>
+    <div id="control-panel" class="gui-panel">
+        <h3 id="selected-city-name">Город</h3>
+        <p style="font-size: 12px; color: #a1a1aa;">Статус: Ваш регион</p>
+        <div class="building-list" id="city-buildings">Постройки: Нет</div>
         
-        <div class="pay-steps">
-            1. Нажмите <b>«Оплатить в Сбере»</b>.<br>
-            2. Переведите <b>сумму заказа</b>.<br>
-            3. Нажмите <b>«Я оплатил»</b> для связи в ТГ.
-        </div>
-        
-        <a href="https://www.sberbank.com/sms/pbpn?requisiteNumber=79888486675" class="sber-btn">Оплатить в Сбере</a>
-
-        <div class="card-box" onclick="copyCard()">
-            <div class="card-num">2202 2088 9003 9648</div>
-            <div class="copy-hint" id="copy-text">Нажмите, чтобы скопировать карту</div>
-        </div>
-
-        <button class="done-btn" onclick="done()">Я оплатил</button>
-        <button onclick="document.getElementById('modal').style.display='none'" style="background:none; border:none; color:var(--text-dim); margin-top:20px; cursor:pointer; font-size:12px;">Отмена</button>
+        <button class="btn" onclick="buildStructure('bank')">Построить Банк (+50$/мин) <br><small>Цена: 300$</small></button>
+        <button class="btn" onclick="buildStructure('factory')">Построить Завод (+30 стали/мин) <br><small>Цена: 200$, 100 сталь</small></button>
+        <button class="btn" onclick="buildStructure('military')">Военная база (+1 войск/мин) <br><small>Цена: 400$, 200 сталь</small></button>
     </div>
-</div>
 
-<script>
-    let mode = 'stars';
-    let confirmedUser = "";
-    
-    const data = {
-        stars: [
-            {t:"100 STARS", p:155}, {t:"155 STARS", p:220}, {t:"250 STARS", p:370}, {t:"500 STARS", p:690}, 
-            {t:"1000 STARS", p:1390}, {t:"2500 STARS", p:3380}, {t:"3000 STARS", p:4025}, 
-            {t:"3500 STARS", p:4700}, {t:"4000 STARS", p:5350}, {t:"4500 STARS", p:6030}, {t:"5000 STARS", p:6695}
-        ],
-        premium: [{t:"3 МЕСЯЦА", p:1200}, {t:"6 МЕСЯЦЕВ", p:1550}, {t:"12 МЕСЯЦЕВ", p:2750}]
-    };
+    <div id="attack-panel" class="gui-panel">
+        <h3 id="enemy-city-name" style="color:#f43f5e;">Вражеский Город</h3>
+        <p id="enemy-city-owner" style="font-size: 12px; color: #e11d48; margin-bottom: 8px;">Владелец: ИИ</p>
+        
+        <button class="btn btn-attack" onclick="startAssault('infantry')">Штурм Пехотой (5 мин)</button>
+        <button class="btn btn-attack" onclick="startAssault('tanks')">Танковый прорыв (2 мин)</button>
+        <button class="btn btn-attack" onclick="startAssault('planes')">Авиаудар (2 мин)</button>
+        <div id="assault-timer" class="timer-badge"></div>
+    </div>
 
-    function toggleFaq(btn) {
-        btn.parentElement.classList.toggle('active');
-        btn.querySelector('span').innerText = btn.parentElement.classList.contains('active') ? '−' : '+';
-    }
+    <div id="map"></div>
 
-    function handleInput(input) {
-        let val = input.value.trim().replace('@', '');
-        if (val.length > 3) {
-            setTimeout(() => { if(input.value.length > 3) showProfile(val); }, 800);
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Игровые ресурсы
+        let resources = { money: 1000, steel: 500, troops: 15 };
+        let playerCountry = '';
+        let selectedCity = null;
+
+        // Настройки цветов для фракций
+        const factionColors = {
+            'Игрок': '#22c55e',       // Зеленый для игрока
+            'США (ИИ)': '#3b82f6',    // Синий
+            'Китай (ИИ)': '#ef4444',  // Красный
+            'Германия (ИИ)': '#eab308',// Желтый
+            'Россия (ИИ)': '#a855f7'   // Фиолетовый
+        };
+
+        // База данных городов (баз)
+        let cities = [
+            { id: 1, name: "Москва", lat: 55.7558, lng: 37.6173, owner: "Россия (ИИ)", color: factionColors["Россия (ИИ)"], buildings: [], radius: 150000 },
+            { id: 2, name: "Берлин", lat: 52.5200, lng: 13.4050, owner: "Германия (ИИ)", color: factionColors["Германия (ИИ)"], buildings: [], radius: 120000 },
+            { id: 3, name: "Вашингтон", lat: 38.9072, lng: -77.0369, owner: "США (ИИ)", color: factionColors["США (ИИ)"], buildings: [], radius: 160000 },
+            { id: 4, name: "Пекин", lat: 39.9042, lng: 116.4074, owner: "Китай (ИИ)", color: factionColors["Китай (ИИ)"], buildings: [], radius: 170000 },
+            { id: 5, name: "Париж", lat: 48.8566, lng: 2.3522, owner: "Германия (ИИ)", color: factionColors["Германия (ИИ)"], buildings: [], radius: 100000 },
+            { id: 6, name: "Нью-Йорк", lat: 40.7128, lng: -74.0060, owner: "США (ИИ)", color: factionColors["США (ИИ)"], buildings: [], radius: 110000 },
+            { id: 7, name: "Владивосток", lat: 43.1198, lng: 131.8869, owner: "Россия (ИИ)", color: factionColors["Россия (ИИ)"], buildings: [], radius: 130000 }
+        ];
+
+        // Инициализация карты
+        const map = L.map('map', {
+            center: [45, 10],
+            zoom: 3,
+            minZoom: 2,
+            maxZoom: 10
+        });
+
+        // Загрузка стильных темных тайлов OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Запуск игры
+        function startGame() {
+            const select = document.getElementById('country-select');
+            const chosen = select.options[select.selectedIndex].text;
+            
+            // Определяем, какую фракцию взял игрок
+            if(chosen.includes("Россия")) playerCountry = "Россия (ИИ)";
+            if(chosen.includes("США")) playerCountry = "США (ИИ)";
+            if(chosen.includes("Китай")) playerCountry = "Китай (ИИ)";
+            if(chosen.includes("Германия")) playerCountry = "Германия (ИИ)";
+
+            // Переназначаем выбранную страну Игроку
+            cities.forEach(city => {
+                if(city.owner === playerCountry) {
+                    city.owner = "Игрок";
+                    city.color = factionColors["Игрок"];
+                }
+            });
+
+            document.getElementById('start-screen').style.display = 'none';
+            renderWorld();
+            startGameloop();
         }
-    }
 
-    function showProfile(name) {
-        confirmedUser = name;
-        document.getElementById('input-box').style.display = 'none';
-        document.getElementById('profile-box').style.display = 'flex';
-        document.getElementById('p-name').innerText = name;
-        document.getElementById('p-avatar').innerText = name.charAt(0).toUpperCase();
-    }
+        // Отрисовка зон влияния стран и маркеров городов
+        let layersGroup = L.layerGroup().addTo(map);
 
-    function resetUser() {
-        confirmedUser = "";
-        document.getElementById('username').value = "";
-        document.getElementById('input-box').style.display = 'block';
-        document.getElementById('profile-box').style.display = 'none';
-    }
+        function renderWorld() {
+            layersGroup.clearLayers();
 
-    function update() {
-        const val = document.getElementById('slider').value;
-        document.getElementById('display-val').innerText = data[mode][val].t;
-        document.getElementById('display-price').innerText = data[mode][val].p + " ₽";
-    }
+            cities.forEach(city => {
+                // Подсвечиваемая зона вокруг города (территория страны)
+                let zone = L.circle([city.lat, city.lng], {
+                    radius: city.radius,
+                    color: city.color,
+                    fillColor: city.color,
+                    fillOpacity: 0.25,
+                    weight: 2
+                }).addTo(layersGroup);
 
-    function setMode(m, pos) {
-        mode = m;
-        document.getElementById('slider-bg').style.transform = `translateX(${pos}%)`;
-        document.getElementById('slider').max = data[mode].length - 1;
-        document.getElementById('slider').value = 0;
-        update();
-    }
+                // Клик на зону или город открывает меню управления/атаки
+                zone.on('click', () => selectCityProps(city));
 
-    function copyCard() {
-        navigator.clipboard.writeText("2202208890039648");
-        document.getElementById('copy-text').innerText = "СКОПИРОВАНО!";
-        setTimeout(() => { document.getElementById('copy-text').innerText = "Нажмите, чтобы скопировать карту"; }, 2000);
-    }
+                // Кастомная точка-маркер центра управления
+                let marker = L.circleMarker([city.lat, city.lng], {
+                    radius: 8,
+                    color: '#ffffff',
+                    fillColor: city.color,
+                    fillOpacity: 1,
+                    weight: 2
+                }).addTo(layersGroup);
+                
+                marker.bindTooltip(`<b>${city.name}</b><br>Владелец: ${city.owner}`, {permanent: false, direction: 'top'});
+                marker.on('click', () => selectCityProps(city));
+            });
+        }
 
-    function copyRef() {
-        navigator.clipboard.writeText(window.location.href);
-        alert("Ссылка скопирована!");
-    }
+        // Логика выбора города кликом
+        function selectCityProps(city) {
+            selectedCity = city;
+            if (city.owner === "Игрок") {
+                document.getElementById('attack-panel').style.display = 'none';
+                document.getElementById('control-panel').style.display = 'block';
+                document.getElementById('selected-city-name').innerText = city.name;
+                document.getElementById('city-buildings').innerText = "Постройки: " + (city.buildings.length > 0 ? city.buildings.join(', ') : "Нет");
+            } else {
+                document.getElementById('control-panel').style.display = 'none';
+                document.getElementById('attack-panel').style.display = 'block';
+                document.getElementById('enemy-city-name').innerText = city.name;
+                document.getElementById('enemy-city-owner').innerText = `Владелец: ${city.owner}`;
+            }
+        }
 
-    function checkout() {
-        if(!confirmedUser) return alert("Введите Username");
-        document.getElementById('modal').style.display = 'flex';
-    }
+        // Постройка инфраструктуры
+        function buildStructure(type) {
+            if (!selectedCity) return;
 
-    function done() {
-        const item = data[mode][document.getElementById('slider').value];
-        const text = `🚀 НОВЫЙ ЗАКАЗ (АКЦИЯ)\n\nТовар: ${item.t}\nСумма: ${item.p}₽\nКлиент: @${confirmedUser}`;
-        window.location.href = `https://t.me/kaoface?text=${encodeURIComponent(text)}`;
-    }
-</script>
+            if (type === 'bank' && resources.money >= 300) {
+                resources.money -= 300;
+                selectedCity.buildings.push("Банк");
+            } else if (type === 'factory' && resources.money >= 200 && resources.steel >= 100) {
+                resources.money -= 200;
+                resources.steel -= 100;
+                selectedCity.buildings.push("Завод");
+            } else if (type === 'military' && resources.money >= 400 && resources.steel >= 200) {
+                resources.money -= 400;
+                resources.steel -= 200;
+                selectedCity.buildings.push("Военная База");
+            } else {
+                alert("Недостаточно ресурсов для строительства!");
+                return;
+            }
 
+            updateUI();
+            selectCityProps(selectedCity);
+        }
+
+        // Облегченная механика штурма из Iron Order (реальные таймеры)
+        function startAssault(unitType) {
+            if (!selectedCity || resources.troops < 1) {
+                alert("Нет доступных дивизий для отправки в атаку!");
+                return;
+            }
+
+            // Списываем 1 дивизию на операцию штурма
+            resources.troops -= 1;
+            updateUI();
+
+            let duration = 120; // 2 минуты по умолчанию (самолеты/танки)
+            if (unitType === 'infantry') {
+                duration = 300; // 5 минут для пехоты
+            }
+
+            let targetCity = selectedCity;
+            let timerElement = document.getElementById('assault-timer');
+            
+            let countdown = setInterval(() => {
+                duration--;
+                let mins = Math.floor(duration / 60);
+                let secs = duration % 60;
+                timerElement.innerText = `Штурм ${targetCity.name}: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
+                if (duration <= 0) {
+                    clearInterval(countdown);
+                    timerElement.innerText = "";
+                    
+                    // Упрощенный расчет боя: 70% шанс успеха игрока
+                    if (Math.random() < 0.7) {
+                        alert(`Победа! ${targetCity.name} переходит под ваш контроль!`);
+                        targetCity.owner = "Игрок";
+                        targetCity.color = factionColors["Игрок"];
+                        renderWorld();
+                    } else {
+                        alert(`Штурм ${targetCity.name} провалился. Войска разбиты.`);
+                    }
+                    document.getElementById('attack-panel').style.display = 'none';
+                }
+            }, 1000);
+        }
+
+        // Экономический игровой цикл (каждые 5 секунд начисляются ресурсы)
+        function startGameloop() {
+            setInterval(() => {
+                // Базовый прирост
+                resources.money += 20;
+                resources.steel += 10;
+
+                // Бонусы от построек во всех городах игрока
+                cities.forEach(city => {
+                    if (city.owner === "Игрок") {
+                        city.buildings.forEach(b => {
+                            if (b === "Банк") resources.money += 15;
+                            if (b === "Завод") resources.steel += 10;
+                            if (b === "Военная База") resources.troops += 1;
+                        });
+                    } else {
+                        // Облегченный ИИ: с шансом 5% строит что-то у себя
+                        if (Math.random() < 0.05) {
+                            city.buildings.push("Завод ИИ");
+                        }
+                    }
+                });
+
+                updateUI();
+            }, 5000);
+        }
+
+        // Обновление интерфейса
+        function updateUI() {
+            document.getElementById('res-money').innerText = resources.money;
+            document.getElementById('res-steel').innerText = resources.steel;
+            document.getElementById('res-troops').innerText = resources.troops;
+        }
+    </script>
 </body>
 </html>
