@@ -3,482 +3,557 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Europe Conflict: Iron Order Light</title>
-    <!-- Подключаем Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <title>CYBERSTRIKE: GLOBAL CONFLICT</title>
     <style>
+        :root {
+            --bg-dark: #030712;
+            --panel-bg: rgba(11, 19, 43, 0.85);
+            --neon-player: #10b981;
+            --neon-player-glow: rgba(16, 185, 129, 0.4);
+            --neon-ui: #0ea5e9;
+            --neon-enemy: #ef4444;
+            --border-ui: rgba(14, 165, 233, 0.3);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Courier New', Courier, monospace;
+            user-select: none;
         }
 
         body, html {
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #090d16;
-            color: #f8fafc;
+            background-color: var(--bg-dark);
+            color: #f3f4f6;
         }
 
-        #map {
+        /* Задний фон с сеткой в стиле кибер-радара */
+        #grid-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 3D Контейнер для тактической карты */
+        #scene-container {
             width: 100%;
             height: 100%;
             position: absolute;
-            top: 0;
-            left: 0;
+            perspective: 1200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             z-index: 1;
-            background: #0f172a;
         }
 
-        /* Стильный темный военный радар */
-        .leaflet-layer {
-            filter: brightness(0.4) contrast(1.2) sepia(0.1) hue-rotate(190deg);
+        svg {
+            width: 85vw;
+            height: 80vh;
+            transform: rotateX(20deg) rotateZ(-5deg);
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
         }
 
-        /* Интерфейс управления */
-        .gui-panel {
+        /* Плавные живые регионы */
+        .region {
+            stroke: #1e293b;
+            stroke-width: 3;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
+        }
+
+        .region:hover {
+            filter: brightness(1.3) drop-shadow(0 10px 20px rgba(0,0,0,0.7));
+            stroke: #ffffff !important;
+            cursor: pointer;
+        }
+
+        /* Жесткая футуристичная подсветка границ игрока */
+        .player-owned {
+            stroke: var(--neon-player) !important;
+            stroke-width: 5 !important;
+            filter: drop-shadow(0px 0px 15px var(--neon-player-glow)) !important;
+            stroke-dasharray: 600;
+            animation: borderDraw 4s linear infinite;
+        }
+
+        @keyframes borderDraw {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: 600; }
+        }
+
+        /* Голографические маркеры заводов прямо на карте */
+        .holo-building {
+            animation: holoPulse 2s infinite alternate;
+            font-size: 18px;
+            filter: drop-shadow(0 0 8px currentColor);
+            pointer-events: none;
+        }
+
+        @keyframes holoPulse {
+            0% { opacity: 0.6; transform: scale(0.9) translateY(0px); }
+            100% { opacity: 1; transform: scale(1.1) translateY(-3px); }
+        }
+
+        /* Премиальный Интерфейс (Стекломорфизм) */
+        .gui-window {
             position: absolute;
             z-index: 1000;
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(8px);
-            border: 2px solid #0284c7;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-ui);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(14, 165, 233, 0.1);
         }
 
-        #top-bar {
-            top: 15px;
+        #top-hud {
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 25px;
-            align-items: center;
-            border-color: #38bdf8;
+            gap: 40px;
+            border-color: var(--neon-ui);
+            padding: 12px 40px;
         }
 
-        .resource {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .hud-item {
+            font-size: 20px;
             font-weight: bold;
-            font-size: 16px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px currentColor;
         }
-        #res-money { color: #eab308; }
+        #res-money { color: #f59e0b; }
         #res-steel { color: #94a3b8; }
-        #res-troops { color: #ef4444; }
+        #res-troops { color: #f43f5e; }
 
-        #control-panel, #attack-panel {
-            bottom: 25px;
-            left: 25px;
-            width: 350px;
+        .side-panel {
+            bottom: 30px;
+            left: 30px;
+            width: 380px;
             display: none;
+            animation: slideUp 0.3s ease-out;
         }
 
-        #attack-panel {
-            border-color: #ef4444;
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         h3 {
-            margin-bottom: 5px;
-            text-transform: uppercase;
             font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--neon-ui);
+            margin-bottom: 15px;
+            border-bottom: 1px dashed var(--border-ui);
+            padding-bottom: 8px;
+        }
+
+        .status-tag {
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
             letter-spacing: 1px;
         }
-        
-        .owner-badge {
-            font-size: 12px;
-            padding: 3px 8px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-bottom: 12px;
-            font-weight: bold;
-        }
 
-        .building-slots {
-            background: rgba(0,0,0,0.3);
-            border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 15px;
-        }
-
-        .building-grid {
-            display: flex;
-            gap: 8px;
-            margin-top: 5px;
-        }
-
-        .build-tag {
-            background: #334155;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            border: 1px solid #475569;
-        }
-
-        .btn {
+        /* Кнопки в стиле игровых терминалов */
+        .cyber-btn {
             display: block;
             width: 100%;
-            background: #1e293b;
+            background: rgba(15, 23, 42, 0.6);
             color: #fff;
-            border: 1px solid #38bdf8;
-            padding: 10px;
-            margin-top: 8px;
-            border-radius: 6px;
+            border: 1px solid var(--neon-ui);
+            padding: 14px;
+            margin-top: 12px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.2s;
             text-align: left;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
         }
 
-        .btn:hover {
-            background: #38bdf8;
-            color: #0f172a;
+        .cyber-btn:hover {
+            background: var(--neon-ui);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-ui);
+            transform: translateX(5px);
         }
 
-        .btn small {
+        .cyber-btn small {
             display: block;
-            color: #94a3b8;
-            font-weight: normal;
+            color: #64748b;
+            font-size: 11px;
+            margin-top: 4px;
         }
-        .btn:hover small { color: #1e293b; }
+        .cyber-btn:hover small { color: #1e293b; }
 
-        .btn-attack {
-            border-color: #ef4444;
-            background: #451a03;
-        }
-        .btn-attack:hover {
-            background: #ef4444;
-            color: #fff;
+        .btn-red { border-color: var(--neon-enemy); }
+        .btn-red:hover { background: var(--neon-enemy); box-shadow: 0 0 15px var(--neon-enemy); }
+
+        /* Диспетчер тактических операций (Таймеры) */
+        #ops-manager {
+            top: 20px;
+            right: 20px;
+            position: absolute;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 320px;
         }
 
-        /* Выбор фракции */
-        #start-screen {
+        .ops-card {
+            background: rgba(244, 63, 94, 0.15);
+            border: 1px solid var(--neon-enemy);
+            border-left: 6px solid var(--neon-enemy);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            animation: pulseCard 2s infinite alternate;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            margin-top: 10px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--neon-enemy);
+            width: 100%;
+            transition: width 1s linear;
+        }
+
+        /* Элитный стартовый экран фракций */
+        #menu-start {
             position: absolute;
             z-index: 2000;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #0f172a;
+            background: radial-gradient(circle, #0b1528 0%, #020617 100%);
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .start-box {
-            background: #1e293b;
-            padding: 40px;
-            border-radius: 12px;
-            border: 3px solid #38bdf8;
+        .start-frame {
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid var(--neon-ui);
+            padding: 50px;
+            border-radius: 20px;
             text-align: center;
-            width: 420px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            width: 460px;
+            box-shadow: 0 0 50px rgba(14, 165, 233, 0.3);
         }
 
         select {
             width: 100%;
-            padding: 12px;
-            margin: 20px 0;
-            background: #0f172a;
-            color: #fff;
-            border: 2px solid #38bdf8;
-            border-radius: 6px;
+            padding: 14px;
+            margin: 25px 0;
+            background: #020617;
+            color: var(--neon-ui);
+            border: 1px solid var(--border-ui);
+            border-radius: 8px;
             font-size: 16px;
             font-weight: bold;
-        }
-
-        .active-timers {
-            position: absolute;
-            top: 90px;
-            right: 25px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .timer-card {
-            background: rgba(239, 68, 68, 0.9);
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            border-left: 5px solid #fff;
-            animation: pulse 2s infinite;
+            outline: none;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <!-- Экран выбора -->
-    <div id="start-screen">
-        <div class="start-box">
-            <h1 style="color: #38bdf8; letter-spacing: 2px; margin-bottom: 10px;">EUROPE: IRON ORDER</h1>
-            <p style="color: #94a3b8;">Выберите страну для тотального доминирования:</p>
-            <select id="country-select">
-                <option value="Германия">Германия (Центральный Сектор)</option>
-                <option value="Франция">Франция (Западный Сектор)</option>
-                <option value="Польша">Польша (Восточный Сектор)</option>
-                <option value="Великобритания">Великобритания (Островной Сектор)</option>
-                <option value="Италия">Италия (Южный Сектор)</option>
+    <div id="grid-bg"></div>
+
+    <!-- Экран старта -->
+    <div id="menu-start">
+        <div class="start-frame">
+            <h1 style="color: var(--neon-ui); letter-spacing: 4px; text-shadow: 0 0 15px var(--neon-ui)">CYBERSTRIKE</h1>
+            <p style="color: #64748b; margin-top: 5px; font-size: 12px;">MILITARY TACTICAL CORE V4.1</p>
+            
+            <select id="faction-picker">
+                <option value="Германия">ГЕРМАНИЯ [ЦЕНТРАЛЬНЫЙ СЕКТОР]</option>
+                <option value="Франция">ФРАНЦИЯ [ЗАПАДНЫЙ СЕКТОР]</option>
+                <option value="Польша">ПОЛЬША [ВОСТОЧНЫЙ СЕКТОР]</option>
             </select>
-            <button class="btn" style="text-align:center; background:#38bdf8; color:#0f172a;" onclick="startGame()">НАЧАТЬ ВОЙНУ</button>
+            
+            <button class="cyber-btn" style="text-align:center; background: var(--neon-ui); color:#000;" onclick="launchCore()">ИНИЦИИРОВАТЬ СЕТЬ</button>
         </div>
     </div>
 
-    <!-- Ресурсы -->
-    <div id="top-bar" class="gui-panel">
-        <div class="resource">💰 <span id="res-money">1000</span></div>
-        <div class="resource">📦 <span id="res-steel">500</span></div>
-        <div class="resource">🎖️ <span id="res-troops">12</span> див.</div>
+    <!-- HUD ресурсов -->
+    <div id="top-hud" class="gui-window">
+        <div class="hud-item" style="color: #f59e0b;">💰 <span id="res-money">1200</span></div>
+        <div class="hud-item" style="color: #cbd5e1;">📦 <span id="res-steel">600</span></div>
+        <div class="hud-item" style="color: #f43f5e;">🎖️ <span id="res-troops">15</span> ДИВ.</div>
     </div>
 
-    <!-- Окна штурмов в углу экрана -->
-    <div class="active-timers" id="timers-container"></div>
+    <!-- Мониторинг Штурмов -->
+    <div id="ops-manager"></div>
 
-    <!-- Панель СВОЕГО государства -->
-    <div id="control-panel" class="gui-panel">
-        <h3 id="selected-city-name">Регион</h3>
-        <span class="owner-badge" style="background: #22c55e; color: #0f172a;">ВАШ СЕКТОР</span>
+    <!-- Панель СВОЕЙ территории -->
+    <div id="panel-control" class="gui-window side-panel">
+        <h3 id="lbl-my-title">РЕГИОН</h3>
+        <div class="status-tag" style="background: rgba(16, 185, 129, 0.2); color: var(--neon-player); border: 1px solid var(--neon-player)">СЕКТОР СТРАТЕГИЧЕСКОЙ ОБОРОНЫ</div>
         
-        <div class="building-slots">
-            <div style="font-size: 12px; color: #94a3b8;">Построенные объекты:</div>
-            <div class="building-grid" id="city-buildings">Нет построек</div>
-        </div>
-        
-        <button class="btn" onclick="buildStructure('bank')">🏦 Построить Банк <small>Цена: 300💰 | Доход: +60💰/цикл</small></button>
-        <button class="btn" onclick="buildStructure('factory')">🏭 Построить Завод <small>Цена: 200💰, 100📦 | Доход: +40📦/цикл</small></button>
-        <button class="btn" onclick="buildStructure('military')">⚔️ Военная база <small>Цена: 400💰, 200📦 | Доход: +1🎖️/цикл</small></button>
+        <button class="cyber-btn" onclick="triggerBuild('🏦')">🏦 СТРОИТЬ БАНК СЕКТОРА <small>Инвестиция: 300💰 | Генерация: +50💰/цикл</small></button>
+        <button class="cyber-btn" onclick="triggerBuild('🏭')">🏭 СТРОИТЬ ТЯЖЕЛЫЙ ЗАВОД <small>Инвестиция: 200💰, 100📦 | Продукция: +30📦/цикл</small></button>
+        <button class="cyber-btn" onclick="triggerBuild('⚔️')">⚔️ РАЗВЕРНУТЬ ВОЕННУЮ БАЗУ <small>Инвестиция: 400💰, 200📦 | Рекруты: +1🎖️/цикл</small></button>
     </div>
 
-    <!-- Панель штурма ВРАГА -->
-    <div id="attack-panel" class="gui-panel">
-        <h3 id="enemy-city-name">Враг</h3>
-        <span id="enemy-city-owner" class="owner-badge" style="background: #ef4444; color: #fff;">ИИ</span>
+    <!-- Панель Атаки ИИ -->
+    <div id="panel-attack" class="gui-window side-panel">
+        <h3 id="lbl-enemy-title">ЦЕЛЬ ДЛЯ ЗАХВАТА</h3>
+        <div id="lbl-enemy-owner" class="status-tag" style="background: rgba(239, 68, 68, 0.2); color: var(--neon-enemy); border: 1px solid var(--neon-enemy)">ВЛАДЕЛЕЦ: ИИ СЕКТОР</div>
         
-        <div class="building-slots" style="margin-bottom: 10px;">
-            <div style="font-size: 12px; color: #94a3b8;">Разведданные инфраструктуры:</div>
-            <div class="building-grid" id="enemy-buildings">-</div>
-        </div>
-
-        <button class="btn btn-attack" onclick="startAssault('infantry')">🪖 Штурм Пехотой <small>Время: 5 мин | Расход: 1 див.</small></button>
-        <button class="btn btn-attack" onclick="startAssault('tanks')">🚜 Танковый прорыв <small>Время: 2 мин | Расход: 2 див.</small></button>
-        <button class="btn btn-attack" onclick="startAssault('planes')">✈️ Воздушный удар <small>Время: 2 мин | Расход: 1 див.</small></button>
+        <button class="cyber-btn btn-red" onclick="triggerAssault('infantry')">🪖 СШУРМ ПЕХОТНЫМИ ВОЙСКАМИ <small>Период: 5 минут | Расход: 1 дивизия</small></button>
+        <button class="cyber-btn btn-red" onclick="triggerAssault('heavy')">🚜 ТАНКОВЫЙ БЛИЦКРИГ <small>Период: 2 минуты | Расход: 2 дивизии</small></button>
     </div>
 
-    <div id="map"></div>
+    <!-- Сцена игры -->
+    <div id="scene-container">
+        <svg id="war-theatre" viewBox="0 0 1000 700">
+            <!-- ГЕРМАНИЯ (4 детальных осколка) -->
+            <path id="ger_1" class="region" d="M460,190 L590,210 L550,290 L430,270 Z" fill="#451a03" />
+            <path id="ger_2" class="region" d="M430,270 L550,290 L530,370 L410,350 Z" fill="#451a03" />
+            <path id="ger_3" class="region" d="M410,350 L530,370 L500,460 L380,440 Z" fill="#451a03" />
+            <path id="ger_4" class="region" d="M550,230 L650,250 L630,350 L530,330 Z" fill="#451a03" />
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+            <!-- ФРАНЦИЯ (4 детальных осколка) -->
+            <path id="fra_1" class="region" d="M240,290 L430,270 L410,350 L220,370 Z" fill="#172554" />
+            <path id="fra_2" class="region" d="M110,370 L220,370 L190,490 L90,460 Z" fill="#172554" />
+            <path id="fra_3" class="region" d="M220,370 L410,350 L370,490 L190,490 Z" fill="#172554" />
+            <path id="fra_4" class="region" d="M130,270 L240,290 L220,370 L110,370 Z" fill="#172554" />
+
+            <!-- ПОЛЬША (3 детальных осколка) -->
+            <path id="pol_1" class="region" d="M650,210 L790,230 L770,310 L630,290 Z" fill="#2e1065" />
+            <path id="pol_2" class="region" d="M630,290 L770,310 L740,410 L600,390 Z" fill="#2e1065" />
+            <path id="pol_3" class="region" d="M770,240 L890,260 L860,390 L740,410 Z" fill="#2e1065" />
+
+            <!-- Слой рендеринга футуристических иконок -->
+            <g id="dynamic-holo-layer"></g>
+        </svg>
+    </div>
+
     <script>
         let resources = { money: 1200, steel: 600, troops: 15 };
-        let playerCountry = '';
-        let selectedState = null;
+        let playerFaction = '';
+        let activeTargetId = null;
 
-        // Палитра фракций (Игрок всегда выделяется сочным неоново-зеленым!)
-        const factionColors = {
-            'Игрок': '#22c55e',          
-            'Германия': '#eab308',       
-            'Франция': '#3b82f6',        
-            'Польша': '#a855f7',         
-            'Великобритания': '#06b6d4', 
-            'Италия': '#f97316'          
+        // Координаты центров для ровного спавна строящихся заводов
+        const mapDatabase = {
+            "ger_1": { name: "Германия - Кильский Канал", native: "Германия", owner: "Германия", buildings: [], x: 500, y: 240 },
+            "ger_2": { name: "Германия - Вестфалия", native: "Германия", owner: "Германия", buildings: [], x: 470, y: 320 },
+            "ger_3": { name: "Германия - Шварцвальд", native: "Германия", owner: "Германия", buildings: [], x: 440, y: 400 },
+            "ger_4": { name: "Германия - Одерский Рубеж", native: "Германия", owner: "Германия", buildings: [], x: 590, y: 290 },
+            
+            "fra_1": { name: "Франция - Иль-де-Франс", native: "Франция", owner: "Франция", buildings: [], x: 310, y: 320 },
+            "fra_2": { name: "Франция - Вандея", native: "Франция", owner: "Франция", buildings: [], x: 140, y: 420 },
+            "fra_3": { name: "Франция - Прованс", native: "Франция", owner: "Франция", buildings: [], x: 290, y: 430 },
+            "fra_4": { name: "Франция - Нормандская Дуга", native: "Франция", owner: "Франция", buildings: [], x: 170, y: 320 },
+            
+            "pol_1": { name: "Польша - Балтийская Коса", native: "Польша", owner: "Польша", buildings: [], x: 700, y: 260 },
+            "pol_2": { name: "Польша - Силезский Бассейн", native: "Польша", owner: "Польша", buildings: [], x: 670, y: 350 },
+            "pol_3": { name: "Польша - Мазовия", native: "Польша", owner: "Польша", buildings: [], x: 810, y: 320 }
         };
 
-        // База стран Европы с точными координатами границ (полигонами) для удобства клика
-        let states = [
-            { name: "Германия", owner: "Германия", buildings: [], coords: [[55,6], [55,15], [47,15], [47,6]], center: [51.1657, 10.4515] },
-            { name: "Франция", owner: "Франция", buildings: [], coords: [[51,-5], [51,8], [42,8], [42,-5]], center: [46.2276, 2.2137] },
-            { name: "Польша", owner: "Польша", buildings: [], coords: [[54,14], [54,24], [49,24], [49,14]], center: [51.9194, 19.1451] },
-            { name: "Великобритания", owner: "Великобритания", buildings: [], coords: [[59,-8], [59,2], [50,2], [50,-8]], center: [55.3781, -3.4360] },
-            { name: "Италия", owner: "Италия", buildings: [], coords: [[46,6], [46,14], [37,18], [37,12]], center: [41.8719, 12.5674] }
-        ];
+        function launchCore() {
+            playerFaction = document.getElementById('faction-picker').value;
 
-        // Инициализация карты с фокусом строго на Европу
-        const map = L.map('map', {
-            center: [50, 10],
-            zoom: 4,
-            minZoom: 4,
-            maxZoom: 6,
-            maxBounds: [[30, -15], [65, 35]], // Ограничиваем карту только Европой
-            zoomControl: false
-        });
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-        let geoLayers = L.layerGroup().addTo(map);
-
-        function startGame() {
-            playerCountry = document.getElementById('country-select').value;
-
-            // Перекрашиваем выбранную игроком страну
-            states.forEach(state => {
-                if(state.name === playerCountry) {
-                    state.owner = "Игрок";
+            // Захватываем стартовые сектора
+            for (let id in mapDatabase) {
+                if (mapDatabase[id].native === playerFaction) {
+                    mapDatabase[id].owner = "Игрок";
                 }
-            });
+            }
 
-            document.getElementById('start-screen').style.display = 'none';
-            drawMap();
-            startLoop();
-        }
+            document.getElementById('menu-start').style.display = 'none';
+            rebuildTheatre();
+            runEconomyTicks();
 
-        // Отрисовка карты: Закрашиваем ВСЮ территорию страны ярким цветом владельца
-        function drawMap() {
-            geoLayers.clearLayers();
-
-            states.forEach(state => {
-                let color = factionColors[state.owner] || factionColors['Игрок'];
-                
-                // Рисуем границы государства
-                let polygon = L.polygon(state.coords, {
-                    color: color,
-                    weight: 3,
-                    fillColor: color,
-                    fillOpacity: 0.4,
-                    className: 'state-poly'
-                }).addTo(geoLayers);
-
-                // Клик по любой точке страны открывает её меню
-                polygon.on('click', () => openStateMenu(state));
-
-                // Создаем красивый военный маркер столицы
-                let marker = L.circleMarker(state.center, {
-                    radius: 9,
-                    color: '#ffffff',
-                    fillColor: color,
-                    fillOpacity: 1,
-                    weight: 2
-                }).addTo(geoLayers);
-
-                marker.bindTooltip(`<b>${state.name}</b><br>Владелец: ${state.owner}`, { permanent: true, direction: 'center', className: 'tactical-label' });
-                marker.on('click', () => openStateMenu(state));
+            // Интерактивные клики
+            document.querySelectorAll('.region').forEach(polygon => {
+                polygon.addEventListener('click', () => handleSectorFocus(polygon.id));
             });
         }
 
-        function openStateMenu(state) {
-            selectedState = state;
-            
-            if (state.owner === "Игрок") {
-                document.getElementById('attack-panel').style.display = 'none';
-                document.getElementById('control-panel').style.display = 'block';
-                document.getElementById('selected-city-name').innerText = state.name;
-                
-                // Рендерим иконки зданий
-                let grid = document.getElementById('city-buildings');
-                grid.innerHTML = state.buildings.length > 0 ? 
-                    state.buildings.map(b => `<span class="build-tag">${b}</span>`).join('') : "Нет построек";
+        // Высококачественная перерисовка карты и голограмм зданий
+        function rebuildTheatre() {
+            const holoLayer = document.getElementById('dynamic-holo-layer');
+            holoLayer.innerHTML = '';
+
+            for (let id in mapDatabase) {
+                const data = mapDatabase[id];
+                const element = document.getElementById(id);
+                if (!element) continue;
+
+                if (data.owner === "Игрок") {
+                    element.setAttribute('fill', '#064e3b'); // Глубокий военный зеленый
+                    element.classList.add('player-owned');
+                } else {
+                    element.classList.remove('player-owned');
+                    if (data.native === "Германия") element.setAttribute('fill', '#5f2120');
+                    if (data.native === "Франция") element.setAttribute('fill', '#1e3a8a');
+                    if (data.native === "Польша") element.setAttribute('fill', '#4c1d95');
+                }
+
+                // Отрисовка голографических заводов прямо в границах
+                if (data.buildings.length > 0) {
+                    let textNode = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    textNode.setAttribute("x", data.x);
+                    textNode.setAttribute("y", data.y);
+                    textNode.setAttribute("class", "holo-building");
+                    textNode.setAttribute("fill", data.owner === "Игрок" ? varColor('--neon-player') : '#ef4444');
+                    textNode.textContent = data.buildings.join('');
+                    holoLayer.appendChild(textNode);
+                }
+            }
+        }
+
+        function varColor(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
+        // Фокусировка на куске земли
+        function handleSectorFocus(id) {
+            activeTargetId = id;
+            const data = mapDatabase[id];
+
+            if (data.owner === "Игрок") {
+                document.getElementById('panel-attack').style.display = 'none';
+                document.getElementById('panel-control').style.display = 'block';
+                document.getElementById('lbl-my-title').innerText = data.name;
             } else {
-                document.getElementById('control-panel').style.display = 'none';
-                document.getElementById('attack-panel').style.display = 'block';
-                document.getElementById('enemy-city-name').innerText = state.name;
-                document.getElementById('enemy-city-owner').innerText = `Владелец: ${state.owner}`;
-                
-                let grid = document.getElementById('enemy-buildings');
-                grid.innerHTML = state.buildings.length > 0 ? 
-                    state.buildings.map(b => `<span class="build-tag" style="background:#450a0a;">${b}</span>`).join('') : "Слоты пусты";
+                document.getElementById('panel-control').style.display = 'none';
+                document.getElementById('panel-attack').style.display = 'block';
+                document.getElementById('lbl-enemy-title').innerText = data.name;
+                document.getElementById('lbl-enemy-owner').innerText = `КОНТРОЛЬ СЕКТОРА: ИИ (${data.owner})`;
             }
         }
 
         // Строительство
-        function buildStructure(type) {
-            if (!selectedState) return;
+        function triggerBuild(type) {
+            if (!activeTargetId) return;
+            const target = mapDatabase[activeTargetId];
 
-            if (type === 'bank' && resources.money >= 300) {
+            if (type === '🏦' && resources.money >= 300) {
                 resources.money -= 300;
-                selectedState.buildings.push("🏦 Банк");
-            } else if (type === 'factory' && resources.money >= 200 && resources.steel >= 100) {
+                target.buildings.push('🏦');
+            } else if (type === '🏭' && resources.money >= 200 && resources.steel >= 100) {
                 resources.money -= 200;
                 resources.steel -= 100;
-                selectedState.buildings.push("🏭 Завод");
-            } else if (type === 'military' && resources.money >= 400 && resources.steel >= 200) {
+                target.buildings.push('🏭');
+            } else if (type === '⚔️' && resources.money >= 400 && resources.steel >= 200) {
                 resources.money -= 400;
                 resources.steel -= 200;
-                selectedState.buildings.push("⚔️ База");
+                target.buildings.push('⚔️');
             } else {
-                alert("Ошибка: Недостаточно ресурсов для постройки!");
+                alert("ОТКАЗ СИСТЕМЫ: Недостаточно материалов.");
                 return;
             }
 
-            updateUI();
-            openStateMenu(selectedState);
+            updateHUD();
+            rebuildTheatre();
         }
 
-        // Реальные таймеры штурма (5 минут пехота, 2 минуты техника)
-        function startAssault(type) {
-            let requiredTroops = type === 'tanks' ? 2 : 1;
-
-            if (resources.troops < requiredTroops) {
-                alert("Недостаточно дивизий для проведения операции!");
+        // Премиальные таймеры штурма с прогресс-баром
+        function triggerAssault(unitType) {
+            const cost = unitType === 'heavy' ? 2 : 1;
+            if (resources.troops < cost) {
+                alert("ОТКАЗ СИСТЕМЫ: Мобилизационный ресурс исчерпан.");
                 return;
             }
 
-            resources.troops -= requiredTroops;
-            updateUI();
+            resources.troops -= cost;
+            updateHUD();
 
-            // Время в секундах: пехота 300 сек (5 мин), танки/самолеты 120 сек (2 мин)
-            let duration = (type === 'infantry') ? 300 : 120; 
-            let target = selectedState;
+            // Честное время: пехота 300 сек (5 мин), танки 120 сек (2 мин)
+            let totalSeconds = unitType === 'infantry' ? 300 : 120;
+            let currentSeconds = totalSeconds;
 
-            // Создаем плашку таймера в углу экрана
-            let timerId = 'timer_' + Date.now();
-            let container = document.getElementById('timers-container');
-            let timerCard = document.createElement('div');
-            timerCard.className = 'timer-card';
-            timerCard.id = timerId;
-            container.appendChild(timerCard);
+            const targetId = activeTargetId;
+            const targetName = mapDatabase[targetId].name;
 
-            let countdown = setInterval(() => {
-                duration--;
-                let mins = Math.floor(duration / 60);
-                let secs = duration % 60;
-                timerCard.innerText = `⚔️ Битва за ${target.name}: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            // Рендерим карточку операции в углу
+            const manager = document.getElementById('ops-manager');
+            const card = document.createElement('div');
+            card.className = 'ops-card';
+            card.innerHTML = `
+                <div>⚔️ ОПЕРАЦИЯ: ШТУРМ [${targetName}]</div>
+                <div class="time-left" style="font-size:18px; font-weight:bold; margin-top:5px;">--:--</div>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+            `;
+            manager.appendChild(card);
 
-                if (duration <= 0) {
-                    clearInterval(countdown);
-                    timerCard.remove();
-                    
-                    // Расчет захвата (упрощенный баланс Iron Order)
+            const fill = card.querySelector('.progress-fill');
+            const timeText = card.querySelector('.time-left');
+
+            document.getElementById('panel-attack').style.display = 'none';
+
+            let operation = setInterval(() => {
+                currentSeconds--;
+                let m = Math.floor(currentSeconds / 60);
+                let s = currentSeconds % 60;
+                timeText.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+                
+                // Анимация статус-бара
+                let percent = (currentSeconds / totalSeconds) * 100;
+                fill.style.width = `${percent}%`;
+
+                if (currentSeconds <= 0) {
+                    clearInterval(operation);
+                    card.remove();
+
+                    // Расчет захвата
                     if (Math.random() < 0.75) {
-                        alert(`Победа! Прорыв удался, ${target.name} теперь закрашен в ваш цвет!`);
-                        target.owner = "Игрок";
-                        drawMap(); // Перекрашиваем карту целиком
+                        alert(`СТРАТЕГИЧЕСКИЙ УСПЕХ: Сектор "${targetName}" капитулировал и закрашен в ваши цвета!`);
+                        mapDatabase[targetId].owner = "Игрок";
+                        rebuildTheatre(); // Контур перекрасится и начнет неоновую анимацию
                     } else {
-                        alert(`Ваша армия потерпела поражение в секторе ${target.name}.`);
+                        alert(`ОПЕРАЦИЯ ПРОВАЛЕНА: Наступление на сектор "${targetName}" захлебнулось.`);
                     }
-                    document.getElementById('attack-panel').style.display = 'none';
                 }
             }, 1000);
         }
 
-        // Экономический тик (каждые 4 секунды — начисление)
-        function startLoop() {
+        // Экономический цикл
+        function runEconomyTicks() {
             setInterval(() => {
-                // Базовый доход страны
                 resources.money += 30;
                 resources.steel += 15;
 
-                // Доходы от заводов и банков
-                states.forEach(state => {
-                    if (state.owner === "Игрок") {
-                        state.buildings.forEach(b => {
-                            if (b.includes("Банк")) resources.money += 60;
-                            if (b.includes("Завод")) resources.steel += 40;
-                            if (b.includes("База")) resources.troops += 1;
+                for (let id in mapDatabase) {
+                    if (mapDatabase[id].owner === "Игрок") {
+                        mapDatabase[id].buildings.forEach(b => {
+                            if (b === '🏦') resources.money += 50;
+                            if (b === '🏭') resources.steel += 30;
+                            if (b === '⚔️') resources.troops += 1;
                         });
-                    } else {
-                        // Облегченный ИИ развивается сам
-                        if (Math.random() < 0.1) {
-                            state.buildings.push("🏭 Завод ИИ");
-                        }
                     }
-                });
-
-                updateUI();
+                }
+                updateHUD();
             }, 4000);
         }
 
-        function updateUI() {
+        function updateHUD() {
             document.getElementById('res-money').innerText = resources.money;
             document.getElementById('res-steel').innerText = resources.steel;
             document.getElementById('res-troops').innerText = resources.troops;
