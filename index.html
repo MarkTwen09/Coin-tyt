@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Iron Order v4: Global Theatre</title>
+    <title>Global Military Theatre</title>
+    
+    <!-- Подключаем стили Leaflet для корректного отображения карты -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <style>
         :root {
-            --bg-dark: #12161a;
-            --map-water: #1b242c;
-            --map-land: #2c353d;
-            --player-fill: rgba(46, 117, 89, 0.45);
-            --player-border: #3b9c75;
-            --ai-fill: rgba(61, 72, 82, 0.7);
-            --ai-border: #4a5763;
-            --panel-bg: rgba(22, 28, 34, 0.95);
-            --text-main: #cbd5e1;
+            --panel-bg: rgba(20, 25, 31, 0.95);
+            --border-color: #2f363d;
             --gold: #dfa837;
         }
 
@@ -22,353 +19,302 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             user-select: none;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body, html {
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
+            background-color: #0b0e11;
+            color: #cbd5e1;
         }
 
-        /* Контейнер для перемещения и зума карты (как на видео) */
-        #viewport {
+        /* Контейнер для карты во весь экран */
+        #map {
             width: 100%;
             height: 100%;
             position: absolute;
-            cursor: grab;
-            background-color: var(--map-water);
+            top: 0;
+            left: 0;
+            z-index: 1;
+            background-color: #1a202c; /* Цвет океана по умолчанию до загрузки тайлов */
         }
 
-        #viewport:active { cursor: grabbing; }
-
-        #map-wrapper {
-            position: absolute;
-            transform-origin: 0 0;
-            width: 2000px;
-            height: 1500px;
-            transition: transform 0.05s linear;
+        /* Кастомный стиль для скрытия дефолтных кнопок Leaflet, чтобы не портили интерфейс игры */
+        .leaflet-control-zoom {
+            display: none !important;
+        }
+        .leaflet-control-attribution {
+            background: rgba(0,0,0,0.5) !important;
+            color: #555 !important;
+            font-size: 9px !important;
         }
 
-        svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Стилизация провинций в стиле Iron Order */
-        .province {
-            fill: var(--ai-fill);
-            stroke: var(--ai-border);
-            stroke-width: 1.5;
-            stroke-linejoin: round;
-            transition: fill 0.2s, stroke 0.2s;
-        }
-
-        /* Умная подсветка при наведении */
-        .province:hover {
-            filter: brightness(1.15);
-            cursor: pointer;
-        }
-
-        /* ТВОЯ СТРАНА: Точно как на видео — мягкая зеленая заливка с благородным контуром */
-        .province.player-owned {
-            fill: var(--player-fill) !important;
-            stroke: var(--player-border) !important;
-            stroke-width: 2.5;
-        }
-
-        /* Границы крупных фракций */
-        .nation-border {
-            stroke: #161a1e;
-            stroke-width: 3;
-            fill: none;
-            pointer-events: none;
-        }
-
-        /* Точки столиц/городов */
-        .capital-dot {
-            fill: #ffffff;
-            stroke: #12161a;
-            stroke-width: 2;
-            transition: transform 0.2s;
-        }
-        .player-owned + .capital-dot {
-            fill: #56ffb7;
-            box-shadow: 0 0 10px rgba(0,255,0,0.5);
-        }
-
-        /* Названия регионов прямо на карте */
-        .map-label {
-            font-size: 11px;
-            font-weight: 700;
-            fill: rgba(255, 255, 255, 0.45);
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-            pointer-events: none;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* ТОП ИНТЕРФЕЙС (Верхний HUD в стиле стратегий) */
-        .strategy-hud {
+        /* Верхний HUD (Ресурсы из Iron Order) */
+        .game-hud {
             position: absolute;
             top: 0; left: 0; width: 100%;
-            height: 44px;
-            background: #161b22;
-            border-bottom: 2px solid #21262d;
+            height: 50px;
+            background: linear-gradient(to bottom, rgba(16,21,27,1) 0%, rgba(16,21,27,0.85) 100%);
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 12px;
+            padding: 0 16px;
             z-index: 100;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
         }
 
-        .hud-left { display: flex; align-items: center; gap: 6px; font-weight: bold; font-size: 14px; }
-        .lvl-badge { background: #388bfd; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
+        .hud-profile { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; }
+        .hud-level { background: #238636; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
+        
+        .resource-group { display: flex; gap: 16px; max-width: 65%; overflow-x: auto; }
+        .res-cell { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; }
+        .res-cell span { color: #fff; }
 
-        .resources-bar { display: flex; gap: 14px; overflow-x: auto; max-width: 70%; }
-        .res-item { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; }
-        .res-item span { color: #fff; }
-
-        /* НИЖНИЙ ТАКТИЧЕСКИЙ БЛОК (Панель Провинции) */
-        .bottom-dock {
+        /* Нижняя выдвижная панель управления регионом */
+        .action-dock {
             position: absolute;
             bottom: 0; left: 0; width: 100%;
             background: var(--panel-bg);
-            border-top: 2px solid #30363d;
-            padding: 16px;
-            z-index: 100;
-            display: none;
-            box-shadow: 0 -5px 25px rgba(0,0,0,0.6);
+            border-top: 2px solid var(--border-color);
             border-top-left-radius: 16px;
             border-top-right-radius: 16px;
-            animation: slideIn 0.2s cubic-bezier(0, 0, 0.2, 1);
+            padding: 20px 16px;
+            z-index: 100;
+            display: none; /* Показывается только при клике на страну */
+            box-shadow: 0 -8px 32px rgba(0,0,0,0.7);
+            transform: translateY(0);
+            animation: slideUp 0.25s cubic-bezier(0, 0, 0.2, 1);
         }
 
-        @keyframes slideIn {
+        @keyframes slideUp {
             from { transform: translateY(100%); }
             to { transform: translateY(0); }
         }
 
-        .dock-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .dock-title { font-size: 18px; font-weight: 700; color: #fff; }
-        .dock-status { font-size: 12px; color: #8b949e; text-transform: uppercase; }
-
-        .grid-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
-        .action-btn {
+        .dock-title { font-size: 20px; font-weight: 800; color: #ffffff; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .dock-subtitle { font-size: 12px; color: #8b949e; text-transform: uppercase; margin-bottom: 16px; }
+        
+        .dock-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .game-btn {
             background: #21262d;
             border: 1px solid #30363d;
             color: #c9d1d9;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 10px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.1s;
         }
-        .action-btn:active { background: #30363d; }
-        .btn-prime { background: #238636; border-color: #2ea043; color: #fff; }
-        .btn-prime:active { background: #2ea043; }
+        .game-btn:active { background: #30363d; transform: scale(0.98); }
+        .btn-attack { background: #852222; border-color: #b53333; color: #fff; grid-column: span 2; }
+        .btn-attack:active { background: #a52a2a; }
     </style>
 </head>
 <body>
 
-    <div class="strategy-hud">
-        <div class="hud-left">
-            <div class="lvl-badge">78-Й</div>
+    <!-- ВЕРХНИЙ ИНТЕРФЕЙС ИГРЫ -->
+    <div class="game-hud">
+        <div class="hud-profile">
+            <div class="hud-level">78-Й</div>
             <span style="color: var(--gold);">⚡ 1,466</span>
         </div>
-        <div class="resources-bar">
-            <div class="res-item">🪵 <span id="r-wood">12K</span></div>
-            <div class="res-item">🪙 <span id="r-iron">9.2K</span></div>
-            <div class="res-item">📦 <span id="r-oil">5.9K</span></div>
-            <div class="res-item">💵 <span id="r-cash">7.6K</span></div>
+        <div class="resource-group">
+            <div class="res-cell">🪵 <span>12.4K</span></div>
+            <div class="res-cell">🪙 <span>9.2K</span></div>
+            <div class="res-cell">📦 <span>5.9K</span></div>
+            <div class="res-cell">💵 <span>7.6K</span></div>
         </div>
     </div>
 
-    <div id="viewport">
-        <div id="map-wrapper">
-            <svg id="game-map" viewBox="0 0 1600 1200">
-                
-                <g id="world-provinces">
-                    <path id="p1" class="province player-owned" d="M 450,400 L 580,380 L 630,440 L 590,520 L 480,540 L 420,470 Z" />
-                    <path id="p2" class="province player-owned" d="M 580,380 L 720,360 L 760,430 L 630,440 Z" />
-                    <path id="p3" class="province player-owned" d="M 630,440 L 760,430 L 790,530 L 680,560 L 590,520 Z" />
-                    <path id="p4" class="province player-owned" d="M 480,540 L 590,520 L 680,560 L 650,640 L 510,620 Z" />
-                    
-                    <path id="p5" class="province" d="M 720,360 L 950,300 L 1050,450 L 920,580 L 760,430 Z" />
-                    <path id="p6" class="province" d="M 760,430 L 920,580 L 880,700 L 790,680 L 790,530 Z" />
-                    <path id="p7" class="province" d="M 950,300 L 1300,250 L 1400,500 L 1050,450 Z" />
+    <!-- КАРТА, КОТОРАЯ БУДЕТ ЗАГРУЖАТЬСЯ ИЗ СЕТИ -->
+    <div id="map"></div>
 
-                    <path id="p8" class="province" d="M 480,540 L 510,620 L 450,710 L 350,650 L 420,560 Z" />
-                    <path id="p9" class="province" d="M 510,620 L 650,640 L 680,750 L 550,760 L 450,710 Z" />
-                    <path id="p10" class="province" d="M 680,560 L 790,530 L 790,680 L 680,750 Z" />
-
-                    <path id="p11" class="province" d="M 320,280 L 480,300 L 450,400 L 300,370 Z" />
-                    <path id="p12" class="province" d="M 480,300 L 580,260 L 580,380 L 450,400 Z" />
-                </g>
-
-                <g id="capitals">
-                    <circle cx="520" cy="450" r="7" class="capital-dot" />
-                    <circle cx="660" cy="400" r="6" class="capital-dot" />
-                    <circle cx="700" cy="480" r="6" class="capital-dot" />
-                    <circle cx="570" cy="560" r="6" class="capital-dot" />
-                    
-                    <circle cx="840" cy="410" r="7" class="capital-dot" />
-                    <circle cx="830" cy="600" r="6" class="capital-dot" />
-                    <circle cx="560" cy="670" r="6" class="capital-dot" />
-                    <circle cx="410" cy="340" r="6" class="capital-dot" />
-                </g>
-
-                <g id="labels">
-                    <text x="490" y="490" class="map-label" style="fill: #8bfcb9; font-size: 14px;">РЕСПУБЛИКА БЕЛАРУСЬ</text>
-                    <text x="830" y="360" class="map-label">РОССИЙСКАЯ ИМПЕРИЯ</text>
-                    <text x="530" y="610" class="map-label">КАЗАЦКИЙ СОЮЗ</text>
-                    <text x="350" y="330" class="map-label">ГЕРЦОГСТВО КУРЛЯНДИЯ</text>
-                </g>
-
-            </svg>
+    <!-- НИЖНЯЯ ПАНЕЛЬ ДЛЯ ВЗАИМОДЕЙСТВИЯ -->
+    <div class="action-dock" id="control-dock">
+        <div class="dock-title" id="country-name">Название Государства</div>
+        <div class="dock-subtitle" id="country-status">Статус региона</div>
+        <div class="dock-buttons" id="action-buttons-container">
+            <!-- Сюда скрипт подкинет нужные кнопки -->
         </div>
     </div>
 
-    <div class="bottom-dock" id="province-dock">
-        <div class="dock-header">
-            <div class="dock-title" id="dock-name">Минская Губерния</div>
-            <div class="dock-status" id="dock-owner">Владелец: Вы</div>
-        </div>
-        <div class="grid-actions" id="dock-actions">
-            </div>
-    </div>
+    <!-- Подключаем сам скрипт движка Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-        // Инициализация Drag & Zoom движка карты (Кастомный плавный трансформ)
-        const viewport = document.getElementById('viewport');
-        const wrapper = document.getElementById('map-wrapper');
-
-        let isDragging = false;
-        let startX, startY;
-        let mapX = -200, mapY = -150, zoom = 1.1;
-
-        function updateTransform() {
-            wrapper.style.transform = `translate(${mapX}px, ${mapY}px) scale(${zoom})`;
-        }
-        updateTransform();
-
-        // Мышь / Тач Скрипты перемещения
-        viewport.addEventListener('mousedown', (e) => {
-            if(e.target.classList.contains('province')) return; // Не двигать при клике на сектор
-            isDragging = true;
-            startX = e.clientX - mapX;
-            startY = e.clientY - mapY;
+        // 1. ИНИЦИАЛИЗАЦИЯ КАРТЫ
+        // Устанавливаем стартовый вид на Восточную Европу и задаем лимиты зума
+        const map = L.map('map', {
+            center: [53.9, 27.5], // Центрируем в районе Беларуси
+            zoom: 5,
+            minZoom: 4,
+            maxZoom: 7,
+            zoomSnap: 0.5,
+            bounceAtZoomLimits: true
         });
 
-        window.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            mapX = e.clientX - startX;
-            mapY = e.clientY - startY;
-            updateTransform();
-        });
+        // 2. ПОДКЛЮЧЕНИЕ ТЕМНЫХ СТИЛЬНЫХ ТАЙЛОВ (CartoDB Dark Matter)
+        // Они дают идеальный монохромный тёмно-серый цвет суши и глубокий цвет воды
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; CartoDB'
+        }).addTo(map);
 
-        window.addEventListener('mouseup', () => isDragging = false);
-
-        // Мобильные тач-события (Драг на телефоне)
-        viewport.addEventListener('touchstart', (e) => {
-            if(e.target.classList.contains('province')) return;
-            isDragging = true;
-            startX = e.touches[0].clientX - mapX;
-            startY = e.touches[0].clientY - mapY;
-        });
-
-        viewport.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            mapX = e.touches[0].clientX - startX;
-            mapY = e.touches[0].clientY - startY;
-            updateTransform();
-        });
-
-        viewport.addEventListener('touchend', () => isDragging = false);
-
-        // Колесико мышки для Зума
-        viewport.addEventListener('wheel', (e) => {
-            e.preventDefault();
-            const zoomFactor = 0.1;
-            if (e.deltaY < 0) zoom = Math.min(zoom + zoomFactor, 2.5);
-            else zoom = Math.max(zoom - zoomFactor, 0.6);
-            updateTransform();
-        });
-
-        // ДАТАБАЗА РЕГИОНОВ
-        const provinceDB = {
-            "p1": { name: "Минский Уезд", owner: "Игрок", status: "Ключевая провинция" },
-            "p2": { name: "Витебский Рубеж", owner: "Игрок", status: "Оборонительный узел" },
-            "p3": { name: "Могилевский Сектор", owner: "Игрок", status: "Производство" },
-            "p4": { name: "Полесские Болота", owner: "Игрок", status: "Граница" },
-            "p5": { name: "Смоленское Княжество", owner: "ИИ (Россия)", status: "Чужая земля" },
-            "p6": { name: "Брянские Леса", owner: "ИИ (Россия)", status: "Чужая земля" },
-            "p7": { name: "Московская Губерния", owner: "ИИ (Россия)", status: "Столица ИИ" },
-            "p8": { name: "Киевский Округ", owner: "ИИ (Казаки)", status: "Чужая земля" },
-            "p9": { name: "Черниговские Степи", owner: "ИИ (Казаки)", status: "Чужая земля" },
-            "p10": { name: "Харьковский Фронт", owner: "ИИ (Казаки)", status: "Чужая земля" },
-            "p11": { name: "Виленский Край", owner: "ИИ (Курляндия)", status: "Чужая земля" },
-            "p12": { name: "Двинский Округ", owner: "ИИ (Курляндия)", status: "Чужая земля" }
+        // 3. ДАННЫЕ ГРАНИЦ СТРАН (GeoJSON полигоны)
+        // Настоящие координаты сглаженных контуров государств
+        const worldGeometries = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Белорусская ССР", "type": "player" },
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [[
+                            [23.5, 52.0], [23.9, 53.9], [25.6, 54.3], [26.6, 55.7], [28.2, 55.9],
+                            [30.1, 56.1], [31.2, 55.0], [32.8, 53.5], [31.6, 52.1], [30.5, 51.3],
+                            [27.5, 52.1], [24.0, 51.5], [23.5, 52.0]
+                        ]]
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Украинская ССР", "type": "ai" },
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [[
+                            [24.0, 51.5], [27.5, 52.1], [30.5, 51.3], [31.6, 52.1], [33.0, 52.4],
+                            [34.3, 50.8], [36.7, 50.2], [39.5, 49.3], [40.1, 47.8], [37.7, 47.1],
+                            [34.5, 46.1], [32.5, 46.4], [30.2, 46.3], [28.7, 45.3], [28.2, 46.3],
+                            [26.2, 48.3], [22.2, 48.2], [22.5, 49.5], [24.0, 51.5]
+                        ]]
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Российская Империя (Запад)", "type": "ai" },
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [[
+                            [31.2, 55.0], [30.1, 56.1], [28.2, 55.9], [28.0, 57.5], [30.0, 60.0],
+                            [35.0, 60.0], [40.0, 55.0], [39.5, 49.3], [36.7, 50.2], [34.3, 50.8],
+                            [33.0, 52.4], [31.6, 52.1], [32.8, 53.5], [31.2, 55.0]
+                        ]]
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Польская Республика", "type": "ai" },
+                    "geometry": {
+                        "type": "Polygon",
+                        "coordinates": [[
+                            [23.5, 52.0], [24.0, 51.5], [22.5, 49.5], [19.0, 49.4], [16.2, 50.7],
+                            [15.0, 52.3], [14.2, 53.9], [17.0, 54.5], [19.5, 54.4], [22.8, 54.2],
+                            [23.5, 52.0]
+                        ]]
+                    }
+                }
+            ]
         };
 
-        // Обработка клика по провинции
-        document.querySelectorAll('.province').forEach(prov => {
-            prov.addEventListener('click', (e) => {
-                const id = prov.id;
-                const data = provinceDB[id];
-                
-                const dock = document.getElementById('province-dock');
-                const nameText = document.getElementById('dock-name');
-                const ownerText = document.getElementById('dock-owner');
-                const actions = document.getElementById('dock-actions');
-
-                dock.style.display = 'block';
-                nameText.innerText = data.name;
-                ownerText.innerText = `Статус: ${data.status}`;
-
-                if (data.owner === "Игрок") {
-                    actions.innerHTML = `
-                        <button class="action-btn btn-prime" onclick="actionNotify('Строительство казармы начато')">🔨 Построить казармы</button>
-                        <button class="action-btn" onclick="actionNotify('Мобилизация запущена')">🎖️ Мобилизация</button>
-                    `;
-                } else {
-                    actions.innerHTML = `
-                        <button class="action-btn btn-prime" style="background:#852222; border-color:#b53333; grid-column: span 2;" onclick="startAssault('${id}')">⚔️ АТАКОВАТЬ ПРОВИНЦИЮ</button>
-                    `;
-                }
-                e.stopPropagation();
-            });
-        });
-
-        // Закрытие панели при клике по воде
-        viewport.addEventListener('click', () => {
-            document.getElementById('province-dock').style.display = 'none';
-        });
-
-        function actionNotify(msg) {
-            alert(`[УПРАВЛЕНИЕ]: ${msg}`);
+        // 4. НАСТРОЙКА СТИЛЕЙ (Мягкая заливка хаки как в Iron Order)
+        // Твоя страна красится в полупрозрачный зелёный с сочным контуром, чужие — в строгий стальной
+        function styleFeature(feature) {
+            if (feature.properties.type === 'player') {
+                return {
+                    fillColor: '#2e7559',      // Тот самый благородный хаки/зеленый
+                    fillOpacity: 0.45,         // Мягкая прозрачность, видно подложку
+                    color: '#3b9c75',          // Плотная линия границы страны
+                    weight: 2.5,
+                    opacity: 1
+                };
+            } else {
+                return {
+                    fillColor: '#3d4852',      // Стальной цвет для ИИ-держав
+                    fillOpacity: 0.2,          // Почти прозрачные, чтобы не отвлекать
+                    color: '#4a5763',          // Неброская серая граница
+                    weight: 1.5,
+                    opacity: 0.7
+                };
+            }
         }
 
-        function startAssault(id) {
-            alert(`[ШТУРМ]: Войска выдвинулись на захват сектора ${provinceDB[id].name}!`);
+        // Переменная для хранения текущей выбранной на карте страны
+        let geojsonLayer;
+
+        // 5. ИНТЕРАКТИВНОСТЬ И КЛИКИ
+        function onEachFeature(feature, layer) {
+            // Подсветка при наведении или таче пальцем
+            layer.on('mouseover', function () {
+                layer.setStyle({
+                    fillOpacity: feature.properties.type === 'player' ? 0.6 : 0.4
+                });
+            });
+            
+            layer.on('mouseout', function () {
+                geojsonLayer.resetStyle(layer); // Возвращаем исходный стиль
+            });
+
+            // Клик по стране открывает нижний док (как на видео)
+            layer.on('click', function (e) {
+                const props = feature.properties;
+                
+                document.getElementById('control-dock').style.display = 'block';
+                document.getElementById('country-name').innerText = props.name;
+                
+                const buttonsContainer = document.getElementById('action-buttons-container');
+                
+                if (props.type === 'player') {
+                    document.getElementById('country-status').innerText = 'Ваша суверенная территория';
+                    buttonsContainer.innerHTML = `
+                        <button class="game-btn" onclick="triggerAction('Построена крепость')">🔨 Построить ДОТ</button>
+                        <button class="game-btn" onclick="triggerAction('Производство запущено')">🏭 На завод</button>
+                    `;
+                } else {
+                    document.getElementById('country-status').innerText = 'Вражеская фракция (ИИ)';
+                    buttonsContainer.innerHTML = `
+                        <button class="game-btn btn-attack" onclick="startWar('${props.name}', layer)">⚔️ ОБЪЯВИТЬ ВОЙНУ И НАЧАТЬ ШТУРМ</button>
+                    `;
+                }
+                
+                // Останавливаем всплытие события, чтобы клик не засчитался по воде
+                L.DomEvent.stopPropagation(e);
+            });
+        }
+
+        // Отрисовываем полигоны на нашей Leaflet карте
+        geojsonLayer = L.geoJSON(worldGeometries, {
+            style: styleFeature,
+            onEachFeature: onEachFeature
+        }).addTo(map);
+
+        // Закрытие дока при клике на свободную область (воду)
+        map.on('click', function() {
+            document.getElementById('control-dock').style.display = 'none';
+        });
+
+        // 6. ИГРОВАЯ ЛОГИКА (Перекрашивание на лету при захвате)
+        function triggerAction(text) {
+            alert(`[ШТАБ]: ${text}`);
+        }
+
+        function startWar(name, layer) {
+            alert(`[ОПЕРАЦИЯ]: Дивизии пересекли границу государства: ${name}!`);
+            
             setTimeout(() => {
-                const el = document.getElementById(id);
-                el.classList.add('player-owned');
-                provinceDB[id].owner = "Игрок";
-                provinceDB[id].status = "Захваченная территория";
-                alert(`[ПОБЕДА]: Сектор ${provinceDB[id].name} успешно аннексирован! Карта перекрашена.`);
-                document.getElementById('province-dock').style.display = 'none';
-            }, 2000);
+                // Меняем внутренние свойства захваченного объекта
+                layer.feature.properties.type = 'player';
+                // Перерисовываем страну в наш зелёный цвет хаки
+                layer.setStyle(styleFeature(layer.feature));
+                
+                alert(`[ПОБЕДА]: ${name} капитулирует! Земли присоединены, карта обновлена.`);
+                document.getElementById('control-dock').style.display = 'none';
+            }, 1500);
         }
     </script>
 </body>
