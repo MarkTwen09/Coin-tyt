@@ -7,7 +7,6 @@
     <style>
         :root {
             --bg-color: #111112;
-            --card-bg: #18181c;
             --text-main: #f5f5f7;
             --text-muted: #8e8e93;
             --accent-red: #ff453a;
@@ -16,7 +15,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
@@ -24,7 +23,6 @@
             letter-spacing: -0.02em;
         }
 
-        /* Минималистичная шапка в стиле СМИ */
         header {
             max-width: 1100px;
             margin: 0 auto;
@@ -58,7 +56,7 @@
             padding: 0 20px;
         }
 
-        /* Главная новость (на всю ширину) */
+        /* Главная новость */
         .main-news {
             display: block;
             text-decoration: none;
@@ -68,9 +66,7 @@
             margin-bottom: 40px;
         }
 
-        .main-news:hover .title {
-            color: var(--accent-blue);
-        }
+        .main-news:hover .title { color: var(--accent-blue); }
 
         .tag {
             font-size: 0.75rem;
@@ -97,7 +93,7 @@
             margin: 0;
         }
 
-        /* Сетка для остальных новостей */
+        /* Сетка новостей */
         .news-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -113,9 +109,7 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        .grid-item:hover .grid-title {
-            color: var(--accent-blue);
-        }
+        .grid-item:hover .grid-title { color: var(--accent-blue); }
 
         .grid-title {
             font-size: 1.3rem;
@@ -132,7 +126,6 @@
             margin: 0;
         }
 
-        /* Подвал */
         footer {
             max-width: 1100px;
             margin: 60px auto 0 auto;
@@ -145,12 +138,6 @@
             font-weight: 600;
             color: var(--accent-blue);
             text-decoration: none;
-            border-bottom: 1px solid transparent;
-            transition: border-color 0.2s;
-        }
-
-        .tg-link:hover {
-            border-color: var(--accent-blue);
         }
     </style>
 </head>
@@ -162,41 +149,73 @@
     </header>
 
     <div class="container">
-        
-        <!-- ГЛАВНАЯ НОВОСТЬ -->
-        <a href="#" class="main-news">
-            <span class="tag">Экстренно</span>
-            <h2 class="title">Масштабные сбои в рунете: под ударом крупнейшие платформы и VPN-протоколы</h2>
-            <p class="descr">Пользователи по всей стране заявляют о невозможности получить доступ к привычным сервисам без включения продвинутых средств обхода. Эксперты связывают это с обновлением ТСПУ.</p>
-        </a>
-
-        <!-- СЕТКА НОВОСТЕЙ СНИЗУ -->
-        <div class="news-grid">
-            
-            <a href="#" class="grid-item">
-                <span class="tag" style="color: var(--accent-blue);">Инструкция</span>
-                <h3 class="grid-title">Что делать, если ваш привычный VPN перестал подключаться?</h3>
-                <p class="grid-descr">Разбираем альтернативные протоколы ShadowSocks и Vless, которые пока держат удар.</p>
-            </a>
-
-            <a href="#" class="grid-item">
-                <span class="tag">Discord</span>
-                <h3 class="grid-title">Обновление статуса блокировки популярного мессенджера</h3>
-                <p class="grid-descr">Появились новые подробности о возможности полной разблокировки платформы для геймеров.</p>
-            </a>
-
-            <a href="#" class="grid-item">
-                <span class="tag">Telegram</span>
-                <h3 class="grid-title">Новые функции для обхода ограничений внутри приложений</h3>
-                <p class="grid-descr">Разработчики выкатили минорное обновление, улучшающее встроенные прокси.</p>
-            </a>
-
-        </div>
+        <!-- Сюда новости будут вставляться автоматически -->
+        <div id="mainNewsContainer"></div>
+        <div class="news-grid" id="newsGridContainer"></div>
     </div>
 
     <footer>
-        <p>«Светский Дом», 2026. Читайте наш <a href="ТВОЯ_ССЫЛКА" class="tg-link">Telegram-канал</a>.</p>
+        <p>«Светский Дом», 2026. Читайте наш <a href="ТВОЯ_ССЫЛКА_НА_ТГ" class="tg-link">Telegram-канал</a>.</p>
     </footer>
 
+    <!-- А ВОТ ТЕПЕРЬ САМАЯ УДОБНАЯ ШТУКА -->
+    <script>
+        // БАЗА ДАННЫХ ТВОИХ НОВОСТЕЙ. 
+        // Самая верхняя новость автоматически станет ГЛАВНОЙ (крупной). 
+        // Все остальные пойдут вниз в красивую сетку.
+        const myNews = [
+            {
+                tag: "Экстренно",
+                title: "Масштабные сбои в рунете: под ударом крупнейшие платформы и VPN-протоколы",
+                descr: "Пользователи по всей стране заявляют о невозможности получить доступ к привычным сервисам без включения продвинутых средств обхода."
+            },
+            {
+                tag: "Инструкция",
+                title: "Что делать, если ваш привычный VPN перестал подключаться?",
+                descr: "Разбираем альтернативные протоколы ShadowSocks и Vless, которые пока держат удар."
+            },
+            {
+                tag: "Discord",
+                title: "Обновление статуса блокировки популярного мессенджера",
+                descr: "Появились новые подробности о возможности полной разблокировки платформы для геймеров."
+            },
+            {
+                tag: "Telegram",
+                title: "Новые функции для обхода ограничений внутри приложений",
+                descr: "Разработчики выкатили минорное обновление, улучшающее встроенные прокси."
+            }
+        ];
+
+        // Этот скрипт сам распределяет новости по дизайну, ты его не трогаешь
+        function renderNews() {
+            if (myNews.length === 0) return;
+
+            // 1. Ставим главную новость (самую первую в списке)
+            const main = myNews[0];
+            document.getElementById('mainNewsContainer').innerHTML = `
+                <a href="#" class="main-news">
+                    <span class="tag">${main.tag}</span>
+                    <h2 class="title">${main.title}</h2>
+                    <p class="descr">${main.descr}</p>
+                </a>
+            `;
+
+            // 2. Все остальные новости пускаем в сетку ниже
+            let gridHTML = '';
+            for (let i = 1; i < myNews.length; i++) {
+                gridHTML += `
+                    <a href="#" class="grid-item">
+                        <span class="tag" style="color: var(--accent-blue);">${myNews[i].tag}</span>
+                        <h3 class="grid-title">${myNews[i].title}</h3>
+                        <p class="grid-descr">${myNews[i].descr}</p>
+                    </a>
+                `;
+            }
+            document.getElementById('newsGridContainer').innerHTML = gridHTML;
+        }
+
+        // Запуск генерации при открытии сайта
+        renderNews();
+    </script>
 </body>
 </html>
