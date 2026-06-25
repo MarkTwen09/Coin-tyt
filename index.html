@@ -3,227 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Светский Дом — Новости и Блокировки</title>
+    <title>3D Игра: Угадай Страну</title>
+    
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.105/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.105/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+
     <style>
-        :root {
-            --bg-color: #111112;
-            --text-main: #f5f5f7;
-            --text-muted: #8e8e93;
-            --accent-blue: #0a84ff;
-            --border-color: #2c2c2e;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0; padding: 0;
-            letter-spacing: -0.02em;
-        }
-        header {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 30px 20px;
-            border-bottom: 1px solid var(--border-color);
-            text-align: center;
-        }
-        .logo { 
-            font-size: 2.5rem; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            color: #ffffff; 
+        html, body, #cesiumContainer {
+            width: 100%;
+            height: 100%;
             margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Интерфейс будущей игры */
+        #game-ui {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            pointer-events: auto;
+        }
+
+        button {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 10px;
             cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: 0.2s;
         }
-        .subtitle { font-size: 0.9rem; color: var(--text-muted); margin-top: 8px; text-transform: uppercase; letter-spacing: 0.1em; }
-        
-        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
-        
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
+
+        button:hover {
+            background: #0056b3;
         }
-        .grid-item {
-            display: flex;
-            flex-direction: column;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            line-height: 1.5;
-        }
-        .grid-date { font-size: 0.75rem; color: var(--accent-blue); font-weight: 700; margin-bottom: 8px; }
-        .grid-text { font-size: 1.05rem; color: var(--text-main); margin: 0; white-space: pre-wrap; }
-        
-        /* Стили админки */
-        #adminModal {
-            display: none; position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); background: #1c1c1e;
-            padding: 25px; border-radius: 12px; border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1000; width: 90%; max-width: 400px;
-        }
-        #adminModal h3 { margin-top: 0; color: #fff; }
-        #adminModal input, #adminModal textarea {
-            width: 100%; padding: 10px; margin-bottom: 15px;
-            background: #2c2c2e; border: 1px solid var(--border-color);
-            color: #fff; border-radius: 6px; box-sizing: border-box;
-            font-family: inherit;
-        }
-        #adminModal button {
-            background: var(--accent-blue); color: #fff; border: none;
-            padding: 10px 20px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold;
-        }
-        footer { max-width: 1100px; margin: 60px auto 0 auto; padding: 40px 20px; border-top: 1px solid var(--border-color); text-align: center; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">Светский Дом</div>
-        <div class="subtitle">Мониторинг блокировок и актуальные новости</div>
-    </header>
-
-    <div class="container">
-        <div class="news-grid" id="newsContainer"></div>
+    <div id="game-ui">
+        <div id="quest">Задание: Найдите Францию и нажмите на нее!</div>
+        <button onclick="flyToRandomCountry()">Показать случайный регион</button>
     </div>
 
-    <div id="adminModal">
-        <h3 id="modalTitle">Вход в систему</h3>
-        <div id="authSection">
-            <input type="password" id="passwordInput" placeholder="Введите секретный код">
-            <button onclick="checkPassword()">Войти</button>
-        </div>
-        <div id="postSection" style="display: none;">
-            <textarea id="postTextInput" rows="5" placeholder="Текст новой новости..."></textarea>
-            <button onclick="saveAndDownload()">Опубликовать и Скачать файл</button>
-        </div>
-    </div>
-
-    <footer>
-        <p>«Светский Дом», 2026.</p>
-    </footer>
-
-    <script id="newsData" type="application/json">
-[
-  {
-    "date": "25 июня, 02:30",
-    "text": "Добро пожаловать на обновленный сайт «Светский Дом»! Теперь все новости о блокировках, VPN и обновлениях рунета публикуются здесь напрямую из нашей защищенной панели."
-  }
-]
-    </script>
+    <div id="cesiumContainer"></div>
 
     <script>
-        // Зашифрованный хэш твоего пароля (SHA-256 от "09012012Mark")
-        const targetHash = "56037a5083cfc0bc3d2e0df40129bc6f62da601ff7a6aa03e67c8b0e77d94e24";
+        // Инициализация 3D глобуса (отключаем лишние стандартные кнопки для чистого интерфейса)
+        const viewer = new Cesium.Viewer('cesiumContainer', {
+            terrainProvider: Cesium.createWorldTerrain(), // Включает 3D рельеф (горы)
+            animation: false,
+            timeline: false,
+            fullscreenButton: false,
+            geocoder: false,
+            homeButton: false,
+            infoBox: false,
+            sceneModePicker: false,
+            selectionIndicator: false,
+            navigationHelpButton: false
+        });
 
-        // Отображение новостей на странице
-        function displayNews() {
-            const rawData = document.getElementById('newsData').textContent;
-            const news = JSON.parse(rawData);
-            const container = document.getElementById('newsContainer');
-            
-            let html = '';
-            // Выводим в обратном порядке (свежие сверху)
-            for(let i = news.length - 1; i >= 0; i--) {
-                html += `
-                    <div class="grid-item">
-                        <div class="grid-date">${news[i].date}</div>
-                        <p class="grid-text">${news[i].text}</p>
-                    </div>
-                `;
-            }
-            container.innerHTML = html;
-        }
-
-        // Хэширование для проверки пароля
-        async function sha256(message) {
-            const msgBuffer = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        // Функция переключения видимости модалки
-        function toggleAdminModal() {
-            const modal = document.getElementById('adminModal');
-            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
-        }
-
-        // 1. Вызов админки на ПК (Ctrl + M)
-        window.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && (e.key === 'm' || e.key === 'ь' || e.key === 'M')) {
-                toggleAdminModal();
+        // Настройка начального вида (как в начале вашего видео — вид на Северную Америку)
+        viewer.camera.setView({
+            destination: Cesium.Cartesian3.fromDegrees(-95.0, 40.0, 10000000.0), // Координаты центра
+            orientation: {
+                heading: Cesium.Math.toRadians(0.0),
+                pitch: Cesium.Math.toRadians(-90.0), // Смотрим строго вниз
+                roll: 0.0
             }
         });
 
-        // 2. Вызов админки на телефоне (3 быстрых тапа по логотипу)
-        const logoElement = document.querySelector('.logo');
-        if (logoElement) {
-            logoElement.addEventListener('click', (e) => {
-                if (e.detail === 3) {
-                    toggleAdminModal();
-                }
+        // Функция плавного полета (зума) к координатам (пример из видео, когда карта приближается к Невинномысску)
+        function flyToRandomCountry() {
+            // Координаты Невинномысска (из конца вашего видео) для демонстрации зума
+            const targetLon = 41.93;
+            const targetLat = 44.63;
+
+            viewer.camera.flyTo({
+                destination: Cesium.Cartesian3.fromDegrees(targetLon, targetLat, 15000.0), // 15000 метров над землей
+                duration: 4.0, // Время полета в секундах
+                pitch: Cesium.Math.toRadians(-45.0) // Небольшой наклон камеры для эффекта 3D
             });
+
+            document.getElementById('quest').innerText = "Вы прилетели к Ставропольскому краю!";
         }
 
-        // Проверка пароля
-        async function checkPassword() {
-            const input = document.getElementById('passwordInput').value;
-            const inputHash = await sha256(input);
+        // Обработка кликов по глобусу (для механики угадывания стран)
+        const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+        handler.setInputAction(function(click) {
+            const ray = viewer.camera.getPickRay(click.position);
+            const earthPosition = viewer.scene.globe.pick(ray, viewer.scene);
             
-            if (inputHash === targetHash) {
-                document.getElementById('authSection').style.display = 'none';
-                document.getElementById('postSection').style.display = 'block';
-                document.getElementById('modalTitle').innerText = 'Новая публикация';
-            } else {
-                alert('Неверный код доступа!');
+            if (Cesium.defined(earthPosition)) {
+                const cartographic = Cesium.Cartographic.fromCartesian(earthPosition);
+                const longitudeString = Cesium.Math.toDegrees(cartographic.longitude).toFixed(2);
+                const latitudeString = Cesium.Math.toDegrees(cartographic.latitude).toFixed(2);
+
+                // Выводим координаты клика. Сюда можно подключить проверку гео-зон (GeoJSON) стран
+                alert(`Вы кликнули на координаты:\nДолгота: ${longitudeString}\nШирота: ${latitudeString}`);
             }
-        }
-
-        // Генерация нового index.html и скачивание
-        function saveAndDownload() {
-            const text = document.getElementById('postTextInput').value;
-            if(!text) return alert('Введите текст!');
-
-            const rawData = document.getElementById('newsData').textContent;
-            const news = JSON.parse(rawData);
-
-            // Создаем объект новой новости
-            const options = { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' };
-            const formattedDate = new Date().toLocaleDateString('ru-RU', options);
-            
-            news.push({
-                date: formattedDate,
-                text: text
-            });
-
-            // Форматируем новые данные новостей с отступами
-            const updatedJsonText = JSON.stringify(news, null, 2);
-
-            // Берем весь текущий HTML-код страницы
-            let entireHtml = document.documentElement.outerHTML;
-
-            // Находим старый блок данных и заменяем его на обновленный
-            const oldScriptRegExp = /<script id="newsData" type="application\/json">([\s\S]*?)<\/script>/;
-            entireHtml = entireHtml.replace(oldScriptRegExp, `<script id="newsData" type="application/json">\n${updatedJsonText}\n    <\/script>`);
-
-            entireHtml = '<!DOCTYPE html>\n' + entireHtml;
-
-            // Скачиваем обновленный файл index.html
-            const blob = new Blob([entireHtml], {type: 'text/html'});
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'index.html';
-            link.click();
-
-            // Скрываем модалку
-            document.getElementById('adminModal').style.display = 'none';
-            document.getElementById('postTextInput').value = '';
-            alert('Файл успешно обновлен! Закинь скачанный index.html на GitHub.');
-            location.reload();
-        }
-
-        displayNews();
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
     </script>
 </body>
 </html>
