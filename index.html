@@ -3,180 +3,280 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Call of War Style Interface</title>
-    
-    <!-- Подключаем Leaflet -->
+    <title>Call of War Engine v1.0</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #1a1b1e; font-family: 'Arial', sans-serif; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #1a1b1e; font-family: 'Arial', sans-serif; user-select: none; }
         #map { width: 100%; height: 100%; position: absolute; z-index: 1; }
+        .leaflet-tile-container { filter: sepia(25%) hue-rotate(-10deg) saturate(65%) contrast(105%) brightness(95%); }
 
-        /* Магия стилизации: превращаем обычную карту в винтажную военную из Call of War */
-        .leaflet-tile-container {
-            filter: sepia(25%) hue-rotate(-10deg) saturate(65%) contrast(105%) brightness(95%);
+        /* Окно выбора страны при старте */
+        #start-screen {
+            position: fixed; inset: 0; background: rgba(10,12,15,0.98); z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff;
         }
+        .start-box { background: #22252a; border: 1px solid #3b76e2; padding: 30px; border-radius: 8px; text-align: center; max-width: 90%; }
+        .start-box h2 { color: #00ffaa; margin-top: 0; text-transform: uppercase; }
+        .country-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .c-btn { background: #2d3139; color: #fff; border: 1px solid #444; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .c-btn:hover { border-color: #00ffaa; background: #343942; }
 
-        /* Полностью переработанный интерфейс под стиль скриншотов */
+        /* Верхний игровой интерфейс */
         .top-bar {
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 55px;
-            background: rgba(20, 21, 24, 0.92);
-            border-bottom: 2px solid #2d2f35;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 0 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            position: absolute; top: 0; left: 0; right: 0; height: 50px;
+            background: rgba(20, 21, 24, 0.95); border-bottom: 2px solid #2d2f35;
+            z-index: 10; display: flex; align-items: center; justify-content: space-around; color: #fff; font-size: 12px;
         }
+        .res-box span { color: #00ffaa; font-weight: bold; }
 
-        .resource-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #ddd;
-            font-size: 11px;
-        }
-
-        .resource-value {
-            font-weight: bold;
-            color: #fff;
-            margin-top: 2px;
-        }
-
-        .gold-value {
-            color: #ffcc00 !important;
-        }
-
-        /* Нижняя панель приказов */
+        /* Панель управления снизу */
         .bottom-ui {
-            position: absolute;
-            bottom: 15px; left: 50%;
-            transform: translateX(-50%);
-            width: 92%;
-            max-width: 450px;
-            background: rgba(28, 30, 34, 0.95);
-            border: 1px solid #3e4149;
-            border-radius: 6px;
-            padding: 10px 15px;
-            z-index: 10;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 450px; background: rgba(28, 30, 34, 0.95);
+            border: 1px solid #3e4149; border-radius: 6px; padding: 12px; z-index: 10;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6); color: #fff;
         }
-
-        .province-detail {
-            color: #b9bbbe;
-            font-size: 12px;
+        .flex-ui { display: flex; justify-content: space-between; align-items: center; }
+        .prov-info strong { color: #fff; font-size: 16px; text-transform: uppercase; }
+        .stats-line { font-size: 12px; color: #aaa; margin-top: 4px; }
+        .actions-block { display: flex; gap: 8px; margin-top: 10px; border-top: 1px solid #333; padding-top: 8px; }
+        .btn-game { flex: 1; padding: 8px; border: none; border-radius: 4px; font-weight: bold; text-transform: uppercase; font-size: 11px; cursor: pointer; }
+        .btn-attack { background: #b84a39; color: #fff; }
+        .btn-build { background: #2b66d2; color: #fff; }
+        .btn-game:disabled { background: #2a2c30; color: #555; cursor: not-allowed; }
+        
+        /* Лог войны справа */
+        #war-log {
+            position: absolute; top: 60px; right: 10px; width: 200px; max-height: 150px;
+            background: rgba(0,0,0,0.7); z-index: 10; border-radius: 4px; padding: 8px;
+            font-size: 10px; color: #ffcccc; overflow-y: hidden; pointer-events: none;
         }
-
-        .province-detail strong {
-            color: #fff;
-            font-size: 15px;
-            display: block;
-            margin-bottom: 2px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-order {
-            background: #2b66d2;
-            color: #fff;
-            border: 1px solid #3b76e2;
-            padding: 8px 18px;
-            font-size: 11px;
-            font-weight: bold;
-            text-transform: uppercase;
-            border-radius: 3px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-order:hover { background: #3b76e2; }
-        .btn-order:disabled { background: #2a2c30; border-color: #333; color: #555; }
     </style>
 </head>
 <body>
 
-    <!-- Верхний бар ресурсов как на скриншоте -->
-    <div class="top-bar">
-        <div class="resource-item">💵 <span class="resource-value">52k</span></div>
-        <div class="resource-item">🪖 <span class="resource-value">14k</span></div>
-        <div class="resource-item">🌾 <span class="resource-value">12k</span></div>
-        <div class="resource-item">🪙 <span class="resource-value gold-value">9,000 Золото</span></div>
+    <!-- Стартовый экран -->
+    <div id="start-screen">
+        <div class="start-box">
+            <h2>Выберите свою Империю</h2>
+            <p>Вы получите контроль над границами выбранной страны, её заводами и армией.</p>
+            <div class="country-selector">
+                <button class="c-btn" onclick="selectCountry('Russia', '#5c6f52')">Россия</button>
+                <button class="c-btn" onclick="selectCountry('Germany', '#4a5568')">Германия</button>
+                <button class="c-btn" onclick="selectCountry('Turkey', '#8c4343')">Турция</button>
+                <button class="c-btn" onclick="selectCountry('Egypt', '#8c7a43')">Египет</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Нижняя панель управления армией -->
+    <!-- Ресурсы -->
+    <div class="top-bar">
+        <div class="res-box">Страна: <span id="player-nation">—</span></div>
+        <div class="res-box">💵 Бюджет: <span id="res-money">1000</span></div>
+        <div class="res-box">🏭 Всего заводов: <span id="res-factories">0</span></div>
+    </div>
+
+    <!-- Военные сводки -->
+    <div id="war-log">Сводки с фронта:<br></div>
+
+    <!-- Управление -->
     <div class="bottom-ui">
-        <div class="province-detail">
-            <span id="prov-type">Провинция не выбрана</span>
-            <strong id="prov-name">—</strong>
+        <div class="prov-info">
+            <strong id="ui-name">Выберите провинцию</strong>
+            <div class="stats-line" id="ui-stats">Владелец: — | Заводы: — | Армия: —</div>
+            <div class="stats-line" id="ui-front" style="color:#ff4444; font-weight:bold;"></div>
         </div>
-        <button class="btn-order" id="order-btn" disabled>Атаковать</button>
+        <div class="actions-block">
+            <button class="btn-game btn-attack" id="attack-btn" onclick="triggerAttack()" disabled>Штурм фронта</button>
+            <button class="btn-game btn-build" id="build-btn" onclick="buildFactory()" disabled>Построить завод (-200💵)</button>
+        </div>
     </div>
 
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Инициализируем карту (центрируем на Европу/Ближний Восток, как на image_4.png)
-        const map = L.map('map', { 
-            zoomControl: false,
-            attributionControl: false 
-        }).setView([45.0, 25.0], 4);
+        const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([50.0, 30.0], 4);
+        
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 6 }).addTo(map);
 
-        // Используем топографический слой Esri Shaded Relief. 
-        // Он дает идеальные тени гор, полей и пустынь без лишней спутниковой зелени.
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', {
-            maxZoom: 8
-        }).addTo(map);
+        let myNation = "";
+        let myColor = "";
+        let countriesData = {}; 
+        let selectedLayer = null;
+        let globalMoney = 1000;
 
-        let currentSelected = null;
+        // Базовые цвета для ботов
+        const botColors = ["#4a5568", "#8c4343", "#8c7a43", "#438c83", "#63438c", "#8c4376"];
 
-        // Стиль линий границ в стиле военных карт (тонкие, темно-серые/коричневые)
-        const callOfWarBoundsStyle = {
-            color: "#2b261f",
-            weight: 1.2,
-            fillColor: "#5c6f52", // Базовый оливково-серый цвет для нейтральных земель
-            fillOpacity: 0.15
-        };
+        function logWar(text) {
+            const log = document.getElementById('war-log');
+            log.innerHTML += `${text}<br>`;
+            log.scrollTop = log.scrollHeight;
+        }
 
-        // Загружаем сетку регионов (разбивка мира)
-        fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson')
-            .then(res => res.json())
-            .then(geoData => {
-                L.geoJSON(geoData, {
-                    style: callOfWarBoundsStyle,
-                    onEachFeature: function (feature, layer) {
-                        layer.on('click', function (e) {
-                            if (currentSelected) {
-                                currentSelected.setStyle(callOfWarBoundsStyle);
+        // 1. Выбор страны
+        function selectCountry(name, color) {
+            myNation = name;
+            myColor = color;
+            document.getElementById('player-nation').innerText = name;
+            document.getElementById('start-screen').style.display = 'none';
+            initGameMap();
+            
+            // Запуск ИИ и экономики (раз в 4 секунды)
+            setInterval(gameTick, 4000);
+        }
+
+        // 2. Генерация карты и привязка систем к каждой стране
+        function initGameMap() {
+            fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson')
+                .then(res => res.json())
+                .then(geoData => {
+                    L.geoJSON(geoData, {
+                        style: function(feature) {
+                            let cName = feature.properties.ADMIN;
+                            // Назначаем фракцию и генерируем войска
+                            if (!countriesData[cName]) {
+                                let isPlayer = (cName === myNation || (myNation === "Russia" && cName.includes("Russian")));
+                                countriesData[cName] = {
+                                    name: cName,
+                                    owner: isPlayer ? myNation : cName,
+                                    color: isPlayer ? myColor : botColors[Math.floor(Math.random() * botColors.length)],
+                                    armies: Math.floor(Math.random() * 80) + 20,
+                                    factories: Math.floor(Math.random() * 3),
+                                    fortification: 100 // Линия фронта (100% - целая)
+                                };
+                                if(isPlayer) countriesData[cName].owner = myNation;
                             }
+                            return {
+                                color: "#222", weight: 1.2,
+                                fillColor: countriesData[cName].color, fillOpacity: 0.25
+                            };
+                        },
+                        onEachFeature: function (feature, layer) {
+                            let cName = feature.properties.ADMIN;
                             
-                            currentSelected = layer;
-
-                            // При выборе провинция окрашивается в матовый фракционный цвет
-                            layer.setStyle({
-                                fillOpacity: 0.4,
-                                fillColor: "#b84a39", // Матовый красный цвет атаки/захвата
-                                weight: 1.8,
-                                color: "#111"
+                            layer.on('click', function (e) {
+                                if (selectedLayer) {
+                                    let prevName = selectedLayer.feature.properties.ADMIN;
+                                    selectedLayer.setStyle({ color: "#222", weight: 1.2, fillOpacity: 0.25 });
+                                }
+                                
+                                selectedLayer = layer;
+                                layer.setStyle({ color: "#fff", weight: 2.5, fillOpacity: 0.4 });
+                                updateUI(cName);
+                                map.panTo(e.latlng);
                             });
+                        }
+                    }).addTo(map);
+                });
+        }
 
-                            // Обновляем инфо-панель
-                            const name = feature.properties.ADMIN || "Регион";
-                            document.getElementById('prov-name').innerText = name;
-                            document.getElementById('prov-type').innerText = "ГЕО-ПРОВИНЦИЯ";
-                            document.getElementById('order-btn').disabled = false;
+        // 3. Обновление интерфейса при клике
+        function updateUI(cName) {
+            let data = countriesData[cName];
+            document.getElementById('ui-name').innerText = data.name;
+            document.getElementById('ui-stats').innerText = `Владелец: ${data.owner} | Заводы: ${data.factories} | Армия: ${data.armies}к`;
+            
+            let isMy = data.owner === myNation;
+            document.getElementById('build-btn').disabled = !isMy || globalMoney < 200;
+            
+            // Если страна вражеская — активируем Линию Фронта
+            if (!isMy) {
+                document.getElementById('attack-btn').disabled = false;
+                document.getElementById('ui-front').innerText = `Линия обороны врага: ${data.fortification}%`;
+            } else {
+                document.getElementById('attack-btn').disabled = true;
+                document.getElementById('ui-front').innerText = `Это ваша территория`;
+            }
+        }
 
-                            map.panTo(e.latlng);
-                        });
+        // 4. Механика микро-ударов (Линия Фронта)
+        function triggerAttack() {
+            if (!selectedLayer) return;
+            let cName = selectedLayer.feature.properties.ADMIN;
+            let data = countriesData[cName];
+
+            // Игрок тратит деньги на снабжение атаки
+            if (globalMoney < 30) {
+                alert("Недостаточно бюджета для проведения атаки (нужно 30💵)!");
+                return;
+            }
+            globalMoney -= 30;
+
+            // Наносим урон по куску земли (линии фронта)
+            let damage = Math.floor(Math.random() * 20) + 10;
+            data.fortification -= damage;
+            data.armies -= Math.floor(Math.random() * 5);
+            if (data.armies < 0) data.armies = 0;
+
+            if (data.fortification <= 0) {
+                // Полный прорыв фронта! Страна переходит игроку
+                data.owner = myNation;
+                data.color = myColor;
+                data.fortification = 100;
+                data.armies = 15; // Оккупационные войска
+                selectedLayer.setStyle({ fillColor: myColor, fillOpacity: 0.25 });
+                logWar(`🎉 Мы полностью захватили ${data.name}!`);
+            } else {
+                logWar(`💥 Бои за рубеж ${data.name}: фронт продавлен на ${damage}%!`);
+            }
+
+            updateUI(cName);
+            refreshTopBar();
+        }
+
+        // 5. Постройка заводов
+        function buildFactory() {
+            if (!selectedLayer) return;
+            let cName = selectedLayer.feature.properties.ADMIN;
+            let data = countriesData[cName];
+            
+            if (globalMoney >= 200) {
+                globalMoney -= 200;
+                data.factories++;
+                updateUI(cName);
+                refreshTopBar();
+                logWar(`🏭 Построен завод в ${data.name}`);
+            }
+        }
+
+        function refreshTopBar() {
+            document.getElementById('res-money').innerText = globalMoney;
+            let totalFac = 0;
+            for (let c in countriesData) {
+                if (countriesData[c].owner === myNation) totalFac += countriesData[c].factories;
+            }
+            document.getElementById('res-factories').innerText = totalFac;
+        }
+
+        // 6. Глобальный Тик: Экономика и Автономные атаки Ботов (ИИ)
+        function gameTick() {
+            let totalFac = 0;
+            
+            // Считаем заводы игрока и даем прибыль
+            for (let c in countriesData) {
+                let data = countriesData[c];
+                if (data.owner === myNation) {
+                    totalFac += data.factories;
+                    globalMoney += 25 + (data.factories * 15);
+                } else {
+                    // Боты строят войска от своих заводов
+                    data.armies += 2 + (data.factories * 3);
+                    
+                    // Шанс того, что бот нападет на кого-то другого (Симуляция войны ИИ)
+                    if (Math.random() < 0.15 && data.armies > 40) {
+                        data.armies -= 15;
+                        logWar(`⚔️ ${data.name} развязал конфликт на границе!`);
                     }
-                }).addTo(map);
-            });
+                }
+            }
+            
+            refreshTopBar();
+            if (selectedLayer) {
+                updateUI(selectedLayer.feature.properties.ADMIN);
+            }
+        }
     </script>
 </body>
 </html>
