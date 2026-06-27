@@ -3,126 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Политическая Глобальная Стратегия</title>
+    <title>Global Strategy Map</title>
     
-    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
-    <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
-
+    <!-- Подключаем стили карты Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <style>
-        html, body, #map {
-            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
-            background-color: #0d1117; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* Обнуляем отступы */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0b0c10;
+            color: #fff;
         }
 
-        /* Игровой интерфейс сверху карты */
-        #game-panel {
-            position: absolute; top: 20px; left: 20px; z-index: 10;
-            background: rgba(15, 23, 42, 0.9); color: white;
-            padding: 20px; border-radius: 16px; width: 300px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
+        /* Контейнер для карты */
+        #map {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
         }
 
-        h3, h4 { margin-top: 0; color: #38bdf8; font-weight: 600; }
-        .stat { margin: 10px 0; font-size: 14px; display: flex; justify-content: space-between; }
-        .btn {
-            background: #2563eb; color: white; border: none; padding: 12px;
-            border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%;
-            margin-top: 10px; transition: 0.2s; font-size: 14px;
+        /* Кастомизация интерфейса игры (Тёмный премиум/глассморфизм) */
+        .game-ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            width: 320px;
+            background: rgba(15, 22, 36, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 170, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            pointer-events: auto;
         }
-        .btn:hover { background: #1d4ed8; }
-        .btn-war { background: #dc2626; }
-        .btn-war:hover { background: #b91c1c; }
 
-        #log-panel {
-            position: absolute; bottom: 20px; left: 20px; z-index: 10;
-            background: rgba(15, 23, 42, 0.9); color: #10b981; padding: 12px;
-            border-radius: 10px; max-height: 120px; width: 300px; overflow-y: auto; 
-            font-size: 13px; border: 1px solid rgba(255,255,255,0.1);
+        .game-ui h1 {
+            font-size: 20px;
+            margin: 0 0 15px 0;
+            color: #00ffaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(0, 255, 170, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .info-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-left: 3px solid #00ffaa;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #8892b0;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
+        /* Кнопка действия */
+        .btn-capture {
+            width: 100%;
+            background: #00ffaa;
+            color: #0f1624;
+            border: none;
+            padding: 12px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+
+        .btn-capture:hover {
+            background: #00cc88;
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.4);
+        }
+
+        /* Скрываем стандартные уродливые копирайты карты для чистого вида */
+        .leaflet-control-attribution {
+            background: rgba(0,0,0,0.7) !important;
+            color: #555 !important;
         }
     </style>
 </head>
 <body>
 
-    <div id="game-panel">
-        <h3>Моя Империя</h3>
-        <div class="stat"><span>Выбранная цель:</span> <strong id="selected-target" style="color: #f59e0b;">Кликните на карту</strong></div>
-        <div class="stat"><span>Золото:</span> <span id="money" style="font-weight: bold; color: #eab308;">1000 🪙</span></div>
-        <hr style="border-color: rgba(255,255,255,0.1)">
+    <!-- Панель управления игрой -->
+    <div class="game-ui">
+        <h1>Штаб Управления</h1>
         
-        <h4>Дипломатия и Война</h4>
-        <button class="btn" onclick="sendDiplomacy()">Предложить союз</button>
-        <button class="btn btn-war" onclick="startWar()">Объявить войну и захватить</button>
+        <div class="info-box">
+            <div class="info-label">Выбранный регион</div>
+            <div id="region-name" class="info-value">Выберите провинцию</div>
+        </div>
+
+        <div class="info-box">
+            <div class="info-label">Контролирует фракция</div>
+            <div id="region-owner" class="info-value">—</div>
+        </div>
+
+        <button class="btn-capture" id="capture-btn" disabled>Захватить регион</button>
     </div>
 
-    <div id="log-panel" id="logs">
-        <div>[Система]: Карта загружена. Выберите регион для дипломатии или экспансии.</div>
-    </div>
-
+    <!-- Сюда рендерится карта -->
     <div id="map"></div>
 
+    <!-- Подключаем логику Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Инициализируем карту с красивым темным векторным стилем (похож на ночной режим Apple Maps)
-        const map = new maplibregl.Map({
-            container: 'map',
-            style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json', // Бесплатный темный стиль карты
-            center: [37.61, 55.75], // Стартовая точка (Москва)
-            zoom: 2, // Стартовый зум (видны страны)
-            pitch: 0,
-            maxZoom: 12
-        });
+        // 1. Инициализация карты (ставим фокус на Восточную Европу / Юг России)
+        const map = L.map('map', {
+            zoomControl: false // Убираем дефолтные кнопки +/- для чистоты UI
+        }).setView([47.0, 42.0], 5); 
 
-        let selectedCoords = null;
-        let playerMoney = 1000;
+        // Переносим кнопки зума в правый верхний угол, чтобы не мешали UI
+        L.control.zoom({ position: 'topright' }).addTo(map);
 
-        // Включение вращения и базовых контроллеров
-        map.addControl(new maplibregl.NavigationControl());
+        // 2. Подключаем спутниковые тайлы Esri (HD Рельеф Земли)
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 18,
+            attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        }).addTo(map);
 
-        // Отслеживаем клик по карте
-        map.on('click', function (e) {
-            selectedCoords = e.lngLat;
-            
-            // Округляем координаты для вывода
-            const lng = selectedCoords.lng.toFixed(2);
-            const lat = selectedCoords.lat.toFixed(2);
-            
-            document.getElementById('selected-target').innerText = `Регион (${lng}, ${lat})`;
-            addLog(`Вы нацелились на сектор: Долгота ${lng}, Широта ${lat}`);
-        });
+        // Переменная для хранения текущей выбранной провинции
+        let selectedProvince = null;
 
-        // Функция взаимодействия с ИИ
-        function sendDiplomacy() {
-            if (!selectedCoords) return alert("Сначала кликните по карте, чтобы выбрать регион!");
-            
-            if (Math.random() > 0.5) {
-                addLog(`🤝 Местный правитель согласился на союз с вами!`);
-                playerMoney += 150;
-            } else {
-                addLog(`❌ ИИ отклонил ваше дипломатическое предложение.`);
+        // Данные для тестовых провинций (координаты полигонов)
+        const provincesData = [
+            {
+                name: "Сектор Альфа (Юг)",
+                owner: "Южная Федерация",
+                color: "#ff3333",
+                coords: [
+                    [45.0, 37.0], [47.0, 38.0], [48.0, 41.0], [46.0, 43.0], [44.0, 41.0]
+                ]
+            },
+            {
+                name: "Провинция Центр",
+                owner: "Нейтралы",
+                color: "#aaaaaa",
+                coords: [
+                    [48.0, 41.0], [51.0, 40.0], [52.0, 44.0], [49.0, 46.0], [46.0, 43.0]
+                ]
+            },
+            {
+                name: "Восточный Рубеж",
+                owner: "Империя Восток",
+                color: "#3388ff",
+                coords: [
+                    [46.0, 43.0], [49.0, 46.0], [50.0, 51.0], [45.0, 50.0], [43.0, 47.0]
+                ]
             }
-            document.getElementById('money').innerText = playerMoney + " 🪙";
+        ];
+
+        // Массив для хранения созданных на карте объектов
+        const armyLayers = [];
+
+        // 3. Функция обработки клика по провинции
+        function onProvinceClick(e, data, layer) {
+            selectedProvince = { data: data, layer: layer };
+            
+            // Обновляем UI текст
+            document.getElementById('region-name').innerText = data.name;
+            document.getElementById('region-owner').innerText = data.owner;
+            
+            // Подсвечиваем фракционный цвет в UI
+            document.getElementById('region-owner').style.color = data.color;
+            
+            // Активируем кнопку захвата
+            document.getElementById('capture-btn').disabled = false;
+
+            // Сбрасываем стиль у всех провинций и выделяем текущую жирной рамкой
+            armyLayers.forEach(l => l.setStyle({ weight: 1.5, fillOpacity: 0.3 }));
+            layer.setStyle({ weight: 3.5, fillOpacity: 0.5 });
+            
+            // Легкое перетекание камеры к региону
+            map.panTo(e.latlng);
         }
 
-        // Функция войны
-        function startWar() {
-            if (!selectedCoords) return alert("Выберите регион для атаки!");
-            
-            addLog(`⚔️ Отправка войск в сектор...`);
-            
-            setTimeout(() => {
-                addLog(`🎉 Сектор успешно присоединен к вашей фракции! Получены трофеи.`);
-                playerMoney += 300;
-                document.getElementById('money').innerText = playerMoney + " 🪙";
+        // 4. Отрисовка провинций на карте
+        provincesData.forEach(prov => {
+            const polygon = L.polygon(prov.coords, {
+                color: prov.color,       // Цвет границ
+                fillColor: prov.color,   // Цвет заливки секторов
+                fillOpacity: 0.3,        // Прозрачность
+                weight: 1.5
+            }).addTo(map);
+
+            armyLayers.push(polygon);
+
+            // Вешаем событие клика
+            polygon.on('click', function(e) {
+                onProvinceClick(e, prov, polygon);
+            });
+        });
+
+        // 5. Логика кнопки "Захватить" (для теста механики)
+        document.getElementById('capture-btn').addEventListener('click', function() {
+            if (selectedProvince) {
+                // Меняем владельца на нашего игрока
+                selectedProvince.data.owner = "Игрок (Вы)";
+                selectedProvince.data.color = "#00ffaa"; // Зеленый неоновый цвет игрока
                 
-                // Здесь в будущем мы будем добавлять цветную закраску поверх карты
-            }, 1000);
-        }
-
-        function addLog(text) {
-            const logPanel = document.getElementById('log-panel');
-            logPanel.innerHTML += `<div>${text}</div>`;
-            logPanel.scrollTop = logPanel.scrollHeight;
-        }
+                // Перекрашиваем полигон на карте
+                selectedProvince.layer.setStyle({
+                    color: "#00ffaa",
+                    fillColor: "#00ffaa"
+                });
+                
+                // Обновляем UI
+                document.getElementById('region-owner').innerText = "Игрок (Вы)";
+                document.getElementById('region-owner').style.color = "#00ffaa";
+            }
+        });
     </script>
 </body>
 </html>
