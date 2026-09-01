@@ -226,4 +226,987 @@
     }
     .player-meta {
       font-size: 0.78rem;
-      color: var
+      color: var(--text-dim);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      font-family: var(--mono);
+    }
+    .player-meta strong { color: var(--text); font-weight: 500; }
+
+    .bars { display: flex; flex-direction: column; gap: 8px; }
+    .bar-row {
+      display: grid;
+      grid-template-columns: 72px 1fr 40px;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      font-family: var(--mono);
+    }
+    .bar-label { color: var(--text-mute); }
+    .bar-track {
+      height: 6px;
+      background: #0a0e0c;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+    .bar-fill.energy { background: var(--orange); box-shadow: 0 0 6px rgba(255,107,26,0.4); }
+    .bar-fill.health { background: var(--red); }
+    .bar-fill.mood { background: #7c5cff; }
+    .bar-fill.hunger { background: var(--green-dim); }
+    .bar-value { text-align: right; color: var(--text-dim); font-size: 0.7rem; }
+
+    .hack-zone { text-align: center; padding: 6px 0 2px; }
+    .hack-btn {
+      width: 100%;
+      max-width: 340px;
+      margin: 0 auto 12px;
+      padding: 20px 16px;
+      border: 2px solid var(--green);
+      background: #0a160f;
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 20px var(--green-glow), inset 0 0 20px rgba(61,255,122,0.05);
+      transition: background 0.1s, box-shadow 0.1s, transform 0.05s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .hack-btn:hover {
+      background: #0e1f14;
+      box-shadow: 0 0 28px var(--green-glow), inset 0 0 30px rgba(61,255,122,0.08);
+    }
+    .hack-btn:active {
+      transform: scale(0.98);
+      background: #122a1a;
+    }
+    .hack-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: none;
+      border-color: var(--border-bright);
+      color: var(--text-mute);
+    }
+    .hack-btn .earn {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      opacity: 0.8;
+      margin-top: 6px;
+      text-transform: none;
+    }
+    .hack-hint {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      margin-bottom: 10px;
+    }
+
+    .float-money {
+      position: absolute;
+      pointer-events: none;
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--green);
+      text-shadow: 0 0 10px var(--green);
+      animation: floatUp 0.85s ease-out forwards;
+      z-index: 50;
+    }
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-42px) scale(1.2); }
+    }
+
+    .job-list { display: flex; flex-direction: column; gap: 8px; }
+    .job {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      padding: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .job.current {
+      border-color: var(--green-dim);
+      background: #0d1610;
+      box-shadow: inset 0 0 20px rgba(61,255,122,0.04);
+    }
+    .job.locked { opacity: 0.5; }
+    .job-icon {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--border-bright);
+      background: #0a0e0c;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .job-body { flex: 1; min-width: 130px; }
+    .job-name {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      color: var(--text);
+      margin-bottom: 2px;
+      letter-spacing: 0.03em;
+    }
+    .job.current .job-name { color: var(--green); }
+    .job-desc { font-size: 0.72rem; color: var(--text-dim); }
+    .job-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+      font-size: 0.68rem;
+      font-family: var(--mono);
+    }
+    .job-stats span {
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      color: var(--text-mute);
+    }
+    .job-stats .pay { color: var(--green); border-color: var(--green-dim); }
+    .job-actions { display: flex; gap: 6px; }
+    .btn {
+      border: 1px solid var(--border-bright);
+      background: var(--bg-elevated);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+    }
+    .btn:hover { border-color: var(--green-dim); color: var(--green); }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary {
+      border-color: var(--green-dim);
+      background: #0d1a12;
+      color: var(--green);
+    }
+    .btn-primary:hover {
+      background: #122a1a;
+      border-color: var(--green);
+      box-shadow: 0 0 12px var(--green-glow);
+    }
+    .btn-primary:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: none;
+      border-color: var(--border);
+      color: var(--text-mute);
+      background: var(--bg);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-dim);
+    }
+    .btn-sm { padding: 6px 10px; font-size: 0.68rem; }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+      gap: 8px;
+    }
+    .action-card {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      padding: 12px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+    .action-card:hover {
+      border-color: var(--border-bright);
+      background: var(--bg-elevated);
+    }
+    .action-card:active { transform: scale(0.97); }
+    .action-card.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .action-icon { font-size: 22px; margin-bottom: 4px; }
+    .action-name {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.03em;
+      margin-bottom: 2px;
+    }
+    .action-cost {
+      font-size: 0.65rem;
+      font-family: var(--mono);
+      color: var(--text-mute);
+    }
+    .action-cost.free { color: var(--green-dim); }
+
+    .log {
+      max-height: 190px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .log-entry {
+      padding: 6px 8px;
+      background: #0a0e0c;
+      border-left: 2px solid var(--border);
+      color: var(--text-dim);
+    }
+    .log-entry.good { border-left-color: var(--green); color: #8dffb0; }
+    .log-entry.bad { border-left-color: var(--red); color: #ff8a8a; }
+    .log-entry.info { border-left-color: var(--orange); color: #ffb380; }
+    .log-time {
+      color: var(--text-mute);
+      margin-right: 6px;
+      font-size: 0.65rem;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10,12,11,0.94);
+      border-top: 1px solid var(--border);
+      padding: 10px 12px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+    .bottom-bar .btn {
+      flex: 1;
+      max-width: 180px;
+      padding: 11px;
+      text-align: center;
+    }
+
+    .toast-container {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      pointer-events: none;
+    }
+    .toast {
+      border: 1px solid var(--border-bright);
+      background: var(--bg-elevated);
+      padding: 10px 14px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      animation: toastIn 0.25s ease, toastOut 0.25s ease 2.3s forwards;
+      max-width: 260px;
+    }
+    .toast.success { border-color: var(--green-dim); color: var(--green); }
+    .toast.error { border-color: var(--red); color: #ff8a8a; }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(16px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes toastOut {
+      to { opacity: 0; transform: translateX(16px); }
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      border: 1px solid var(--border-bright);
+      background: var(--bg-panel);
+      padding: 20px;
+      max-width: 380px;
+      width: 100%;
+      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    }
+    .modal h3 {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--green);
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+    .modal p {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+      font-family: var(--mono);
+    }
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); }
+
+    @media (max-width: 480px) {
+      .app { padding: 10px 8px 110px; }
+      .header-stats { width: 100%; }
+      .stat-box { flex: 1; min-width: 0; }
+      .hack-btn { padding: 16px 12px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="logo">
+        <div class="logo-badge">01</div>
+        <div>
+          <h1>ЗОНА // ХАК</h1>
+          <span>ТЮРЕМНЫЙ ТЕРМИНАЛ · ЧЁРНЫЙ РЫНОК</span>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="stat-box money">
+          <span class="lbl">Баланс</span>
+          <span class="val" id="moneyDisplay">0 ₽</span>
+        </div>
+        <div class="stat-box energy">
+          <span class="lbl">Силы</span>
+          <span class="val" id="energyDisplay">100</span>
+        </div>
+        <div class="stat-box day">
+          <span class="lbl">Сутки</span>
+          <span class="val" id="dayDisplay">1</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div>
+        <div class="panel" style="margin-bottom:14px;">
+          <div class="panel-title">Статус заключённого</div>
+          <div class="player-row">
+            <div class="avatar" id="avatar">🔒</div>
+            <div class="player-info">
+              <h2 id="playerName">Новичок</h2>
+              <div class="player-meta">
+                <span>Ранг: <strong id="jobTitle">Отсидка</strong></span>
+                <span>Срок: <strong id="ageDisplay">1</strong> г.</span>
+                <span>Репутация: <strong id="expDisplay">0</strong></span>
+              </div>
+            </div>
+          </div>
+          <div class="bars">
+            <div class="bar-row">
+              <span class="bar-label">СИЛЫ</span>
+              <div class="bar-track"><div class="bar-fill energy" id="energyBar" style="width:100%"></div></div>
+              <span class="bar-value" id="energyBarVal">100</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">ЗДОРОВЬЕ</span>
+              <div class="bar-track"><div class="bar-fill health" id="healthBar" style="width:100%"></div></div>
+              <span class="bar-value" id="healthBarVal">100</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">МОРАЛЬ</span>
+              <div class="bar-track"><div class="bar-fill mood" id="moodBar" style="width:65%"></div></div>
+              <span class="bar-value" id="moodBarVal">65</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">ПАЁК</span>
+              <div class="bar-track"><div class="bar-fill hunger" id="hungerBar" style="width:75%"></div></div>
+              <span class="bar-value" id="hungerBarVal">75</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-bottom:14px; position:relative;" id="workCard">
+          <div class="panel-title">Терминал · Хак</div>
+          <div class="hack-zone">
+            <p class="hack-hint" id="workHint">Взламывай системы. Деньги идут медленно. Одна ошибка — и нары.</p>
+            <button class="hack-btn" id="workBtn" type="button">
+              ВЗЛОМАТЬ
+              <span class="earn" id="workEarn">+0 ₽ · −0 силы</span>
+            </button>
+            <p class="hack-hint" style="margin-bottom:0;" id="workStats">Сессий сегодня: 0 · Навар: 0 ₽</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Иерархия зоны</div>
+          <div class="job-list" id="jobList"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel" style="margin-bottom:14px;">
+          <div class="panel-title">Барахолка / Действия</div>
+          <div class="actions-grid" id="actionsGrid"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Журнал событий</div>
+          <div class="log" id="log"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <button class="btn btn-ghost" id="saveBtn" type="button">СОХР</button>
+    <button class="btn btn-ghost" id="resetBtn" type="button">СБРОС</button>
+    <button class="btn btn-primary" id="sleepBtn" type="button">ОТБОЙ · НОВЫЕ СУТКИ</button>
+  </div>
+
+  <div class="toast-container" id="toasts"></div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <h3 id="modalTitle">ПОДТВЕРЖДЕНИЕ</h3>
+      <p id="modalText"></p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="modalCancel">ОТМЕНА</button>
+        <button class="btn btn-primary" id="modalConfirm">ДА</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const JOBS = [
+      {
+        id: 'newbie',
+        name: 'Отсидка',
+        icon: '🔒',
+        desc: 'Сидишь. Почти ничего не можешь. Копейки с мелкого.',
+        payPerClick: 4,
+        energyCost: 5,
+        expRequired: 0,
+        expGain: 1,
+        unlockCost: 0,
+        stress: 3
+      },
+      {
+        id: 'runner',
+        name: 'Бегунок',
+        icon: '📱',
+        desc: 'Носишь телефоны и записки. Рискованно, но кормит.',
+        payPerClick: 14,
+        energyCost: 7,
+        expRequired: 30,
+        expGain: 2,
+        unlockCost: 0,
+        stress: 5
+      },
+      {
+        id: 'dealer',
+        name: 'Барыга',
+        icon: '🚬',
+        desc: 'Сигареты, чай, мелочёвка. Чёрный рынок камеры.',
+        payPerClick: 28,
+        energyCost: 6,
+        expRequired: 90,
+        expGain: 3,
+        unlockCost: 2000,
+        stress: 6
+      },
+      {
+        id: 'phone',
+        name: 'Телефонщик',
+        icon: '📡',
+        desc: 'Контрабандные смартфоны. Связь с волей.',
+        payPerClick: 48,
+        energyCost: 8,
+        expRequired: 200,
+        expGain: 4,
+        unlockCost: 6000,
+        stress: 8
+      },
+      {
+        id: 'coder',
+        name: 'Кодер',
+        icon: '💻',
+        desc: 'Пишешь скрипты на старом ноуте. Первые хаки.',
+        payPerClick: 75,
+        energyCost: 6,
+        expRequired: 400,
+        expGain: 6,
+        unlockCost: 18000,
+        stress: 7
+      },
+      {
+        id: 'hacker',
+        name: 'Хакер зоны',
+        icon: '🕵️',
+        desc: 'Взламываешь камеры, счета, мелкие базы. Уже серьёзно.',
+        payPerClick: 130,
+        energyCost: 7,
+        expRequired: 750,
+        expGain: 8,
+        unlockCost: 45000,
+        stress: 9
+      },
+      {
+        id: 'ghost',
+        name: 'Призрак',
+        icon: '👻',
+        desc: 'Доступ к внешним сетям. Работаешь на заказ извне.',
+        payPerClick: 220,
+        energyCost: 6,
+        expRequired: 1400,
+        expGain: 10,
+        unlockCost: 120000,
+        stress: 8
+      },
+      {
+        id: 'broker',
+        name: 'Брокер',
+        icon: '📊',
+        desc: 'Посредник между зоной и волей. Крупные сделки.',
+        payPerClick: 380,
+        energyCost: 7,
+        expRequired: 2500,
+        expGain: 12,
+        unlockCost: 350000,
+        stress: 10
+      },
+      {
+        id: 'king',
+        name: 'Смотрящий по цифре',
+        icon: '👑',
+        desc: 'Контролируешь информационный поток зоны. Вершина.',
+        payPerClick: 650,
+        energyCost: 8,
+        expRequired: 4500,
+        expGain: 15,
+        unlockCost: 900000,
+        stress: 12
+      }
+    ];
+
+    const ACTIONS = [
+      { id: 'ration', name: 'Паёк', icon: '🥣', cost: 0, hunger: 20, mood: -2, health: 0, energy: 3, desc: 'Казённая баландa' },
+      { id: 'tea', name: 'Чифирь', icon: '☕', cost: 150, hunger: 5, mood: 6, health: 0, energy: 12, desc: 'Крепкий чай' },
+      { id: 'smoke', name: 'Сигареты', icon: '🚬', cost: 350, hunger: 0, mood: 10, health: -3, energy: 5, desc: 'Успокоить нервы' },
+      { id: 'food', name: 'Передача', icon: '🥩', cost: 900, hunger: 45, mood: 8, health: 4, energy: 10, desc: 'Нормальная еда' },
+      { id: 'rest', name: 'Лечь на нары', icon: '🛏️', cost: 0, hunger: -4, mood: 12, health: 4, energy: 28, desc: 'Отдых' },
+      { id: 'yard', name: 'Прогулка', icon: '🚶', cost: 0, hunger: -6, mood: 8, health: 3, energy: -8, desc: 'Двор' },
+      { id: 'workout', name: 'Турник', icon: '🏋️', cost: 0, hunger: -12, mood: 6, health: 10, energy: -18, desc: 'Качалка' },
+      { id: 'medic', name: 'Санитар', icon: '🩹', cost: 1800, hunger: 0, mood: -3, health: 30, energy: 5, desc: 'Подлатать' },
+      { id: 'card', name: 'Карты', icon: '🃏', cost: 600, hunger: 0, mood: 15, health: 0, energy: -5, desc: 'Партия' },
+      { id: 'book', name: 'Книга/код', icon: '📖', cost: 1200, hunger: -3, mood: -4, health: 0, energy: -15, exp: 35, desc: '+репутация' },
+      { id: 'phone_time', name: 'Минуты связи', icon: '📞', cost: 2500, hunger: 0, mood: 18, health: 0, energy: 0, desc: 'Звонок на волю' },
+      { id: 'protection', name: 'Крыша', icon: '🛡️', cost: 5000, hunger: 0, mood: 5, health: 8, energy: 5, desc: 'Меньше риска' }
+    ];
+
+    const defaultState = () => ({
+      money: 500,
+      energy: 100,
+      health: 100,
+      mood: 65,
+      hunger: 75,
+      day: 1,
+      age: 1,
+      exp: 0,
+      jobId: 'newbie',
+      unlockedJobs: ['newbie'],
+      clicksToday: 0,
+      earnedToday: 0,
+      totalEarned: 0,
+      lastSave: Date.now(),
+      log: []
+    });
+
+    let state = loadState();
+    let modalCallback = null;
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem('zonaHack_v1');
+        if (raw) return { ...defaultState(), ...JSON.parse(raw) };
+      } catch (e) {}
+      return defaultState();
+    }
+
+    function saveState() {
+      state.lastSave = Date.now();
+      localStorage.setItem('zonaHack_v1', JSON.stringify(state));
+      toast('СОХРАНЕНО', 'success');
+    }
+
+    function formatMoney(n) {
+      return Math.floor(n).toLocaleString('ru-RU') + ' ₽';
+    }
+
+    function clamp(v, min, max) {
+      return Math.max(min, Math.min(max, v));
+    }
+
+    function currentJob() {
+      return JOBS.find(j => j.id === state.jobId) || JOBS[0];
+    }
+
+    function toast(msg, type = '') {
+      const el = document.createElement('div');
+      el.className = 'toast ' + type;
+      el.textContent = msg;
+      document.getElementById('toasts').appendChild(el);
+      setTimeout(() => el.remove(), 2700);
+    }
+
+    function addLog(text, type = '') {
+      state.log.unshift({ text, type, time: `СУТКИ ${state.day}` });
+      if (state.log.length > 45) state.log.pop();
+      renderLog();
+    }
+
+    function showModal(title, text, onConfirm) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalText').textContent = text;
+      document.getElementById('modal').classList.add('open');
+      modalCallback = onConfirm;
+    }
+
+    function hideModal() {
+      document.getElementById('modal').classList.remove('open');
+      modalCallback = null;
+    }
+
+    function renderAll() {
+      renderHeader();
+      renderPlayer();
+      renderWork();
+      renderJobs();
+      renderActions();
+      renderLog();
+    }
+
+    function renderHeader() {
+      document.getElementById('moneyDisplay').textContent = formatMoney(state.money);
+      document.getElementById('energyDisplay').textContent = Math.floor(state.energy);
+      document.getElementById('dayDisplay').textContent = state.day;
+    }
+
+    function renderPlayer() {
+      const job = currentJob();
+      document.getElementById('playerName').textContent = job.name;
+      document.getElementById('jobTitle').textContent = job.name;
+      document.getElementById('ageDisplay').textContent = state.age;
+      document.getElementById('expDisplay').textContent = state.exp;
+      document.getElementById('avatar').textContent = job.icon;
+
+      const setBar = (id, val) => {
+        const v = Math.floor(clamp(val, 0, 100));
+        document.getElementById(id + 'Bar').style.width = v + '%';
+        document.getElementById(id + 'BarVal').textContent = v;
+      };
+      setBar('energy', state.energy);
+      setBar('health', state.health);
+      setBar('mood', state.mood);
+      setBar('hunger', state.hunger);
+    }
+
+    function renderWork() {
+      const job = currentJob();
+      const canWork = state.energy >= job.energyCost && state.hunger > 8 && state.health > 12;
+      const btn = document.getElementById('workBtn');
+      btn.disabled = !canWork;
+      document.getElementById('workEarn').textContent = `+${job.payPerClick} ₽ · −${job.energyCost} силы`;
+      document.getElementById('workStats').textContent =
+        `Сессий сегодня: ${state.clicksToday} · Навар: ${formatMoney(state.earnedToday)}`;
+      if (!canWork) {
+        if (state.energy < job.energyCost) document.getElementById('workHint').textContent = 'Силы на нуле. Ляг на нары или выпей чифирь.';
+        else if (state.hunger <= 8) document.getElementById('workHint').textContent = 'Голод. Возьми паёк или передачу.';
+        else document.getElementById('workHint').textContent = 'Здоровье критическое. Нужен санитар.';
+      } else {
+        document.getElementById('workHint').textContent = 'Взламывай. Деньги тяжёлые. Одна ошибка — и штрафной.';
+      }
+    }
+
+    function renderJobs() {
+      const list = document.getElementById('jobList');
+      list.innerHTML = '';
+      JOBS.forEach(job => {
+        const unlocked = state.unlockedJobs.includes(job.id);
+        const isCurrent = state.jobId === job.id;
+        const canUnlock = !unlocked && state.exp >= job.expRequired && state.money >= job.unlockCost;
+        const canTake = unlocked && !isCurrent && state.exp >= job.expRequired;
+
+        const el = document.createElement('div');
+        el.className = 'job' + (isCurrent ? ' current' : '') + (!unlocked ? ' locked' : '');
+        el.innerHTML = `
+          <div class="job-icon">${job.icon}</div>
+          <div class="job-body">
+            <div class="job-name">${job.name}${isCurrent ? ' · ТЕКУЩИЙ' : ''}</div>
+            <div class="job-desc">${job.desc}</div>
+            <div class="job-stats">
+              <span class="pay">${job.payPerClick} ₽/сесс</span>
+              <span>−${job.energyCost} силы</span>
+              <span>реп ≥ ${job.expRequired}</span>
+              ${job.unlockCost > 0 ? `<span>вход ${formatMoney(job.unlockCost)}</span>` : ''}
+            </div>
+          </div>
+          <div class="job-actions"></div>
+        `;
+        const actions = el.querySelector('.job-actions');
+        if (isCurrent) {
+          actions.innerHTML = `<button class="btn btn-ghost btn-sm" disabled>НА МЕСТЕ</button>`;
+        } else if (!unlocked) {
+          const btn = document.createElement('button');
+          btn.className = 'btn btn-primary btn-sm';
+          btn.textContent = canUnlock ? 'ОТКРЫТЬ' : 'ЗАКРЫТО';
+          btn.disabled = !canUnlock;
+          btn.onclick = () => unlockJob(job.id);
+          actions.appendChild(btn);
+        } else {
+          const btn = document.createElement('button');
+          btn.className = 'btn btn-primary btn-sm';
+          btn.textContent = canTake ? 'ЗАНЯТЬ' : 'МАЛО РЕП';
+          btn.disabled = !canTake;
+          btn.onclick = () => takeJob(job.id);
+          actions.appendChild(btn);
+        }
+        list.appendChild(el);
+      });
+    }
+
+    function renderActions() {
+      const grid = document.getElementById('actionsGrid');
+      grid.innerHTML = '';
+      ACTIONS.forEach(a => {
+        const can = state.money >= a.cost;
+        const el = document.createElement('div');
+        el.className = 'action-card' + (can ? '' : ' disabled');
+        el.innerHTML = `
+          <div class="action-icon">${a.icon}</div>
+          <div class="action-name">${a.name}</div>
+          <div class="action-cost ${a.cost === 0 ? 'free' : ''}">${a.cost === 0 ? 'бесплатно' : formatMoney(a.cost)}</div>
+        `;
+        if (can) el.onclick = () => doAction(a.id);
+        grid.appendChild(el);
+      });
+    }
+
+    function renderLog() {
+      const log = document.getElementById('log');
+      log.innerHTML = state.log.length
+        ? state.log.map(e => `
+            <div class="log-entry ${e.type}">
+              <span class="log-time">${e.time}</span>${e.text}
+            </div>
+          `).join('')
+        : '<div class="log-entry">Тишина в камере. Начни взлом.</div>';
+    }
+
+    function workClick(e) {
+      const job = currentJob();
+      if (state.energy < job.energyCost || state.hunger <= 8 || state.health <= 12) return;
+
+      state.energy = clamp(state.energy - job.energyCost, 0, 100);
+      state.hunger = clamp(state.hunger - 1.4, 0, 100);
+      state.mood = clamp(state.mood - job.stress * 0.18, 0, 100);
+      state.health = clamp(state.health - (job.stress > 8 ? 0.35 : 0.12), 0, 100);
+
+      const variance = 0.8 + Math.random() * 0.4;
+      const pay = Math.floor(job.payPerClick * variance);
+      state.money += pay;
+      state.earnedToday += pay;
+      state.totalEarned += pay;
+      state.exp += job.expGain;
+      state.clicksToday += 1;
+
+      const card = document.getElementById('workCard');
+      const rect = card.getBoundingClientRect();
+      const float = document.createElement('div');
+      float.className = 'float-money';
+      float.textContent = `+${pay} ₽`;
+      float.style.left = (e.clientX - rect.left - 18 + (Math.random() * 36 - 18)) + 'px';
+      float.style.top = (e.clientY - rect.top - 8) + 'px';
+      card.appendChild(float);
+      setTimeout(() => float.remove(), 850);
+
+      if (Math.random() < 0.045) {
+        const events = [
+          { text: 'Удачный взлом. Бонус на счёт.', money: Math.floor(pay * 1.8), type: 'good' },
+          { text: 'Почти спалились. Пришлось слить часть.', money: -Math.floor(pay * 0.5), type: 'bad' },
+          { text: 'Чистый доступ. Мораль поднялась.', mood: 6, type: 'info' },
+          { text: 'Сервер ответил долго. Устал сильнее.', energy: -10, type: 'bad' },
+          { text: 'Нашли уязвимость. Репутация +', exp: 8, type: 'good' }
+        ];
+        const ev = events[Math.floor(Math.random() * events.length)];
+        if (ev.money) state.money = Math.max(0, state.money + ev.money);
+        if (ev.mood) state.mood = clamp(state.mood + ev.mood, 0, 100);
+        if (ev.energy) state.energy = clamp(state.energy + ev.energy, 0, 100);
+        if (ev.exp) state.exp += ev.exp;
+        addLog(ev.text, ev.type);
+      }
+
+      checkCritical();
+      renderAll();
+    }
+
+    function unlockJob(id) {
+      const job = JOBS.find(j => j.id === id);
+      if (!job || state.unlockedJobs.includes(id)) return;
+      if (state.exp < job.expRequired || state.money < job.unlockCost) {
+        toast('НЕ ХВАТАЕТ РЕПЫ ИЛИ БАБОК', 'error');
+        return;
+      }
+      state.money -= job.unlockCost;
+      state.unlockedJobs.push(id);
+      addLog(`Открыт ранг: ${job.name}`, 'info');
+      toast(`РАНГ «${job.name}» ОТКРЫТ`);
+      renderAll();
+    }
+
+    function takeJob(id) {
+      const job = JOBS.find(j => j.id === id);
+      if (!job || !state.unlockedJobs.includes(id) || state.exp < job.expRequired) return;
+      state.jobId = id;
+      addLog(`Теперь ты: ${job.name}`, 'good');
+      toast(`РАНГ: ${job.name}`);
+      renderAll();
+    }
+
+    function doAction(id) {
+      const a = ACTIONS.find(x => x.id === id);
+      if (!a || state.money < a.cost) return;
+      state.money -= a.cost;
+      if (a.hunger) state.hunger = clamp(state.hunger + a.hunger, 0, 100);
+      if (a.mood) state.mood = clamp(state.mood + a.mood, 0, 100);
+      if (a.health) state.health = clamp(state.health + a.health, 0, 100);
+      if (a.energy) state.energy = clamp(state.energy + a.energy, 0, 100);
+      if (a.exp) state.exp += a.exp;
+      addLog(`${a.name}: ${a.desc}`, a.cost > 0 ? 'info' : 'good');
+      toast(a.name);
+      checkCritical();
+      renderAll();
+    }
+
+    function sleep() {
+      state.day += 1;
+      if (state.day % 365 === 0) state.age += 1;
+
+      state.energy = clamp(state.energy + 50, 0, 100);
+      state.hunger = clamp(state.hunger - 22, 0, 100);
+      state.mood = clamp(state.mood - 6 + (state.health > 55 ? 4 : -6), 0, 100);
+
+      let expense = 280;
+      if (state.money >= expense) {
+        state.money -= expense;
+        addLog(`Сутки ${state.day}: обязательные траты −${formatMoney(expense)}`, 'info');
+      } else {
+        state.mood = clamp(state.mood - 18, 0, 100);
+        state.health = clamp(state.health - 6, 0, 100);
+        addLog(`Сутки ${state.day}: нечем платить. Давят.`, 'bad');
+      }
+
+      if (Math.random() < 0.38) {
+        const daily = [
+          { text: 'Нашли купюру в старой книге', money: 300, type: 'good' },
+          { text: 'Шмон. Потерял часть бабок', money: -500, type: 'bad' },
+          { text: 'Хорошие новости с воли', mood: 10, type: 'good' },
+          { text: 'Бессонная ночь', energy: -18, type: 'bad' },
+          { text: 'Узнал новую схему', exp: 18, type: 'info' },
+          { text: 'Подрался. Синяки', health: -14, type: 'bad' },
+          { text: 'Контролёр закрыл глаза', money: 150, type: 'good' }
+        ];
+        const ev = daily[Math.floor(Math.random() * daily.length)];
+        if (ev.money) state.money = Math.max(0, state.money + ev.money);
+        if (ev.mood) state.mood = clamp(state.mood + ev.mood, 0, 100);
+        if (ev.energy) state.energy = clamp(state.energy + ev.energy, 0, 100);
+        if (ev.health) state.health = clamp(state.health + ev.health, 0, 100);
+        if (ev.exp) state.exp += ev.exp;
+        addLog(ev.text, ev.type);
+      }
+
+      state.clicksToday = 0;
+      state.earnedToday = 0;
+      checkCritical();
+      renderAll();
+      toast(`СУТКИ ${state.day}`);
+    }
+
+    function checkCritical() {
+      if (state.health <= 0) {
+        state.health = 12;
+        state.money = Math.max(0, state.money - 4000);
+        state.mood = 15;
+        addLog('Лазарет. −4000 ₽', 'bad');
+        toast('ЛАЗАРЕТ −4000 ₽', 'error');
+      }
+      if (state.hunger <= 0) {
+        state.hunger = 8;
+        state.health = clamp(state.health - 14, 0, 100);
+        state.mood = clamp(state.mood - 18, 0, 100);
+        addLog('Голод. Силы и мораль падают.', 'bad');
+      }
+      if (state.mood <= 5) {
+        state.energy = clamp(state.energy - 12, 0, 100);
+        addLog('Мораль на нуле. Работать тяжело.', 'bad');
+      }
+    }
+
+    document.getElementById('workBtn').addEventListener('click', workClick);
+    document.getElementById('sleepBtn').addEventListener('click', sleep);
+    document.getElementById('saveBtn').addEventListener('click', saveState);
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      showModal('СБРОС', 'Весь прогресс будет уничтожен. Начать заново?', () => {
+        localStorage.removeItem('zonaHack_v1');
+        state = defaultState();
+        addLog('Новый срок. С нуля.', 'info');
+        renderAll();
+        hideModal();
+        toast('ПРОГРЕСС ОБНУЛЁН');
+      });
+    });
+    document.getElementById('modalCancel').addEventListener('click', hideModal);
+    document.getElementById('modalConfirm').addEventListener('click', () => {
+      if (modalCallback) modalCallback();
+    });
+
+    setInterval(() => {
+      state.lastSave = Date.now();
+      localStorage.setItem('zonaHack_v1', JSON.stringify(state));
+    }, 30000);
+
+    setInterval(() => {
+      if (document.hidden) return;
+      state.hunger = clamp(state.hunger - 0.45, 0, 100);
+      state.energy = clamp(state.energy - 0.18, 0, 100);
+      if (state.hunger < 18 || state.energy < 12) renderAll();
+    }, 8000);
+
+    if (state.log.length === 0) {
+      addLog('Камера. 500 ₽ на старте. Деньги здесь зарабатывают кровью и кодом.', 'info');
+      addLog('Жми ВЗЛОМАТЬ. Копи репутацию. Поднимайся по иерархии зоны.', 'info');
+    }
+    renderAll();
+  </script>
+</body>
+</html>
