@@ -1,135 +1,229 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Europe Tactical Map</title>
-    
-    <!-- Подключаем Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #1a1b1e; font-family: sans-serif; user-select: none; }
-        #map { width: 100%; height: 100%; position: absolute; z-index: 1; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>ЗОНА · Хакерский симулятор</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0c0b;
+      --bg-panel: #111413;
+      --bg-elevated: #161a18;
+      --border: #2a332e;
+      --border-bright: #3d4a42;
+      --text: #c8d6c9;
+      --text-dim: #6b7a6e;
+      --text-mute: #4a554e;
+      --green: #3dff7a;
+      --green-dim: #1a8f45;
+      --green-glow: rgba(61, 255, 122, 0.25);
+      --orange: #ff6b1a;
+      --orange-dim: #b34700;
+      --red: #ff3b3b;
+      --yellow: #e8c547;
+      --concrete: #1c211e;
+      --radius: 2px;
+      --font: 'IBM Plex Sans', system-ui, sans-serif;
+      --mono: 'Share Tech Mono', ui-monospace, monospace;
+    }
 
-        /* Матовый военный фильтр для карты */
-        .leaflet-tile-container {
-            filter: sepia(20%) hue-rotate(-10deg) saturate(70%) contrast(102%) brightness(95%);
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.4;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        /* Стартовый экран выбора фракции */
-        #start-screen {
-            position: fixed; inset: 0; background: rgba(15, 17, 20, 0.95); z-index: 100;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff;
-        }
-        .start-box { background: #22252a; border: 1px solid #2b66d2; padding: 25px; border-radius: 8px; text-align: center; width: 85%; max-width: 350px; }
-        .start-box h2 { color: #00ffaa; margin-top: 0; text-transform: uppercase; font-size: 18px; }
-        .faction-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-        .f-btn { background: #2d3139; color: #fff; border: 1px solid #444; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 13px; }
-        .f-btn:hover { border-color: #00ffaa; background: #343942; }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(0,0,0,0.12) 2px,
+          rgba(0,0,0,0.12) 4px
+        ),
+        radial-gradient(ellipse 100% 80% at 50% -20%, rgba(61,255,122,0.04), transparent 50%),
+        linear-gradient(180deg, #0d100e 0%, #0a0c0b 40%, #080a09 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent 0,
+        transparent 80px,
+        rgba(255,255,255,0.008) 80px,
+        rgba(255,255,255,0.008) 81px
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
 
-        /* Минималистичная инфо-панель сверху */
-        .info-bar {
-            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
-            z-index: 10; background: rgba(25, 27, 31, 0.9); border: 1px solid #3e4149;
-            padding: 8px 16px; border-radius: 20px; color: #fff; font-size: 13px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center; pointer-events: none;
-        }
-        .info-bar span { color: #00ffaa; font-weight: bold; }
-    </style>
-</head>
-<body>
+    .app {
+      position: relative;
+      z-index: 1;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 12px 12px 110px;
+      min-height: 100%;
+    }
 
-    <!-- Выбор фракции -->
-    <div id="start-screen">
-        <div class="start-box">
-            <h2>ВЫБЕРИТЕ СВОЮ ФРАКЦИЮ</h2>
-            <div class="faction-list">
-                <button class="f-btn" onclick="startConquest('Империя (Вы)', '#8c4343')">Красный Альянс</button>
-                <button class="f-btn" onclick="startConquest('Империя (Вы)', '#3366cc')">Синий Союз</button>
-                <button class="f-btn" onclick="startConquest('Империя (Вы)', '#5c6f52')">Зеленый Блок</button>
-            </div>
-        </div>
-    </div>
+    header {
+      border: 1px solid var(--border);
+      background: var(--bg-panel);
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: relative;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--green-dim), var(--green), var(--green-dim));
+      opacity: 0.7;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-badge {
+      width: 44px;
+      height: 44px;
+      border: 2px solid var(--green);
+      background: #0d1a12;
+      display: grid;
+      place-items: center;
+      font-family: var(--mono);
+      font-size: 18px;
+      color: var(--green);
+      box-shadow: 0 0 12px var(--green-glow);
+    }
+    .logo h1 {
+      font-family: var(--mono);
+      font-size: 1.15rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      color: var(--green);
+      text-transform: uppercase;
+    }
+    .logo span {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      letter-spacing: 0.04em;
+    }
 
-    <!-- Инфо-панель -->
-    <div class="info-bar">
-        Ваша фракция: <span id="faction-name">—</span> | Тапни по региону для захвата
-    </div>
+    .header-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .stat-box {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      padding: 7px 12px;
+      min-width: 100px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+    }
+    .stat-box .lbl {
+      display: block;
+      font-size: 0.65rem;
+      color: var(--text-mute);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .stat-box .val { color: var(--text); }
+    .stat-box.money .val { color: var(--green); text-shadow: 0 0 8px var(--green-glow); }
+    .stat-box.energy .val { color: var(--orange); }
+    .stat-box.day .val { color: var(--yellow); }
 
-    <div id="map"></div>
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    @media (min-width: 860px) {
+      .grid { grid-template-columns: 1.2fr 0.8fr; }
+    }
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        // Центрируем карту строго на Европе
-        const map = L.map('map', { 
-            zoomControl: false, 
-            attributionControl: false 
-        }).setView([52.0, 20.0], 4);
+    .panel {
+      border: 1px solid var(--border);
+      background: var(--bg-panel);
+      padding: 14px;
+      position: relative;
+    }
+    .panel-title {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green-dim);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-title::before {
+      content: '▸';
+      color: var(--green);
+    }
 
-        // Ставим качественную топографическую подложку рельефа земли
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', { 
-            maxZoom: 7,
-            minZoom: 3
-        }).addTo(map);
-
-        let playerFaction = "";
-        let playerColor = "";
-        let regionsData = {}; 
-
-        // Дефолтный стиль для карты Европы (нейтральные регионы)
-        const neutralStyle = {
-            color: "#2b261f", // Темные тонкие границы провинций
-            weight: 1.2,
-            fillColor: "#6b7280", // Базовый матовый цвет
-            fillOpacity: 0.2
-        };
-
-        function startConquest(name, color) {
-            playerFaction = name;
-            playerColor = color;
-            document.getElementById('faction-name').innerText = "АКТИВНА";
-            document.getElementById('faction-name').style.color = color;
-            document.getElementById('start-screen').style.display = 'none';
-            
-            loadEuropeanProvinces();
-        }
-
-        function loadEuropeanProvinces() {
-            // Подгружаем карту с детальным разделением регионов Европы
-            fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson')
-                .then(res => res.json())
-                .then(geoData => {
-                    // Фильтруем координаты, оставляя в основном европейский регион для легкости работы
-                    L.geoJSON(geoData, {
-                        style: neutralStyle,
-                        onEachFeature: function (feature, layer) {
-                            let rName = feature.properties.ADMIN;
-                            
-                            // Сохраняем базовые данные региона
-                            regionsData[rName] = {
-                                owner: "Нейтралы",
-                                color: "#6b7280"
-                            };
-
-                            // Главная механика: Тап — и регион физически переходит под твой контроль
-                            layer.on('click', function (e) {
-                                // Меняем данные региона на данные игрока
-                                regionsData[rName].owner = playerFaction;
-                                regionsData[rName].color = playerColor;
-
-                                // Мгновенно перекрашиваем границы и внутреннюю часть региона в цвет игрока
-                                layer.setStyle({
-                                    fillColor: playerColor,
-                                    fillOpacity: 0.4,
-                                    color: "#111", // Граница становится контрастной военной линией
-                                    weight: 1.5
-                                });
-                            });
-                        }
-                    }).addTo(map);
-                });
-        }
-    </script>
-</body>
-</html>
+    .player-row {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .avatar {
+      width: 60px;
+      height: 60px;
+      border: 2px solid var(--border-bright);
+      background: #0d1210;
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .avatar::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border: 1px solid rgba(61,255,122,0.15);
+      pointer-events: none;
+    }
+    .player-info h2 {
+      font-family: var(--mono);
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: var(--green);
+      margin-bottom: 4px;
+      letter-spacing: 0.04em;
+    }
+    .player-meta {
+      font-size: 0.78rem;
+      color: var
