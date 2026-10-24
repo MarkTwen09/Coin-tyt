@@ -3,25 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus // Protocol Dispatch Engine</title>
+    <title>AETHER // Gateway Stress Testing Platform</title>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --bg-base: #090a0f;
-            --surface: rgba(18, 20, 28, 0.75);
-            --surface-hover: rgba(26, 30, 42, 0.85);
-            --border: rgba(255, 255, 255, 0.08);
-            --border-focus: rgba(99, 102, 241, 0.5);
+            --bg: #07090e;
+            --surface: rgba(18, 22, 34, 0.65);
+            --surface-subtle: rgba(255, 255, 255, 0.02);
+            --border: rgba(255, 255, 255, 0.07);
+            --border-hover: rgba(129, 140, 248, 0.3);
+            
             --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.25);
             --accent-gradient: linear-gradient(135deg, #6366f1, #a855f7);
+            
             --success: #10b981;
             --warning: #f59e0b;
-            --danger: #ef4444;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --danger: #f43f5e;
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-tertiary: #64748b;
+            
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
 
         * {
@@ -32,21 +38,26 @@
         }
 
         body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
+            background-color: var(--bg);
+            color: var(--text-primary);
             font-family: var(--font-sans);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
-            background-image: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.04) 0%, transparent 60%);
+            background-image: 
+                radial-gradient(ellipse 80% 50% at 20% -10%, rgba(99, 102, 241, 0.12), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(168, 85, 247, 0.08), transparent);
+            background-attachment: fixed;
         }
 
+        /* Top Navigation Header */
         header {
-            height: 60px;
+            height: 64px;
             border-bottom: 1px solid var(--border);
-            background: rgba(9, 10, 15, 0.8);
-            backdrop-filter: blur(16px);
+            background: rgba(7, 9, 14, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -61,30 +72,31 @@
             align-items: center;
             gap: 12px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 15px;
             letter-spacing: -0.01em;
         }
 
         .brand-icon {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             background: var(--accent-gradient);
-            border-radius: 8px;
+            border-radius: 9px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 0 20px var(--accent-glow);
         }
 
-        .status-pill {
+        .status-badge {
             display: flex;
             align-items: center;
             gap: 8px;
             font-size: 12px;
             font-family: var(--font-mono);
-            background: rgba(16, 185, 129, 0.1);
+            background: rgba(16, 185, 129, 0.08);
             border: 1px solid rgba(16, 185, 129, 0.2);
             color: var(--success);
-            padding: 4px 12px;
+            padding: 5px 14px;
             border-radius: 20px;
         }
 
@@ -93,71 +105,85 @@
             height: 6px;
             background: var(--success);
             border-radius: 50%;
+            box-shadow: 0 0 8px var(--success);
         }
 
-        .main-layout {
+        /* Main Grid */
+        .container {
             flex: 1;
             display: grid;
-            grid-template-columns: 380px 1fr 400px;
-            gap: 24px;
+            grid-template-columns: 380px 1fr 420px;
+            gap: 20px;
             padding: 24px 32px;
-            max-width: 1700px;
+            max-width: 1800px;
             margin: 0 auto;
             width: 100%;
         }
 
-        @media (max-width: 1300px) {
-            .main-layout { grid-template-columns: 360px 1fr; }
+        @media (max-width: 1400px) {
+            .container { grid-template-columns: 360px 1fr; }
             .right-panel { grid-column: span 2; }
         }
 
-        @media (max-width: 850px) {
-            .main-layout { grid-template-columns: 1fr; }
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
             .right-panel { grid-column: span 1; }
         }
 
+        /* Glass Panel Card */
         .card {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.36);
+            transition: border-color 0.25s ease;
+        }
+
+        .card:hover {
+            border-color: var(--border-hover);
         }
 
         .card-header {
-            padding: 18px 20px;
+            padding: 18px 22px;
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
             font-size: 13px;
             font-weight: 600;
-            color: #d1d5db;
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.01);
         }
 
         .card-body {
-            padding: 20px;
+            padding: 22px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 18px;
             flex: 1;
         }
 
+        /* Forms & Inputs */
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
 
         label {
             font-size: 11px;
-            font-weight: 500;
-            color: var(--text-muted);
+            font-weight: 600;
+            color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .input-wrapper {
@@ -168,97 +194,136 @@
 
         .input-wrapper i {
             position: absolute;
-            left: 12px;
-            color: var(--text-muted);
+            left: 14px;
+            color: var(--text-tertiary);
             width: 16px;
             height: 16px;
+            transition: color 0.2s;
         }
 
         input[type="text"], select {
             width: 100%;
-            background: rgba(15, 17, 23, 0.6);
+            background: rgba(10, 13, 22, 0.7);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 11px 12px 11px 38px;
-            color: #fff;
+            border-radius: 12px;
+            padding: 12px 14px 12px 42px;
+            color: var(--text-primary);
             font-family: var(--font-mono);
             font-size: 13px;
             outline: none;
             transition: all 0.2s ease;
         }
 
-        select { appearance: none; cursor: pointer; padding-left: 38px; }
+        select { appearance: none; cursor: pointer; }
 
         input[type="text"]:focus, select:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+            background: rgba(10, 13, 22, 0.95);
         }
 
-        .services-box {
+        input[type="text"]:focus + i, select:focus + i {
+            color: var(--accent);
+        }
+
+        /* Services Choice Boxes */
+        .services-actions {
+            display: flex;
+            gap: 12px;
+            font-size: 11px;
+            color: var(--accent);
+            cursor: pointer;
+        }
+
+        .services-actions span:hover { text-decoration: underline; }
+
+        .services-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 6px;
-            max-height: 160px;
+            gap: 8px;
+            max-height: 170px;
             overflow-y: auto;
+            padding-right: 4px;
         }
 
         .service-chip {
-            background: rgba(255, 255, 255, 0.02);
+            background: var(--surface-subtle);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 8px 10px;
+            border-radius: 10px;
+            padding: 9px 12px;
             font-size: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
         }
 
-        .service-chip:hover { background: rgba(255, 255, 255, 0.04); }
-        .service-chip.active { background: rgba(99, 102, 241, 0.12); border-color: var(--accent); color: #818cf8; }
+        .service-chip:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .service-chip.active {
+            background: rgba(99, 102, 241, 0.12);
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
         .service-chip input { display: none; }
 
+        /* Action Buttons */
         .btn {
             width: 100%;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 14px;
+            border-radius: 12px;
             border: none;
             font-weight: 600;
             font-size: 13px;
+            letter-spacing: 0.02em;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            transition: all 0.2s;
+            gap: 10px;
+            transition: all 0.25s ease;
         }
 
         .btn-primary {
             background: var(--accent-gradient);
             color: #fff;
-            box-shadow: 0 2px 12px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 4px 20px var(--accent-glow);
         }
 
-        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-primary:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px var(--accent-glow);
+        }
+
         .btn-danger {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            background: rgba(244, 63, 94, 0.12);
+            border: 1px solid rgba(244, 63, 94, 0.3);
             color: var(--danger);
             display: none;
         }
-        .btn-danger:hover { background: rgba(239, 68, 68, 0.25); }
 
+        .btn-danger:hover {
+            background: rgba(244, 63, 94, 0.22);
+        }
+
+        /* Telemetry Cards */
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
         }
 
         .metric-card {
-            background: rgba(255, 255, 255, 0.015);
+            background: var(--surface-subtle);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 12px;
             display: flex;
             flex-direction: column;
@@ -268,83 +333,87 @@
         .metric-value {
             font-family: var(--font-mono);
             font-size: 18px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .metric-label {
             font-size: 10px;
-            color: var(--text-muted);
+            color: var(--text-tertiary);
             text-transform: uppercase;
         }
 
+        /* Progress Line */
         .progress-track {
             width: 100%;
-            height: 4px;
+            height: 6px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 2px;
+            border-radius: 3px;
             overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
             width: 0%;
-            background: var(--accent);
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--accent-gradient);
+            border-radius: 3px;
+            transition: width 0.2s ease;
         }
 
+        /* Charts Box */
         .chart-box {
             width: 100%;
-            height: 160px;
-            background: rgba(12, 14, 20, 0.5);
+            height: 150px;
+            background: rgba(8, 10, 18, 0.6);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 12px;
             position: relative;
             overflow: hidden;
         }
 
         canvas { width: 100%; height: 100%; display: block; }
 
+        /* Terminal Console */
         .terminal {
-            background: #06070a;
+            background: rgba(5, 7, 12, 0.9);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px;
+            border-radius: 12px;
+            padding: 14px;
             font-family: var(--font-mono);
             font-size: 11px;
             height: 380px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
 
         .log-row {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             line-height: 1.4;
             word-break: break-all;
         }
 
-        .log-time { color: var(--text-muted); flex-shrink: 0; }
+        .log-time { color: var(--text-tertiary); flex-shrink: 0; }
         .log-badge {
-            padding: 1px 5px;
-            border-radius: 3px;
+            padding: 1px 6px;
+            border-radius: 4px;
             font-size: 9px;
-            font-weight: 600;
+            font-weight: 700;
             flex-shrink: 0;
             height: fit-content;
         }
 
-        .bg-success { background: rgba(16, 185, 129, 0.12); color: var(--success); }
-        .bg-warning { background: rgba(245, 158, 11, 0.12); color: var(--warning); }
-        .bg-danger { background: rgba(239, 68, 68, 0.12); color: var(--danger); }
-        .bg-info { background: rgba(99, 102, 241, 0.12); color: #818cf8; }
+        .bg-success { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+        .bg-warning { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+        .bg-danger { background: rgba(244, 63, 94, 0.15); color: var(--danger); }
+        .bg-info { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
 
-        .log-msg { color: #d1d5db; }
+        .log-msg { color: #cbd5e1; }
 
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 3px; }
     </style>
 </head>
 <body>
@@ -352,51 +421,52 @@
     <header>
         <div class="brand">
             <div class="brand-icon">
-                <i data-lucide="cpu" style="width: 16px; height: 16px; color: #fff;"></i>
+                <i data-lucide="shield-alert" style="width: 18px; height: 18px; color: #fff;"></i>
             </div>
-            <span>NEXUS <span style="color: var(--text-muted); font-weight: 400;">// Protocol Engine</span></span>
+            <span>AETHER <span style="color: var(--text-tertiary); font-weight: 400;">// Stress Test v5.2</span></span>
         </div>
-        <div class="status-pill">
+        <div class="status-badge">
             <div class="status-dot"></div>
-            <span id="sysStatusText">Система готова</span>
+            <span id="sysStatusText">Ядро готово</span>
         </div>
     </header>
 
-    <div class="main-layout">
-        <!-- Left Column: Controls -->
+    <div class="container">
+        
+        <!-- Controls Column -->
         <div class="card">
             <div class="card-header">
                 <span style="display: flex; align-items: center; gap: 8px;">
-                    <i data-lucide="sliders" style="width: 14px; height: 14px;"></i> Параметры сессии
+                    <i data-lucide="sliders" style="width: 15px; height: 15px; color: var(--accent);"></i> Параметры тестов
                 </span>
             </div>
             <div class="card-body">
                 <div class="form-group">
                     <label>Целевой номер</label>
                     <div class="input-wrapper">
-                        <input type="text" id="phoneInput" value="+7 (900) 555-35-35">
+                        <input type="text" id="phoneInput" value="+7 (900) 123-45-67">
                         <i data-lucide="phone"></i>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Интенсивность запросов</label>
+                    <label>Интенсивность</label>
                     <div class="input-wrapper">
                         <select id="rateSelect">
-                            <option value="3">Низкая (3 req/s - Скрытный режим)</option>
-                            <option value="8" selected>Средняя (8 req/s - Стандарт)</option>
-                            <option value="15">Высокая (15 req/s - Быстрый шлюз)</option>
+                            <option value="5">Низкая (5 req/s - Stealth)</option>
+                            <option value="12" selected>Средняя (12 req/s - Adaptive)</option>
+                            <option value="25">Высокая (25 req/s - Burst)</option>
                         </select>
-                        <i data-lucide="activity"></i>
+                        <i data-lucide="zap"></i>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Пакет итераций</label>
+                    <label>Лимит пакетов</label>
                     <div class="input-wrapper">
                         <select id="limitSelect">
-                            <option value="50">50 пакетов</option>
-                            <option value="120" selected>120 пакетов</option>
+                            <option value="60">60 пакетов</option>
+                            <option value="150" selected>150 пакетов</option>
                             <option value="300">300 пакетов</option>
                         </select>
                         <i data-lucide="layers"></i>
@@ -404,47 +474,57 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Шлюзы маршрутизации</label>
-                    <div class="services-box" id="gatewaysGrid"></div>
+                    <label>
+                        Шлюзы маршрутизации
+                        <div class="services-actions">
+                            <span onclick="selectAllGateways(true)">Все</span>
+                            <span onclick="selectAllGateways(false)">Сбросить</span>
+                        </div>
+                    </label>
+                    <div class="services-grid" id="gatewaysGrid"></div>
                 </div>
 
-                <div style="margin-top: auto; padding-top: 8px;">
+                <div style="margin-top: auto; padding-top: 10px;">
                     <button class="btn btn-primary" id="startBtn" onclick="startSimulation()">
-                        <i data-lucide="play" style="width: 16px; height: 16px;"></i> Запустить тест
+                        <i data-lucide="play" style="width: 16px; height: 16px;"></i> Запустить эмуляцию
                     </button>
                     <button class="btn btn-danger" id="stopBtn" onclick="stopSimulation()">
-                        <i data-lucide="square" style="width: 16px; height: 16px;"></i> Прервать сессию
+                        <i data-lucide="square" style="width: 16px; height: 16px;"></i> Остановить
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Center Column: Metrics & Graph -->
+        <!-- Telemetry & Analytics Column -->
         <div class="card">
             <div class="card-header">
                 <span style="display: flex; align-items: center; gap: 8px;">
-                    <i data-lucide="bar-chart-2" style="width: 14px; height: 14px;"></i> Телеметрия очереди
+                    <i data-lucide="activity" style="width: 15px; height: 15px; color: var(--accent);"></i> Мониторинг сети
                 </span>
-                <span id="proxyInfo" style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">IP: Ожидание...</span>
+                <span id="proxyInfo" style="font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);">IP: Standby</span>
             </div>
             <div class="card-body">
                 <div class="metrics-grid">
                     <div class="metric-card">
-                        <span class="metric-label">Отправлено</span>
-                        <span class="metric-value" id="mSent" style="color: #fff;">0</span>
+                        <span class="metric-label">Запросов</span>
+                        <span class="metric-value" id="mSent">0</span>
                     </div>
                     <div class="metric-card">
-                        <span class="metric-label">Доставлено (200)</span>
+                        <span class="metric-label">Успех 200</span>
                         <span class="metric-value" id="mSuccess" style="color: var(--success);">0</span>
                     </div>
                     <div class="metric-card">
-                        <span class="metric-label">Ошибки / Лимиты</span>
+                        <span class="metric-label">Ошибки 429</span>
                         <span class="metric-value" id="mErrors" style="color: var(--danger);">0</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Ping</span>
+                        <span class="metric-value" id="mPing" style="color: var(--warning);">0 ms</span>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-tertiary);">
                         <span>Прогресс выполнения</span>
                         <span id="progressText">0%</span>
                     </div>
@@ -453,51 +533,60 @@
                     </div>
                 </div>
 
-                <div class="form-group" style="flex: 1;">
+                <div class="form-group">
                     <label>Пропускная способность (RPS)</label>
                     <div class="chart-box">
-                        <canvas id="chartCanvas"></canvas>
+                        <canvas id="rpsCanvas"></canvas>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Задержка откликов (Latency - ms)</label>
+                    <div class="chart-box" style="height: 110px;">
+                        <canvas id="pingCanvas"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Right Column: Terminal Logs -->
+        <!-- Live Terminal Column -->
         <div class="card right-panel">
             <div class="card-header">
                 <span style="display: flex; align-items: center; gap: 8px;">
-                    <i data-lucide="terminal" style="width: 14px; height: 14px;"></i> Консоль шлюзов
+                    <i data-lucide="terminal" style="width: 15px; height: 15px; color: var(--accent);"></i> Консоль
                 </span>
-                <i data-lucide="trash-2" style="width: 14px; height: 14px; cursor: pointer; color: var(--text-muted);" onclick="clearLogs()"></i>
+                <i data-lucide="trash-2" style="width: 14px; height: 14px; cursor: pointer; color: var(--text-tertiary);" onclick="clearLogs()"></i>
             </div>
             <div class="card-body" style="padding: 12px;">
                 <div class="terminal" id="terminal">
                     <div class="log-row">
                         <span class="log-time">00:00:00</span>
                         <span class="log-badge bg-info">INIT</span>
-                        <span class="log-msg">Модуль инициализирован. Ожидание запуска задачи.</span>
+                        <span class="log-msg">Модуль инициализирован. Задайте параметры целевой сессии.</span>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 
     <script>
         lucide.createIcons();
 
-        const gateways = [
-            'Auth Hub Core', 'Telegram OAuth', 'SberID Gateway', 'Tinkoff Secure',
-            'Yandex Passport', 'Ozon ID Service', 'Wildberries Auth', 'VK Connect API',
-            'Avito Security', 'Delivery Club OTP', 'MVideo Verify', 'X5 ID Service'
+        const gatewaysList = [
+            'Telegram API Hub', 'WhatsApp Auth', 'VK ID Security', 'Tinkoff Secure',
+            'SberID Auth', 'Yandex Passport', 'Ozon Express', 'WB Direct API',
+            'Avito Gate', 'Uber Security', 'Delivery Auth', 'X5 ID Gateway'
         ];
 
-        const proxies = [
-            '185.22.14.88 (NL)', '45.12.74.12 (DE)', '194.67.21.5 (RU)',
-            '91.240.118.2 (SG)', '176.119.4.15 (KZ)', '212.109.19.7 (FR)'
+        const proxyPool = [
+            '185.220.101.5 (NL)', '45.142.122.8 (DE)', '194.67.210.4 (RU)',
+            '91.240.118.2 (SG)', '176.119.10.15 (KZ)', '212.109.19.7 (FR)'
         ];
 
+        // Render Service Checkboxes
         const grid = document.getElementById('gatewaysGrid');
-        gateways.forEach(gw => {
+        gatewaysList.forEach(gw => {
             const label = document.createElement('label');
             label.className = 'service-chip active';
             label.innerHTML = `
@@ -507,43 +596,59 @@
             grid.appendChild(label);
         });
 
-        let active = false;
-        let timer = null;
-        let sent = 0, success = 0, errors = 0, targetTotal = 120;
-        const rpsHistory = new Array(30).fill(0);
+        function selectAllGateways(state) {
+            document.querySelectorAll('#gatewaysGrid label').forEach(label => {
+                const cb = label.querySelector('input');
+                cb.checked = state;
+                label.classList.toggle('active', state);
+            });
+        }
 
-        const canvas = document.getElementById('chartCanvas');
-        const ctx = canvas.getContext('2d');
+        let isRunning = false;
+        let timer = null;
+        let sent = 0, success = 0, errors = 0, targetTotal = 150;
+        
+        let rpsHistory = new Array(30).fill(0);
+        let pingHistory = new Array(30).fill(15);
+
+        const rpsCanvas = document.getElementById('rpsCanvas');
+        const rpsCtx = rpsCanvas.getContext('2d');
+        const pingCanvas = document.getElementById('pingCanvas');
+        const pingCtx = pingCanvas.getContext('2d');
 
         function resizeCanvas() {
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
+            rpsCanvas.width = rpsCanvas.parentElement.clientWidth;
+            rpsCanvas.height = rpsCanvas.parentElement.clientHeight;
+            pingCanvas.width = pingCanvas.parentElement.clientWidth;
+            pingCanvas.height = pingCanvas.parentElement.clientHeight;
         }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        function drawChart() {
+        function drawWaveChart(ctx, canvas, data, colorHex, maxVal) {
             const w = canvas.width;
             const h = canvas.height;
             ctx.clearRect(0, 0, w, h);
 
-            ctx.strokeStyle = 'rgba(255,255,255,0.02)';
+            // Background Grid Lines
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
             ctx.lineWidth = 1;
-            for(let y = 0; y < h; y += 25) {
+            for(let y = 0; y < h; y += 20) {
                 ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
             }
 
+            // Fill Area
             ctx.beginPath();
-            const step = w / (rpsHistory.length - 1);
+            const step = w / (data.length - 1);
             ctx.moveTo(0, h);
-            for(let i = 0; i < rpsHistory.length; i++) {
-                const val = (rpsHistory[i] / 20) * (h - 15);
+            for(let i = 0; i < data.length; i++) {
+                const val = (data[i] / maxVal) * (h - 15);
                 const x = i * step;
                 const y = h - val;
                 if(i === 0) ctx.lineTo(x, y);
                 else {
                     const px = (i - 1) * step;
-                    const py = h - (rpsHistory[i - 1] / 20) * (h - 15);
+                    const py = h - (data[i - 1] / maxVal) * (h - 15);
                     const cx = (px + x) / 2;
                     ctx.bezierCurveTo(cx, py, cx, y, x, y);
                 }
@@ -552,25 +657,26 @@
             ctx.closePath();
 
             const grad = ctx.createLinearGradient(0, 0, 0, h);
-            grad.addColorStop(0, 'rgba(99, 102, 241, 0.25)');
-            grad.addColorStop(1, 'rgba(99, 102, 241, 0)');
+            grad.addColorStop(0, colorHex + '33');
+            grad.addColorStop(1, colorHex + '00');
             ctx.fillStyle = grad;
             ctx.fill();
 
+            // Line
             ctx.beginPath();
-            for(let i = 0; i < rpsHistory.length; i++) {
-                const val = (rpsHistory[i] / 20) * (h - 15);
+            for(let i = 0; i < data.length; i++) {
+                const val = (data[i] / maxVal) * (h - 15);
                 const x = i * step;
                 const y = h - val;
                 if(i === 0) ctx.moveTo(x, y);
                 else {
                     const px = (i - 1) * step;
-                    const py = h - (rpsHistory[i - 1] / 20) * (h - 15);
+                    const py = h - (data[i - 1] / maxVal) * (h - 15);
                     const cx = (px + x) / 2;
                     ctx.bezierCurveTo(cx, py, cx, y, x, y);
                 }
             }
-            ctx.strokeStyle = '#6366f1';
+            ctx.strokeStyle = colorHex;
             ctx.lineWidth = 2;
             ctx.stroke();
         }
@@ -583,8 +689,8 @@
 
             let badgeClass = 'bg-info', badgeText = 'INFO';
             if(type === 'success') { badgeClass = 'bg-success'; badgeText = '200 OK'; }
-            if(type === 'warn') { badgeClass = 'bg-warning'; badgeText = 'LIMIT'; }
-            if(type === 'error') { badgeClass = 'bg-error bg-danger'; badgeText = 'BLOCKED'; }
+            if(type === 'warn') { badgeClass = 'bg-warning'; badgeText = '429 LIMIT'; }
+            if(type === 'error') { badgeClass = 'bg-danger'; badgeText = '504 TIMEOUT'; }
 
             row.innerHTML = `
                 <span class="log-time">${time}</span>
@@ -599,46 +705,64 @@
             document.getElementById('terminal').innerHTML = '';
         }
 
+        function getSelectedGateways() {
+            const selected = [];
+            document.querySelectorAll('#gatewaysGrid input[type="checkbox"]:checked').forEach(cb => {
+                selected.push(cb.value);
+            });
+            return selected;
+        }
+
         function startSimulation() {
             const phone = document.getElementById('phoneInput').value.trim();
-            if(!phone) { alert('Введите целевой номер!'); return; }
+            if(!phone) { alert('Пожалуйста, введите целевой номер телефона!'); return; }
 
-            const activeGateways = Array.from(document.querySelectorAll('.services-chip input:checked')).map(e => e.value);
-            if(activeGateways.length === 0) { alert('Выберите хотя бы один шлюз!'); return; }
+            const activeGateways = getSelectedGateways();
+            if(activeGateways.length === 0) { 
+                alert('Выберите хотя бы один шлюз из списка!'); 
+                return; 
+            }
 
-            active = true;
+            isRunning = true;
             sent = 0; success = 0; errors = 0;
             targetTotal = parseInt(document.getElementById('limitSelect').value);
             const speed = parseInt(document.getElementById('rateSelect').value);
 
             document.getElementById('startBtn').style.display = 'none';
             document.getElementById('stopBtn').style.display = 'flex';
-            document.getElementById('sysStatusText').innerText = 'Выполнение задачи...';
+            document.getElementById('sysStatusText').innerText = 'Эмуляция активности...';
 
-            log(`Запуск симуляции для ${phone}. Выбрано шлюзов: ${activeGateways.length}`, 'info');
+            log(`Сессия открыта для ${phone}. Выбрано активных узлов: ${activeGateways.length}`, 'info');
 
             const intervalMs = Math.floor(1000 / speed);
 
             timer = setInterval(() => {
-                if(!active) return;
+                if(!isRunning) return;
 
                 sent++;
+
+                // Realism Engine: As attack progresses, target WAF protection triggers more blocks
+                const progressRatio = sent / targetTotal;
+                const failureThreshold = 0.50 + (progressRatio * 0.35); // 50% fail early, up to 85% fail later
                 
-                // Realism simulation: 50% success, 30% rate limit 429, 20% firewall/cloudflare block or timeout
                 const rand = Math.random();
                 const gw = activeGateways[Math.floor(Math.random() * activeGateways.length)];
-                const currentProxy = proxies[Math.floor(Math.random() * proxies.length)];
+                const currentProxy = proxyPool[Math.floor(Math.random() * proxyPool.length)];
+                
                 document.getElementById('proxyInfo').innerText = `IP: ${currentProxy}`;
 
-                if(rand < 0.48) {
+                const currentPing = Math.floor(12 + Math.random() * 20 + (progressRatio * 80));
+                document.getElementById('mPing').innerText = `${currentPing} ms`;
+
+                if(rand > failureThreshold) {
                     success++;
-                    log(`[${gw}] Пакет принят шлюзом [200 OK] через IP ${currentProxy}`, 'success');
-                } else if(rand < 0.78) {
+                    log(`[${gw}] Авторизационный пакет принят [200 OK]`, 'success');
+                } else if(rand > 0.15) {
                     errors++;
-                    log(`[${gw}] Превышен лимит запросов [429 Too Many Requests] - IP в бане`, 'warn');
+                    log(`[${gw}] Ограничение частоты запросов [429 Rate Limit]`, 'warn');
                 } else {
                     errors++;
-                    log(`[${gw}] Соединение сброшено WAF / Таймаут шлюза [504 Gateway Timeout]`, 'error');
+                    log(`[${gw}] Сброс соединения экраном Cloudflare / WAF`, 'error');
                 }
 
                 document.getElementById('mSent').innerText = sent;
@@ -649,9 +773,11 @@
                 document.getElementById('progressBar').style.width = pct + '%';
                 document.getElementById('progressText').innerText = pct + '%';
 
-                rpsHistory.shift();
-                rpsHistory.push(speed + (Math.random() * 4 - 2));
-                drawChart();
+                rpsHistory.shift(); rpsHistory.push(speed + (Math.random() * 4 - 2));
+                pingHistory.shift(); pingHistory.push(currentPing);
+
+                drawWaveChart(rpsCtx, rpsCanvas, rpsHistory, '#6366f1', 30);
+                drawWaveChart(pingCtx, pingCanvas, pingHistory, '#f59e0b', 120);
 
                 if(sent >= targetTotal) {
                     stopSimulation(true);
@@ -660,23 +786,27 @@
         }
 
         function stopSimulation(completed = false) {
-            active = false;
+            isRunning = false;
             if(timer) clearInterval(timer);
 
             document.getElementById('startBtn').style.display = 'flex';
             document.getElementById('stopBtn').style.display = 'none';
-            document.getElementById('sysStatusText').innerText = 'Система готова';
-            document.getElementById('proxyInfo').innerText = 'IP: Ожидание...';
+            document.getElementById('sysStatusText').innerText = 'Ядро готово';
+            document.getElementById('proxyInfo').innerText = 'IP: Standby';
 
             rpsHistory.fill(0);
-            drawChart();
+            drawWaveChart(rpsCtx, rpsCanvas, rpsHistory, '#6366f1', 30);
 
             if(completed) {
-                log(`Сессия завершена. Успешно доставлено: ${success} из ${sent} (${Math.round((success/sent)*100)}%)`, 'info');
+                log(`Эмуляция завершена. Доставлено: ${success}/${sent} (${Math.round((success/sent)*100)}%)`, 'info');
             } else {
-                log('Сессия прервана пользователем.', 'warn');
+                log('Эмуляция остановлена пользователем.', 'warn');
             }
         }
+
+        // Init blank charts
+        drawWaveChart(rpsCtx, rpsCanvas, rpsHistory, '#6366f1', 30);
+        drawWaveChart(pingCtx, pingCanvas, pingHistory, '#f59e0b', 120);
     </script>
 </body>
 </html>
