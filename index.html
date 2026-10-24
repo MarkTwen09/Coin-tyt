@@ -12,14 +12,14 @@
             user-select: none;
             -webkit-user-select: none;
             touch-action: manipulation;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         html, body {
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #0f121a;
+            background-color: #0c0e14;
             color: #fff;
             display: flex;
             justify-content: center;
@@ -61,9 +61,10 @@
         .stat-box {
             background: rgba(15, 18, 26, 0.85);
             backdrop-filter: blur(8px);
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
         .stat-label {
@@ -75,7 +76,7 @@
 
         .stat-value {
             color: #4cd964;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 800;
         }
 
@@ -186,6 +187,12 @@
             opacity: 0.6;
         }
 
+        .btn-cashout {
+            background: linear-gradient(180deg, #34c759 0%, #248a3d 100%);
+            box-shadow: 0 4px 12px rgba(52, 199, 89, 0.4);
+            display: none;
+        }
+
         /* Ammo Bar */
         .ammo-container {
             display: flex;
@@ -239,7 +246,7 @@
             font-size: 28px;
             font-weight: 900;
             color: #fff;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+            text-shadow: 0 4px 12px rgba(0,0,0,0.9);
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.3s;
@@ -262,13 +269,13 @@
             <div class="stat-value" id="balance-val">$1000.00</div>
         </div>
         <div class="stat-box">
-            <div class="stat-label">Выигрыш</div>
+            <div class="stat-label">Текущий куш</div>
             <div class="stat-value" id="win-val" style="color:#ffcc00;">$0.00</div>
         </div>
     </div>
 
     <div class="history-bar" id="history-bar"></div>
-    <div class="overlay-msg" id="overlay-msg">НАЖМИ СТАРТ!</div>
+    <div class="overlay-msg" id="overlay-msg">СДЕЛАЙ СТАВКУ!</div>
 
     <canvas id="gameCanvas"></canvas>
 
@@ -298,6 +305,7 @@
         </div>
 
         <button class="btn-primary" id="btn-start">СТАРТ</button>
+        <button class="btn-primary btn-cashout" id="btn-cashout">ЗАБРАТЬ</button>
     </div>
 </div>
 
@@ -313,14 +321,14 @@
         playShot() {
             if (!this.ctx) return;
             const now = this.ctx.currentTime;
-            const buf = this.ctx.createBuffer(1, this.ctx.sampleRate * 0.1, this.ctx.sampleRate);
+            const buf = this.ctx.createBuffer(1, this.ctx.sampleRate * 0.12, this.ctx.sampleRate);
             const d = buf.getChannelData(0);
-            for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+            for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (this.ctx.sampleRate * 0.02));
             const src = this.ctx.createBufferSource();
             src.buffer = buf;
             const gain = this.ctx.createGain();
-            gain.gain.setValueAtTime(0.8, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            gain.gain.setValueAtTime(1.0, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
             src.connect(gain);
             gain.connect(this.ctx.destination);
             src.start(now);
@@ -330,28 +338,30 @@
             const now = this.ctx.currentTime;
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
-            osc.frequency.setValueAtTime(300, now);
-            osc.frequency.exponentialRampToValueAtTime(700, now + 0.1);
-            gain.gain.setValueAtTime(0.4, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(250, now);
+            osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
+            gain.gain.setValueAtTime(0.5, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
             osc.start(now);
-            osc.stop(now + 0.1);
+            osc.stop(now + 0.15);
         }
         playWin() {
             if (!this.ctx) return;
             const now = this.ctx.currentTime;
-            [400, 550, 700].forEach((f, i) => {
+            [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
+                osc.type = 'triangle';
                 osc.frequency.setValueAtTime(f, now + i * 0.08);
-                gain.gain.setValueAtTime(0.2, now + i * 0.08);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.15);
+                gain.gain.setValueAtTime(0.3, now + i * 0.08);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.2);
                 osc.connect(gain);
                 gain.connect(this.ctx.destination);
                 osc.start(now + i * 0.08);
-                osc.stop(now + i * 0.08 + 0.15);
+                osc.stop(now + i * 0.08 + 0.2);
             });
         }
     }
@@ -369,12 +379,13 @@
     let maxAmmo = 5;
     let currentAmmo = 5;
     let roundWin = 0;
-    let totalMultiplier = 0;
+    let hitsInRound = 0;
 
     const balanceEl = document.getElementById('balance-val');
     const winEl = document.getElementById('win-val');
     const betInput = document.getElementById('bet-input');
     const btnStart = document.getElementById('btn-start');
+    const btnCashout = document.getElementById('btn-cashout');
     const overlayMsg = document.getElementById('overlay-msg');
     const ammoBox = document.getElementById('ammo-box');
     const historyBar = document.getElementById('history-bar');
@@ -390,49 +401,64 @@
     let chickens = [];
     let particles = [];
     let floatingTexts = [];
+    let muzzleFlashes = [];
 
     const MULTIPLIERS = [
-        { mult: 1.2, bg: '#4cd964', size: 32, speed: 2.0 },
-        { mult: 1.5, bg: '#34a853', size: 30, speed: 2.3 },
-        { mult: 2.0, bg: '#007aff', size: 28, speed: 2.7 },
-        { mult: 5.0, bg: '#5856d6', size: 25, speed: 3.3 },
-        { mult: 12.0, bg: '#ff9500', size: 22, speed: 4.0 },
-        { mult: 48.0, bg: '#ff3b30', size: 18, speed: 5.0 }
+        { mult: 1.2, bg: '#4cd964', scale: 0.85, speed: 1.6 },
+        { mult: 1.5, bg: '#34a853', scale: 0.8, speed: 1.9 },
+        { mult: 2.0, bg: '#007aff', scale: 0.75, speed: 2.2 },
+        { mult: 5.0, bg: '#5856d6', scale: 0.7, speed: 2.7 },
+        { mult: 12.0, bg: '#ff9500', scale: 0.65, speed: 3.2 },
+        { mult: 48.0, bg: '#ff3b30', scale: 0.55, speed: 4.0 }
     ];
 
+    // --- КРАСИВАЯ МУЛЬТЯШНАЯ КУРИЦА ---
     class Chicken {
-        constructor() {
-            this.reset();
+        constructor(laneIndex) {
+            this.lane = laneIndex; // Полоса высоты (чтобы не летали в куче)
+            this.reset(true);
         }
 
-        reset() {
+        reset(initial = false) {
             const rand = Math.random();
             let type = MULTIPLIERS[0];
-            if (rand > 0.4) type = MULTIPLIERS[1];
-            if (rand > 0.65) type = MULTIPLIERS[2];
-            if (rand > 0.82) type = MULTIPLIERS[3];
-            if (rand > 0.93) type = MULTIPLIERS[4];
+            if (rand > 0.35) type = MULTIPLIERS[1];
+            if (rand > 0.60) type = MULTIPLIERS[2];
+            if (rand > 0.80) type = MULTIPLIERS[3];
+            if (rand > 0.92) type = MULTIPLIERS[4];
             if (rand > 0.98) type = MULTIPLIERS[5];
 
             this.mult = type.mult;
             this.bg = type.bg;
-            this.baseSize = type.size;
-            this.speed = type.speed * (selectedRisk === 'high' ? 1.3 : selectedRisk === 'low' ? 0.8 : 1.0);
+            this.scale = type.scale;
+            this.speed = type.speed * (selectedRisk === 'high' ? 1.25 : selectedRisk === 'low' ? 0.85 : 1.0);
             
-            this.x = canvas.width + Math.random() * 200 + 30;
-            this.y = canvas.height * 0.2 + Math.random() * (canvas.height * 0.4);
-            this.startY = this.y;
+            this.dir = Math.random() > 0.5 ? 1 : -1; // Направление движения
+            
+            const laneY = canvas.height * 0.15 + (this.lane * (canvas.height * 0.1));
+            this.y = laneY + (Math.random() * 20 - 10);
+            this.x = initial 
+                ? Math.random() * (canvas.width - 100) + 50 
+                : (this.dir === 1 ? -80 - Math.random() * 100 : canvas.width + 80 + Math.random() * 100);
+
             this.time = Math.random() * 100;
+            this.wingPhase = Math.random() * Math.PI * 2;
             this.alive = true;
         }
 
         update() {
-            this.x -= this.speed;
-            this.time += 0.05;
-            this.y = this.startY + Math.sin(this.time) * 15;
+            this.x += this.speed * this.dir;
+            this.time += 0.04;
+            this.wingPhase += 0.15;
 
-            if (this.x < -50) {
-                this.x = canvas.width + Math.random() * 150 + 30;
+            // Небольшое качание по вертикали
+            this.currentY = this.y + Math.sin(this.time) * 10;
+
+            // Выход за границы
+            if (this.dir === 1 && this.x > canvas.width + 100) {
+                this.reset(false);
+            } else if (this.dir === -1 && this.x < -100) {
+                this.reset(false);
             }
         }
 
@@ -440,46 +466,139 @@
             if (!this.alive) return;
 
             ctx.save();
-            ctx.translate(this.x, this.y);
+            ctx.translate(this.x, this.currentY);
+            if (this.dir === -1) {
+                ctx.scale(-1, 1); // Отражение по горизонтали
+            }
+            ctx.scale(this.scale, this.scale);
 
-            // Курица
-            ctx.fillStyle = '#e84c3d';
-            ctx.beginPath();
-            ctx.ellipse(0, 0, this.baseSize, this.baseSize * 0.75, 0, 0, Math.PI * 2);
-            ctx.fill();
+            // --- ТЕЛО (Коричневое с градиентом) ---
+            const bodyGrad = ctx.createRadialGradient(-10, -5, 5, 0, 0, 45);
+            bodyGrad.addColorStop(0, '#b86b32');
+            bodyGrad.addColorStop(1, '#6e3814');
 
-            // Голова
-            ctx.beginPath();
-            ctx.arc(-this.baseSize * 0.6, -this.baseSize * 0.3, this.baseSize * 0.4, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.fillStyle = bodyGrad;
+            ctx.strokeStyle = '#2d1405';
+            ctx.lineWidth = 3;
 
-            // Гребешок
-            ctx.fillStyle = '#ff2a2a';
             ctx.beginPath();
-            ctx.arc(-this.baseSize * 0.6, -this.baseSize * 0.7, this.baseSize * 0.2, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Клюв
-            ctx.fillStyle = '#f39c12';
-            ctx.beginPath();
-            ctx.moveTo(-this.baseSize * 0.9, -this.baseSize * 0.3);
-            ctx.lineTo(-this.baseSize * 1.2, -this.baseSize * 0.1);
-            ctx.lineTo(-this.baseSize * 0.9, 0);
+            ctx.moveTo(-35, -10);
+            ctx.bezierCurveTo(-45, -30, -10, -45, 15, -30); // Шея
+            ctx.bezierCurveTo(40, -15, 45, 20, 15, 35); // Живот
+            ctx.bezierCurveTo(-15, 45, -45, 25, -35, -10); // Спина
             ctx.closePath();
             ctx.fill();
+            ctx.stroke();
 
-            // Табличка множителя
-            ctx.restore();
+            // --- ХВОСТ ---
+            ctx.fillStyle = '#52270c';
+            ctx.beginPath();
+            ctx.moveTo(-35, 0);
+            ctx.quadraticCurveTo(-55, -20, -50, -35);
+            ctx.quadraticCurveTo(-35, -25, -30, -10);
+            ctx.fill();
+            ctx.stroke();
+
+            // --- ЛАПЫ ---
+            ctx.fillStyle = '#e67e22';
+            ctx.strokeStyle = '#2d1405';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.rect(-10, 30, 6, 18);
+            ctx.rect(5, 30, 6, 18);
+            ctx.fill();
+            ctx.stroke();
+
+            // --- КРЫЛО (Анимированное) ---
+            const wingY = Math.sin(this.wingPhase) * 12;
             ctx.save();
-            ctx.translate(this.x, this.y + this.baseSize + 10);
+            ctx.translate(-5, -5);
+            ctx.rotate(wingY * 0.05);
+            ctx.fillStyle = '#9c5423';
+            ctx.beginPath();
+            ctx.ellipse(-5, wingY, 22, 14, -0.3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.restore();
+
+            // --- ГОЛОВА ---
+            ctx.fillStyle = bodyGrad;
+            ctx.beginPath();
+            ctx.arc(22, -35, 20, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // --- ГРЕБЕШОК (Ярко-красный) ---
+            ctx.fillStyle = '#e74c3c';
+            ctx.strokeStyle = '#2d1405';
+            ctx.beginPath();
+            ctx.arc(15, -52, 9, 0, Math.PI * 2);
+            ctx.arc(25, -56, 11, 0, Math.PI * 2);
+            ctx.arc(36, -50, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // --- БОРОДКА ---
+            ctx.beginPath();
+            ctx.arc(34, -18, 7, 0, Math.PI * 2);
+            ctx.arc(28, -15, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // --- КЛЮВ ---
+            ctx.fillStyle = '#f1c40f';
+            ctx.beginPath();
+            ctx.moveTo(35, -35);
+            ctx.lineTo(58, -28);
+            ctx.lineTo(36, -20);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // --- ОГРОМНЫЕ БЕШЕНЫЕ ГЛАЗА ---
+            // Белок 1
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(18, -38, 11, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // Белок 2
+            ctx.beginPath();
+            ctx.arc(32, -38, 12, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // Зрачки (косящие)
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.arc(20, -37, 4, 0, Math.PI * 2);
+            ctx.arc(30, -37, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Блик
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(21, -39, 1.5, 0, Math.PI * 2);
+            ctx.arc(31, -39, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+
+            // --- ТАБЛИЧКА МНОЖИТЕЛЯ ---
+            ctx.save();
+            ctx.translate(this.x, this.currentY + 32 * this.scale);
             
             ctx.fillStyle = this.bg;
             ctx.beginPath();
-            ctx.roundRect(-20, -8, 40, 16, 4);
+            ctx.roundRect(-22, -9, 44, 18, 5);
             ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
 
-            ctx.fillStyle = '#fff';
-            ctx.font = 'bold 11px sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '900 12px sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('x' + this.mult, 0, 1);
@@ -489,14 +608,96 @@
 
         isHit(px, py) {
             const dx = this.x - px;
-            const dy = this.y - py;
-            return Math.sqrt(dx * dx + dy * dy) < this.baseSize + 12;
+            const dy = this.currentY - py;
+            return Math.sqrt(dx * dx + dy * dy) < 40 * this.scale;
         }
     }
 
-    // Спавн куриц сразу при старте страницы
-    for (let i = 0; i < 6; i++) {
-        chickens.push(new Chicken());
+    // Инициализация куриц по полосам
+    for (let i = 0; i < 5; i++) {
+        chickens.push(new Chicken(i));
+    }
+
+    // --- ЭФФЕКТЫ ---
+    function createFeatherExplosion(x, y) {
+        for (let i = 0; i < 20; i++) {
+            particles.push({
+                x: x, y: y,
+                vx: (Math.random() - 0.5) * 10,
+                vy: (Math.random() - 0.5) * 10,
+                size: Math.random() * 8 + 4,
+                color: Math.random() > 0.4 ? '#6e3814' : (Math.random() > 0.5 ? '#e74c3c' : '#ffffff'),
+                life: 1.0,
+                rot: Math.random() * Math.PI * 2
+            });
+        }
+    }
+
+    function addMuzzleFlash(x, y) {
+        muzzleFlashes.push({ x: x, y: y, radius: 35, life: 1.0 });
+    }
+
+    function addFloatingText(text, x, y, color = '#ffcc00') {
+        floatingTexts.push({ text: text, x: x, y: y, vy: -2, alpha: 1, color: color });
+    }
+
+    function updateEffects() {
+        // Перья
+        for (let i = particles.length - 1; i >= 0; i--) {
+            let p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.2; // Гравитация
+            p.life -= 0.03;
+
+            if (p.life <= 0) particles.splice(i, 1);
+            else {
+                ctx.save();
+                ctx.globalAlpha = p.life;
+                ctx.fillStyle = p.color;
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rot);
+                ctx.beginPath();
+                ctx.ellipse(0, 0, p.size, p.size * 0.4, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // Вспышки
+        for (let i = muzzleFlashes.length - 1; i >= 0; i--) {
+            let f = muzzleFlashes[i];
+            f.life -= 0.15;
+            if (f.life <= 0) muzzleFlashes.splice(i, 1);
+            else {
+                ctx.save();
+                ctx.globalAlpha = f.life;
+                ctx.fillStyle = '#fff5a8';
+                ctx.beginPath();
+                ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // Всплывающий текст
+        for (let i = floatingTexts.length - 1; i >= 0; i--) {
+            let ft = floatingTexts[i];
+            ft.y += ft.vy;
+            ft.alpha -= 0.02;
+
+            if (ft.alpha <= 0) floatingTexts.splice(i, 1);
+            else {
+                ctx.save();
+                ctx.globalAlpha = ft.alpha;
+                ctx.fillStyle = ft.color;
+                ctx.font = '900 22px sans-serif';
+                ctx.shadowColor = '#000';
+                ctx.shadowBlur = 4;
+                ctx.fillText(ft.text, ft.x, ft.y);
+                ctx.restore();
+            }
+        }
     }
 
     function drawBackground() {
@@ -504,41 +705,44 @@
         const h = canvas.height;
 
         // Небо
-        ctx.fillStyle = '#87ceeb';
+        const skyGradient = ctx.createLinearGradient(0, 0, 0, h * 0.6);
+        skyGradient.addColorStop(0, '#74b9ff');
+        skyGradient.addColorStop(1, '#a1c4fd');
+        ctx.fillStyle = skyGradient;
         ctx.fillRect(0, 0, w, h);
 
         // Горы
-        ctx.fillStyle = '#a3c2cf';
+        ctx.fillStyle = '#9cb8c1';
         ctx.beginPath();
         ctx.moveTo(0, h * 0.6);
-        ctx.lineTo(w * 0.2, h * 0.4);
-        ctx.lineTo(w * 0.5, h * 0.6);
-        ctx.lineTo(w * 0.8, h * 0.45);
+        ctx.lineTo(w * 0.25, h * 0.42);
+        ctx.lineTo(w * 0.55, h * 0.6);
+        ctx.lineTo(w * 0.8, h * 0.48);
         ctx.lineTo(w, h * 0.6);
         ctx.lineTo(w, h);
         ctx.lineTo(0, h);
         ctx.fill();
 
         // Поле
-        ctx.fillStyle = '#5ca935';
-        ctx.fillRect(0, h * 0.55, w, h * 0.45);
+        ctx.fillStyle = '#6ab04c';
+        ctx.fillRect(0, h * 0.58, w, h * 0.42);
 
         // Ветряк
-        drawWindmill(w * 0.85, h * 0.45);
+        drawWindmill(w * 0.88, h * 0.48);
     }
 
     function drawWindmill(x, y) {
         ctx.save();
         ctx.translate(x, y);
         ctx.fillStyle = '#7a5230';
-        ctx.fillRect(-8, 0, 16, 60);
+        ctx.fillRect(-8, 0, 16, 50);
         
         windmillAngle += 0.01;
         ctx.rotate(windmillAngle);
-        ctx.fillStyle = '#ddd';
+        ctx.fillStyle = '#f5f6fa';
         for (let i = 0; i < 4; i++) {
             ctx.rotate(Math.PI / 2);
-            ctx.fillRect(-2, 0, 4, 35);
+            ctx.fillRect(-2, 0, 4, 30);
         }
         ctx.restore();
     }
@@ -562,7 +766,7 @@
         sound.init();
         balance -= currentBet;
         roundWin = 0;
-        totalMultiplier = 0;
+        hitsInRound = 0;
         currentAmmo = maxAmmo;
 
         balanceEl.innerText = `$${balance.toFixed(2)}`;
@@ -570,20 +774,41 @@
         updateAmmoUI();
 
         gameState = 'playing';
-        btnStart.disabled = true;
+        btnStart.style.display = 'none';
+        btnCashout.style.display = 'block';
         showOverlay('СТРЕЛЯЙ!');
     }
 
-    function endRound() {
+    function cashout() {
+        if (gameState !== 'playing') return;
+
         gameState = 'idle';
-        btnStart.disabled = false;
+        btnStart.style.display = 'block';
+        btnCashout.style.display = 'none';
 
         if (roundWin > 0) {
             balance += roundWin;
             balanceEl.innerText = `$${balance.toFixed(2)}`;
             sound.playWin();
             showOverlay(`ВЫИГРЫШ: $${roundWin.toFixed(2)}`);
-            addHistoryTag(totalMultiplier, true);
+            addHistoryTag(roundWin / currentBet, true);
+        } else {
+            showOverlay('БЕЗ ВЫИГРЫША');
+            addHistoryTag(0, false);
+        }
+    }
+
+    function endRoundLoss() {
+        gameState = 'idle';
+        btnStart.style.display = 'block';
+        btnCashout.style.display = 'none';
+
+        if (roundWin > 0) {
+            balance += roundWin;
+            balanceEl.innerText = `$${balance.toFixed(2)}`;
+            sound.playWin();
+            showOverlay(`РАУНД ОКОНЧЕН: $${roundWin.toFixed(2)}`);
+            addHistoryTag(roundWin / currentBet, true);
         } else {
             showOverlay('ПРОМАХ!');
             addHistoryTag(0, false);
@@ -617,29 +842,38 @@
         currentAmmo--;
         updateAmmoUI();
         sound.playShot();
+        addMuzzleFlash(mouseX, mouseY);
 
         let hit = false;
         for (let chicken of chickens) {
             if (chicken.alive && chicken.isHit(mouseX, mouseY)) {
                 chicken.alive = false;
                 hit = true;
+                hitsInRound++;
                 sound.playHit();
+                createFeatherExplosion(chicken.x, chicken.currentY);
 
                 const winAmount = currentBet * chicken.mult;
                 roundWin += winAmount;
-                totalMultiplier += chicken.mult;
 
                 winEl.innerText = `$${roundWin.toFixed(2)}`;
+                addFloatingText(`+$${winAmount.toFixed(1)} (x${chicken.mult})`, chicken.x, chicken.currentY);
 
+                // Респавн курицы спустя время
                 setTimeout(() => {
-                    chicken.reset();
-                }, 500);
+                    chicken.reset(false);
+                }, 600);
                 break;
             }
         }
 
+        if (!hit) {
+            addFloatingText('МИМО!', mouseX, mouseY, '#ff3b30');
+        }
+
+        // Если кончились патроны — раунд закончен
         if (currentAmmo <= 0) {
-            setTimeout(endRound, 500);
+            setTimeout(endRoundLoss, 600);
         }
     }
 
@@ -660,10 +894,13 @@
             chicken.draw(ctx);
         }
 
+        updateEffects();
+
         requestAnimationFrame(gameLoop);
     }
 
     btnStart.addEventListener('click', initRound);
+    btnCashout.addEventListener('click', cashout);
 
     betInput.addEventListener('change', () => {
         let val = parseFloat(betInput.value);
