@@ -3,262 +3,998 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber Simulator UI</title>
+    <title>OVERRIDE // Protocol Stress Tester v4.0</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        :root {
+            --bg-dark: #05070d;
+            --panel-bg: rgba(13, 20, 36, 0.55);
+            --panel-border: rgba(56, 189, 248, 0.15);
+            --panel-border-glow: rgba(56, 189, 248, 0.35);
+            --accent-cyan: #38bdf8;
+            --accent-blue: #3b82f6;
+            --accent-red: #f43f5e;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+            --text-main: #f3f4f6;
+            --text-muted: #6b7280;
+            --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            user-select: none;
         }
 
         body {
-            background-color: #0b0f19;
-            color: #f3f4f6;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-sans);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+                linear-gradient(to bottom, rgba(5, 7, 13, 0.8), rgba(5, 7, 13, 0.95));
+            background-attachment: fixed;
+        }
+
+        /* Scanline FX */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 999;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        /* Top Header Navigation */
+        header {
+            height: 60px;
+            border-bottom: 1px solid var(--panel-border);
+            background: rgba(8, 12, 22, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            display: flex;
             align-items: center;
-            padding: 20px;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .container {
-            width: 100%;
-            max-width: 500px;
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-family: var(--font-mono);
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-green);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Main Grid Layout */
+        .dashboard {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 340px 1fr 360px;
+            gap: 20px;
             padding: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            max-width: 1800px;
+            margin: 0 auto;
+            width: 100%;
         }
 
-        h2 {
-            font-size: 20px;
+        @media (max-width: 1280px) {
+            .dashboard {
+                grid-template-columns: 320px 1fr;
+            }
+            .right-panel {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 868px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            .right-panel {
+                grid-column: span 1;
+            }
+        }
+
+        /* Glassmorphism Panel Container */
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .panel:hover {
+            border-color: var(--panel-border-glow);
+            box-shadow: 0 8px 32px 0 rgba(56, 189, 248, 0.1);
+        }
+
+        .panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .panel-title {
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 20px;
-            color: #38bdf8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #d1d5db;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .input-group {
-            margin-bottom: 16px;
+        .panel-body {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Form Controls */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         label {
-            display: block;
-            font-size: 13px;
+            font-size: 12px;
+            font-weight: 500;
             color: #9ca3af;
-            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        input, select {
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            color: #6b7280;
+            width: 18px;
+            height: 18px;
+            transition: color 0.3s;
+        }
+
+        input[type="text"], select {
             width: 100%;
-            padding: 12px 16px;
-            background: rgba(31, 41, 55, 0.6);
+            background: rgba(15, 23, 42, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
+            border-radius: 10px;
+            padding: 12px 14px 12px 42px;
             color: #fff;
+            font-family: var(--font-mono);
             font-size: 14px;
             outline: none;
             transition: all 0.3s ease;
         }
 
-        input:focus, select:focus {
-            border-color: #38bdf8;
-            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+        select {
+            appearance: none;
+            cursor: pointer;
         }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #0ea5e9, #2563eb);
-            border: none;
+        input[type="text"]:focus, select:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        input[type="text"]:focus + i, select:focus + i {
+            color: var(--accent-cyan);
+        }
+
+        /* Multi-select Service Checkboxes */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            max-height: 160px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .service-chip {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 8px;
-            color: white;
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .service-chip:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .service-chip.active {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .service-chip input {
+            display: none;
+        }
+
+        /* Action Buttons */
+        .btn-action {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
             font-weight: 600;
             font-size: 14px;
+            letter-spacing: 0.5px;
             cursor: pointer;
-            transition: opacity 0.2s, transform 0.1s;
-            margin-top: 8px;
-        }
-
-        button:hover {
-            opacity: 0.9;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        button:disabled {
-            background: #374151;
-            cursor: not-allowed;
-        }
-
-        .progress-container {
-            margin-top: 20px;
-            display: none;
-        }
-
-        .progress-bar-bg {
-            width: 100%;
-            height: 6px;
-            background: #1f2937;
-            border-radius: 3px;
-            overflow: hidden;
-            margin-bottom: 8px;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: #38bdf8;
-            transition: width 0.2s linear;
-        }
-
-        .stats {
             display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #9ca3af;
-            margin-bottom: 12px;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .terminal {
-            background: #030712;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            padding: 12px;
-            height: 160px;
-            overflow-y: auto;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 12px;
-            color: #4ade80;
+        .btn-start {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(2, 132, 199, 0.4);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(2, 132, 199, 0.6);
+        }
+
+        .btn-start:active {
+            transform: translateY(1px);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #e11d48, #9f1239);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(225, 29, 72, 0.4);
             display: none;
+        }
+
+        .btn-stop:hover {
+            box-shadow: 0 6px 24px rgba(225, 29, 72, 0.6);
+        }
+
+        /* Metrics & Stats Row */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
             flex-direction: column;
             gap: 4px;
         }
 
-        .log-item {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .metric-value {
+            font-family: var(--font-mono);
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
         }
 
-        .log-error { color: #f87171; }
-        .log-success { color: #4ade80; }
-        .log-info { color: #fbbf24; }
+        .metric-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Real-time Canvas Visualization */
+        .canvas-container {
+            width: 100%;
+            height: 180px;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(3, 7, 18, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* World Nodes Network Visualizer */
+        .nodes-container {
+            width: 100%;
+            height: 160px;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(3, 7, 18, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Live Terminal Logs */
+        .terminal {
+            background: rgba(2, 6, 23, 0.85);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            height: 220px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            scroll-behavior: smooth;
+        }
+
+        .terminal-line {
+            display: flex;
+            gap: 10px;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+
+        .terminal-time {
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .terminal-tag {
+            padding: 0 4px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: bold;
+            flex-shrink: 0;
+            height: fit-content;
+        }
+
+        .tag-info { background: rgba(56, 189, 248, 0.2); color: var(--accent-cyan); }
+        .tag-success { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
+        .tag-warn { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); }
+        .tag-error { background: rgba(244, 63, 94, 0.2); color: var(--accent-red); }
+
+        .terminal-msg {
+            color: #d1d5db;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Sound Control Switch */
+        .sound-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .sound-toggle:hover {
+            color: var(--text-main);
+        }
+
+        .progress-bar-outer {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+            border-radius: 3px;
+            transition: width 0.2s ease;
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>⚡ Protocol Simulator</h2>
+    <header>
+        <div class="brand">
+            <div class="brand-icon">
+                <i data-lucide="shield-alert" style="width: 20px; height: 20px; color: #fff;"></i>
+            </div>
+            <span>OVERRIDE <span style="color: var(--accent-cyan); font-weight: 300;">v4.0</span></span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="sound-toggle" onclick="toggleAudio()" id="soundBtn">
+                <i data-lucide="volume-2" style="width: 16px; height: 16px;"></i>
+                <span id="soundLabel">Звук: ВКЛ</span>
+            </div>
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                <span id="systemStatus">ЯДРО ГОТОВО</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard">
         
-        <div class="input-group">
-            <label for="phone">Целевой номер</label>
-            <input type="text" id="phone" placeholder="+7 (999) 000-00-00">
-        </div>
-
-        <div class="input-group">
-            <label for="count">Количество пакетов</label>
-            <select id="count">
-                <option value="10">10 итераций (Тест)</option>
-                <option value="25">25 итераций (Стандарт)</option>
-                <option value="50">50 итераций (Максимум)</option>
-            </select>
-        </div>
-
-        <button id="startBtn" onclick="startSimulation()">Запустить симуляцию</button>
-
-        <div class="progress-container" id="progressContainer">
-            <div class="stats">
-                <span id="statusText">Статус: Выполнение...</span>
-                <span id="counterText">0 / 0</span>
+        <!-- Left Panel: Controls & Settings -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <i data-lucide="sliders" style="width: 16px; height: 16px; color: var(--accent-cyan);"></i>
+                    Параметры Теста
+                </div>
             </div>
-            <div class="progress-bar-bg">
-                <div class="progress-bar-fill" id="progressBar"></div>
+            <div class="panel-body">
+                
+                <div class="form-group">
+                    <label>Целевой номер</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="targetPhone" placeholder="+7 (999) 000-00-00" value="+7 (900) 123-45-67">
+                        <i data-lucide="phone"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Интенсивность (Запросов/сек)</label>
+                    <div class="input-wrapper">
+                        <select id="attackSpeed">
+                            <option value="5">Низкая (5 req/s)</option>
+                            <option value="15" selected>Средняя (15 req/s)</option>
+                            <option value="35">Высокая (35 req/s)</option>
+                            <option value="60">EXTREME (60 req/s)</option>
+                        </select>
+                        <i data-lucide="zap"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Лимит пакетов</label>
+                    <div class="input-wrapper">
+                        <select id="packetLimit">
+                            <option value="50">50 пакетов</option>
+                            <option value="150" selected>150 пакетов</option>
+                            <option value="300">300 пакетов</option>
+                            <option value="1000">1000 пакетов</option>
+                        </select>
+                        <i data-lucide="layers"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Сервисы доставки (Выбор)</label>
+                    <div class="services-grid" id="servicesGrid">
+                        <!-- JS injected -->
+                    </div>
+                </div>
+
+                <div style="margin-top: auto; padding-top: 12px;">
+                    <button class="btn-action btn-start" id="startBtn" onclick="startAttack()">
+                        <i data-lucide="play" style="width: 18px; height: 18px;"></i>
+                        ЗАПУСТИТЬ ТЕСТ
+                    </button>
+                    <button class="btn-action btn-stop" id="stopBtn" onclick="stopAttack()">
+                        <i data-lucide="square" style="width: 18px; height: 18px;"></i>
+                        ОСТАНОВИТЬ
+                    </button>
+                </div>
+
             </div>
         </div>
 
-        <div class="terminal" id="terminal">
-            <div class="log-item log-info">[SYSTEM] Инициализация интерфейса...</div>
+        <!-- Center Panel: Visualization & Charts -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <i data-lucide="activity" style="width: 16px; height: 16px; color: var(--accent-cyan);"></i>
+                    Мониторинг Нагрузки в Реальном Времени
+                </div>
+            </div>
+            <div class="panel-body">
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <span class="metric-label">Отправлено</span>
+                        <span class="metric-value" id="sentCount" style="color: var(--accent-cyan);">0</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Успешно (200)</span>
+                        <span class="metric-value" id="successCount" style="color: var(--accent-green);">0</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Ошибки (429/503)</span>
+                        <span class="metric-value" id="errorCount" style="color: var(--accent-red);">0</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label>Прогресс задачи</label>
+                        <span id="progressPercent" style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-cyan);">0%</span>
+                    </div>
+                    <div class="progress-bar-outer">
+                        <div class="progress-bar-inner" id="progressBar"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <label style="margin-bottom: 8px; display: block;">График Пропускной Способности (RPS)</label>
+                    <div class="canvas-container">
+                        <canvas id="chartCanvas"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <label style="margin-bottom: 8px; display: block;">Сеть Узлов Распределения</label>
+                    <div class="nodes-container">
+                        <canvas id="nodesCanvas"></canvas>
+                    </div>
+                </div>
+
+            </div>
         </div>
+
+        <!-- Right Panel: Live Terminal Logs -->
+        <div class="panel right-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <i data-lucide="terminal" style="width: 16px; height: 16px; color: var(--accent-cyan);"></i>
+                    Консоль Отладки
+                </div>
+                <i data-lucide="trash-2" style="width: 14px; height: 14px; color: var(--text-muted); cursor: pointer;" onclick="clearTerminal()"></i>
+            </div>
+            <div class="panel-body" style="padding: 12px;">
+                <div class="terminal" id="terminalLog">
+                    <div class="terminal-line">
+                        <span class="terminal-time">00:00:00</span>
+                        <span class="terminal-tag tag-info">SYS</span>
+                        <span class="terminal-msg">Система готова. Ожидание ввода параметров.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        const services = [
-            "Auth Service", "API Gateway", "Verification Hub", 
-            "SMS Dispatcher", "Notification Core", "Session Manager"
-        ];
+        // Initialize Icons
+        lucide.createIcons();
 
-        function getRandomElement(arr) {
-            return arr[Math.floor(Math.random() * arr.length)];
+        // Sound Effects Controller via Web Audio API
+        class SoundFX {
+            constructor() {
+                this.ctx = null;
+                this.enabled = true;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }
+
+            playBeep(freq = 800, duration = 0.05, type = 'sine', gainVal = 0.05) {
+                if (!this.enabled) return;
+                this.init();
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, this.ctx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + duration);
+                } catch (e) {}
+            }
+
+            playSuccess() { this.playBeep(1200, 0.04, 'sine', 0.03); }
+            playError() { this.playBeep(300, 0.08, 'sawtooth', 0.04); }
+            playStart() { 
+                this.playBeep(400, 0.1, 'triangle', 0.06); 
+                setTimeout(() => this.playBeep(800, 0.15, 'sine', 0.06), 80);
+            }
         }
 
-        function startSimulation() {
-            const phone = document.getElementById('phone').value.trim();
-            const count = parseInt(document.getElementById('count').value);
-            const startBtn = document.getElementById('startBtn');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const statusText = document.getElementById('statusText');
-            const counterText = document.getElementById('counterText');
-            const terminal = document.getElementById('terminal');
+        const sfx = new SoundFX();
 
+        function toggleAudio() {
+            sfx.enabled = !sfx.enabled;
+            document.getElementById('soundLabel').innerText = sfx.enabled ? 'Звук: ВКЛ' : 'Звук: ВЫКЛ';
+        }
+
+        // Mock Service Provider DB
+        const availableServices = [
+            'Telegram API', 'WhatsApp Auth', 'VK ID Core', 'Tinkoff Bank',
+            'SberAuth', 'Yandex ID', 'Ozon Express', 'Wildberries',
+            'SMM Gateway', 'Uber Auth', 'Delivery Club', 'MVideo SMS'
+        ];
+
+        // Render Services Checkboxes
+        const servicesGrid = document.getElementById('servicesGrid');
+        availableServices.forEach((svc, index) => {
+            const chip = document.createElement('label');
+            chip.className = 'service-chip active';
+            chip.innerHTML = `
+                <input type="checkbox" checked value="${svc}" onchange="this.parentElement.classList.toggle('active', this.checked)">
+                <span>${svc}</span>
+            `;
+            servicesGrid.appendChild(chip);
+        });
+
+        // App State
+        let isRunning = false;
+        let timer = null;
+        let sent = 0;
+        let success = 0;
+        let errors = 0;
+        let targetTotal = 150;
+
+        // Chart Data
+        const chartCanvas = document.getElementById('chartCanvas');
+        const chartCtx = chartCanvas.getContext('2d');
+        let rpsHistory = new Array(40).fill(0);
+
+        function resizeCanvas() {
+            chartCanvas.width = chartCanvas.parentElement.clientWidth;
+            chartCanvas.height = chartCanvas.parentElement.clientHeight;
+            nodesCanvas.width = nodesCanvas.parentElement.clientWidth;
+            nodesCanvas.height = nodesCanvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function drawChart() {
+            const w = chartCanvas.width;
+            const h = chartCanvas.height;
+            chartCtx.clearRect(0, 0, w, h);
+
+            // Draw Grid
+            chartCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            chartCtx.lineWidth = 1;
+            for(let i = 0; i < h; i += 30) {
+                chartCtx.beginPath();
+                chartCtx.moveTo(0, i);
+                chartCtx.lineTo(w, i);
+                chartCtx.stroke();
+            }
+
+            // Draw Area Wave
+            chartCtx.beginPath();
+            const step = w / (rpsHistory.length - 1);
+            chartCtx.moveTo(0, h);
+
+            for (let i = 0; i < rpsHistory.length; i++) {
+                const val = (rpsHistory[i] / 70) * (h - 20); // Scale
+                const x = i * step;
+                const y = h - val;
+                if (i === 0) chartCtx.lineTo(x, y);
+                else {
+                    const prevX = (i - 1) * step;
+                    const prevY = h - (rpsHistory[i - 1] / 70) * (h - 20);
+                    const cx = (prevX + x) / 2;
+                    chartCtx.bezierCurveTo(cx, prevY, cx, y, x, y);
+                }
+            }
+
+            chartCtx.lineTo(w, h);
+            chartCtx.closePath();
+
+            const grad = chartCtx.createLinearGradient(0, 0, 0, h);
+            grad.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
+            grad.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
+            chartCtx.fillStyle = grad;
+            chartCtx.fill();
+
+            // Draw Stroke Line
+            chartCtx.beginPath();
+            for (let i = 0; i < rpsHistory.length; i++) {
+                const val = (rpsHistory[i] / 70) * (h - 20);
+                const x = i * step;
+                const y = h - val;
+                if (i === 0) chartCtx.moveTo(x, y);
+                else {
+                    const prevX = (i - 1) * step;
+                    const prevY = h - (rpsHistory[i - 1] / 70) * (h - 20);
+                    const cx = (prevX + x) / 2;
+                    chartCtx.bezierCurveTo(cx, prevY, cx, y, x, y);
+                }
+            }
+            chartCtx.strokeStyle = '#38bdf8';
+            chartCtx.lineWidth = 2;
+            chartCtx.stroke();
+        }
+
+        // Nodes Simulation Network
+        const nodesCanvas = document.getElementById('nodesCanvas');
+        const nodesCtx = nodesCanvas.getContext('2d');
+        let nodes = [];
+
+        function initNodes() {
+            nodes = [];
+            for (let i = 0; i < 15; i++) {
+                nodes.push({
+                    x: Math.random() * nodesCanvas.width,
+                    y: Math.random() * nodesCanvas.height,
+                    vx: (Math.random() - 0.5) * 0.8,
+                    vy: (Math.random() - 0.5) * 0.8,
+                    active: false
+                });
+            }
+        }
+
+        function drawNodes() {
+            const w = nodesCanvas.width;
+            const h = nodesCanvas.height;
+            nodesCtx.clearRect(0, 0, w, h);
+
+            // Update & Draw Connections
+            for (let i = 0; i < nodes.length; i++) {
+                let n = nodes[i];
+                n.x += n.vx;
+                n.y += n.vy;
+
+                if (n.x < 0 || n.x > w) n.vx *= -1;
+                if (n.y < 0 || n.y > h) n.vy *= -1;
+
+                for (let j = i + 1; j < nodes.length; j++) {
+                    let n2 = nodes[j];
+                    let dist = Math.hypot(n.x - n2.x, n.y - n2.y);
+                    if (dist < 90) {
+                        nodesCtx.strokeStyle = isRunning ? `rgba(56, 189, 248, ${1 - dist / 90})` : `rgba(255, 255, 255, ${0.1 - dist / 900})`;
+                        nodesCtx.lineWidth = 1;
+                        nodesCtx.beginPath();
+                        nodesCtx.moveTo(n.x, n.y);
+                        nodesCtx.lineTo(n2.x, n2.y);
+                        nodesCtx.stroke();
+                    }
+                }
+
+                // Draw Point
+                nodesCtx.fillStyle = isRunning ? '#38bdf8' : '#4b5563';
+                nodesCtx.beginPath();
+                nodesCtx.arc(n.x, n.y, isRunning ? 3 : 2, 0, Math.PI * 2);
+                nodesCtx.fill();
+            }
+
+            requestAnimationFrame(drawNodes);
+        }
+
+        // Terminal Log Function
+        function log(msg, type = 'info') {
+            const terminal = document.getElementById('terminalLog');
+            const line = document.createElement('div');
+            line.className = 'terminal-line';
+            
+            const time = new Date().toLocaleTimeString();
+            
+            let tagClass = 'tag-info';
+            let tagText = 'INFO';
+            if (type === 'success') { tagClass = 'tag-success'; tagText = 'OK 200'; }
+            if (type === 'warn') { tagClass = 'tag-warn'; tagText = 'WARN'; }
+            if (type === 'error') { tagClass = 'tag-error'; tagText = 'ERR 429'; }
+
+            line.innerHTML = `
+                <span class="terminal-time">${time}</span>
+                <span class="terminal-tag ${tagClass}">${tagText}</span>
+                <span class="terminal-msg">${msg}</span>
+            `;
+
+            terminal.appendChild(line);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function clearTerminal() {
+            document.getElementById('terminalLog').innerHTML = '';
+        }
+
+        // Execution Logic
+        function startAttack() {
+            const phone = document.getElementById('targetPhone').value.trim();
             if (!phone) {
-                alert('Пожалуйста, введите номер телефона!');
+                log('Ошибка: Номер телефона не может быть пустым', 'error');
+                sfx.playError();
                 return;
             }
 
-            // Сброс интерфейса
-            startBtn.disabled = true;
-            progressContainer.style.display = 'block';
-            terminal.style.display = 'flex';
-            terminal.innerHTML = `<div class="log-item log-info">[SYSTEM] Цель задана: ${phone}</div>`;
-            
-            let current = 0;
-            progressBar.style.width = '0%';
+            const activeServices = Array.from(document.querySelectorAll('#servicesGrid input:checked')).map(el => el.value);
+            if (activeServices.length === 0) {
+                log('Ошибка: Выберите хотя бы один сервис', 'error');
+                sfx.playError();
+                return;
+            }
 
-            const interval = setInterval(() => {
-                current++;
-                const percent = Math.round((current / count) * 100);
+            isRunning = true;
+            sent = 0;
+            success = 0;
+            errors = 0;
+            targetTotal = parseInt(document.getElementById('packetLimit').value);
+            const speed = parseInt(document.getElementById('attackSpeed').value);
+
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'flex';
+            document.getElementById('systemStatus').innerText = 'ТЕСТИРОВАНИЕ...';
+            document.getElementById('systemStatus').style.color = 'var(--accent-cyan)';
+
+            sfx.playStart();
+            log(`Инициализация сессии для ${phone}...`, 'info');
+            log(`Подключение к ${activeServices.length} узлам шлюзов. Интенсивность: ${speed}req/s`, 'info');
+
+            const intervalMs = Math.max(20, Math.floor(1000 / speed));
+
+            timer = setInterval(() => {
+                if (!isRunning) return;
+
+                sent++;
+                const isErr = Math.random() < 0.12; // 12% error rate simulation
                 
-                // Обновление прогресса
-                progressBar.style.width = percent + '%';
-                counterText.textContent = `${current} / ${count}`;
-
-                // Генерация красивого лога
-                const service = getRandomElement(services);
-                const isSuccess = Math.random() > 0.15; // 85% успеха
-                const time = new Date().toLocaleTimeString();
-                
-                let logClass = isSuccess ? 'log-success' : 'log-error';
-                let logMsg = isSuccess 
-                    ? `[${time}] [OK] ${service}: Пакет отправлен успешно (Код 200)` 
-                    : `[${time}] [WARN] ${service}: Превышено время ожидания таймаута`;
-
-                const logDiv = document.createElement('div');
-                logDiv.className = `log-item ${logClass}`;
-                logDiv.textContent = logMsg;
-                terminal.appendChild(logDiv);
-                terminal.scrollTop = terminal.scrollHeight;
-
-                if (current >= count) {
-                    clearInterval(interval);
-                    statusText.textContent = 'Статус: Симуляция завершена';
-                    const finishDiv = document.createElement('div');
-                    finishDiv.className = 'log-item log-info';
-                    finishDiv.textContent = `[SYSTEM] Задача выполнена. Успешно передано пакетов: ${count}`;
-                    terminal.appendChild(finishDiv);
-                    terminal.scrollTop = terminal.scrollHeight;
-                    startBtn.disabled = false;
+                if (isErr) {
+                    errors++;
+                    sfx.playError();
+                    const randomSvc = activeServices[Math.floor(Math.random() * activeServices.length)];
+                    log(`[${randomSvc}] Таймаут ответа шлюза или Rate Limit`, 'error');
+                } else {
+                    success++;
+                    sfx.playSuccess();
+                    const randomSvc = activeServices[Math.floor(Math.random() * activeServices.length)];
+                    log(`[${randomSvc}] Пакет авторизации принят (HTTP 200 OK)`, 'success');
                 }
-            }, 150); // Скорость анимации (мс)
+
+                // Update Counters
+                document.getElementById('sentCount').innerText = sent;
+                document.getElementById('successCount').innerText = success;
+                document.getElementById('errorCount').innerText = errors;
+
+                // Update Progress Bar
+                const pct = Math.min(100, Math.round((sent / targetTotal) * 100));
+                document.getElementById('progressBar').style.width = pct + '%';
+                document.getElementById('progressPercent').innerText = pct + '%';
+
+                // Push dynamic Chart Data
+                rpsHistory.shift();
+                rpsHistory.push(speed + (Math.random() * 8 - 4));
+                drawChart();
+
+                if (sent >= targetTotal) {
+                    stopAttack(true);
+                }
+            }, intervalMs);
         }
+
+        function stopAttack(completed = false) {
+            isRunning = false;
+            if (timer) clearInterval(timer);
+
+            document.getElementById('startBtn').style.display = 'flex';
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('systemStatus').innerText = 'ЯДРО ГОТОВО';
+            document.getElementById('systemStatus').style.color = 'var(--accent-green)';
+
+            rpsHistory = new Array(40).fill(0);
+            drawChart();
+
+            if (completed) {
+                log(`Тестирование завершено! Передано пакетов: ${sent}. Успех: ${Math.round((success/sent)*100)}%`, 'info');
+                sfx.playStart();
+            } else {
+                log('Тестирование остановлено пользователем', 'warn');
+                sfx.playError();
+            }
+        }
+
+        // Init Canvas & Animations on Load
+        setTimeout(() => {
+            resizeCanvas();
+            initNodes();
+            drawNodes();
+            drawChart();
+        }, 100);
+
     </script>
 </body>
 </html>
