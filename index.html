@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chicken Shoot InOut</title>
+    <title>Chicken Shoot InOut Ultra 4K</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,14 +12,14 @@
             user-select: none;
             -webkit-user-select: none;
             touch-action: manipulation;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
         }
 
         html, body {
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #0c0e14;
+            background-color: #08090d;
             color: #fff;
             display: flex;
             justify-content: center;
@@ -32,10 +32,12 @@
             height: 100vh;
             max-width: 960px;
             max-height: 680px;
-            background: #1a1d28;
+            background: #11131a;
+            border-radius: 16px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 1px rgba(255, 255, 255, 0.2);
         }
 
         canvas {
@@ -45,12 +47,86 @@
             cursor: crosshair;
         }
 
+        /* --- ГЛАВНОЕ МЕНЮ --- */
+        .main-menu {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, #1e2436 0%, #0a0c12 100%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            transition: opacity 0.4s ease, visibility 0.4s;
+        }
+
+        .main-menu.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .logo-title {
+            font-size: 42px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            background: linear-gradient(180deg, #ffd000 0%, #ff8c00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 25px rgba(255, 140, 0, 0.4);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .logo-subtitle {
+            font-size: 14px;
+            color: #8e95a5;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .menu-btn {
+            background: linear-gradient(180deg, #ff9500 0%, #d97700 100%);
+            border: none;
+            color: #fff;
+            padding: 16px 48px;
+            font-size: 20px;
+            font-weight: 800;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255, 149, 0, 0.4);
+            text-transform: uppercase;
+            transition: all 0.2s;
+            margin-bottom: 12px;
+            width: 240px;
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 149, 0, 0.6);
+        }
+
+        .rules-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            max-width: 380px;
+            font-size: 13px;
+            color: #a0a7b5;
+            line-height: 1.5;
+            margin-top: 15px;
+        }
+
         /* Top Bar Info */
         .top-bar {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            right: 10px;
+            top: 12px;
+            left: 12px;
+            right: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -59,24 +135,25 @@
         }
 
         .stat-box {
-            background: rgba(15, 18, 26, 0.85);
-            backdrop-filter: blur(8px);
-            padding: 6px 14px;
-            border-radius: 10px;
+            background: rgba(12, 14, 20, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 8px 16px;
+            border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.12);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
         }
 
         .stat-label {
-            color: #8a8d9b;
+            color: #7b8190;
             font-size: 10px;
             text-transform: uppercase;
             font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         .stat-value {
             color: #4cd964;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 800;
         }
 
@@ -86,15 +163,15 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(15, 18, 26, 0.95);
-            backdrop-filter: blur(12px);
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding: 8px 12px;
+            background: rgba(12, 14, 20, 0.92);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding: 10px 16px;
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             z-index: 10;
         }
 
@@ -105,8 +182,8 @@
         }
 
         .control-label {
-            font-size: 9px;
-            color: #8a8d9b;
+            font-size: 10px;
+            color: #7b8190;
             text-transform: uppercase;
             font-weight: 700;
         }
@@ -114,142 +191,154 @@
         .bet-input-wrapper {
             display: flex;
             align-items: center;
-            background: #222634;
-            border: 1px solid #33384a;
-            border-radius: 6px;
-            padding: 2px;
+            background: #1c202c;
+            border: 1px solid #2d3345;
+            border-radius: 8px;
+            padding: 3px;
         }
 
         .bet-input-wrapper input {
             background: transparent;
             border: none;
             color: #fff;
-            width: 50px;
+            width: 60px;
             text-align: center;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: bold;
             outline: none;
         }
 
         .btn-small {
-            background: #2c3245;
+            background: #282e3f;
             border: none;
-            color: #a0a5b5;
-            padding: 4px 8px;
-            border-radius: 4px;
+            color: #9ba1b0;
+            padding: 5px 10px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
             font-size: 11px;
+            transition: background 0.15s;
         }
+
+        .btn-small:hover { background: #363d52; color: #fff; }
 
         .risk-selector {
             display: flex;
-            background: #222634;
-            padding: 2px;
-            border-radius: 6px;
-            gap: 2px;
+            background: #1c202c;
+            padding: 3px;
+            border-radius: 8px;
+            gap: 3px;
         }
 
         .risk-btn {
             background: transparent;
             border: none;
-            color: #8a8d9b;
-            padding: 5px 8px;
-            border-radius: 4px;
-            font-weight: 600;
+            color: #7b8190;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: 700;
             font-size: 11px;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
         .risk-btn.active {
             background: #ff9500;
             color: #fff;
+            box-shadow: 0 2px 8px rgba(255, 149, 0, 0.4);
         }
 
         .btn-primary {
-            background: linear-gradient(180deg, #ff9500 0%, #e07b00 100%);
+            background: linear-gradient(180deg, #ff9500 0%, #d97700 100%);
             border: none;
             color: #fff;
-            padding: 10px 20px;
-            font-size: 15px;
+            padding: 12px 24px;
+            font-size: 16px;
             font-weight: 800;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(255, 149, 0, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 149, 0, 0.4);
             text-transform: uppercase;
             flex-grow: 1;
             max-width: 140px;
-        }
-
-        .btn-primary:disabled {
-            background: #4a4e5d;
-            box-shadow: none;
-            opacity: 0.6;
+            transition: all 0.15s;
         }
 
         .btn-cashout {
             background: linear-gradient(180deg, #34c759 0%, #248a3d 100%);
-            box-shadow: 0 4px 12px rgba(52, 199, 89, 0.4);
+            box-shadow: 0 4px 15px rgba(52, 199, 89, 0.4);
             display: none;
+        }
+
+        .btn-primary:disabled {
+            background: #3a3f50;
+            box-shadow: none;
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         /* Ammo Bar */
         .ammo-container {
             display: flex;
             align-items: center;
-            gap: 4px;
-            background: rgba(0,0,0,0.3);
-            padding: 4px 8px;
-            border-radius: 6px;
+            gap: 5px;
+            background: rgba(0,0,0,0.4);
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
         .bullet {
-            width: 8px;
-            height: 18px;
-            background: #ffcc00;
-            border-radius: 2px;
-            border: 1px solid #b38f00;
+            width: 9px;
+            height: 20px;
+            background: linear-gradient(180deg, #ffe066 0%, #f39c12 100%);
+            border-radius: 2px 2px 1px 1px;
+            border: 1px solid #b37d00;
+            box-shadow: 0 0 6px rgba(243, 156, 18, 0.4);
+            transition: all 0.2s;
         }
 
         .bullet.spent {
-            background: #444;
-            border-color: #222;
-            opacity: 0.3;
+            background: #333642;
+            border-color: #1f222b;
+            box-shadow: none;
+            opacity: 0.25;
         }
 
         /* History */
         .history-bar {
             position: absolute;
-            top: 55px;
-            left: 10px;
+            top: 65px;
+            left: 12px;
             display: flex;
-            gap: 4px;
+            gap: 5px;
             z-index: 10;
         }
 
         .history-tag {
-            background: rgba(22, 26, 38, 0.85);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: bold;
+            background: rgba(12, 14, 20, 0.85);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            border: 1px solid rgba(255,255,255,0.05);
         }
-        .history-tag.win { color: #4cd964; }
-        .history-tag.loss { color: #ff3b30; }
+        .history-tag.win { color: #4cd964; border-color: rgba(76, 217, 100, 0.3); }
+        .history-tag.loss { color: #ff3b30; border-color: rgba(255, 59, 48, 0.3); }
 
         /* Notification overlay */
         .overlay-msg {
             position: absolute;
-            top: 40%;
+            top: 38%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 900;
             color: #fff;
-            text-shadow: 0 4px 12px rgba(0,0,0,0.9);
+            text-shadow: 0 4px 16px rgba(0,0,0,0.9), 0 0 20px rgba(255, 149, 0, 0.6);
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.25s, transform 0.25s;
             z-index: 20;
             text-align: center;
             width: 90%;
@@ -257,34 +346,53 @@
 
         .overlay-msg.show {
             opacity: 1;
+            transform: translate(-50%, -50%) scale(1.05);
         }
     </style>
 </head>
 <body>
 
 <div id="game-container">
+    <!-- ГЛАВНОЕ МЕНЮ -->
+    <div class="main-menu" id="main-menu">
+        <div class="logo-title">Chicken Shoot</div>
+        <div class="logo-subtitle">InOut Pro 4K Edition</div>
+        
+        <button class="menu-btn" id="btn-play-game">ИГРАТЬ</button>
+
+        <div class="rules-card">
+            <b>Правила игры:</b><br>
+            • У вас 3 патрона на раунд.<br>
+            • Каждый точный выстрел приносит множитель.<br>
+            • Заберите куш в любой момент или рискуйте дальше!<br>
+            • Промах сжигает патрон.
+        </div>
+    </div>
+
+    <!-- ТОП БАР ИНФО -->
     <div class="top-bar">
         <div class="stat-box">
             <div class="stat-label">Баланс</div>
-            <div class="stat-value" id="balance-val">$1000.00</div>
+            <div class="stat-value" id="balance-val">$100.00</div>
         </div>
         <div class="stat-box">
-            <div class="stat-label">Текущий куш</div>
+            <div class="stat-label">Текущий выигрыш</div>
             <div class="stat-value" id="win-val" style="color:#ffcc00;">$0.00</div>
         </div>
     </div>
 
     <div class="history-bar" id="history-bar"></div>
-    <div class="overlay-msg" id="overlay-msg">СДЕЛАЙ СТАВКУ!</div>
+    <div class="overlay-msg" id="overlay-msg">ГОТОВ?</div>
 
     <canvas id="gameCanvas"></canvas>
 
+    <!-- ПАНЕЛЬ УПРАВЛЕНИЯ -->
     <div class="controls-panel">
         <div class="control-group">
             <span class="control-label">Ставка</span>
             <div class="bet-input-wrapper">
                 <button class="btn-small" id="btn-min">MIN</button>
-                <input type="number" id="bet-input" value="10" min="1">
+                <input type="number" id="bet-input" value="5" min="1">
                 <button class="btn-small" id="btn-max">MAX</button>
                 <button class="btn-small" id="btn-x2">x2</button>
             </div>
@@ -310,7 +418,7 @@
 </div>
 
 <script>
-    // --- ЗВУКОВОЙ ДВИЖОК ---
+    // --- ЗВУКОВОЙ ДВИЖОК (Web Audio API) ---
     class SoundEngine {
         constructor() { this.ctx = null; }
         init() {
@@ -321,14 +429,14 @@
         playShot() {
             if (!this.ctx) return;
             const now = this.ctx.currentTime;
-            const buf = this.ctx.createBuffer(1, this.ctx.sampleRate * 0.12, this.ctx.sampleRate);
+            const buf = this.ctx.createBuffer(1, this.ctx.sampleRate * 0.15, this.ctx.sampleRate);
             const d = buf.getChannelData(0);
             for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (this.ctx.sampleRate * 0.02));
             const src = this.ctx.createBufferSource();
             src.buffer = buf;
             const gain = this.ctx.createGain();
             gain.gain.setValueAtTime(1.0, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
             src.connect(gain);
             gain.connect(this.ctx.destination);
             src.start(now);
@@ -338,48 +446,48 @@
             const now = this.ctx.currentTime;
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(250, now);
-            osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(300, now);
+            osc.frequency.exponentialRampToValueAtTime(800, now + 0.12);
             gain.gain.setValueAtTime(0.5, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
             osc.start(now);
-            osc.stop(now + 0.15);
+            osc.stop(now + 0.12);
         }
         playWin() {
             if (!this.ctx) return;
             const now = this.ctx.currentTime;
-            [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+            [523, 659, 783, 1046].forEach((f, i) => {
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(f, now + i * 0.08);
-                gain.gain.setValueAtTime(0.3, now + i * 0.08);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.2);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(f, now + i * 0.07);
+                gain.gain.setValueAtTime(0.3, now + i * 0.07);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.07 + 0.18);
                 osc.connect(gain);
                 gain.connect(this.ctx.destination);
-                osc.start(now + i * 0.08);
-                osc.stop(now + i * 0.08 + 0.2);
+                osc.start(now + i * 0.07);
+                osc.stop(now + i * 0.07 + 0.18);
             });
         }
     }
 
     const sound = new SoundEngine();
 
-    // --- СОСТОЯНИЕ ИГРЫ ---
+    // --- НАСТРОЙКИ СТАТУСА И ГРАФИКИ ---
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    let balance = 1000;
-    let currentBet = 10;
+    let balance = 100;
+    let currentBet = 5;
     let selectedRisk = 'med';
-    let gameState = 'idle'; // idle, playing
-    let maxAmmo = 5;
-    let currentAmmo = 5;
+    let gameState = 'menu'; // menu, idle, playing
+    let maxAmmo = 3;
+    let currentAmmo = 3;
     let roundWin = 0;
-    let hitsInRound = 0;
+    let totalMult = 1.0;
 
     const balanceEl = document.getElementById('balance-val');
     const winEl = document.getElementById('win-val');
@@ -389,10 +497,16 @@
     const overlayMsg = document.getElementById('overlay-msg');
     const ammoBox = document.getElementById('ammo-box');
     const historyBar = document.getElementById('history-bar');
+    const mainMenu = document.getElementById('main-menu');
 
+    // 4K HiDPI Canvas Scaling
+    let dpr = window.devicePixelRatio || 1;
     function resizeCanvas() {
-        canvas.width = canvas.parentElement.clientWidth;
-        canvas.height = canvas.parentElement.clientHeight;
+        dpr = window.devicePixelRatio || 1;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
     }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
@@ -403,43 +517,47 @@
     let floatingTexts = [];
     let muzzleFlashes = [];
 
+    // Множители и их математический риск
     const MULTIPLIERS = [
-        { mult: 1.2, bg: '#4cd964', scale: 0.85, speed: 1.6 },
-        { mult: 1.5, bg: '#34a853', scale: 0.8, speed: 1.9 },
-        { mult: 2.0, bg: '#007aff', scale: 0.75, speed: 2.2 },
-        { mult: 5.0, bg: '#5856d6', scale: 0.7, speed: 2.7 },
-        { mult: 12.0, bg: '#ff9500', scale: 0.65, speed: 3.2 },
-        { mult: 48.0, bg: '#ff3b30', scale: 0.55, speed: 4.0 }
+        { mult: 1.2, bg: '#4cd964', scale: 0.8, speed: 2.2, chance: 0.50 },
+        { mult: 1.5, bg: '#34a853', scale: 0.75, speed: 2.6, chance: 0.30 },
+        { mult: 2.0, bg: '#007aff', scale: 0.7, speed: 3.0, chance: 0.12 },
+        { mult: 3.5, bg: '#5856d6', scale: 0.65, speed: 3.6, chance: 0.05 },
+        { mult: 8.0, bg: '#ff9500', scale: 0.6, speed: 4.2, chance: 0.02 },
+        { mult: 25.0, bg: '#ff3b30', scale: 0.5, speed: 5.0, chance: 0.01 }
     ];
 
-    // --- КРАСИВАЯ МУЛЬТЯШНАЯ КУРИЦА ---
+    // --- КУРИЦА ЕДИНЫМ ВЕКТОРНЫМ СЛОЕМ ---
     class Chicken {
         constructor(laneIndex) {
-            this.lane = laneIndex; // Полоса высоты (чтобы не летали в куче)
+            this.lane = laneIndex;
             this.reset(true);
         }
 
         reset(initial = false) {
             const rand = Math.random();
             let type = MULTIPLIERS[0];
-            if (rand > 0.35) type = MULTIPLIERS[1];
-            if (rand > 0.60) type = MULTIPLIERS[2];
-            if (rand > 0.80) type = MULTIPLIERS[3];
-            if (rand > 0.92) type = MULTIPLIERS[4];
-            if (rand > 0.98) type = MULTIPLIERS[5];
+            let acc = 0;
+            for (let m of MULTIPLIERS) {
+                acc += m.chance;
+                if (rand <= acc) { type = m; break; }
+            }
 
             this.mult = type.mult;
             this.bg = type.bg;
             this.scale = type.scale;
-            this.speed = type.speed * (selectedRisk === 'high' ? 1.25 : selectedRisk === 'low' ? 0.85 : 1.0);
+            this.speed = type.speed * (selectedRisk === 'high' ? 1.3 : selectedRisk === 'low' ? 0.8 : 1.0);
             
-            this.dir = Math.random() > 0.5 ? 1 : -1; // Направление движения
+            this.dir = Math.random() > 0.5 ? 1 : -1;
             
-            const laneY = canvas.height * 0.15 + (this.lane * (canvas.height * 0.1));
-            this.y = laneY + (Math.random() * 20 - 10);
+            const renderW = canvas.width / dpr;
+            const renderH = canvas.height / dpr;
+            const laneY = renderH * 0.18 + (this.lane * (renderH * 0.09));
+            
+            this.y = laneY;
             this.x = initial 
-                ? Math.random() * (canvas.width - 100) + 50 
-                : (this.dir === 1 ? -80 - Math.random() * 100 : canvas.width + 80 + Math.random() * 100);
+                ? Math.random() * (renderW - 120) + 60 
+                : (this.dir === 1 ? -90 - Math.random() * 120 : renderW + 90 + Math.random() * 120);
 
             this.time = Math.random() * 100;
             this.wingPhase = Math.random() * Math.PI * 2;
@@ -447,19 +565,15 @@
         }
 
         update() {
+            const renderW = canvas.width / dpr;
             this.x += this.speed * this.dir;
             this.time += 0.04;
-            this.wingPhase += 0.15;
+            this.wingPhase += 0.18;
 
-            // Небольшое качание по вертикали
-            this.currentY = this.y + Math.sin(this.time) * 10;
+            this.currentY = this.y + Math.sin(this.time) * 8;
 
-            // Выход за границы
-            if (this.dir === 1 && this.x > canvas.width + 100) {
-                this.reset(false);
-            } else if (this.dir === -1 && this.x < -100) {
-                this.reset(false);
-            }
+            if (this.dir === 1 && this.x > renderW + 120) this.reset(false);
+            else if (this.dir === -1 && this.x < -120) this.reset(false);
         }
 
         draw(ctx) {
@@ -467,138 +581,96 @@
 
             ctx.save();
             ctx.translate(this.x, this.currentY);
-            if (this.dir === -1) {
-                ctx.scale(-1, 1); // Отражение по горизонтали
-            }
+            if (this.dir === -1) ctx.scale(-1, 1);
             ctx.scale(this.scale, this.scale);
 
-            // --- ТЕЛО (Коричневое с градиентом) ---
-            const bodyGrad = ctx.createRadialGradient(-10, -5, 5, 0, 0, 45);
-            bodyGrad.addColorStop(0, '#b86b32');
-            bodyGrad.addColorStop(1, '#6e3814');
-
-            ctx.fillStyle = bodyGrad;
-            ctx.strokeStyle = '#2d1405';
-            ctx.lineWidth = 3;
-
+            // КРЫЛО (Заднее)
+            ctx.fillStyle = '#6e3814';
             ctx.beginPath();
-            ctx.moveTo(-35, -10);
-            ctx.bezierCurveTo(-45, -30, -10, -45, 15, -30); // Шея
-            ctx.bezierCurveTo(40, -15, 45, 20, 15, 35); // Живот
-            ctx.bezierCurveTo(-15, 45, -45, 25, -35, -10); // Спина
-            ctx.closePath();
+            ctx.ellipse(-15, -12, 14, 8, -0.4, 0, Math.PI * 2);
             ctx.fill();
-            ctx.stroke();
 
-            // --- ХВОСТ ---
-            ctx.fillStyle = '#52270c';
-            ctx.beginPath();
-            ctx.moveTo(-35, 0);
-            ctx.quadraticCurveTo(-55, -20, -50, -35);
-            ctx.quadraticCurveTo(-35, -25, -30, -10);
-            ctx.fill();
-            ctx.stroke();
-
-            // --- ЛАПЫ ---
-            ctx.fillStyle = '#e67e22';
-            ctx.strokeStyle = '#2d1405';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.rect(-10, 30, 6, 18);
-            ctx.rect(5, 30, 6, 18);
-            ctx.fill();
-            ctx.stroke();
-
-            // --- КРЫЛО (Анимированное) ---
-            const wingY = Math.sin(this.wingPhase) * 12;
-            ctx.save();
-            ctx.translate(-5, -5);
-            ctx.rotate(wingY * 0.05);
+            // ТЕЛО
             ctx.fillStyle = '#9c5423';
             ctx.beginPath();
-            ctx.ellipse(-5, wingY, 22, 14, -0.3, 0, Math.PI * 2);
+            ctx.arc(0, 0, 26, 0, Math.PI * 2);
             ctx.fill();
-            ctx.stroke();
-            ctx.restore();
 
-            // --- ГОЛОВА ---
-            ctx.fillStyle = bodyGrad;
+            // ХВОСТ
+            ctx.fillStyle = '#52270c';
             ctx.beginPath();
-            ctx.arc(22, -35, 20, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-
-            // --- ГРЕБЕШОК (Ярко-красный) ---
-            ctx.fillStyle = '#e74c3c';
-            ctx.strokeStyle = '#2d1405';
-            ctx.beginPath();
-            ctx.arc(15, -52, 9, 0, Math.PI * 2);
-            ctx.arc(25, -56, 11, 0, Math.PI * 2);
-            ctx.arc(36, -50, 8, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-
-            // --- БОРОДКА ---
-            ctx.beginPath();
-            ctx.arc(34, -18, 7, 0, Math.PI * 2);
-            ctx.arc(28, -15, 6, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-
-            // --- КЛЮВ ---
-            ctx.fillStyle = '#f1c40f';
-            ctx.beginPath();
-            ctx.moveTo(35, -35);
-            ctx.lineTo(58, -28);
-            ctx.lineTo(36, -20);
+            ctx.moveTo(-20, -5);
+            ctx.lineTo(-38, -22);
+            ctx.lineTo(-28, 5);
             ctx.closePath();
             ctx.fill();
-            ctx.stroke();
 
-            // --- ОГРОМНЫЕ БЕШЕНЫЕ ГЛАЗА ---
-            // Белок 1
+            // ГОЛОВА
+            ctx.fillStyle = '#9c5423';
+            ctx.beginPath();
+            ctx.arc(18, -20, 16, 0, Math.PI * 2);
+            ctx.fill();
+
+            // ГРЕБЕШОК
+            ctx.fillStyle = '#e74c3c';
+            ctx.beginPath();
+            ctx.arc(12, -34, 6, 0, Math.PI * 2);
+            ctx.arc(20, -37, 7, 0, Math.PI * 2);
+            ctx.arc(28, -32, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // БОРОДКА
+            ctx.beginPath();
+            ctx.arc(28, -4, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // КЛЮВ
+            ctx.fillStyle = '#f1c40f';
+            ctx.beginPath();
+            ctx.moveTo(30, -22);
+            ctx.lineTo(46, -17);
+            ctx.lineTo(31, -11);
+            ctx.closePath();
+            ctx.fill();
+
+            // КРЫЛО (Переднее анимированное)
+            const wingAngle = Math.sin(this.wingPhase) * 0.3;
+            ctx.save();
+            ctx.translate(-2, 0);
+            ctx.rotate(wingAngle);
+            ctx.fillStyle = '#b86b32';
+            ctx.beginPath();
+            ctx.ellipse(-4, 2, 16, 10, 0.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // ГЛАЗА (Сумасшедшие крупные)
             ctx.fillStyle = '#ffffff';
             ctx.beginPath();
-            ctx.arc(18, -38, 11, 0, Math.PI * 2);
+            ctx.arc(16, -24, 8, 0, Math.PI * 2);
+            ctx.arc(27, -24, 9, 0, Math.PI * 2);
             ctx.fill();
-            ctx.stroke();
 
-            // Белок 2
-            ctx.beginPath();
-            ctx.arc(32, -38, 12, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-
-            // Зрачки (косящие)
+            // Зрачки
             ctx.fillStyle = '#000000';
             ctx.beginPath();
-            ctx.arc(20, -37, 4, 0, Math.PI * 2);
-            ctx.arc(30, -37, 4, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Блик
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.arc(21, -39, 1.5, 0, Math.PI * 2);
-            ctx.arc(31, -39, 1.5, 0, Math.PI * 2);
+            ctx.arc(18, -23, 3, 0, Math.PI * 2);
+            ctx.arc(28, -23, 3, 0, Math.PI * 2);
             ctx.fill();
 
             ctx.restore();
 
-            // --- ТАБЛИЧКА МНОЖИТЕЛЯ ---
+            // МНОЖИТЕЛЬ
             ctx.save();
-            ctx.translate(this.x, this.currentY + 32 * this.scale);
+            ctx.translate(this.x, this.currentY + 34 * this.scale);
             
             ctx.fillStyle = this.bg;
             ctx.beginPath();
             ctx.roundRect(-22, -9, 44, 18, 5);
             ctx.fill();
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
 
             ctx.fillStyle = '#ffffff';
-            ctx.font = '900 12px sans-serif';
+            ctx.font = '900 11px sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('x' + this.mult, 0, 1);
@@ -609,140 +681,60 @@
         isHit(px, py) {
             const dx = this.x - px;
             const dy = this.currentY - py;
-            return Math.sqrt(dx * dx + dy * dy) < 40 * this.scale;
+            return Math.sqrt(dx * dx + dy * dy) < 35 * this.scale;
         }
     }
 
-    // Инициализация куриц по полосам
+    // Постоянные полосы полёта
     for (let i = 0; i < 5; i++) {
         chickens.push(new Chicken(i));
     }
 
-    // --- ЭФФЕКТЫ ---
-    function createFeatherExplosion(x, y) {
-        for (let i = 0; i < 20; i++) {
-            particles.push({
-                x: x, y: y,
-                vx: (Math.random() - 0.5) * 10,
-                vy: (Math.random() - 0.5) * 10,
-                size: Math.random() * 8 + 4,
-                color: Math.random() > 0.4 ? '#6e3814' : (Math.random() > 0.5 ? '#e74c3c' : '#ffffff'),
-                life: 1.0,
-                rot: Math.random() * Math.PI * 2
-            });
-        }
-    }
-
-    function addMuzzleFlash(x, y) {
-        muzzleFlashes.push({ x: x, y: y, radius: 35, life: 1.0 });
-    }
-
-    function addFloatingText(text, x, y, color = '#ffcc00') {
-        floatingTexts.push({ text: text, x: x, y: y, vy: -2, alpha: 1, color: color });
-    }
-
-    function updateEffects() {
-        // Перья
-        for (let i = particles.length - 1; i >= 0; i--) {
-            let p = particles[i];
-            p.x += p.vx;
-            p.y += p.vy;
-            p.vy += 0.2; // Гравитация
-            p.life -= 0.03;
-
-            if (p.life <= 0) particles.splice(i, 1);
-            else {
-                ctx.save();
-                ctx.globalAlpha = p.life;
-                ctx.fillStyle = p.color;
-                ctx.translate(p.x, p.y);
-                ctx.rotate(p.rot);
-                ctx.beginPath();
-                ctx.ellipse(0, 0, p.size, p.size * 0.4, 0, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-
-        // Вспышки
-        for (let i = muzzleFlashes.length - 1; i >= 0; i--) {
-            let f = muzzleFlashes[i];
-            f.life -= 0.15;
-            if (f.life <= 0) muzzleFlashes.splice(i, 1);
-            else {
-                ctx.save();
-                ctx.globalAlpha = f.life;
-                ctx.fillStyle = '#fff5a8';
-                ctx.beginPath();
-                ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-
-        // Всплывающий текст
-        for (let i = floatingTexts.length - 1; i >= 0; i--) {
-            let ft = floatingTexts[i];
-            ft.y += ft.vy;
-            ft.alpha -= 0.02;
-
-            if (ft.alpha <= 0) floatingTexts.splice(i, 1);
-            else {
-                ctx.save();
-                ctx.globalAlpha = ft.alpha;
-                ctx.fillStyle = ft.color;
-                ctx.font = '900 22px sans-serif';
-                ctx.shadowColor = '#000';
-                ctx.shadowBlur = 4;
-                ctx.fillText(ft.text, ft.x, ft.y);
-                ctx.restore();
-            }
-        }
-    }
-
+    // --- ФОН В 4K ---
     function drawBackground() {
-        const w = canvas.width;
-        const h = canvas.height;
+        const w = canvas.width / dpr;
+        const h = canvas.height / dpr;
 
         // Небо
-        const skyGradient = ctx.createLinearGradient(0, 0, 0, h * 0.6);
-        skyGradient.addColorStop(0, '#74b9ff');
-        skyGradient.addColorStop(1, '#a1c4fd');
-        ctx.fillStyle = skyGradient;
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.65);
+        skyGrad.addColorStop(0, '#5fa8f5');
+        skyGrad.addColorStop(1, '#9ecaff');
+        ctx.fillStyle = skyGrad;
         ctx.fillRect(0, 0, w, h);
 
         // Горы
-        ctx.fillStyle = '#9cb8c1';
+        ctx.fillStyle = '#8395a7';
         ctx.beginPath();
-        ctx.moveTo(0, h * 0.6);
-        ctx.lineTo(w * 0.25, h * 0.42);
-        ctx.lineTo(w * 0.55, h * 0.6);
-        ctx.lineTo(w * 0.8, h * 0.48);
-        ctx.lineTo(w, h * 0.6);
+        ctx.moveTo(0, h * 0.65);
+        ctx.lineTo(w * 0.2, h * 0.45);
+        ctx.lineTo(w * 0.45, h * 0.65);
+        ctx.lineTo(w * 0.75, h * 0.48);
+        ctx.lineTo(w, h * 0.65);
         ctx.lineTo(w, h);
         ctx.lineTo(0, h);
         ctx.fill();
 
         // Поле
-        ctx.fillStyle = '#6ab04c';
-        ctx.fillRect(0, h * 0.58, w, h * 0.42);
+        ctx.fillStyle = '#54a0ff';
+        ctx.fillStyle = '#10ac84';
+        ctx.fillRect(0, h * 0.62, w, h * 0.38);
 
         // Ветряк
-        drawWindmill(w * 0.88, h * 0.48);
+        drawWindmill(w * 0.88, h * 0.52);
     }
 
     function drawWindmill(x, y) {
         ctx.save();
         ctx.translate(x, y);
-        ctx.fillStyle = '#7a5230';
-        ctx.fillRect(-8, 0, 16, 50);
+        ctx.fillStyle = '#576574';
+        ctx.fillRect(-6, 0, 12, 45);
         
-        windmillAngle += 0.01;
+        windmillAngle += 0.015;
         ctx.rotate(windmillAngle);
         ctx.fillStyle = '#f5f6fa';
         for (let i = 0; i < 4; i++) {
             ctx.rotate(Math.PI / 2);
-            ctx.fillRect(-2, 0, 4, 30);
+            ctx.fillRect(-2, 0, 4, 28);
         }
         ctx.restore();
     }
@@ -766,7 +758,7 @@
         sound.init();
         balance -= currentBet;
         roundWin = 0;
-        hitsInRound = 0;
+        totalMult = 1.0;
         currentAmmo = maxAmmo;
 
         balanceEl.innerText = `$${balance.toFixed(2)}`;
@@ -792,9 +784,6 @@
             sound.playWin();
             showOverlay(`ВЫИГРЫШ: $${roundWin.toFixed(2)}`);
             addHistoryTag(roundWin / currentBet, true);
-        } else {
-            showOverlay('БЕЗ ВЫИГРЫША');
-            addHistoryTag(0, false);
         }
     }
 
@@ -807,7 +796,7 @@
             balance += roundWin;
             balanceEl.innerText = `$${balance.toFixed(2)}`;
             sound.playWin();
-            showOverlay(`РАУНД ОКОНЧЕН: $${roundWin.toFixed(2)}`);
+            showOverlay(`ЗАБРАНО: $${roundWin.toFixed(2)}`);
             addHistoryTag(roundWin / currentBet, true);
         } else {
             showOverlay('ПРОМАХ!');
@@ -829,7 +818,7 @@
         if (historyBar.children.length > 6) historyBar.removeChild(historyBar.lastChild);
     }
 
-    // --- ВЫСТРЕЛ ---
+    // --- ОБРАБОТКА ВЫСТРЕЛА ---
     function handleShoot(clientX, clientY) {
         if (gameState !== 'playing') return;
 
@@ -842,46 +831,33 @@
         currentAmmo--;
         updateAmmoUI();
         sound.playShot();
-        addMuzzleFlash(mouseX, mouseY);
 
         let hit = false;
         for (let chicken of chickens) {
             if (chicken.alive && chicken.isHit(mouseX, mouseY)) {
                 chicken.alive = false;
                 hit = true;
-                hitsInRound++;
                 sound.playHit();
-                createFeatherExplosion(chicken.x, chicken.currentY);
 
-                const winAmount = currentBet * chicken.mult;
-                roundWin += winAmount;
+                // Расчет кумулятивного множителя
+                totalMult *= chicken.mult;
+                roundWin = currentBet * totalMult;
 
                 winEl.innerText = `$${roundWin.toFixed(2)}`;
-                addFloatingText(`+$${winAmount.toFixed(1)} (x${chicken.mult})`, chicken.x, chicken.currentY);
 
-                // Респавн курицы спустя время
-                setTimeout(() => {
-                    chicken.reset(false);
-                }, 600);
+                setTimeout(() => chicken.reset(false), 500);
                 break;
             }
         }
 
-        if (!hit) {
-            addFloatingText('МИМО!', mouseX, mouseY, '#ff3b30');
-        }
-
-        // Если кончились патроны — раунд закончен
         if (currentAmmo <= 0) {
-            setTimeout(endRoundLoss, 600);
+            setTimeout(endRoundLoss, 500);
         }
     }
 
     canvas.addEventListener('click', (e) => handleShoot(e.clientX, e.clientY));
     canvas.addEventListener('touchstart', (e) => {
-        if (e.touches.length > 0) {
-            handleShoot(e.touches[0].clientX, e.touches[0].clientY);
-        }
+        if (e.touches.length > 0) handleShoot(e.touches[0].clientX, e.touches[0].clientY);
     });
 
     function gameLoop() {
@@ -894,10 +870,13 @@
             chicken.draw(ctx);
         }
 
-        updateEffects();
-
         requestAnimationFrame(gameLoop);
     }
+
+    document.getElementById('btn-play-game').addEventListener('click', () => {
+        mainMenu.classList.add('hidden');
+        gameState = 'idle';
+    });
 
     btnStart.addEventListener('click', initRound);
     btnCashout.addEventListener('click', cashout);
