@@ -9,18 +9,16 @@
   <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-tg: #0E1621;
-      --bg-sidebar: #17212B;
-      --bg-header: rgba(23, 33, 43, 0.92);
-      --bg-bubble-me: #2B5278;
-      --bg-bubble-other: #182533;
+      --bg-tg: #0F1217;
+      --bg-sidebar: #171E28;
+      --bg-header: rgba(23, 30, 40, 0.94);
+      --bg-bubble-me: #2A60E4;
+      --bg-bubble-other: #1E2734;
       --accent: #64B5EF;
-      --accent-blue: #2A60E4;
-      --text-main: #F5F5F5;
+      --text-main: #FFFFFF;
       --text-muted: #7F8C99;
-      --text-blue: #64B5EF;
-      --border-color: rgba(0, 0, 0, 0.35);
-      --danger: #FF595A;
+      --danger: #FF453A;
+      --border-color: rgba(255, 255, 255, 0.08);
     }
 
     * {
@@ -67,14 +65,14 @@
     .screen.hidden-right { transform: translateX(100%); pointer-events: none; }
     .screen.active { transform: translateX(0); z-index: 2; opacity: 1; }
 
-    /* Шапки */
+    /* Шапка iOS */
     .header {
       padding: 10px 16px;
       padding-top: calc(env(safe-area-inset-top, 10px) + 6px);
       background: var(--bg-header);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-bottom: 0.5px solid rgba(0, 0, 0, 0.5);
+      border-bottom: 0.5px solid rgba(0, 0, 0, 0.4);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -113,7 +111,7 @@
 
     .search-input {
       width: 100%;
-      background: #101721;
+      background: #11161F;
       border: none;
       padding: 8px 12px 8px 34px;
       border-radius: 10px;
@@ -143,7 +141,7 @@
     }
 
     .chat-item:active {
-      background: #101721;
+      background: #11161F;
     }
 
     .chat-item::after {
@@ -158,7 +156,7 @@
       width: 52px;
       height: 52px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #64B5EF, #2B5278);
+      background: linear-gradient(135deg, #2A60E4, #64B5EF);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -169,7 +167,7 @@
     }
 
     .chat-avatar.saved {
-      background: linear-gradient(135deg, #3390EC, #0072FF);
+      background: linear-gradient(135deg, #00C6FF, #0072FF);
     }
 
     .chat-details {
@@ -232,35 +230,34 @@
       line-height: 1;
     }
 
-    /* ЧАТ С ДУДЛАМИ TELEGRAM */
+    /* ТВОЙ ДУДЛ-ФОН С ИЗОБРАЖЕНИЯ (САМОЛЕТЫ, ЗАМКИ, СМАЙЛЫ, ЗВЕЗДЫ) */
     .chat-body {
       flex: 1;
       padding: 12px 10px 16px 10px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
       background-color: var(--bg-tg);
-      /* Telegram Official Doodle Pattern */
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M0 0h80v80H0z' fill='none'/%3E%3Cpath d='M14.5 27.5c0-1.7 1.3-3 3-3h12c1.7 0 3 1.3 3 3v12c0 1.7-1.3 3-3 3h-12c-1.7 0-3-1.3-3-3v-12zm3 0v12h12v-12h-12zm30 0c0-1.7 1.3-3 3-3h12c1.7 0 3 1.3 3 3v12c0 1.7-1.3 3-3 3h-12c-1.7 0-3-1.3-3-3v-12zm3 0v12h12v-12h-12zM14.5 57.5c0-1.7 1.3-3 3-3h12c1.7 0 3 1.3 3 3v12c0 1.7-1.3 3-3 3h-12c-1.7 0-3-1.3-3-3v-12zm3 0v12h12v-12h-12zm30 0c0-1.7 1.3-3 3-3h12c1.7 0 3 1.3 3 3v12c0 1.7-1.3 3-3 3h-12c-1.7 0-3-1.3-3-3v-12zm3 0v12h12v-12h-12z'/%3E%3C/g%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round' opacity='0.09'%3E%3C!-- Бумажный самолетик --%3E%3Cpath d='M 20 20 L 45 32 L 20 40 L 26 30 Z M 45 32 L 26 30'/%3E%3C!-- Замок --%3E%3Crect x='85' y='20' width='16' height='18' rx='3'/%3E%3Cpath d='M 93 29 A 3 3 0 1 0 93 33 V 35'/%3E%3C!-- Звездочка --%3E%3Cpath d='M 15 85 L 17 90 L 22 90 L 18 93 L 19 98 L 15 95 L 11 98 L 12 93 L 8 90 L 13 90 Z'/%3E%3C!-- Смайлик --%3E%3Ccircle cx='95' cy='90' r='10'/%3E%3Ccircle cx='91' cy='87' r='1' fill='%23fff'/%3E%3Ccircle cx='99' cy='87' r='1' fill='%23fff'/%3E%3Cpath d='M 91 93 Q 95 97 99 93'/%3E%3C!-- Сердечко в диалоговом облачке --%3E%3Cpath d='M 45 75 Q 45 68 52 68 Q 57 68 60 72 Q 63 68 68 68 Q 75 68 75 75 Q 75 82 60 90 Q 45 82 45 75 Z'/%3E%3C!-- Лампочка --%3E%3Ccircle cx='30' cy='120' r='6'/%3E%3Cpath d='M 28 126 L 32 126 M 29 128 L 31 128 M 27 114 L 25 112 M 33 114 L 35 112 M 30 112 L 30 110'/%3E%3C!-- Молния --%3E%3Cpath d='M 115 110 L 108 122 L 113 122 L 109 132 L 120 118 L 114 118 Z'/%3E%3C/g%3E%3C/svg%3E");
     }
 
     .date-badge {
       align-self: center;
-      background: rgba(16, 23, 33, 0.7);
+      background: rgba(16, 23, 33, 0.75);
       backdrop-filter: blur(10px);
       padding: 3px 10px;
       border-radius: 12px;
       font-size: 0.75rem;
       color: rgba(255, 255, 255, 0.8);
-      margin: 6px 0;
+      margin: 4px 0;
       font-weight: 500;
     }
 
     .msg-group {
       display: flex;
       flex-direction: column;
-      max-width: 76%;
+      max-width: 78%;
       position: relative;
     }
 
@@ -268,7 +265,7 @@
     .msg-group.other { align-self: flex-start; }
 
     .msg-bubble {
-      padding: 7px 11px 6px 11px;
+      padding: 8px 12px 6px 12px;
       border-radius: 16px;
       font-size: 0.95rem;
       line-height: 1.35;
@@ -281,34 +278,40 @@
       background: var(--bg-bubble-me);
       color: #FFFFFF;
       border-bottom-right-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
     .msg-group.other .msg-bubble {
       background: var(--bg-bubble-other);
       color: #FFFFFF;
       border-bottom-left-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
-    /* Нативный ответ Telegram */
+    /* Цитата ответа Telegram */
     .msg-reply-line {
-      border-left: 2px solid var(--accent);
+      border-left: 2px solid #FFFFFF;
       padding-left: 8px;
       margin-bottom: 4px;
       font-size: 0.8rem;
     }
 
+    .msg-group.other .msg-reply-line {
+      border-left-color: var(--accent);
+    }
+
     .msg-reply-author {
       font-weight: 600;
-      color: var(--accent);
       font-size: 0.75rem;
+      color: rgba(255,255,255,0.9);
     }
 
     .msg-meta {
       float: right;
       font-size: 0.68rem;
-      color: rgba(255, 255, 255, 0.55);
+      color: rgba(255, 255, 255, 0.6);
       margin-left: 12px;
-      margin-top: 2px;
+      margin-top: 3px;
       display: inline-flex;
       align-items: center;
       gap: 3px;
@@ -320,16 +323,16 @@
       margin-top: 4px;
       position: absolute;
       bottom: -10px;
-      right: 10px;
+      right: 8px;
     }
 
     .reaction-pill {
-      background: #17212B;
-      border: 1px solid rgba(255,255,255,0.1);
+      background: #171E28;
+      border: 1px solid rgba(255,255,255,0.12);
       padding: 1px 6px;
       border-radius: 12px;
       font-size: 0.75rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
     }
 
     /* Ввод */
@@ -337,7 +340,7 @@
       background: var(--bg-header);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-top: 0.5px solid rgba(0, 0, 0, 0.5);
+      border-top: 0.5px solid rgba(0, 0, 0, 0.4);
       padding: 8px 12px;
       padding-bottom: calc(env(safe-area-inset-bottom, 8px) + 4px);
       display: flex;
@@ -366,7 +369,7 @@
 
     .msg-input {
       flex: 1;
-      background: #101721;
+      background: #11161F;
       border: 0.5px solid rgba(255, 255, 255, 0.08);
       padding: 9px 14px;
       border-radius: 20px;
@@ -377,10 +380,10 @@
     }
 
     .send-btn {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
-      background: var(--accent);
+      background: var(--bg-bubble-me);
       border: none;
       color: #FFFFFF;
       display: flex;
@@ -393,7 +396,7 @@
     .context-overlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.65);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       z-index: 100;
@@ -416,7 +419,7 @@
     .ios-context-box.active { display: flex; }
 
     .reaction-picker {
-      background: rgba(23, 33, 43, 0.95);
+      background: rgba(23, 30, 40, 0.96);
       border-radius: 20px;
       padding: 8px 12px;
       display: flex;
@@ -433,7 +436,7 @@
     .reaction-picker span:hover { transform: scale(1.3); }
 
     .ios-menu {
-      background: rgba(23, 33, 43, 0.95);
+      background: rgba(23, 30, 40, 0.96);
       border-radius: 14px;
       overflow: hidden;
       box-shadow: 0 10px 30px rgba(0,0,0,0.6);
@@ -468,7 +471,7 @@
     .modal.active { display: flex; }
 
     .auth-box {
-      background: #17212B;
+      background: #171E28;
       border-radius: 20px;
       padding: 24px;
       width: 85%;
@@ -480,7 +483,7 @@
 
     .auth-box input {
       width: 100%;
-      background: #101721;
+      background: #11161F;
       border: none;
       padding: 11px 14px;
       border-radius: 10px;
@@ -492,7 +495,7 @@
 
     .auth-btn {
       width: 100%;
-      background: var(--accent);
+      background: var(--bg-bubble-me);
       color: #fff;
       border: none;
       padding: 12px;
@@ -521,7 +524,7 @@
 
       <div class="chat-list" id="chatsContainer"></div>
 
-      <!-- Нативная нижняя панель iOS Telegram -->
+      <!-- Таббар iOS Telegram -->
       <nav class="tabbar">
         <div class="tab-item">
           <span class="tab-icon">👤</span>
@@ -542,7 +545,7 @@
       </nav>
     </div>
 
-    <!-- ЭКРАН 2: Окно чата -->
+    <!-- ЭКРАН 2: Окно чата с векторными дудлами -->
     <div class="screen hidden-right" id="screenMessages">
       <header class="header">
         <div class="header-btn" id="btnBack">‹ Назад</div>
@@ -606,7 +609,7 @@
 
   <script>
     const state = {
-      user: JSON.parse(localStorage.getItem('anon_tg_v4_user')) || {
+      user: JSON.parse(localStorage.getItem('anon_tg_v5_user')) || {
         id: '@anon_' + Math.floor(1000 + Math.random() * 9000),
         nick: 'Аноним',
         avatar: '🥷'
@@ -618,7 +621,7 @@
           name: 'Избранное',
           avatar: '🔖',
           type: 'saved',
-          messages: JSON.parse(localStorage.getItem('anon_tg_v4_saved')) || [
+          messages: JSON.parse(localStorage.getItem('anon_tg_v5_saved')) || [
             { id: 1, uid: 'me', author: 'Вы', text: 'Сохраненные сообщения и тесты.', time: '12:00', reply: null, reactions: {} }
           ]
         },
@@ -627,7 +630,7 @@
           name: 'Общий Чат',
           avatar: '🌐',
           type: 'group',
-          messages: JSON.parse(localStorage.getItem('anon_tg_v4_global')) || [
+          messages: JSON.parse(localStorage.getItem('anon_tg_v5_global')) || [
             { id: 1, uid: 'sys', author: 'Система', text: 'Добро пожаловать в мессенджер Анонимнет.', time: '12:00', reply: null, reactions: {} }
           ]
         }
@@ -655,10 +658,10 @@
     const btnAuthModal = document.getElementById('btnAuthModal');
 
     function saveState() {
-      localStorage.setItem('anon_tg_v4_user', JSON.stringify(state.user));
+      localStorage.setItem('anon_tg_v5_user', JSON.stringify(state.user));
       const activeChat = state.chats.find(c => c.id === state.activeChatId);
       if (activeChat) {
-        localStorage.setItem(`anon_tg_v4_${activeChat.id}`, JSON.stringify(activeChat.messages));
+        localStorage.setItem(`anon_tg_v5_${activeChat.id}`, JSON.stringify(activeChat.messages));
       }
     }
 
@@ -839,7 +842,6 @@
       closeContextMenu();
     };
 
-    // Создание нового диалога по клику на ✏️
     document.getElementById('btnNewChat').onclick = () => {
       const targetId = prompt('Введите @ID собеседника для анонимного диалога:');
       if (targetId) {
@@ -864,7 +866,6 @@
     sendBtn.onclick = send;
     msgInput.onkeypress = (e) => { if (e.key === 'Enter') send(); };
 
-    // Настройки
     btnAuthModal.onclick = () => {
       document.getElementById('authNick').value = state.user.nick;
       document.getElementById('authId').value = state.user.id;
