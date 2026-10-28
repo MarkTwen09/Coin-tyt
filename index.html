@@ -8,24 +8,25 @@
 <title>anonimnet AI</title>
 <style>
 /* ============================================================
-   ANONIMNET — Smart AI Assistant (Premium Telegram Style)
+   ANONIMNET — Extreme Liquid Glass & Smart AI
    ============================================================ */
 :root {
   --tg-bg: #0e1621;
   --tg-panel: #17212b;
-  --tg-search: #242f3d;
-  --tg-hover: #202b36;
-  --tg-active: #2b5278;
   --tg-text: #ffffff;
-  --tg-text-dim: #7d8e9e;
+  --tg-text-dim: #8e9eab;
   --tg-accent: #64b5ef;
   --tg-blue: #3390ec;
   
-  --tg-bubble-in: #182533;
-  --tg-bubble-out: #2b5278;
+  /* Extreme Glassmorphism */
+  --glass-bg: rgba(23, 33, 43, 0.45); /* Очень прозрачный */
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  --glass-blur: blur(50px) saturate(200%);
   
-  --tg-border: rgba(255, 255, 255, 0.08);
-  --glass-bg: rgba(23, 33, 43, 0.75);
+  /* Semi-transparent bubbles */
+  --bubble-in: rgba(24, 37, 51, 0.7);
+  --bubble-out: rgba(43, 82, 120, 0.8);
 }
 
 * {
@@ -62,41 +63,43 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .screen-header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 8px 16px; padding-top: calc(8px + env(safe-area-inset-top));
-  min-height: 44px; background: var(--tg-panel); z-index: 10;
+  min-height: 44px; background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border); z-index: 10;
 }
 .header-title { font-size: 17px; font-weight: 600; letter-spacing: -0.4px; }
 .btn-text { font-size: 17px; color: var(--tg-accent); font-weight: 400; }
 .icon-btn { display: grid; place-items: center; color: var(--tg-accent); padding: 4px; }
 
-.content-scroll { flex: 1; overflow-y: auto; padding-bottom: 120px; background: var(--tg-panel); }
+.content-scroll { flex: 1; overflow-y: auto; padding-bottom: 120px; background: transparent; }
 .content-scroll::-webkit-scrollbar { display: none; }
 
 /* ===================== СПИСОК ЧАТОВ ===================== */
-.search-wrap { padding: 8px 16px; background: var(--tg-panel); }
+.search-wrap { padding: 8px 16px; background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--glass-border); }
 .search {
-  width: 100%; background: var(--tg-search); border-radius: 10px;
+  width: 100%; background: rgba(0,0,0,0.3); border-radius: 10px;
   padding: 7px 12px; display: flex; align-items: center; gap: 6px;
 }
 .search svg { width: 18px; height: 18px; fill: var(--tg-text-dim); }
 .search input { width: 100%; font-size: 17px; color: var(--tg-text); }
 .search input::placeholder { color: var(--tg-text-dim); }
 
-.folders { display: flex; gap: 8px; padding: 8px 16px; background: var(--tg-panel); overflow-x: auto; scrollbar-width: none; }
+.folders { display: flex; gap: 8px; padding: 8px 16px; background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); overflow-x: auto; border-bottom: 1px solid var(--glass-border); }
 .folders::-webkit-scrollbar { display: none; }
 .folder {
-  background: var(--tg-search); padding: 6px 14px; border-radius: 20px;
+  background: rgba(0,0,0,0.3); padding: 6px 14px; border-radius: 20px;
   font-size: 15px; font-weight: 500; white-space: nowrap; display: flex; align-items: center; gap: 6px;
   cursor: pointer; color: var(--tg-text);
 }
-.folder.active { background: var(--tg-active); }
+.folder.active { background: rgba(255,255,255,0.15); border: 1px solid var(--glass-border); }
 
-.chat-item { display: flex; align-items: center; gap: 12px; padding: 8px 16px; cursor: pointer; }
-.chat-item:active { background: var(--tg-hover); }
+.chat-item { display: flex; align-items: center; gap: 12px; padding: 8px 16px; cursor: pointer; background: transparent; }
+.chat-item:active { background: rgba(255,255,255,0.05); }
 
 .avatar-wrap { position: relative; flex: 0 0 auto; }
 .avatar {
   width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center;
-  font-weight: 600; font-size: 22px; color: #fff;
+  font-weight: 600; font-size: 22px; color: #fff; background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px); border: 1px solid var(--glass-border);
 }
 .avatar-ring {
   position: absolute; inset: -2px; border-radius: 50%;
@@ -104,10 +107,10 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   z-index: -1; opacity: 0; animation: pulseRing 2s infinite;
 }
 .avatar-ring.active { opacity: 1; }
-.avatar-ring::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--tg-panel); }
+.avatar-ring::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--tg-bg); }
 @keyframes pulseRing { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.04); opacity: 0.7; } }
 
-.ci-body { flex: 1; min-width: 0; border-bottom: 1px solid var(--tg-border); padding-bottom: 8px; padding-top: 4px; }
+.ci-body { flex: 1; min-width: 0; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; padding-top: 4px; }
 .chat-item:last-child .ci-body { border-bottom: none; }
 .ci-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
 .ci-name { font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.3px; }
@@ -127,19 +130,19 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .chat-header {
   display: flex; align-items: center; gap: 10px; padding: 8px 12px;
   padding-top: calc(8px + env(safe-area-inset-top));
-  background: var(--tg-panel); border-bottom: 1px solid var(--tg-border); z-index: 10;
+  background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border); z-index: 10;
 }
 .chat-header .avatar { width: 40px; height: 40px; font-size: 18px; }
 .chat-title { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center;}
 .chat-title .name { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; display: flex; align-items: center; gap: 4px; }
-.chat-title .status { font-size: 13px; color: var(--tg-text-dim); }
-.chat-title .status.online { color: var(--tg-accent); }
+.chat-title .status { font-size: 13px; color: var(--tg-accent); }
 
 /* Сообщения */
 .msgs-wrap { position: relative; flex: 1; overflow: hidden; width: 100%; background: var(--tg-bg); }
 
-/* ПАТТЕРН */
-.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.25; }
+/* КОСМИЧЕСКИЙ ПАТТЕРН */
+.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.3; }
 .messages {
   position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 16px 16px 100px;
   display: flex; flex-direction: column; gap: 6px; scroll-behavior: smooth; z-index: 2;
@@ -149,30 +152,33 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .date-chip {
   align-self: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px);
   color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 500; margin: 12px 0;
+  border: 1px solid var(--glass-border);
 }
 
-/* ПУЗЫРИ */
+/* СТЕКЛЯННЫЕ ПУЗЫРИ (Liquid Glass) */
 .msg {
-  max-width: 85%; padding: 7px 12px 6px; border-radius: 16px;
+  max-width: 85%; padding: 7px 12px 6px; border-radius: 18px;
   font-size: 16px; line-height: 1.35; word-break: break-word; position: relative;
   animation: msgPop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  backdrop-filter: blur(25px) saturate(200%); -webkit-backdrop-filter: blur(25px) saturate(200%);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.1);
+  border: 1px solid var(--glass-border);
 }
 @keyframes msgPop { 0% { opacity: 0; transform: scale(0.85) translateY(15px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
-.msg.in { align-self: flex-start; background: var(--tg-bubble-in); border-bottom-left-radius: 4px; }
-.msg.out { align-self: flex-end; background: var(--tg-bubble-out); border-bottom-right-radius: 4px; }
+.msg.in { align-self: flex-start; background: var(--bubble-in); border-bottom-left-radius: 4px; }
+.msg.out { align-self: flex-end; background: var(--bubble-out); border-bottom-right-radius: 4px; border-color: rgba(100, 181, 239, 0.3); }
 
 .msg .text { white-space: pre-wrap; letter-spacing: -0.2px; }
-.msg .text pre { background: rgba(0,0,0,0.4); padding: 8px; border-radius: 8px; font-family: monospace; font-size: 14px; margin-top: 6px; overflow-x: auto; }
+.msg .text pre { background: rgba(0,0,0,0.5); padding: 8px; border-radius: 8px; font-family: monospace; font-size: 14px; margin-top: 6px; overflow-x: auto; }
 .msg .meta { display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 12px; margin-top: 3px; color: var(--tg-text-dim); }
-.msg.out .meta { color: rgba(255,255,255,0.6); }
+.msg.out .meta { color: rgba(255,255,255,0.7); }
 .tick { width: 15px; height: 15px; fill: var(--tg-accent); margin-left: 2px;}
 
 /* Анимация печати */
 .typing-indicator { display: flex; align-items: center; gap: 4px; height: 20px; padding: 0 4px; }
 .typing-indicator span {
-  width: 6px; height: 6px; border-radius: 50%; background: var(--tg-text-dim);
+  width: 6px; height: 6px; border-radius: 50%; background: var(--tg-accent);
   animation: typingBounce 1.4s infinite ease-in-out both;
 }
 .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
@@ -182,46 +188,48 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 /* Реакции */
 .reactions { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
 .reaction {
-  background: rgba(255,255,255,0.1); border-radius: 12px; padding: 2px 8px; font-size: 14px; color: #fff;
+  background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+  border-radius: 12px; padding: 2px 8px; font-size: 14px; color: #fff;
   display: flex; align-items: center; gap: 4px; border: 1px solid transparent;
 }
-.reaction.mine { background: rgba(100, 181, 239, 0.2); border-color: rgba(100, 181, 239, 0.4); }
+.reaction.mine { background: rgba(100, 181, 239, 0.3); border-color: rgba(100, 181, 239, 0.5); }
 
-/* ===================== COMPOSER ===================== */
+/* ===================== COMPOSER (Extreme Glass) ===================== */
 .composer-container {
   position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 16px;
   padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  background: linear-gradient(to top, var(--tg-bg) 20%, rgba(14,22,33,0) 100%);
+  background: linear-gradient(to top, var(--tg-bg) 10%, rgba(14,22,33,0) 100%);
   z-index: 20; pointer-events: none;
 }
 .composer-glass {
   pointer-events: auto; display: flex; align-items: flex-end; gap: 6px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(30px) saturate(200%); -webkit-backdrop-filter: blur(30px) saturate(200%);
-  border: 1px solid var(--tg-border);
-  border-radius: 22px; padding: 5px 6px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  background: rgba(255, 255, 255, 0.08); /* Еще прозрачнее */
+  backdrop-filter: blur(40px) saturate(250%); -webkit-backdrop-filter: blur(40px) saturate(250%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px; padding: 6px 8px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.3);
   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 .composer-glass:focus-within {
-  border-color: rgba(100, 181, 239, 0.4);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 15px 50px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.5);
   transform: translateY(-2px);
 }
-.attach-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--tg-text-dim); }
+.attach-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--tg-text); opacity: 0.7; }
 .attach-btn svg { width: 24px; height: 24px; fill: currentColor; }
 .input-wrap { flex: 1; display: flex; align-items: flex-end; padding: 0 4px 0 0; }
 #input { width: 100%; resize: none; max-height: 120px; font-size: 17px; padding: 7px 0; color: var(--tg-text); line-height: 1.3; }
-#input::placeholder { color: var(--tg-text-dim); }
+#input::placeholder { color: rgba(255,255,255,0.5); }
 .send-btn { 
   width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; 
   background: var(--tg-blue); color: #fff; flex: 0 0 auto;
-  box-shadow: 0 2px 10px rgba(51, 144, 236, 0.4);
+  box-shadow: 0 4px 15px rgba(51, 144, 236, 0.5);
 }
-.send-btn.mic { background: transparent; box-shadow: none; color: var(--tg-text-dim); }
+.send-btn.mic { background: transparent; box-shadow: none; color: var(--tg-text); opacity: 0.7; }
 .send-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
-/* ===================== НАВИГАЦИЯ ===================== */
+/* ===================== НИЖНЯЯ НАВИГАЦИЯ (Extreme Glass) ===================== */
 .bottom-nav-wrapper {
   position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;
   padding: 0 16px 20px 16px; padding-bottom: calc(20px + env(safe-area-inset-bottom));
@@ -230,28 +238,31 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .app.chat-open .bottom-nav-wrapper { transform: translateY(150px); opacity: 0; }
 
 .bottom-nav {
-  pointer-events: auto; position: relative; background: var(--glass-bg); 
-  backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
-  border: 1px solid var(--tg-border); border-radius: 35px;
-  display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden;
+  pointer-events: auto; position: relative; background: rgba(255, 255, 255, 0.08); 
+  backdrop-filter: blur(40px) saturate(250%); -webkit-backdrop-filter: blur(40px) saturate(250%);
+  border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 35px;
+  display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px; 
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.2); overflow: hidden;
 }
 .nav-indicator {
   position: absolute; top: 6px; bottom: 6px; width: calc(25% - 3px); left: 6px; 
-  background: rgba(255, 255, 255, 0.1); border-radius: 25px;
+  background: rgba(255, 255, 255, 0.15); border-radius: 25px;
   transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1; pointer-events: none;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.2);
 }
 .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 500; color: var(--tg-text-dim); padding: 6px 0; position: relative; z-index: 2; }
-.nav-item.active { color: var(--tg-accent); }
-.nav-item.active svg { fill: var(--tg-accent); }
+.nav-item.active { color: #fff; }
+.nav-item.active svg { fill: #fff; }
 .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
 
 /* Меню */
 .ctx {
-  position: fixed; z-index: 200; background: #1c2733; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); min-width: 200px; padding: 6px;
-  border: 1px solid var(--tg-border); animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: fixed; z-index: 200; background: rgba(28, 39, 51, 0.85); backdrop-filter: blur(30px);
+  border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); min-width: 200px; padding: 6px;
+  border: 1px solid var(--glass-border); animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
-.ctx-emojis { display: flex; gap: 4px; padding: 6px; border-bottom: 1px solid var(--tg-border); margin-bottom: 4px; }
+.ctx-emojis { display: flex; gap: 4px; padding: 6px; border-bottom: 1px solid var(--glass-border); margin-bottom: 4px; }
 .ctx-emoji { font-size: 22px; padding: 4px; border-radius: 50%; }
 .ctx-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; font-size: 16px; border-radius: 10px; color: var(--tg-text); }
 .ctx-item:active { background: rgba(255,255,255,0.1); }
@@ -259,14 +270,16 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .ctx-item svg { width: 20px; height: 20px; fill: currentColor; }
 
 .emoji-panel {
-  position: fixed; z-index: 150; background: #1c2733; border-radius: 16px; padding: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); 
-  border: 1px solid var(--tg-border); display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; animation: popIn 0.2s;
+  position: fixed; z-index: 150; background: rgba(28, 39, 51, 0.85); backdrop-filter: blur(30px);
+  border-radius: 16px; padding: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); 
+  border: 1px solid var(--glass-border); display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; animation: popIn 0.2s;
 }
 .emoji-panel button { font-size: 24px; padding: 4px; }
 
 .toast {
   position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: #1c2733; border: 1px solid var(--tg-border); color: #fff; padding: 12px 20px; border-radius: 20px; font-size: 14px;
+  background: rgba(28, 39, 51, 0.9); backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border); color: #fff; padding: 12px 20px; border-radius: 20px; font-size: 14px;
   opacity: 0; transition: 0.3s; pointer-events: none; z-index: 300; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -299,11 +312,11 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
   <div class="view-screen" id="view-contacts" hidden>
     <div class="screen-header"><button class="btn-text">Группы</button><div class="header-title">Контакты</div><button class="btn-text">Создать</button></div>
-    <div class="content-scroll" style="padding-top:20px;"><div style="padding: 10px 16px; border-bottom: 1px solid var(--tg-border);">Иван Иванов</div></div>
+    <div class="content-scroll" style="padding-top:20px;"><div style="padding: 10px 16px; border-bottom: 1px solid var(--glass-border);">Иван Иванов</div></div>
   </div>
   <div class="view-screen" id="view-calls" hidden>
     <div class="screen-header"><button class="btn-text"></button><div class="header-title">Звонки</div><button class="icon-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button></div>
-    <div class="content-scroll" style="padding-top:10px;"><div style="padding: 10px 16px; border-bottom: 1px solid var(--tg-border);"><div style="font-size: 17px;">Иван Иванов</div><div style="font-size: 14px; color: var(--tg-text-dim);">Исходящий • 12:40</div></div></div>
+    <div class="content-scroll" style="padding-top:10px;"><div style="padding: 10px 16px; border-bottom: 1px solid var(--glass-border);"><div style="font-size: 17px;">Иван Иванов</div><div style="font-size: 14px; color: var(--tg-text-dim);">Исходящий • 12:40</div></div></div>
   </div>
   <div class="view-screen" id="view-settings" hidden>
     <div class="screen-header"><button class="btn-text"></button><div class="header-title">Настройки</div><button class="btn-text">Править</button></div>
@@ -325,7 +338,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
       <button class="icon-btn" id="backBtn" style="margin-right: 2px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
       <div class="avatar" id="chatAvatar" style="background: var(--tg-blue);">🤖</div>
       <div class="chat-title">
-        <div class="name" id="chatName">anonimnet AI <span style="font-size: 11px; background: var(--tg-active); padding: 2px 6px; border-radius: 4px; margin-left: 4px;">BOT</span></div>
+        <div class="name" id="chatName">anonimnet AI <span style="font-size: 11px; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; margin-left: 4px;">BOT</span></div>
         <div class="status online" id="chatStatus">онлайн</div>
       </div>
       <button class="icon-btn" title="Очистить чат" onclick="clearChat()">
@@ -399,7 +412,7 @@ const chats = [
     id: 'ai', name: 'anonimnet AI', avatar: '🤖', color: '#3390ec',
     status: 'онлайн', time: nowTime(), unread: 0, pinned: true, muted: false,
     messages: [
-      {id:nid(), out:false, type:'text', time:nowTime(), text:'Привет! Я — твой персональный ИИ-ассистент. 🤖\n\nЯ умею:\n• Решать математику (даже словами: "5 умножить на 10")\n• Говорить время и дату\n• Рассказывать шутки и факты\n• Давать советы\n\nСпроси меня о чем-нибудь!', reactions:{}, mine:{}}
+      {id:nid(), out:false, type:'text', time:nowTime(), text:'Привет! Я — твой умный ИИ-ассистент. 🤖\n\nЯ умею:\n• Считать (даже словами: "5 умножить на 10")\n• Говорить время\n• Рассказывать шутки, факты и советы\n• Поддерживать беседу\n\nСпроси меня о чем-нибудь!', reactions:{}, mine:{}}
     ]
   }
 ];
@@ -511,55 +524,50 @@ function toggleReaction(m, emoji) {
 }
 
 // ==========================================
-// ПРОДВИНУТЫЙ ИИ-ДВИЖОК
+// УЛЬТИМАТИВНЫЙ ИИ-ДВИЖОК
 // ==========================================
-function getJoke() {
-  const jokes = [
-    "— Почему программисты путают Хэллоуин и Рождество?\n— Потому что Oct 31 == Dec 25.",
-    "— Сколько нужно программистов, чтобы вкрутить лампочку?\n— Ни одного, это проблема железа.",
-    "— Как называется страх перед нейросетями?\n— Искусственный интеллект-фобия. (Ладно, это было плохо 😅)",
-    "— Что говорит один байт другому?\n— Мне не хватает бита до полного счастья.",
-    "— Почему у программистов путаются день и ночь?\n— Потому что они живут в 24/7.",
-    "— Как программист объясняет любовь?\n— Это бесконечный цикл с break по требованию.",
-    "— Что делает программист, когда замерзает?\n— Надевает свитер и закрывает все окна. (Windows)",
-    "— Что сказал ноль единице?\n— Ты такая толстая! (Шучу, ты просто больше меня в 1 раз)"
-  ];
-  return jokes[Math.floor(Math.random() * jokes.length)];
-}
+const JOKES = [
+  "— Почему программисты путают Хэллоуин и Рождество?\n— Потому что Oct 31 == Dec 25.",
+  "— Сколько нужно программистов, чтобы вкрутить лампочку?\n— Ни одного, это проблема железа.",
+  "— Как называется страх перед нейросетями?\n— Искусственный интеллект-фобия. (Ладно, это было плохо 😅)",
+  "— Что говорит один байт другому?\n— Мне не хватает бита до полного счастья.",
+  "— Почему у программистов путаются день и ночь?\n— Потому что они живут в 24/7.",
+  "— Как программист объясняет любовь?\n— Это бесконечный цикл с break по требованию.",
+  "— Что делает программист, когда замерзает?\n— Надевает свитер и закрывает все окна. (Windows)",
+  "— Что сказал ноль единице?\n— Ты такая толстая! (Шучу, ты просто больше меня в 1 раз)"
+];
 
-function getFact() {
-  const facts = [
-    "Знаешь ли ты, что первый компьютерный баг был настоящим насекомым (мотыльком), застрявшим в реле компьютера в 1947 году? 🐛",
-    "Количество возможных комбинаций в шахматах больше, чем количество атомов во Вселенной! ♟️",
-    "Первый домен в интернете (symbolics.com) был зарегистрирован в 1985 году. 🌐",
-    "Медоеды — настоящие бесстрашные бойцы. Они могут выдержать укусы нескольких ядовитых змей и даже уснуть после этого! 🦡",
-    "Группа The Beatles изначально называлась The Quarrymen. 🎸",
-    "На Венере день длится дольше, чем год. ☀️",
-    "У осьминогов три сердца и голубая кровь. 🐙",
-    "Человеческий глаз различает около 10 миллионов оттенков цвета. 👁️",
-    "Молния бьет в землю примерно 100 раз в секунду. ⚡",
-    "Вода замерзает быстрее, если она горячая (Эффект Мпембы). 🧊"
-  ];
-  return facts[Math.floor(Math.random() * facts.length)];
-}
+const FACTS = [
+  "Знаешь ли ты, что первый компьютерный баг был настоящим насекомым (мотыльком), застрявшим в реле компьютера в 1947 году? 🐛",
+  "Количество возможных комбинаций в шахматах больше, чем количество атомов во Вселенной! ♟️",
+  "Первый домен в интернете (symbolics.com) был зарегистрирован в 1985 году. 🌐",
+  "Медоеды — настоящие бесстрашные бойцы. Они могут выдержать укусы нескольких ядовитых змей и даже уснуть после этого! 🦡",
+  "Группа The Beatles изначально называлась The Quarrymen. 🎸",
+  "На Венере день длится дольше, чем год. ☀️",
+  "У осьминогов три сердца и голубая кровь. 🐙",
+  "Человеческий глаз различает около 10 миллионов оттенков цвета. 👁️",
+  "Молния бьет в землю примерно 100 раз в секунду. ⚡",
+  "Вода замерзает быстрее, если она горячая (Эффект Мпембы). 🧊",
+  "Улитки могут спать по три года подряд. 🐌",
+  "В Японии есть остров, который полностью населен кроликами. 🐇"
+];
 
-function getAdvice() {
-  const advices = [
-    "Мой совет: не откладывай на завтра то, что можно сделать сегодня. Но и не забывай отдыхать! 🛌",
-    "Если чувствуешь усталость — сделай перерыв. Выпей воды, разомнись. Твой мозг скажет спасибо. 💧",
-    "Хочешь выучить что-то новое? Начни с малого. 15 минут в день дадут результат через месяц! 📚",
-    "Не сравнивай себя с другими. Сравнивай себя с собой вчерашним. Прогресс — это главное. 📈",
-    "Улыбнись! Даже если грустно. Мозг воспринимает улыбку как сигнал, что всё хорошо. 😊",
-    "Пей больше воды, спи 8 часов и не сиди в телефоне перед сном. Банально, но работает! 📱🚫"
-  ];
-  return advices[Math.floor(Math.random() * advices.length)];
-}
+const ADVICES = [
+  "Мой совет: не откладывай на завтра то, что можно сделать сегодня. Но и не забывай отдыхать! 🛌",
+  "Если чувствуешь усталость — сделай перерыв. Выпей воды, разомнись. Твой мозг скажет спасибо. 💧",
+  "Хочешь выучить что-то новое? Начни с малого. 15 минут в день дадут результат через месяц! 📚",
+  "Не сравнивай себя с другими. Сравнивай себя с собой вчерашним. Прогресс — это главное. 📈",
+  "Улыбнись! Даже если грустно. Мозг воспринимает улыбку как сигнал, что всё хорошо. 😊",
+  "Пей больше воды, спи 8 часов и не сиди в телефоне перед сном. Банально, но работает! 📱🚫"
+];
+
+function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 function getBotResponse(inputText) {
   const t = inputText.toLowerCase().trim();
   
-  // 1. Математика (умная обработка слов)
-  let mathText = t.replace(/плюс/g, '+').replace(/минус/g, '-').replace(/умножить на/g, '*').replace(/умножить/g, '*').replace(/разделить на/g, '/').replace(/разделить/g, '/').replace(/х/g, '*');
+  // 1. Математика (Обработка текста)
+  let mathText = t.replace(/плюс/g, '+').replace(/минус/g, '-').replace(/умножить на/g, '*').replace(/умножить/g, '*').replace(/разделить на/g, '/').replace(/разделить/g, '/').replace(/\s*[xх]\s*/g, '*');
   const mathRegex = /(-?\d+(?:\.\d+)?)\s*([\+\-\*\/])\s*(-?\d+(?:\.\d+)?)/;
   const mathMatch = mathText.match(mathRegex);
   if (mathMatch) {
@@ -580,11 +588,11 @@ function getBotResponse(inputText) {
     return `Считаю: ${a} ${op} ${b} = ${result}`;
   }
 
-  // 2. Контекст "Еще"
-  if (t.match(/еще|ещё|давай еще|расскажи еще/)) {
-    if (botState.lastIntent === 'joke') return getJoke();
-    if (botState.lastIntent === 'fact') return getFact();
-    if (botState.lastIntent === 'advice') return getAdvice();
+  // 2. Контекст (Еще)
+  if (t.match(/еще|ещё|давай еще|расскажи еще|продолжай/)) {
+    if (botState.lastIntent === 'joke') return getRandom(JOKES);
+    if (botState.lastIntent === 'fact') return getRandom(FACTS);
+    if (botState.lastIntent === 'advice') return getRandom(ADVICES);
     return "Что именно рассказать еще? Шутку, факт или совет?";
   }
 
@@ -600,58 +608,60 @@ function getBotResponse(inputText) {
     return `Сегодня ${d.toLocaleDateString('ru-RU', options)}. 📅`;
   }
 
-  // 4. Эмпатия и Настроение
+  // 4. Состояние / Эмпатия
   if (t.match(/грустно|плохо|устал|депрессия|тяжело|болит/)) {
     botState.lastIntent = 'empathy';
-    const responses = [
+    return getRandom([
       "Мне жаль это слышать... 🫂 Знай, что это временно. Попробуй отвлечься, выпей чаю. Я всегда здесь, если захочешь поговорить.",
       "Плохие дни случаются у всех. Главное — помнить, что после дождя всегда выходит солнце. ☀️ Хочешь, расскажу шутку, чтобы поднять настроение?",
       "Держись! Ты справишься. Иногда нужно просто выдохнуть и дать себе отдохнуть. 💙"
-    ];
-    return responses[Math.floor(Math.random() * responses.length)];
+    ]);
   }
   if (t.match(/рад|счастлив|отлично|супер|класс/)) {
     botState.lastIntent = 'happy';
     return "Я очень рад за тебя! 🥳 Пусть этот день будет лучшим. Что хорошего случилось?";
   }
 
-  // 5. Шутки / Факты / Советы
+  // 5. Вопросы о боте
+  if (t.match(/что делаешь|чем занят|как жизнь/)) {
+    botState.lastIntent = 'status';
+    return getRandom(["Общаюсь с тобой 😊 А ты чем занимаешься?", "Обрабатываю нейронные связи и жду твоих вопросов! 🧠", "Скучаю и жду, когда ты напишешь что-нибудь интересное."]);
+  }
+  if (t.match(/где ты|откуда ты|где живешь/)) {
+    botState.lastIntent = 'location';
+    return "Я живу на серверах... Шучу! Мой код работает прямо в твоем браузере. Я невидимый цифровой дух. 👻";
+  }
+  if (t.match(/кто ты|что ты|расскажи о себе|как тебя зовут|твое имя/)) {
+    botState.lastIntent = 'about';
+    return "Я — anonimnet AI. 🤖 Меня написали на JavaScript. Я умею считать, подсказывать время, рассказывать шутки и давать советы. Чем займемся?";
+  }
+
+  // 6. Шутки / Факты / Советы
   if (t.match(/шутка|анекдот|рассмеши|пошути/)) {
     botState.lastIntent = 'joke';
-    return getJoke();
+    return getRandom(JOKES);
   }
   if (t.match(/факт|интересное|расскажи что-то/)) {
     botState.lastIntent = 'fact';
-    return getFact();
+    return getRandom(FACTS);
   }
   if (t.match(/совет|что делать|подскажи|как поступить/)) {
     botState.lastIntent = 'advice';
-    return getAdvice();
-  }
-
-  // 6. О боте
-  if (t.match(/кто ты|что ты|расскажи о себе|как тебя зовут|твое имя/)) {
-    botState.lastIntent = 'about';
-    return "Я — anonimnet AI. 🤖 Меня написали на JavaScript. Я живу прямо в твоем браузере, поэтому могу работать даже без интернета! Я умею считать, подсказывать время, рассказывать шутки и давать советы. Чем займемся?";
+    return getRandom(ADVICES);
   }
 
   // 7. Приветствия
-  if (t.match(/привет|здравствуй|хай|ку|доброе утро|добрый день|добрый вечер/)) {
+  if (t.match(/привет|здравствуй|хай|ку|доброе утро|добрый день|добрый вечер|салют/)) {
     botState.lastIntent = 'greet';
-    const greets = [
-      "Привет! 👋 Как сам?",
-      "Здравствуй! Рад тебя видеть. Чем могу помочь?",
-      "Хай! 😎 Готов к новым вопросам."
-    ];
-    return greets[Math.floor(Math.random() * greets.length)];
+    return getRandom(["Привет! 👋 Как сам?", "Здравствуй! Рад тебя видеть. Чем могу помочь?", "Хай! 😎 Готов к новым вопросам."]);
   }
-  if (t.match(/пока|до свидания|бай/)) {
+  if (t.match(/пока|до свидания|бай|увидимся/)) {
     botState.lastIntent = 'bye';
     return "До встречи! Буду скучать. Если что, я всегда онлайн. 👋";
   }
   if (t.match(/как дела|как ты|как настроение/)) {
     botState.lastIntent = 'howareyou';
-    return "У меня всё отлично! Я же ИИ, у меня всегда 100% заряд. А у тебя как настроение?";
+    return getRandom(["У меня всё отлично! Я же ИИ, у меня всегда 100% заряд. А у тебя как настроение?", "Все супер! Готов помочь. Как ты?"]);
   }
 
   // 8. Код
@@ -661,14 +671,13 @@ function getBotResponse(inputText) {
   }
 
   // 9. Умный Fallback
-  const fallbacks = [
+  botState.lastIntent = 'fallback';
+  return getRandom([
     "Интересная мысль. Но я пока не умею отвечать на такое. Попробуй спросить про шутку, факт или время!",
     "Я немного туповат для таких сложных материй. 😅 Но я умею считать! Напиши: 500 * 20",
     "Мой создатель пока не научил меня этому. Но я учусь. Может, расскажу шутку?",
     "Хм, дай подумать... Нет, всё равно не знаю. Давай лучше я расскажу тебе факт! 🧠"
-  ];
-  botState.lastIntent = 'fallback';
-  return fallbacks[Math.floor(Math.random() * fallbacks.length)];
+  ]);
 }
 
 // Отправка
@@ -711,7 +720,6 @@ function triggerBotReply(userText) {
   $('#messages').appendChild(el);
   scrollToBottom();
 
-  // Задержка зависит от длины ответа (имитация набора)
   const delay = 800 + Math.random() * 800;
   setTimeout(() => {
     document.getElementById(typingId)?.remove();
