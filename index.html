@@ -8,25 +8,46 @@
 <title>anonimnet AI</title>
 <style>
 /* ============================================================
-   ANONIMNET — Extreme Liquid Glass & Smart AI
+   ANONIMNET — True Liquid Glass & Political AI
    ============================================================ */
 :root {
-  --tg-bg: #0e1621;
-  --tg-panel: #17212b;
-  --tg-text: #ffffff;
-  --tg-text-dim: #8e9eab;
-  --tg-accent: #64b5ef;
+  /* Default Dark Theme Variables */
+  --bg-base: #0e1621;
+  --text-main: #ffffff;
+  --text-dim: #8e9eab;
   --tg-blue: #3390ec;
   
-  /* Extreme Glassmorphism */
-  --glass-bg: rgba(23, 33, 43, 0.45); /* Очень прозрачный */
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-  --glass-blur: blur(50px) saturate(200%);
+  /* Extreme Liquid Glass */
+  --glass-bg: rgba(30, 40, 55, 0.25); /* Очень прозрачный фон */
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  --glass-blur: blur(45px) saturate(200%);
   
-  /* Semi-transparent bubbles */
-  --bubble-in: rgba(24, 37, 51, 0.7);
-  --bubble-out: rgba(43, 82, 120, 0.8);
+  /* Bubbles */
+  --bubble-in: rgba(24, 37, 51, 0.65);
+  --bubble-out: rgba(43, 82, 120, 0.75);
+  
+  /* Background Gradient for Glass effect */
+  --bg-gradient: radial-gradient(circle at 10% 20%, rgba(43, 82, 120, 0.8) 0%, rgba(14, 22, 33, 1) 90%);
+}
+
+[data-theme="light"] {
+  --bg-base: #e6ebee;
+  --text-main: #000000;
+  --text-dim: #707579;
+  --tg-blue: #007aff;
+  
+  /* Extreme Light Liquid Glass */
+  --glass-bg: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  
+  /* Bubbles */
+  --bubble-in: rgba(255, 255, 255, 0.75);
+  --bubble-out: rgba(0, 122, 255, 0.85);
+  
+  /* Background Gradient */
+  --bg-gradient: radial-gradient(circle at 90% 10%, rgba(200, 220, 255, 0.8) 0%, rgba(230, 235, 238, 1) 90%);
 }
 
 * {
@@ -40,8 +61,9 @@
 [hidden] { display: none !important; }
 html, body { 
   height: 100%; height: 100dvh; overflow: hidden; 
-  background: var(--tg-bg); color: var(--tg-text);
+  background: var(--bg-base); color: var(--text-main);
   overscroll-behavior: none;
+  transition: background 0.3s, color 0.3s;
 }
 
 button { 
@@ -51,12 +73,12 @@ button {
 button:active { transform: scale(0.85); }
 input, textarea { border: none; outline: none; background: none; color: inherit; font-family: inherit; }
 
-.app { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; width: 100vw; }
+.app { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; width: 100vw; background: var(--bg-gradient); }
 
 /* ===================== ЭКРАНЫ ===================== */
 .view-screen {
   position: absolute; inset: 0; display: flex; flex-direction: column;
-  background: var(--tg-bg); animation: viewFade 0.3s ease;
+  background: transparent; animation: viewFade 0.3s ease;
 }
 @keyframes viewFade { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
@@ -64,11 +86,11 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   display: flex; align-items: center; justify-content: space-between;
   padding: 8px 16px; padding-top: calc(8px + env(safe-area-inset-top));
   min-height: 44px; background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-  border-bottom: 1px solid var(--glass-border); z-index: 10;
+  border-bottom: 1px solid var(--glass-border); z-index: 10; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 .header-title { font-size: 17px; font-weight: 600; letter-spacing: -0.4px; }
-.btn-text { font-size: 17px; color: var(--tg-accent); font-weight: 400; }
-.icon-btn { display: grid; place-items: center; color: var(--tg-accent); padding: 4px; }
+.btn-text { font-size: 17px; color: var(--tg-blue); font-weight: 500; }
+.icon-btn { display: grid; place-items: center; color: var(--tg-blue); padding: 4px; }
 
 .content-scroll { flex: 1; overflow-y: auto; padding-bottom: 120px; background: transparent; }
 .content-scroll::-webkit-scrollbar { display: none; }
@@ -76,30 +98,32 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 /* ===================== СПИСОК ЧАТОВ ===================== */
 .search-wrap { padding: 8px 16px; background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--glass-border); }
 .search {
-  width: 100%; background: rgba(0,0,0,0.3); border-radius: 10px;
-  padding: 7px 12px; display: flex; align-items: center; gap: 6px;
+  width: 100%; background: rgba(0,0,0,0.1); border-radius: 10px;
+  padding: 7px 12px; display: flex; align-items: center; gap: 6px; border: 1px solid var(--glass-border);
 }
-.search svg { width: 18px; height: 18px; fill: var(--tg-text-dim); }
-.search input { width: 100%; font-size: 17px; color: var(--tg-text); }
-.search input::placeholder { color: var(--tg-text-dim); }
+[data-theme="light"] .search { background: rgba(255,255,255,0.3); }
+.search svg { width: 18px; height: 18px; fill: var(--text-dim); }
+.search input { width: 100%; font-size: 17px; color: var(--text-main); }
+.search input::placeholder { color: var(--text-dim); }
 
 .folders { display: flex; gap: 8px; padding: 8px 16px; background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); overflow-x: auto; border-bottom: 1px solid var(--glass-border); }
 .folders::-webkit-scrollbar { display: none; }
 .folder {
-  background: rgba(0,0,0,0.3); padding: 6px 14px; border-radius: 20px;
+  background: rgba(0,0,0,0.15); padding: 6px 14px; border-radius: 20px;
   font-size: 15px; font-weight: 500; white-space: nowrap; display: flex; align-items: center; gap: 6px;
-  cursor: pointer; color: var(--tg-text);
+  cursor: pointer; color: var(--text-main); border: 1px solid var(--glass-border);
 }
-.folder.active { background: rgba(255,255,255,0.15); border: 1px solid var(--glass-border); }
+[data-theme="light"] .folder { background: rgba(255,255,255,0.4); }
+.folder.active { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.4); }
 
 .chat-item { display: flex; align-items: center; gap: 12px; padding: 8px 16px; cursor: pointer; background: transparent; }
-.chat-item:active { background: rgba(255,255,255,0.05); }
+.chat-item:active { background: rgba(255,255,255,0.1); }
 
 .avatar-wrap { position: relative; flex: 0 0 auto; }
 .avatar {
   width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center;
-  font-weight: 600; font-size: 22px; color: #fff; background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(10px); border: 1px solid var(--glass-border);
+  font-weight: 600; font-size: 22px; color: #fff; background: var(--tg-blue);
+  border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 .avatar-ring {
   position: absolute; inset: -2px; border-radius: 50%;
@@ -107,21 +131,21 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   z-index: -1; opacity: 0; animation: pulseRing 2s infinite;
 }
 .avatar-ring.active { opacity: 1; }
-.avatar-ring::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--tg-bg); }
+.avatar-ring::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--bg-base); }
 @keyframes pulseRing { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.04); opacity: 0.7; } }
 
-.ci-body { flex: 1; min-width: 0; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; padding-top: 4px; }
+.ci-body { flex: 1; min-width: 0; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px; padding-top: 4px; }
 .chat-item:last-child .ci-body { border-bottom: none; }
 .ci-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
 .ci-name { font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.3px; }
-.ci-time { font-size: 14px; color: var(--tg-text-dim); display: flex; align-items: center; gap: 4px; }
+.ci-time { font-size: 14px; color: var(--text-dim); display: flex; align-items: center; gap: 4px; }
 .ci-bottom { display: flex; justify-content: space-between; align-items: center; }
-.ci-sub { font-size: 15px; color: var(--tg-text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.2px; }
+.ci-sub { font-size: 15px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.2px; }
 .badge { background: var(--tg-blue); color: #fff; border-radius: 11px; font-size: 13px; font-weight: 600; padding: 2px 7px; min-width: 22px; text-align: center; }
 
 /* ===================== ЧАТ ===================== */
 .chat-overlay {
-  position: fixed; inset: 0; background: var(--tg-bg); z-index: 100;
+  position: fixed; inset: 0; background: var(--bg-gradient); z-index: 100;
   display: flex; flex-direction: column;
   transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
 }
@@ -131,18 +155,18 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   display: flex; align-items: center; gap: 10px; padding: 8px 12px;
   padding-top: calc(8px + env(safe-area-inset-top));
   background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-  border-bottom: 1px solid var(--glass-border); z-index: 10;
+  border-bottom: 1px solid var(--glass-border); z-index: 10; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 .chat-header .avatar { width: 40px; height: 40px; font-size: 18px; }
 .chat-title { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center;}
 .chat-title .name { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; display: flex; align-items: center; gap: 4px; }
-.chat-title .status { font-size: 13px; color: var(--tg-accent); }
+.chat-title .status { font-size: 13px; color: var(--tg-blue); font-weight: 500; }
 
 /* Сообщения */
-.msgs-wrap { position: relative; flex: 1; overflow: hidden; width: 100%; background: var(--tg-bg); }
+.msgs-wrap { position: relative; flex: 1; overflow: hidden; width: 100%; }
 
 /* КОСМИЧЕСКИЙ ПАТТЕРН */
-.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.3; }
+.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.2; }
 .messages {
   position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 16px 16px 100px;
   display: flex; flex-direction: column; gap: 6px; scroll-behavior: smooth; z-index: 2;
@@ -150,35 +174,36 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .messages::-webkit-scrollbar { display: none; }
 
 .date-chip {
-  align-self: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px);
+  align-self: center; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px);
   color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 500; margin: 12px 0;
-  border: 1px solid var(--glass-border);
+  border: 1px solid rgba(255,255,255,0.1);
 }
+[data-theme="light"] .date-chip { background: rgba(255,255,255,0.5); color: #333; border-color: rgba(0,0,0,0.1); }
 
-/* СТЕКЛЯННЫЕ ПУЗЫРИ (Liquid Glass) */
+/* ИДЕАЛЬНЫЕ СТЕКЛЯННЫЕ ПУЗЫРИ */
 .msg {
-  max-width: 85%; padding: 7px 12px 6px; border-radius: 18px;
+  max-width: 85%; padding: 8px 12px 7px; border-radius: 20px;
   font-size: 16px; line-height: 1.35; word-break: break-word; position: relative;
   animation: msgPop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   backdrop-filter: blur(25px) saturate(200%); -webkit-backdrop-filter: blur(25px) saturate(200%);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.1);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255, 255, 255, 0.2);
   border: 1px solid var(--glass-border);
 }
 @keyframes msgPop { 0% { opacity: 0; transform: scale(0.85) translateY(15px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
-.msg.in { align-self: flex-start; background: var(--bubble-in); border-bottom-left-radius: 4px; }
-.msg.out { align-self: flex-end; background: var(--bubble-out); border-bottom-right-radius: 4px; border-color: rgba(100, 181, 239, 0.3); }
+.msg.in { align-self: flex-start; background: var(--bubble-in); border-bottom-left-radius: 6px; color: var(--text-main); }
+.msg.out { align-self: flex-end; background: var(--bubble-out); border-bottom-right-radius: 6px; color: #fff; border-color: rgba(100, 181, 239, 0.4); }
 
 .msg .text { white-space: pre-wrap; letter-spacing: -0.2px; }
-.msg .text pre { background: rgba(0,0,0,0.5); padding: 8px; border-radius: 8px; font-family: monospace; font-size: 14px; margin-top: 6px; overflow-x: auto; }
-.msg .meta { display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 12px; margin-top: 3px; color: var(--tg-text-dim); }
+.msg .text pre { background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; font-family: monospace; font-size: 14px; margin-top: 6px; overflow-x: auto; }
+.msg .meta { display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 12px; margin-top: 3px; color: var(--text-dim); }
 .msg.out .meta { color: rgba(255,255,255,0.7); }
-.tick { width: 15px; height: 15px; fill: var(--tg-accent); margin-left: 2px;}
+.tick { width: 15px; height: 15px; fill: #fff; margin-left: 2px;}
 
 /* Анимация печати */
 .typing-indicator { display: flex; align-items: center; gap: 4px; height: 20px; padding: 0 4px; }
 .typing-indicator span {
-  width: 6px; height: 6px; border-radius: 50%; background: var(--tg-accent);
+  width: 6px; height: 6px; border-radius: 50%; background: var(--tg-blue);
   animation: typingBounce 1.4s infinite ease-in-out both;
 }
 .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
@@ -198,38 +223,41 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .composer-container {
   position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 16px;
   padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  background: linear-gradient(to top, var(--tg-bg) 10%, rgba(14,22,33,0) 100%);
+  background: linear-gradient(to top, var(--bg-base) 10%, rgba(14,22,33,0) 100%);
   z-index: 20; pointer-events: none;
 }
+[data-theme="light"] .composer-container { background: linear-gradient(to top, var(--bg-base) 10%, rgba(230,235,238,0) 100%); }
+
 .composer-glass {
   pointer-events: auto; display: flex; align-items: flex-end; gap: 6px;
-  background: rgba(255, 255, 255, 0.08); /* Еще прозрачнее */
-  backdrop-filter: blur(40px) saturate(250%); -webkit-backdrop-filter: blur(40px) saturate(250%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: 24px; padding: 6px 8px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.3);
+  box-shadow: var(--glass-shadow);
   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 .composer-glass:focus-within {
-  background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 15px 50px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.5);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.4);
   transform: translateY(-2px);
 }
-.attach-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--tg-text); opacity: 0.7; }
+[data-theme="light"] .composer-glass:focus-within { border-color: rgba(0, 0, 0, 0.2); }
+
+.attach-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--text-dim); }
 .attach-btn svg { width: 24px; height: 24px; fill: currentColor; }
 .input-wrap { flex: 1; display: flex; align-items: flex-end; padding: 0 4px 0 0; }
-#input { width: 100%; resize: none; max-height: 120px; font-size: 17px; padding: 7px 0; color: var(--tg-text); line-height: 1.3; }
-#input::placeholder { color: rgba(255,255,255,0.5); }
+#input { width: 100%; resize: none; max-height: 120px; font-size: 17px; padding: 7px 0; color: var(--text-main); line-height: 1.3; }
+#input::placeholder { color: var(--text-dim); }
 .send-btn { 
   width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; 
   background: var(--tg-blue); color: #fff; flex: 0 0 auto;
-  box-shadow: 0 4px 15px rgba(51, 144, 236, 0.5);
+  box-shadow: 0 4px 15px rgba(51, 144, 236, 0.4);
 }
-.send-btn.mic { background: transparent; box-shadow: none; color: var(--tg-text); opacity: 0.7; }
+.send-btn.mic { background: transparent; box-shadow: none; color: var(--text-dim); }
 .send-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
-/* ===================== НИЖНЯЯ НАВИГАЦИЯ (Extreme Glass) ===================== */
+/* ===================== НИЖНЯЯ НАВИГАЦИЯ ===================== */
 .bottom-nav-wrapper {
   position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;
   padding: 0 16px 20px 16px; padding-bottom: calc(20px + env(safe-area-inset-bottom));
@@ -238,11 +266,11 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .app.chat-open .bottom-nav-wrapper { transform: translateY(150px); opacity: 0; }
 
 .bottom-nav {
-  pointer-events: auto; position: relative; background: rgba(255, 255, 255, 0.08); 
-  backdrop-filter: blur(40px) saturate(250%); -webkit-backdrop-filter: blur(40px) saturate(250%);
-  border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 35px;
+  pointer-events: auto; position: relative; background: var(--glass-bg); 
+  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border); border-radius: 35px;
   display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px; 
-  box-shadow: 0 10px 40px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.2); overflow: hidden;
+  box-shadow: var(--glass-shadow); overflow: hidden;
 }
 .nav-indicator {
   position: absolute; top: 6px; bottom: 6px; width: calc(25% - 3px); left: 6px; 
@@ -250,42 +278,44 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1; pointer-events: none;
   box-shadow: inset 0 1px 1px rgba(255,255,255,0.2);
 }
-.nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 500; color: var(--tg-text-dim); padding: 6px 0; position: relative; z-index: 2; }
-.nav-item.active { color: #fff; }
-.nav-item.active svg { fill: #fff; }
+[data-theme="light"] .nav-indicator { background: rgba(0, 0, 0, 0.08); }
+
+.nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 500; color: var(--text-dim); padding: 6px 0; position: relative; z-index: 2; }
+.nav-item.active { color: var(--tg-blue); }
+.nav-item.active svg { fill: var(--tg-blue); }
 .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
 
 /* Меню */
 .ctx {
-  position: fixed; z-index: 200; background: rgba(28, 39, 51, 0.85); backdrop-filter: blur(30px);
-  border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); min-width: 200px; padding: 6px;
+  position: fixed; z-index: 200; background: var(--glass-bg); backdrop-filter: var(--glass-blur);
+  border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); min-width: 200px; padding: 6px;
   border: 1px solid var(--glass-border); animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
 .ctx-emojis { display: flex; gap: 4px; padding: 6px; border-bottom: 1px solid var(--glass-border); margin-bottom: 4px; }
 .ctx-emoji { font-size: 22px; padding: 4px; border-radius: 50%; }
-.ctx-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; font-size: 16px; border-radius: 10px; color: var(--tg-text); }
+.ctx-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; font-size: 16px; border-radius: 10px; color: var(--text-main); }
 .ctx-item:active { background: rgba(255,255,255,0.1); }
 .ctx-item.danger { color: #ff453a; }
 .ctx-item svg { width: 20px; height: 20px; fill: currentColor; }
 
 .emoji-panel {
-  position: fixed; z-index: 150; background: rgba(28, 39, 51, 0.85); backdrop-filter: blur(30px);
-  border-radius: 16px; padding: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); 
+  position: fixed; z-index: 150; background: var(--glass-bg); backdrop-filter: var(--glass-blur);
+  border-radius: 16px; padding: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); 
   border: 1px solid var(--glass-border); display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; animation: popIn 0.2s;
 }
 .emoji-panel button { font-size: 24px; padding: 4px; }
 
 .toast {
   position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: rgba(28, 39, 51, 0.9); backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border); color: #fff; padding: 12px 20px; border-radius: 20px; font-size: 14px;
-  opacity: 0; transition: 0.3s; pointer-events: none; z-index: 300; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  background: var(--glass-bg); backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border); color: var(--text-main); padding: 12px 20px; border-radius: 20px; font-size: 14px;
+  opacity: 0; transition: 0.3s; pointer-events: none; z-index: 300; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
-<body>
+<body data-theme="dark">
 
 <div class="app" id="app">
   
@@ -293,8 +323,8 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
     <div class="screen-header">
       <button class="btn-text">Изм.</button>
       <div class="header-title">anonimnet AI</div>
-      <button class="icon-btn">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      <button class="icon-btn" id="themeBtn" title="Сменить тему">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
       </button>
     </div>
     <div class="search-wrap">
@@ -305,7 +335,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
     </div>
     <div class="folders">
       <div class="folder active">Все</div>
-      <div class="folder">Боты <span class="folder-badge">1</span></div>
+      <div class="folder">Политика <span class="folder-badge">1</span></div>
     </div>
     <div class="content-scroll" id="chatList"></div>
   </div>
@@ -316,11 +346,11 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   </div>
   <div class="view-screen" id="view-calls" hidden>
     <div class="screen-header"><button class="btn-text"></button><div class="header-title">Звонки</div><button class="icon-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button></div>
-    <div class="content-scroll" style="padding-top:10px;"><div style="padding: 10px 16px; border-bottom: 1px solid var(--glass-border);"><div style="font-size: 17px;">Иван Иванов</div><div style="font-size: 14px; color: var(--tg-text-dim);">Исходящий • 12:40</div></div></div>
+    <div class="content-scroll" style="padding-top:10px;"><div style="padding: 10px 16px; border-bottom: 1px solid var(--glass-border);"><div style="font-size: 17px;">Иван Иванов</div><div style="font-size: 14px; color: var(--text-dim);">Исходящий • 12:40</div></div></div>
   </div>
   <div class="view-screen" id="view-settings" hidden>
     <div class="screen-header"><button class="btn-text"></button><div class="header-title">Настройки</div><button class="btn-text">Править</button></div>
-    <div class="content-scroll" style="padding-top:20px;"><div style="padding: 10px 16px; display:flex; align-items:center; gap:12px;"><div class="avatar" style="background: var(--tg-blue); width: 50px; height: 50px;">A</div><div><div style="font-size: 17px; font-weight: 600;">Вы</div><div style="font-size: 14px; color: var(--tg-text-dim);">@anonimnet_user</div></div></div></div>
+    <div class="content-scroll" style="padding-top:20px;"><div style="padding: 10px 16px; display:flex; align-items:center; gap:12px;"><div class="avatar" style="background: var(--tg-blue); width: 50px; height: 50px;">A</div><div><div style="font-size: 17px; font-weight: 600;">Вы</div><div style="font-size: 14px; color: var(--text-dim);">@anonimnet_user</div></div></div></div>
   </div>
 
   <div class="bottom-nav-wrapper">
@@ -350,7 +380,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
       <svg class="doodle-bg" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="spaceDoodle" width="400" height="400" patternUnits="userSpaceOnUse">
-            <g fill="none" stroke="#4a6a96" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+            <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4">
               <g transform="translate(50, 50) scale(0.8)"><circle cx="50" cy="50" r="25"/><ellipse cx="50" cy="50" rx="45" ry="12" transform="rotate(-15 50 50)"/></g>
               <g transform="translate(250, 60) scale(0.8)"><ellipse cx="50" cy="50" rx="35" ry="12" fill="none"/><path d="M 25 50 Q 50 15 75 50"/><circle cx="50" cy="40" r="10"/><path d="M 10 50 L 90 50"/></g>
               <g transform="translate(320, 200) scale(0.7)"><rect x="40" y="40" width="20" height="20" rx="3"/><rect x="10" y="45" width="25" height="10"/><rect x="65" y="45" width="25" height="10"/><line x1="50" y1="40" x2="50" y2="20"/><circle cx="50" cy="15" r="5"/></g>
@@ -368,14 +398,14 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
         <div class="composer-glass" id="composerGlass">
           <div id="normalPanel" style="display:flex; width:100%; align-items:flex-end; gap:6px;">
             <button class="attach-btn" id="emojiBtn"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg></button>
-            <div class="input-wrap"><textarea id="input" rows="1" placeholder="Спроси о чем-нибудь..."></textarea></div>
+            <div class="input-wrap"><textarea id="input" rows="1" placeholder="Спроси о политике..."></textarea></div>
             <button class="send-btn mic" id="sendBtn"></button>
           </div>
           <div id="recPanel" hidden style="display:flex; width:100%;">
             <div style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 0 8px; height: 36px;">
               <div style="width: 10px; height: 10px; border-radius: 50%; background: #ff453a; animation: blink 1s infinite;"></div>
               <div style="font-size: 16px; font-weight: 500;" id="recTime">0:00</div>
-              <div style="flex: 1; color: var(--tg-text-dim); font-size: 15px;">Запись...</div>
+              <div style="flex: 1; color: var(--text-dim); font-size: 15px;">Запись...</div>
               <button id="recCancel" style="width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
               <button id="recSend" style="width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--tg-blue);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></button>
             </div>
@@ -409,10 +439,10 @@ const SVG_COPY = `<svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2
 
 const chats = [
   {
-    id: 'ai', name: 'anonimnet AI', avatar: '🤖', color: '#3390ec',
+    id: 'ai', name: 'anonimnet Политолог', avatar: '🏛️', color: '#3390ec',
     status: 'онлайн', time: nowTime(), unread: 0, pinned: true, muted: false,
     messages: [
-      {id:nid(), out:false, type:'text', time:nowTime(), text:'Привет! Я — твой умный ИИ-ассистент. 🤖\n\nЯ умею:\n• Считать (даже словами: "5 умножить на 10")\n• Говорить время\n• Рассказывать шутки, факты и советы\n• Поддерживать беседу\n\nСпроси меня о чем-нибудь!', reactions:{}, mine:{}}
+      {id:nid(), out:false, type:'text', time:nowTime(), text:'Привет! Я — твой ИИ-эксперт по политике. 🏛️\n\nЯ разбираюсь в:\n• Идеологиях (демократия, капитализм и т.д.)\n• Формах правления\n• Международных отношениях и организациях\n• Политических процессах\n\nСпроси меня о чем-нибудь!', reactions:{}, mine:{}}
     ]
   }
 ];
@@ -422,6 +452,24 @@ const activeChat = () => chats.find(c => c.id === activeId);
 let isBotTyping = false;
 let botState = { lastIntent: null };
 
+// === ТЕМЫ ===
+const themeBtn = $('#themeBtn');
+let currentTheme = 'dark'; // dark, light, system
+
+themeBtn.onclick = () => {
+  if(currentTheme === 'dark') { currentTheme = 'light'; document.body.setAttribute('data-theme', 'light'); themeBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`; toast('Светлая тема'); }
+  else if(currentTheme === 'light') { currentTheme = 'system'; document.body.removeAttribute('data-theme'); themeBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`; toast('Системная тема'); }
+  else { currentTheme = 'dark'; document.body.setAttribute('data-theme', 'dark'); themeBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`; toast('Тёмная тема'); }
+};
+// Системная тема
+window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', e => {
+  if(currentTheme === 'system') document.body.setAttribute('data-theme', e.matches ? 'light' : 'dark');
+});
+if(window.matchMedia('(prefers-color-scheme: light)').matches && currentTheme === 'dark') {
+  // Если система светлая, но по умолчанию стоит темная, не меняем, пока не нажмут кнопку.
+}
+
+// === НАВИГАЦИЯ ===
 const navItems = $$('.nav-item');
 const navIndicator = $('#navIndicator');
 const views = { chats: $('#view-chats'), contacts: $('#view-contacts'), calls: $('#view-calls'), settings: $('#view-settings') };
@@ -524,41 +572,44 @@ function toggleReaction(m, emoji) {
 }
 
 // ==========================================
-// УЛЬТИМАТИВНЫЙ ИИ-ДВИЖОК
+// ПОЛИТИЧЕСКИЙ ИИ-ДВИЖОК
 // ==========================================
+const politicsDB = {
+  'демократия': 'Демократия — это политический режим, при котором власть принадлежит народу. Основные признаки: свободные выборы, верховенство закона, защита прав и свобод человека.',
+  'авторитаризм': 'Авторитаризм — это политический режим, при котором власть сосредоточена в руках одного лидера или элитной группы, а политическая оппозиция подавляется или строго контролируется.',
+  'капитализм': 'Капитализм — экономическая система, основанная на частной собственности на средства производства, свободном рынке и конкуренции. Главный мотив — получение прибыли.',
+  'социализм': 'Социализм — идеология, ставящая целью социальную справедливость, равенство и общественную собственность (или контроль) над средствами производства.',
+  'коммунизм': 'Коммунизм — политическая и экономическая идеология, целью которой является создание бесклассового общества, где средства производства находятся в общественной собственности.',
+  'фашизм': 'Фашизм — ультраправая тоталитарная идеология, характеризующаяся диктатурой, крайним национализмом, милитаризмом и подавлением инакомыслия.',
+  'либертарианство': 'Либертарианство — политическая философия, которая делает упор на свободу личности, минимизацию роли государства и невмешательство в экономику.',
+  'республика': 'Республика — форма государственного правления, при которой высшие органы власти избираются или формируются представительными учреждениями на определенный срок.',
+  'монархия': 'Монархия — форма правления, при которой верховная власть принадлежит одному лицу (монарху) и передается по наследству.',
+  'федерация': 'Федерация — форма государственного устройства, при которой части государства (субъекты) обладают определенной политической самостоятельностью.',
+  'унитарное государство': 'Унитарное государство — форма государственного устройства, при которой его части не имеют статуса государственных образований и не обладают политической самостоятельностью.',
+  'оон': 'ООН (Организация Объединенных Наций) — крупнейшая международная организация, созданная в 1945 году для поддержания мира и безопасности, развития сотрудничества между государствами.',
+  'нато': 'НАТО (Организация Североатлантического договора) — военно-политический блок, созданный в 1949 году для коллективной обороны стран-участниц.',
+  'ес': 'ЕС (Европейский союз) — экономический и политический союз 27 европейских государств, обладающий единым рынком и общей политикой в ряде сфер.',
+  'брикс': 'БРИКС — межгосударственное объединение Бразилии, России, Индии, Китая и ЮАР (а также новых членов), направленное на развитие экономического и политического сотрудничества.',
+  'разделение властей': 'Разделение властей — принцип, согласно которому государственная власть делится на законодательную, исполнительную и судебную, которые независимы друг от друга.',
+  'выборы': 'Выборы — это процедура формирования органов власти или наделения полномочиями должностного лица путем голосования граждан.',
+  'лоббизм': 'Лоббизм — деятельность по продвижению интересов определенных групп (бизнеса, отраслей) в органах государственной власти.',
+  'политика': 'Политика — это деятельность социальных групп и индивидов по осуществлению своих интересов, связанная с завоеванием, удержанием и использованием государственной власти.',
+  'сша': 'США — федеративная президентская республика. Главой государства и правительства является президент. Законодательная власть — двухпалатный Конгресс (Сенат и Палата представителей).',
+  'россия': 'Россия — федеративное государство с республиканской формой правления. Главой государства является президент, законодательная власть — Федеральное Собрание (Госдума и Совет Федерации).',
+  'китай': 'Китай — социалистическое государство с коммунистической партией во главе. Высший орган государственной власти — Всекитайское собрание народных представителей.',
+  'великобритания': 'Великобритания — парламентская монархия. Главой государства является монарх (король/королева), но реальная власть принадлежит парламенту и премьер-министру.'
+};
+
 const JOKES = [
-  "— Почему программисты путают Хэллоуин и Рождество?\n— Потому что Oct 31 == Dec 25.",
-  "— Сколько нужно программистов, чтобы вкрутить лампочку?\n— Ни одного, это проблема железа.",
-  "— Как называется страх перед нейросетями?\n— Искусственный интеллект-фобия. (Ладно, это было плохо 😅)",
-  "— Что говорит один байт другому?\n— Мне не хватает бита до полного счастья.",
-  "— Почему у программистов путаются день и ночь?\n— Потому что они живут в 24/7.",
-  "— Как программист объясняет любовь?\n— Это бесконечный цикл с break по требованию.",
-  "— Что делает программист, когда замерзает?\n— Надевает свитер и закрывает все окна. (Windows)",
-  "— Что сказал ноль единице?\n— Ты такая толстая! (Шучу, ты просто больше меня в 1 раз)"
+  "— Почему политики не играют в прятки?\n— Потому что их сразу находят по обещаниям.",
+  "— Какой самый популярный вид спорта у политиков?\n— Прыжки с обещания на обещание.",
+  "— Почему в парламенте так много слов?\n— Потому что нужно скрыть отсутствие дел."
 ];
 
 const FACTS = [
-  "Знаешь ли ты, что первый компьютерный баг был настоящим насекомым (мотыльком), застрявшим в реле компьютера в 1947 году? 🐛",
-  "Количество возможных комбинаций в шахматах больше, чем количество атомов во Вселенной! ♟️",
-  "Первый домен в интернете (symbolics.com) был зарегистрирован в 1985 году. 🌐",
-  "Медоеды — настоящие бесстрашные бойцы. Они могут выдержать укусы нескольких ядовитых змей и даже уснуть после этого! 🦡",
-  "Группа The Beatles изначально называлась The Quarrymen. 🎸",
-  "На Венере день длится дольше, чем год. ☀️",
-  "У осьминогов три сердца и голубая кровь. 🐙",
-  "Человеческий глаз различает около 10 миллионов оттенков цвета. 👁️",
-  "Молния бьет в землю примерно 100 раз в секунду. ⚡",
-  "Вода замерзает быстрее, если она горячая (Эффект Мпембы). 🧊",
-  "Улитки могут спать по три года подряд. 🐌",
-  "В Японии есть остров, который полностью населен кроликами. 🐇"
-];
-
-const ADVICES = [
-  "Мой совет: не откладывай на завтра то, что можно сделать сегодня. Но и не забывай отдыхать! 🛌",
-  "Если чувствуешь усталость — сделай перерыв. Выпей воды, разомнись. Твой мозг скажет спасибо. 💧",
-  "Хочешь выучить что-то новое? Начни с малого. 15 минут в день дадут результат через месяц! 📚",
-  "Не сравнивай себя с другими. Сравнивай себя с собой вчерашним. Прогресс — это главное. 📈",
-  "Улыбнись! Даже если грустно. Мозг воспринимает улыбку как сигнал, что всё хорошо. 😊",
-  "Пей больше воды, спи 8 часов и не сиди в телефоне перед сном. Банально, но работает! 📱🚫"
+  "Знаешь ли ты, что первая в мире демократия возникла в Древних Афинах в V веке до н.э.?",
+  "В некоторых странах голосование на выборах является не только правом, но и обязательной обязанностью (например, в Австралии).",
+  "ООН была основана 24 октября 1945 года, и на данный момент в нее входят 193 государства."
 ];
 
 function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -566,118 +617,48 @@ function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function getBotResponse(inputText) {
   const t = inputText.toLowerCase().trim();
   
-  // 1. Математика (Обработка текста)
+  // 1. Математика
   let mathText = t.replace(/плюс/g, '+').replace(/минус/g, '-').replace(/умножить на/g, '*').replace(/умножить/g, '*').replace(/разделить на/g, '/').replace(/разделить/g, '/').replace(/\s*[xх]\s*/g, '*');
   const mathRegex = /(-?\d+(?:\.\d+)?)\s*([\+\-\*\/])\s*(-?\d+(?:\.\d+)?)/;
   const mathMatch = mathText.match(mathRegex);
   if (mathMatch) {
-    const a = parseFloat(mathMatch[1]);
-    const op = mathMatch[2];
-    const b = parseFloat(mathMatch[3]);
-    let result;
-    if (op === '+') result = a + b;
-    else if (op === '-') result = a - b;
-    else if (op === '*') result = a * b;
-    else if (op === '/') result = b !== 0 ? (a / b) : 'на ноль делить нельзя! 🤦‍♂️';
-    
-    if (typeof result === 'number') {
-      result = Number(result.toFixed(4));
-      botState.lastIntent = 'math';
-      return `Считаю: ${a} ${op} ${b} = **${result}**`;
-    }
-    return `Считаю: ${a} ${op} ${b} = ${result}`;
+    const a = parseFloat(mathMatch[1]); const op = mathMatch[2]; const b = parseFloat(mathMatch[3]);
+    let result = op === '+' ? a + b : op === '-' ? a - b : op === '*' ? a * b : (b !== 0 ? a / b : 'на ноль делить нельзя!');
+    if (typeof result === 'number') result = Number(result.toFixed(4));
+    return `Считаю: ${a} ${op} ${b} = **${result}**`;
   }
 
-  // 2. Контекст (Еще)
-  if (t.match(/еще|ещё|давай еще|расскажи еще|продолжай/)) {
+  // 2. Контекст
+  if (t.match(/еще|ещё|давай еще/)) {
     if (botState.lastIntent === 'joke') return getRandom(JOKES);
     if (botState.lastIntent === 'fact') return getRandom(FACTS);
-    if (botState.lastIntent === 'advice') return getRandom(ADVICES);
-    return "Что именно рассказать еще? Шутку, факт или совет?";
   }
 
-  // 3. Время и Дата
-  if (t.match(/время|час|сколько времени/)) {
-    botState.lastIntent = 'time';
-    return `Сейчас ${nowTime()} по твоему местному времени. ⏰`;
-  }
-  if (t.match(/какое сегодня число|какая дата|какой сегодня день/)) {
+  // 3. Время
+  if (t.match(/время|час/)) return `Сейчас ${nowTime()}. ⏰`;
+  if (t.match(/какое сегодня число|дата/)) {
     const d = new Date();
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    botState.lastIntent = 'date';
-    return `Сегодня ${d.toLocaleDateString('ru-RU', options)}. 📅`;
+    return `Сегодня ${d.toLocaleDateString('ru-RU', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}. 📅`;
   }
 
-  // 4. Состояние / Эмпатия
-  if (t.match(/грустно|плохо|устал|депрессия|тяжело|болит/)) {
-    botState.lastIntent = 'empathy';
-    return getRandom([
-      "Мне жаль это слышать... 🫂 Знай, что это временно. Попробуй отвлечься, выпей чаю. Я всегда здесь, если захочешь поговорить.",
-      "Плохие дни случаются у всех. Главное — помнить, что после дождя всегда выходит солнце. ☀️ Хочешь, расскажу шутку, чтобы поднять настроение?",
-      "Держись! Ты справишься. Иногда нужно просто выдохнуть и дать себе отдохнуть. 💙"
-    ]);
-  }
-  if (t.match(/рад|счастлив|отлично|супер|класс/)) {
-    botState.lastIntent = 'happy';
-    return "Я очень рад за тебя! 🥳 Пусть этот день будет лучшим. Что хорошего случилось?";
+  // 4. Политика (Поиск по ключевым словам)
+  for (const [key, value] of Object.entries(politicsDB)) {
+    if (t.includes(key)) {
+      botState.lastIntent = 'politics';
+      return `${value}\n\nХочешь узнать о чем-то еще?`;
+    }
   }
 
-  // 5. Вопросы о боте
-  if (t.match(/что делаешь|чем занят|как жизнь/)) {
-    botState.lastIntent = 'status';
-    return getRandom(["Общаюсь с тобой 😊 А ты чем занимаешься?", "Обрабатываю нейронные связи и жду твоих вопросов! 🧠", "Скучаю и жду, когда ты напишешь что-нибудь интересное."]);
-  }
-  if (t.match(/где ты|откуда ты|где живешь/)) {
-    botState.lastIntent = 'location';
-    return "Я живу на серверах... Шучу! Мой код работает прямо в твоем браузере. Я невидимый цифровой дух. 👻";
-  }
-  if (t.match(/кто ты|что ты|расскажи о себе|как тебя зовут|твое имя/)) {
-    botState.lastIntent = 'about';
-    return "Я — anonimnet AI. 🤖 Меня написали на JavaScript. Я умею считать, подсказывать время, рассказывать шутки и давать советы. Чем займемся?";
-  }
+  // 5. Приветствия / База
+  if (t.match(/привет|здравствуй|хай|ку/)) return "Привет! 👋 Готов обсудить политику или ответить на твои вопросы.";
+  if (t.match(/как дела|как ты/)) return "У меня всё отлично. Как твои дела?";
+  if (t.match(/кто ты|что ты умеешь/)) return "Я — anonimnet AI, специализируюсь на политике. Знаю идеологии, страны, международные организации. Спроси меня о чем-нибудь!";
+  if (t.match(/шутка|анекдот/)) { botState.lastIntent = 'joke'; return getRandom(JOKES); }
+  if (t.match(/факт/)) { botState.lastIntent = 'fact'; return getRandom(FACTS); }
 
-  // 6. Шутки / Факты / Советы
-  if (t.match(/шутка|анекдот|рассмеши|пошути/)) {
-    botState.lastIntent = 'joke';
-    return getRandom(JOKES);
-  }
-  if (t.match(/факт|интересное|расскажи что-то/)) {
-    botState.lastIntent = 'fact';
-    return getRandom(FACTS);
-  }
-  if (t.match(/совет|что делать|подскажи|как поступить/)) {
-    botState.lastIntent = 'advice';
-    return getRandom(ADVICES);
-  }
-
-  // 7. Приветствия
-  if (t.match(/привет|здравствуй|хай|ку|доброе утро|добрый день|добрый вечер|салют/)) {
-    botState.lastIntent = 'greet';
-    return getRandom(["Привет! 👋 Как сам?", "Здравствуй! Рад тебя видеть. Чем могу помочь?", "Хай! 😎 Готов к новым вопросам."]);
-  }
-  if (t.match(/пока|до свидания|бай|увидимся/)) {
-    botState.lastIntent = 'bye';
-    return "До встречи! Буду скучать. Если что, я всегда онлайн. 👋";
-  }
-  if (t.match(/как дела|как ты|как настроение/)) {
-    botState.lastIntent = 'howareyou';
-    return getRandom(["У меня всё отлично! Я же ИИ, у меня всегда 100% заряд. А у тебя как настроение?", "Все супер! Готов помочь. Как ты?"]);
-  }
-
-  // 8. Код
-  if (t.match(/код|напиши|программ|javascript|html|css/)) {
-    botState.lastIntent = 'code';
-    return "Вот простой пример бесконечного цикла в JavaScript (не запускай его в консоли 😉):\n```\nwhile(true) {\n  console.log('Я работаю!');\n}\n```";
-  }
-
-  // 9. Умный Fallback
+  // 6. Fallback
   botState.lastIntent = 'fallback';
-  return getRandom([
-    "Интересная мысль. Но я пока не умею отвечать на такое. Попробуй спросить про шутку, факт или время!",
-    "Я немного туповат для таких сложных материй. 😅 Но я умею считать! Напиши: 500 * 20",
-    "Мой создатель пока не научил меня этому. Но я учусь. Может, расскажу шутку?",
-    "Хм, дай подумать... Нет, всё равно не знаю. Давай лучше я расскажу тебе факт! 🧠"
-  ]);
+  return "Я пока не знаю ответа на этот вопрос. Но я отлично разбираюсь в политике! Спроси меня про демократию, капитализм, ООН или США.";
 }
 
 // Отправка
@@ -720,7 +701,7 @@ function triggerBotReply(userText) {
   $('#messages').appendChild(el);
   scrollToBottom();
 
-  const delay = 800 + Math.random() * 800;
+  const delay = 1000 + Math.random() * 1000;
   setTimeout(() => {
     document.getElementById(typingId)?.remove();
     
@@ -740,7 +721,7 @@ window.clearChat = function() {
   if(confirm("Очистить историю сообщений?")) {
     const chat = activeChat();
     chat.messages = [
-      {id:nid(), out:false, type:'text', time:nowTime(), text:'Чат очищен. Чем я могу помочь? 🤖', reactions:{}, mine:{}}
+      {id:nid(), out:false, type:'text', time:nowTime(), text:'Чат очищен. Спроси меня о политике! 🏛️', reactions:{}, mine:{}}
     ];
     renderMessages();
   }
