@@ -2,240 +2,383 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Анонимная 2.0</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Аноним Нет</title>
 <style>
+/* ============================================================
+   АНОНИМ НЕТ — Telegram-like messenger
+   ============================================================ */
 :root{
-  --bg:#0e1621; --panel:#17212b; --panel2:#1c2733; --bubble-in:#182533; --bubble-out:#2b5278;
-  --text:#ffffff; --dim:#7d8e9e; --accent:#64b5ef; --border:rgba(255,255,255,.06);
-  --hover:rgba(255,255,255,.05); --doodle:rgba(255,255,255,.05); --menu:#1c2733;
-  --reaction:rgba(100,181,239,.18); --danger:#e05c5c;
+  --bg:#0e1621;
+  --panel:#17212b;
+  --panel-hover:#202b36;
+  --panel-active:#2b5278;
+  --search:#242f3d;
+  --bubble-in:#182533;
+  --bubble-out:#2b5278;
+  --text:#ffffff;
+  --dim:#7d8e9e;
+  --accent:#64b5ef;
+  --accent-solid:#3390ec;
+  --border:rgba(255,255,255,.06);
+  --hover:rgba(255,255,255,.05);
+  --doodle:rgba(255,255,255,.045);
+  --menu:rgba(28,39,51,.94);
+  --reaction:rgba(100,181,239,.16);
+  --danger:#e05c5c;
+  --glass:rgba(23,33,43,.58);
+  --glass-border:rgba(255,255,255,.10);
+  --glass-shadow:0 10px 40px rgba(0,0,0,.42);
+  --tick:#64b5ef;
 }
 body.light{
-  --bg:#e6ebee; --panel:#ffffff; --panel2:#f4f4f5; --bubble-in:#ffffff; --bubble-out:#effdde;
-  --text:#0f0f0f; --dim:#707579; --accent:#3390ec; --border:rgba(0,0,0,.08);
-  --hover:rgba(0,0,0,.05); --doodle:rgba(0,0,0,.07); --menu:#ffffff;
-  --reaction:rgba(51,144,236,.15); --danger:#d94848;
+  --bg:#e3eaf0;
+  --panel:#ffffff;
+  --panel-hover:#f4f4f5;
+  --panel-active:#3390ec;
+  --search:#f1f3f5;
+  --bubble-in:#ffffff;
+  --bubble-out:#effdde;
+  --text:#0f1419;
+  --dim:#707579;
+  --accent:#3390ec;
+  --accent-solid:#3390ec;
+  --border:rgba(0,0,0,.07);
+  --hover:rgba(0,0,0,.045);
+  --doodle:rgba(0,0,0,.055);
+  --menu:rgba(255,255,255,.96);
+  --reaction:rgba(51,144,236,.13);
+  --danger:#d94848;
+  --glass:rgba(255,255,255,.62);
+  --glass-border:rgba(255,255,255,.85);
+  --glass-shadow:0 10px 40px rgba(0,0,0,.13);
+  --tick:#3390ec;
 }
+
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none !important}
 html,body{height:100%}
 body{
   font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-  background:var(--bg);color:var(--text);overflow:hidden;transition:background .25s,color .25s;
+  background:var(--bg);color:var(--text);overflow:hidden;
+  transition:background .3s ease,color .3s ease;
 }
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,textarea{font-family:inherit;border:none;outline:none;background:none;color:inherit}
 
-.app{display:flex;height:100vh;height:100dvh}
+.app{display:flex;height:100vh;height:100dvh;overflow:hidden}
 
-/* ---------- Сайдбар ---------- */
+/* ===================== САЙДБАР ===================== */
 .sidebar{
-  width:340px;min-width:340px;background:var(--panel);display:flex;flex-direction:column;
-  border-right:1px solid var(--border);transition:background .25s;
+  width:360px;min-width:360px;background:var(--panel);display:flex;flex-direction:column;
+  border-right:1px solid var(--border);transition:background .3s;
 }
-.sb-header{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border)}
+.sb-header{display:flex;align-items:center;gap:11px;padding:11px 14px}
 .logo{
-  width:38px;height:38px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;
-  background:linear-gradient(135deg,#64b5ef,#2b5278);color:#fff;font-weight:700;font-size:17px;
-  box-shadow:0 2px 10px rgba(100,181,239,.35);
+  width:40px;height:40px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;
+  background:linear-gradient(135deg,#64b5ef,#2b5278);color:#fff;
+  font-weight:700;font-size:13.5px;letter-spacing:.5px;
+  box-shadow:0 3px 14px rgba(100,181,239,.35);
 }
-.brand-name{font-weight:600;font-size:15px;letter-spacing:.2px}
-.brand-sub{font-size:12px;color:var(--dim)}
-.spacer{flex:1}
+.brand{flex:1;min-width:0}
+.brand-name{font-weight:600;font-size:15.5px;letter-spacing:.15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-sub{font-size:12px;color:var(--dim);margin-top:1px}
+
 .icon-btn{
-  width:36px;height:36px;border-radius:50%;display:grid;place-items:center;
+  width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
   font-size:17px;color:var(--dim);transition:.15s;flex:0 0 auto;
 }
 .icon-btn:hover{background:var(--hover);color:var(--text)}
-.search-wrap{padding:8px 12px}
+
+.search-wrap{padding:2px 12px 8px}
 .search{
-  width:100%;background:var(--panel2);border-radius:10px;padding:9px 14px;font-size:14px;
+  width:100%;background:var(--search);border-radius:11px;padding:9px 15px;font-size:14px;
   color:var(--text);transition:background .2s;
 }
 .search::placeholder{color:var(--dim)}
 
-.chat-list{flex:1;overflow-y:auto;padding:4px 0}
+.chat-list{flex:1;overflow-y:auto;padding:2px 0 10px}
+.chat-list::-webkit-scrollbar{width:6px}
+.chat-list::-webkit-scrollbar-thumb{background:rgba(128,128,128,.25);border-radius:3px}
+
 .chat-item{
-  display:flex;align-items:center;gap:11px;padding:9px 14px;cursor:pointer;transition:background .12s;
-  position:relative;
+  display:flex;align-items:center;gap:12px;padding:8px 14px;cursor:pointer;
+  transition:background .13s;position:relative;
 }
-.chat-item:hover{background:var(--hover)}
-.chat-item.active{background:var(--accent);color:#fff}
-.chat-item.active .ci-sub,.chat-item.active .ci-time{color:rgba(255,255,255,.75)}
+.chat-item:hover{background:var(--panel-hover)}
+.chat-item.active{background:var(--panel-active);color:#fff}
+.chat-item.active .ci-sub,.chat-item.active .ci-time{color:rgba(255,255,255,.72)}
+
 .avatar{
-  width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font-weight:600;
-  font-size:18px;color:#fff;flex:0 0 auto;
+  width:54px;height:54px;border-radius:50%;display:grid;place-items:center;
+  font-weight:600;font-size:19px;color:#fff;flex:0 0 auto;user-select:none;
 }
 .ci-body{flex:1;min-width:0}
 .ci-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
-.ci-name{font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ci-time{font-size:11.5px;color:var(--dim);flex:0 0 auto}
-.ci-sub{font-size:13px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.ci-name{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-time{font-size:12px;color:var(--dim);flex:0 0 auto}
+.ci-bottom{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:3px}
+.ci-sub{font-size:13.5px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .badge{
-  background:var(--accent);color:#fff;border-radius:11px;font-size:11.5px;font-weight:600;
-  padding:1px 7px;min-width:20px;text-align:center;
+  background:var(--accent-solid);color:#fff;border-radius:11px;font-size:12px;font-weight:600;
+  padding:1px 7px;min-width:21px;text-align:center;flex:0 0 auto;
 }
-.chat-item.active .badge{background:#fff;color:var(--accent)}
+.chat-item.active .badge{background:#fff;color:var(--accent-solid)}
 
-/* ---------- Чат ---------- */
-.chat{flex:1;display:flex;flex-direction:column;position:relative;min-width:0;background:var(--bg)}
-.msgs-wrap{position:relative;flex:1;overflow:hidden}
-.doodle-bg{
-  position:absolute;inset:0;width:100%;height:100%;color:var(--doodle);
-  pointer-events:none;transition:color .25s;
+/* ===================== ЧАТ ===================== */
+.chat{
+  flex:1;display:flex;flex-direction:column;position:relative;min-width:0;
+  background:var(--bg);overflow:hidden;transition:background .3s;
 }
-.messages{
-  position:absolute;inset:0;overflow-y:auto;padding:18px 18px 8px;
-  display:flex;flex-direction:column;gap:3px;scroll-behavior:smooth;
-}
-.messages::-webkit-scrollbar{width:7px}
-.messages::-webkit-scrollbar-thumb{background:rgba(128,128,128,.28);border-radius:4px}
-.messages::-webkit-scrollbar-track{background:transparent}
 
 .chat-header{
-  display:flex;align-items:center;gap:11px;padding:8px 14px;background:var(--panel);
-  border-bottom:1px solid var(--border);z-index:3;min-height:60px;
+  display:flex;align-items:center;gap:12px;padding:7px 14px;
+  background:var(--panel);border-bottom:1px solid var(--border);
+  z-index:6;min-height:58px;transition:background .3s;
 }
-.chat-header .avatar{width:42px;height:42px;font-size:16px}
+.chat-header .avatar{width:44px;height:44px;font-size:17px}
 .chat-title{flex:1;min-width:0}
-.chat-title .name{font-weight:600;font-size:15px}
-.chat-title .status{font-size:12.5px;color:var(--dim)}
+.chat-title .name{font-weight:600;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-title .status{font-size:12.5px;color:var(--dim);margin-top:1px}
 .chat-title .status.online{color:var(--accent)}
 #backBtn{display:none}
 
+/* ---------- Область сообщений ---------- */
+.msgs-wrap{position:relative;flex:1;overflow:hidden}
+.doodle-bg{
+  position:absolute;inset:0;width:100%;height:100%;color:var(--doodle);
+  pointer-events:none;transition:color .3s;
+}
+.messages{
+  position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+  padding:14px 20px 110px;display:flex;flex-direction:column;gap:2px;
+  scroll-behavior:smooth;overscroll-behavior:contain;touch-action:manipulation;
+}
+.messages::-webkit-scrollbar{width:7px}
+.messages::-webkit-scrollbar-thumb{background:rgba(128,128,128,.25);border-radius:4px}
+.messages::-webkit-scrollbar-track{background:transparent}
+
+.date-chip{
+  align-self:center;background:rgba(0,0,0,.25);color:#fff;
+  padding:3px 13px;border-radius:13px;font-size:12.5px;font-weight:500;
+  margin:8px 0 12px;backdrop-filter:blur(8px);user-select:none;
+}
+body.light .date-chip{background:rgba(0,0,0,.13);color:#fff}
+
 /* ---------- Сообщения ---------- */
 .msg{
-  max-width:min(72%,520px);padding:7px 11px 8px;border-radius:14px;position:relative;
-  background:var(--bubble-in);align-self:flex-start;font-size:14.5px;line-height:1.38;
-  word-break:break-word;animation:pop .18s ease-out;transition:opacity .2s,transform .2s;
-  box-shadow:0 1px 1px rgba(0,0,0,.1);
+  position:relative;max-width:min(75%,560px);padding:7px 11px 6px;
+  border-radius:16px;background:var(--bubble-in);align-self:flex-start;
+  font-size:15px;line-height:1.36;word-break:break-word;
+  box-shadow:0 1px 1px rgba(0,0,0,.10);
+  animation:msgIn .24s cubic-bezier(.2,.85,.3,1);
+  transition:opacity .22s,transform .22s;
 }
-.msg.out{align-self:flex-end;background:var(--bubble-out);border-bottom-right-radius:5px}
-.msg.in{border-bottom-left-radius:5px}
-.msg.removing{opacity:0;transform:scale(.85);pointer-events:none}
-@keyframes pop{from{opacity:0;transform:translateY(6px) scale(.97)}to{opacity:1;transform:none}}
-.msg .text{white-space:pre-wrap}
-.msg .meta{
-  display:flex;justify-content:flex-end;align-items:center;gap:4px;
-  font-size:11px;color:var(--dim);margin-top:2px;line-height:1;
-}
-.msg.out .meta{color:rgba(255,255,255,.6)}
-body.light .msg.out .meta{color:rgba(0,0,0,.42)}
-.tick{font-size:11px;color:var(--accent)}
+.msg.out{align-self:flex-end;background:var(--bubble-out)}
+.msg.in.last{border-bottom-left-radius:5px}
+.msg.out.last{border-bottom-right-radius:5px}
+.msg.removing{opacity:0;transform:scale(.88);pointer-events:none}
 
-/* Реакции */
+@keyframes msgIn{
+  from{opacity:0;transform:translateY(8px) scale(.96)}
+  to{opacity:1;transform:none}
+}
+
+/* хвостики */
+.msg.in.last::before{
+  content:"";position:absolute;left:-7px;bottom:0;width:14px;height:14px;
+  background:var(--bubble-in);border-bottom-right-radius:14px;
+}
+.msg.out.last::after{
+  content:"";position:absolute;right:-7px;bottom:0;width:14px;height:14px;
+  background:var(--bubble-out);border-bottom-left-radius:14px;
+}
+
+.msg .text{white-space:pre-wrap}
+
+/* мета-строка */
+.meta{
+  display:flex;align-items:center;justify-content:flex-end;gap:5px;
+  margin-top:3px;font-size:11.5px;line-height:1;color:var(--dim);
+  user-select:none;
+}
+.msg.out .meta{color:rgba(255,255,255,.62)}
+body.light .msg.out .meta{color:rgba(0,0,0,.42)}
+
+.addreact{
+  width:17px;height:17px;border-radius:50%;display:grid;place-items:center;
+  font-size:12px;line-height:1;color:var(--dim);margin-right:auto;
+  opacity:0;transition:opacity .16s,background .15s;cursor:pointer;
+}
+.msg:hover .addreact{opacity:.85}
+.addreact:hover{background:var(--hover)}
+body.light .addreact{color:var(--dim)}
+
+.tick{font-size:11px;letter-spacing:-2px;color:var(--tick);margin-left:1px}
+.msg.out .tick{color:rgba(255,255,255,.75)}
+body.light .msg.out .tick{color:var(--accent)}
+
+/* ---------- Реакции ---------- */
 .reactions{display:none;flex-wrap:wrap;gap:4px;margin-top:5px}
 .reactions.has{display:flex}
 .reaction{
-  display:flex;align-items:center;gap:3px;background:var(--reaction);border-radius:11px;
-  padding:2px 7px;font-size:12.5px;line-height:1.4;transition:.12s;color:var(--text);
+  display:flex;align-items:center;gap:3px;background:var(--reaction);
+  border-radius:12px;padding:2px 8px 2px 6px;font-size:13px;line-height:1.45;
+  transition:.14s;color:var(--text);
 }
-.reaction b{font-weight:600;font-size:11.5px}
+.reaction b{font-weight:600;font-size:11.5px;opacity:.85}
 .reaction:hover{filter:brightness(1.18)}
-.reaction.mine{background:var(--accent);color:#fff}
-.reaction.mine b{color:#fff}
+.reaction.mine{background:var(--accent-solid);color:#fff}
+.reaction.mine b{opacity:1}
 
-/* Голосовые */
-.voice{display:flex;align-items:center;gap:9px;min-width:190px;padding:2px 0}
+/* ---------- Голосовые ---------- */
+.voice{display:flex;align-items:center;gap:10px;min-width:200px;padding:2px 0}
 .play-btn{
-  width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;
-  display:grid;place-items:center;flex:0 0 auto;font-size:13px;transition:.15s;
+  width:36px;height:36px;border-radius:50%;background:var(--accent-solid);color:#fff;
+  display:grid;place-items:center;flex:0 0 auto;font-size:13px;
+  transition:.15s;padding-left:1px;
 }
-.play-btn:hover{filter:brightness(1.12)}
-.wave{display:flex;align-items:center;gap:2px;height:26px;flex:1}
-.wave span{width:3px;border-radius:2px;background:var(--dim);opacity:.55;transition:background .15s,opacity .15s}
-.wave span.played{background:var(--accent);opacity:1}
-.msg.out .wave span{background:rgba(255,255,255,.45)}
-.msg.out .wave span.played{background:#fff}
-.v-dur{font-size:11.5px;color:var(--dim);min-width:32px;text-align:right}
-.msg.out .v-dur{color:rgba(255,255,255,.75)}
+.play-btn:hover{filter:brightness(1.12);transform:scale(1.05)}
+.wave{display:flex;align-items:center;gap:2px;height:26px;flex:1;overflow:hidden}
+.wave span{width:3px;border-radius:2px;background:var(--dim);opacity:.5;transition:background .15s,opacity .15s}
+.wave span.played{background:var(--accent-solid);opacity:1}
+.msg.out .wave span{background:rgba(255,255,255,.5)}
+.msg.out .wave span.played{background:#fff;opacity:1}
+body.light .msg.out .wave span.played{background:var(--accent-solid)}
+.v-dur{font-size:11.5px;color:var(--dim);min-width:34px;text-align:right;user-select:none}
+.msg.out .v-dur{color:rgba(255,255,255,.78)}
+body.light .msg.out .v-dur{color:rgba(0,0,0,.45)}
 
-/* ---------- Композер ---------- */
-.composer{background:var(--panel);border-top:1px solid var(--border);padding:8px 12px;z-index:3}
-.composer-panel{display:flex;align-items:center;gap:9px}
-.composer-panel[hidden]{display:none}
+/* ===================== ПЛАВАЮЩИЙ КОМПОЗЕР ===================== */
+.composer-float{
+  position:absolute;left:0;right:0;bottom:0;z-index:7;
+  padding:8px 16px calc(16px + env(safe-area-inset-bottom));
+  pointer-events:none;
+}
+.composer-pill{
+  pointer-events:auto;display:flex;align-items:flex-end;gap:4px;
+  padding:4px 6px 4px 4px;border-radius:26px;
+  background:var(--glass);
+  -webkit-backdrop-filter:blur(26px) saturate(180%);
+  backdrop-filter:blur(26px) saturate(180%);
+  border:1px solid var(--glass-border);
+  box-shadow:var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,.07);
+  transition:background .3s,border-color .3s,box-shadow .3s;
+}
+body.light .composer-pill{
+  box-shadow:var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+.cp-normal{display:flex;align-items:flex-end;gap:4px;width:100%}
+.cp-recording{
+  display:flex;align-items:center;gap:10px;width:100%;padding:0 2px 0 12px;min-height:42px;
+}
+
+.circle-btn{
+  width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+  flex:0 0 auto;font-size:20px;color:var(--dim);transition:.15s;
+}
+.circle-btn:hover{background:var(--hover);color:var(--text)}
+.circle-btn.accent{background:var(--accent-solid);color:#fff;transform:scale(.97)}
+.circle-btn.accent:hover{filter:brightness(1.1);transform:scale(1);color:#fff}
+.circle-btn.danger{color:var(--danger)}
+.circle-btn.danger:hover{background:rgba(224,92,92,.13);color:var(--danger)}
+
 #input{
-  flex:1;resize:none;max-height:130px;font-size:14.5px;line-height:1.4;
-  padding:9px 4px;color:var(--text);
+  flex:1;resize:none;max-height:132px;font-size:15px;line-height:22px;
+  padding:10px 2px;color:var(--text);background:none;border:none;outline:none;
+  scrollbar-width:none;
 }
+#input::-webkit-scrollbar{display:none}
 #input::placeholder{color:var(--dim)}
-.send-btn{
-  width:42px;height:42px;border-radius:50%;background:var(--accent);color:#fff;
-  display:grid;place-items:center;flex:0 0 auto;transition:.15s;transform:scale(.95);
-}
-.send-btn:hover{filter:brightness(1.1);transform:scale(1)}
-.rec-panel{justify-content:space-between;padding:4px 2px}
-.rec-left{display:flex;align-items:center;gap:10px}
-.rec-dot{width:11px;height:11px;border-radius:50%;background:var(--danger);animation:blink 1s infinite}
-@keyframes blink{50%{opacity:.25}}
-.rec-time{font-variant-numeric:tabular-nums;font-size:14px;font-weight:600}
-.rec-hint{font-size:12.5px;color:var(--dim)}
-.rec-btn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:16px;transition:.15s}
-.rec-btn.cancel{color:var(--danger)}
-.rec-btn.cancel:hover{background:rgba(224,92,92,.15)}
-.rec-btn.send{background:var(--accent);color:#fff}
-.rec-btn.send:hover{filter:brightness(1.1)}
 
-/* ---------- Контекстное меню ---------- */
+/* запись */
+.rec-dot{width:11px;height:11px;border-radius:50%;background:var(--danger);animation:blink 1.1s infinite;flex:0 0 auto}
+@keyframes blink{50%{opacity:.2}}
+.rec-time{font-variant-numeric:tabular-nums;font-size:14.5px;font-weight:600;min-width:42px}
+.rec-hint{font-size:13px;color:var(--dim);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rec-actions{display:flex;gap:4px}
+
+/* ===================== КОНТЕКСТНОЕ МЕНЮ ===================== */
 .ctx{
-  position:fixed;z-index:100;background:var(--menu);border-radius:14px;padding:6px;
-  box-shadow:0 8px 34px rgba(0,0,0,.45);min-width:190px;animation:ctxIn .12s ease-out;
+  position:fixed;z-index:120;background:var(--menu);border-radius:15px;padding:6px;
+  box-shadow:0 12px 44px rgba(0,0,0,.5);min-width:200px;
+  animation:ctxIn .13s cubic-bezier(.2,.85,.3,1);
   border:1px solid var(--border);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  backdrop-filter:blur(24px) saturate(180%);
 }
-@keyframes ctxIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
-.ctx-emojis{display:flex;gap:2px;padding:2px 2px 7px;border-bottom:1px solid var(--border);margin-bottom:5px}
+@keyframes ctxIn{from{opacity:0;transform:scale(.94) translateY(4px)}to{opacity:1;transform:none}}
+.ctx-emojis{
+  display:flex;gap:2px;padding:2px 2px 7px;
+  border-bottom:1px solid var(--border);margin-bottom:5px;
+}
 .ctx-emoji{
-  width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:17px;transition:.12s;
+  width:33px;height:33px;border-radius:50%;display:grid;place-items:center;
+  font-size:18px;transition:.12s;
 }
-.ctx-emoji:hover{background:var(--hover);transform:scale(1.18)}
+.ctx-emoji:hover{background:var(--hover);transform:scale(1.22)}
 .ctx-item{
-  display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;font-size:14px;
-  width:100%;text-align:left;transition:.12s;
+  display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:10px;
+  font-size:14px;width:100%;text-align:left;transition:.12s;
 }
 .ctx-item:hover{background:var(--hover)}
 .ctx-item.danger{color:var(--danger)}
-.ctx-item .ico{width:18px;text-align:center}
+.ctx-item .ico{width:18px;text-align:center;font-size:15px}
 
-/* ---------- Тост ---------- */
+/* ===================== ЭМОДЗИ-ПАНЕЛЬ ===================== */
+.emoji-panel{
+  position:fixed;z-index:110;background:var(--menu);border-radius:16px;padding:10px;
+  box-shadow:0 12px 44px rgba(0,0,0,.5);
+  display:grid;grid-template-columns:repeat(8,1fr);gap:2px;
+  max-width:340px;border:1px solid var(--border);
+  animation:ctxIn .13s cubic-bezier(.2,.85,.3,1);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  backdrop-filter:blur(24px) saturate(180%);
+}
+.emoji-panel button{
+  font-size:21px;width:36px;height:36px;border-radius:9px;transition:.1s;
+  display:grid;place-items:center;
+}
+.emoji-panel button:hover{background:var(--hover);transform:scale(1.15)}
+
+/* ===================== ТОСТ ===================== */
 .toast{
-  position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);
-  background:var(--menu);color:var(--text);padding:11px 20px;border-radius:11px;
-  font-size:13.5px;box-shadow:0 6px 26px rgba(0,0,0,.4);opacity:0;transition:.25s;
-  pointer-events:none;z-index:200;border:1px solid var(--border);
+  position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(16px);
+  background:var(--menu);color:var(--text);padding:11px 20px;border-radius:12px;
+  font-size:13.5px;box-shadow:0 8px 30px rgba(0,0,0,.45);opacity:0;
+  transition:.26s cubic-bezier(.2,.85,.3,1);pointer-events:none;z-index:200;
+  border:1px solid var(--border);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  backdrop-filter:blur(20px) saturate(180%);
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ---------- Эмодзи-панель ---------- */
-.emoji-panel{
-  position:absolute;bottom:70px;left:12px;background:var(--menu);border-radius:14px;padding:10px;
-  box-shadow:0 8px 34px rgba(0,0,0,.45);display:grid;grid-template-columns:repeat(8,1fr);gap:3px;
-  z-index:20;max-width:330px;border:1px solid var(--border);animation:ctxIn .12s ease-out;
-}
-.emoji-panel button{font-size:20px;width:34px;height:34px;border-radius:8px;transition:.1s}
-.emoji-panel button:hover{background:var(--hover);transform:scale(1.15)}
-
+/* ===================== АДАПТИВ ===================== */
 @media(max-width:760px){
-  .sidebar{width:100%;min-width:0}
+  .sidebar{width:100%;min-width:0;border-right:none}
   .app.chat-open .sidebar{display:none}
   .chat{display:none}
   .app.chat-open .chat{display:flex}
   #backBtn{display:grid}
   .msg{max-width:86%}
+  .messages{padding:12px 12px 108px}
+  .composer-float{padding:6px 10px calc(12px + env(safe-area-inset-bottom))}
+  .emoji-panel{grid-template-columns:repeat(7,1fr);max-width:300px}
 }
 </style>
 </head>
 <body>
 <div class="app" id="app">
 
-  <!-- ============ САЙДБАР ============ -->
+  <!-- ================= САЙДБАР ================= -->
   <aside class="sidebar" id="sidebar">
     <div class="sb-header">
-      <div class="logo">А</div>
-      <div>
-        <div class="brand-name">Анонимная 2.0</div>
+      <div class="logo">АН</div>
+      <div class="brand">
+        <div class="brand-name">Аноним Нет</div>
         <div class="brand-sub" id="brandSub">в сети</div>
       </div>
-      <div class="spacer"></div>
       <button class="icon-btn" id="themeBtn" title="Сменить тему">◐</button>
     </div>
     <div class="search-wrap">
@@ -244,11 +387,11 @@ body.light .msg.out .meta{color:rgba(0,0,0,.42)}
     <div class="chat-list" id="chatList"></div>
   </aside>
 
-  <!-- ============ ЧАТ ============ -->
+  <!-- ================= ЧАТ ================= -->
   <main class="chat" id="chat">
     <header class="chat-header">
       <button class="icon-btn" id="backBtn">←</button>
-      <div class="avatar" id="chatAvatar" style="background:#64b5ef">А</div>
+      <div class="avatar" id="chatAvatar" style="background:linear-gradient(135deg,#64b5ef,#3d7ec4)">А</div>
       <div class="chat-title">
         <div class="name" id="chatName">Аноним</div>
         <div class="status" id="chatStatus">в сети</div>
@@ -260,56 +403,44 @@ body.light .msg.out .meta{color:rgba(0,0,0,.42)}
     <div class="msgs-wrap">
       <svg class="doodle-bg" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <pattern id="doodlePattern" width="420" height="420" patternUnits="userSpaceOnUse">
+          <pattern id="doodlePattern" width="440" height="440" patternUnits="userSpaceOnUse">
             <g fill="none" stroke="currentColor" stroke-width="2.2"
                stroke-linecap="round" stroke-linejoin="round">
-              <!-- сердце -->
               <g transform="translate(10,10) scale(0.8) rotate(-10 50 50)">
                 <path d="M50 82 C18 58 18 32 34 24 C43 20 50 27 50 33 C50 27 57 20 66 24 C82 32 82 58 50 82 Z"/>
               </g>
-              <!-- звезда -->
-              <g transform="translate(250,20) scale(0.8) rotate(14 50 50)">
+              <g transform="translate(270,20) scale(0.8) rotate(14 50 50)">
                 <path d="M50 16 L60 40 L86 42 L66 58 L73 84 L50 70 L27 84 L34 58 L14 42 L40 40 Z"/>
               </g>
-              <!-- бумажный самолётик -->
-              <g transform="translate(130,90) scale(0.8) rotate(-22 50 50)">
-                <path d="M12 50 L88 16 L60 86 L46 58 Z"/>
-                <path d="M46 58 L88 16"/>
+              <g transform="translate(140,95) scale(0.8) rotate(-22 50 50)">
+                <path d="M12 50 L88 16 L60 86 L46 58 Z"/><path d="M46 58 L88 16"/>
               </g>
-              <!-- котик -->
-              <g transform="translate(300,110) scale(0.8) rotate(8 50 50)">
+              <g transform="translate(320,120) scale(0.8) rotate(8 50 50)">
                 <circle cx="50" cy="55" r="24"/>
-                <path d="M30 38 L27 16 L46 28"/>
-                <path d="M70 38 L73 16 L54 28"/>
+                <path d="M30 38 L27 16 L46 28"/><path d="M70 38 L73 16 L54 28"/>
                 <path d="M22 52 h-9 M22 60 h-9 M78 52 h9 M78 60 h9"/>
                 <circle cx="42" cy="52" r="2.4" fill="currentColor" stroke="none"/>
                 <circle cx="58" cy="52" r="2.4" fill="currentColor" stroke="none"/>
                 <path d="M50 60 l-4 5 h8 z"/>
               </g>
-              <!-- нотка -->
-              <g transform="translate(20,170) scale(0.8) rotate(-12 50 50)">
+              <g transform="translate(20,180) scale(0.8) rotate(-12 50 50)">
                 <path d="M40 70 V26 L70 20 V58"/>
-                <circle cx="32" cy="70" r="9"/>
-                <circle cx="62" cy="58" r="9"/>
+                <circle cx="32" cy="70" r="9"/><circle cx="62" cy="58" r="9"/>
               </g>
-              <!-- смайлик -->
-              <g transform="translate(180,230) scale(0.8)">
+              <g transform="translate(190,240) scale(0.8)">
                 <circle cx="50" cy="50" r="32"/>
                 <circle cx="39" cy="42" r="2.6" fill="currentColor" stroke="none"/>
                 <circle cx="61" cy="42" r="2.6" fill="currentColor" stroke="none"/>
                 <path d="M34 58 Q50 72 66 58"/>
               </g>
-              <!-- молния -->
-              <g transform="translate(320,270) scale(0.8) rotate(10 50 50)">
+              <g transform="translate(340,285) scale(0.8) rotate(10 50 50)">
                 <path d="M56 10 L26 54 L46 54 L38 90 L70 42 L50 42 Z"/>
               </g>
-              <!-- облако -->
-              <g transform="translate(60,310) scale(0.8)">
+              <g transform="translate(60,325) scale(0.8)">
                 <path d="M26 70 h48"/>
                 <path d="M32 70 a12 12 0 0 1 0 -24 a16 16 0 0 1 30 -6 a12 12 0 0 1 10 30 z"/>
               </g>
-              <!-- конверт -->
-              <g transform="translate(230,330) scale(0.8) rotate(-8 50 50)">
+              <g transform="translate(240,345) scale(0.8) rotate(-8 50 50)">
                 <rect x="18" y="30" width="64" height="44" rx="7"/>
                 <path d="M21 35 L50 56 L79 35"/>
               </g>
@@ -318,40 +449,30 @@ body.light .msg.out .meta{color:rgba(0,0,0,.42)}
         </defs>
         <rect width="100%" height="100%" fill="url(#doodlePattern)"/>
       </svg>
+
       <div class="messages" id="messages"></div>
-    </div>
 
-    <div class="composer">
-      <!-- обычный режим -->
-      <div class="composer-panel" id="normalPanel">
-        <button class="icon-btn" id="emojiBtn" title="Эмодзи">😊</button>
-        <textarea id="input" rows="1" placeholder="Написать сообщение..."></textarea>
-        <button class="icon-btn" id="micBtn" title="Голосовое сообщение">
-          <svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor">
-            <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/>
-          </svg>
-        </button>
-        <button class="send-btn" id="sendBtn" title="Отправить">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-            <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
-          </svg>
-        </button>
-      </div>
-
-      <!-- режим записи -->
-      <div class="composer-panel rec-panel" id="recPanel" hidden>
-        <div class="rec-left">
-          <span class="rec-dot"></span>
-          <span class="rec-time" id="recTime">0:00</span>
-          <span class="rec-hint">Идёт запись…</span>
-        </div>
-        <div style="display:flex;gap:8px">
-          <button class="rec-btn cancel" id="recCancel">✕</button>
-          <button class="rec-btn send" id="recSend">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-              <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
-            </svg>
-          </button>
+      <!-- ===== Плавающий композер ===== -->
+      <div class="composer-float" id="composerFloat">
+        <div class="composer-pill" id="composerPill">
+          <div class="cp-normal" id="cpNormal">
+            <button class="circle-btn" id="emojiBtn" title="Эмодзи">😊</button>
+            <textarea id="input" rows="1" placeholder="Сообщение"></textarea>
+            <button class="circle-btn accent" id="sendBtn" title="Отправить"></button>
+          </div>
+          <div class="cp-recording" id="cpRecording" hidden>
+            <span class="rec-dot"></span>
+            <span class="rec-time" id="recTime">0:00</span>
+            <span class="rec-hint">Идёт запись…</span>
+            <div class="rec-actions">
+              <button class="circle-btn danger" id="recCancel" title="Отмена">✕</button>
+              <button class="circle-btn accent" id="recSend" title="Отправить">
+                <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor">
+                  <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -361,9 +482,9 @@ body.light .msg.out .meta{color:rgba(0,0,0,.42)}
 <div class="toast" id="toast"></div>
 
 <script>
-/* =========================================================
-   АНОНИМНАЯ 2.0 — фронтенд-прототип мессенджера
-   ========================================================= */
+/* ============================================================
+   АНОНИМ НЕТ — логика
+   ============================================================ */
 const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 
@@ -375,42 +496,63 @@ const nowTime = () => {
   return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
 };
 const fmt = s => Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
+const escapeHtml = s => String(s).replace(/[&<>"']/g, ch =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 
 function toast(text){
   const t = $('#toast');
   t.textContent = text;
   t.classList.add('show');
   clearTimeout(t._tm);
-  t._tm = setTimeout(() => t.classList.remove('show'), 1900);
+  t._tm = setTimeout(() => t.classList.remove('show'), 2000);
 }
 
 const EMOJIS = ['👍','❤️','🔥','😂','😮','😢','🎉','👏','🤔','💩','😍','🥰','😎','🤯','🙏','💯'];
-const randomBars = (n = 32) =>
-  Array.from({length:n}, () => 0.18 + Math.random()*0.82);
+const randomBars = (n = 34) =>
+  Array.from({length:n}, () => 0.16 + Math.random()*0.84);
 
-/* ---------- Состояние ---------- */
+const ICON_MIC = `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+  <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>`;
+const ICON_SEND = `<svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor">
+  <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>`;
+
+/* ---------- Данные ---------- */
 const chats = [
   {
-    id:'anonym', name:'Аноним', avatar:'А', color:'#64b5ef', status:'в сети', online:true, unread:0,
+    id:'anonym', name:'Аноним', avatar:'А',
+    color:'linear-gradient(135deg,#64b5ef,#3d7ec4)',
+    status:'в сети', online:true, unread:0,
     messages:[
-      {id:nid(), out:false, type:'text', text:'Привет 👋 Добро пожаловать в Анонимную 2.0', time:'11:58', reactions:{}, mine:{}},
-      {id:nid(), out:false, type:'text', text:'Тут можно писать, удалять сообщения, ставить реакции и записывать голосовые 🎤', time:'11:59', reactions:{'🔥':3}, mine:{}},
-      {id:nid(), out:true,  type:'text', text:'Круто! А реакции правда можно убирать?', time:'12:01', reactions:{}, mine:{}}
+      {id:nid(), out:false, type:'text', time:'11:58', reactions:{}, mine:{},
+       text:'Привет 👋 Это Аноним Нет — приватный мессенджер.'},
+      {id:nid(), out:false, type:'text', time:'11:59', reactions:{'🔥':3}, mine:{},
+       text:'Тут есть реакции, удаление сообщений и голосовые 🎤\nДвойной клик по сообщению ставит ❤️'},
+      {id:nid(), out:true, type:'text', time:'12:01', reactions:{}, mine:{},
+       text:'Круто! А реакции правда можно убирать?'},
+      {id:nid(), out:false, type:'text', time:'12:02', reactions:{'👍':2}, mine:{},
+       text:'Да — нажми на реакцию ещё раз, и она исчезнет.'}
     ]
   },
   {
-    id:'secret', name:'Секретный чат', avatar:'🔒', color:'#7d68d8', status:'был(а) недавно', online:false, unread:2,
+    id:'secret', name:'Секретный чат', avatar:'🔒',
+    color:'linear-gradient(135deg,#8b7be8,#5b4bc4)',
+    status:'был(а) недавно', online:false, unread:2,
     messages:[
-      {id:nid(), out:false, type:'text', text:'Этот чат шифруется 🛡️', time:'10:12', reactions:{}, mine:{}},
+      {id:nid(), out:false, type:'text', time:'10:12', reactions:{}, mine:{},
+       text:'Этот чат шифруется 🛡️'},
       {id:nid(), out:false, type:'voice', time:'10:13', reactions:{'❤️':1}, mine:{},
        voice:{url:null, duration:6, bars:randomBars()}}
     ]
   },
   {
-    id:'team', name:'Команда 2.0', avatar:'2', color:'#e17076', status:'12 участников', online:false, unread:0,
+    id:'team', name:'Команда 2.0', avatar:'2',
+    color:'linear-gradient(135deg,#ef8a80,#d3544a)',
+    status:'12 участников', online:false, unread:0,
     messages:[
-      {id:nid(), out:false, type:'text', text:'Собираем релиз в пятницу 🚀', time:'09:30', reactions:{'👍':5,'🎉':2}, mine:{}},
-      {id:nid(), out:true,  type:'text', text:'Принято!', time:'09:31', reactions:{}, mine:{}}
+      {id:nid(), out:false, type:'text', time:'09:30', reactions:{'👍':5,'🎉':2}, mine:{},
+       text:'Собираем релиз в пятницу 🚀'},
+      {id:nid(), out:true, type:'text', time:'09:31', reactions:{}, mine:{},
+       text:'Принято!'}
     ]
   }
 ];
@@ -418,7 +560,7 @@ const chats = [
 let activeId = 'anonym';
 const activeChat = () => chats.find(c => c.id === activeId);
 
-/* ---------- Рендер списка чатов ---------- */
+/* ---------- Список чатов ---------- */
 function lastPreview(chat){
   const m = chat.messages[chat.messages.length - 1];
   if(!m) return 'Нет сообщений';
@@ -442,10 +584,10 @@ function renderChatList(filter = ''){
         <div class="avatar" style="background:${c.color}">${c.avatar}</div>
         <div class="ci-body">
           <div class="ci-top">
-            <div class="ci-name">${c.name}</div>
+            <div class="ci-name">${escapeHtml(c.name)}</div>
             <div class="ci-time">${lastTime(c)}</div>
           </div>
-          <div class="ci-top" style="margin-top:2px">
+          <div class="ci-bottom">
             <div class="ci-sub">${escapeHtml(lastPreview(c))}</div>
             ${c.unread ? `<div class="badge">${c.unread}</div>` : ''}
           </div>
@@ -454,18 +596,17 @@ function renderChatList(filter = ''){
       list.appendChild(el);
     });
 }
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-}
 
 /* ---------- Переключение чата ---------- */
 function switchChat(id){
   activeId = id;
   const c = activeChat();
   c.unread = 0;
+
   $('#chatName').textContent = c.name;
   $('#chatStatus').textContent = c.status;
   $('#chatStatus').classList.toggle('online', !!c.online);
+
   const av = $('#chatAvatar');
   av.textContent = c.avatar;
   av.style.background = c.color;
@@ -474,13 +615,28 @@ function switchChat(id){
   renderChatList($('#search').value);
   $('#app').classList.add('chat-open');
   closeEmojiPanel();
+  closeContext();
 }
 
 /* ---------- Рендер сообщений ---------- */
 function renderMessages(){
   const box = $('#messages');
   box.innerHTML = '';
-  activeChat().messages.forEach(m => box.appendChild(messageEl(m)));
+  const msgs = activeChat().messages;
+
+  if(msgs.length){
+    const chip = document.createElement('div');
+    chip.className = 'date-chip';
+    chip.textContent = 'Сегодня';
+    box.appendChild(chip);
+  }
+
+  msgs.forEach((m, i) => {
+    const next = msgs[i+1];
+    const isLast = !next || next.out !== m.out;
+    box.appendChild(messageEl(m, isLast));
+  });
+
   scrollToBottom(true);
 }
 
@@ -491,9 +647,9 @@ function scrollToBottom(instant){
   });
 }
 
-function messageEl(m){
+function messageEl(m, isLast){
   const el = document.createElement('div');
-  el.className = 'msg ' + (m.out ? 'out' : 'in');
+  el.className = 'msg ' + (m.out ? 'out' : 'in') + (isLast ? ' last' : '');
   el.dataset.id = m.id;
 
   if(m.type === 'text'){
@@ -505,21 +661,43 @@ function messageEl(m){
     el.appendChild(voiceEl(m));
   }
 
+  /* мета */
   const meta = document.createElement('div');
   meta.className = 'meta';
-  meta.innerHTML = `<span>${m.time}</span>` + (m.out ? `<span class="tick">✓✓</span>` : '');
+
+  const add = document.createElement('button');
+  add.className = 'addreact';
+  add.textContent = '＋';
+  add.title = 'Реакция';
+  add.onclick = e => {
+    e.stopPropagation();
+    const r = add.getBoundingClientRect();
+    openContext(r.left, r.top - 40, m);
+  };
+  meta.appendChild(add);
+
+  meta.insertAdjacentHTML('beforeend',
+    `<span>${m.time}</span>` + (m.out ? `<span class="tick">✓✓</span>` : ''));
   el.appendChild(meta);
 
+  /* реакции */
   const react = document.createElement('div');
   react.className = 'reactions';
   el.appendChild(react);
   renderReactions(react, m);
 
   attachContext(el, m);
+
+  el.addEventListener('dblclick', e => {
+    if(window.getSelection().toString()) return;
+    e.preventDefault();
+    toggleReaction(m, '❤️');
+  });
+
   return el;
 }
 
-/* ---------- Голосовое сообщение ---------- */
+/* ---------- Голосовое ---------- */
 let currentAudio = null, currentBtn = null;
 
 function voiceEl(m){
@@ -563,7 +741,7 @@ function voiceEl(m){
   btn.onclick = e => {
     e.stopPropagation();
     if(audio.paused){
-      if(currentAudio && currentAudio !== audio){ currentAudio.pause(); }
+      if(currentAudio && currentAudio !== audio) currentAudio.pause();
       if(currentBtn && currentBtn !== btn) currentBtn.innerHTML = '▶';
       audio.play();
       btn.innerHTML = '❚❚';
@@ -644,7 +822,9 @@ function openContext(x, y, m){
   copy.onclick = e => {
     e.stopPropagation();
     const txt = m.type === 'text' ? m.text : '🎤 Голосовое сообщение';
-    navigator.clipboard?.writeText(txt).then(() => toast('Скопировано')).catch(() => toast('Не удалось скопировать'));
+    navigator.clipboard?.writeText(txt)
+      .then(() => toast('Скопировано'))
+      .catch(() => toast('Не удалось скопировать'));
     closeContext();
   };
   menu.appendChild(copy);
@@ -658,10 +838,10 @@ function openContext(x, y, m){
   document.body.appendChild(menu);
 
   const r = menu.getBoundingClientRect();
-  const px = Math.min(x, window.innerWidth  - r.width  - 8);
-  const py = Math.min(y, window.innerHeight - r.height - 8);
-  menu.style.left = Math.max(8, px) + 'px';
-  menu.style.top  = Math.max(8, py) + 'px';
+  const px = Math.min(x, window.innerWidth  - r.width  - 10);
+  const py = Math.min(y, window.innerHeight - r.height - 10);
+  menu.style.left = Math.max(10, px) + 'px';
+  menu.style.top  = Math.max(10, py) + 'px';
 
   ctxEl = menu;
 }
@@ -672,30 +852,31 @@ function attachContext(el, m){
     openContext(e.clientX, e.clientY, m);
   });
 
-  // долгое нажатие (мобильные)
   let timer = null;
   el.addEventListener('touchstart', e => {
     const t = e.touches[0];
-    timer = setTimeout(() => openContext(t.clientX, t.clientY, m), 480);
+    timer = setTimeout(() => openContext(t.clientX, t.clientY, m), 460);
   }, {passive:true});
   ['touchend','touchmove','touchcancel'].forEach(ev =>
     el.addEventListener(ev, () => clearTimeout(timer), {passive:true})
   );
 }
 
-/* ---------- Удаление сообщения ---------- */
+/* ---------- Удаление ---------- */
 function deleteMessage(id){
   const chat = activeChat();
   const idx = chat.messages.findIndex(m => m.id === id);
   if(idx < 0) return;
+
   const el = document.querySelector(`.msg[data-id="${id}"]`);
   if(el) el.classList.add('removing');
+
   setTimeout(() => {
     chat.messages.splice(idx, 1);
     if(el) el.remove();
     renderChatList($('#search').value);
     toast('Сообщение удалено');
-  }, 190);
+  }, 210);
 }
 
 /* ---------- Отправка текста ---------- */
@@ -703,12 +884,14 @@ function sendText(){
   const input = $('#input');
   const text = input.value.trim();
   if(!text) return;
+
   const chat = activeChat();
   const m = {id:nid(), out:true, type:'text', text, time:nowTime(), reactions:{}, mine:{}};
   chat.messages.push(m);
-  $('#messages').appendChild(messageEl(m));
+  $('#messages').appendChild(messageEl(m, true));
   input.value = '';
   autoResize();
+  updateComposerState();
   scrollToBottom();
   renderChatList($('#search').value);
 }
@@ -716,7 +899,15 @@ function sendText(){
 function autoResize(){
   const i = $('#input');
   i.style.height = 'auto';
-  i.style.height = Math.min(i.scrollHeight, 130) + 'px';
+  i.style.height = Math.min(i.scrollHeight, 132) + 'px';
+}
+
+function updateComposerState(){
+  const btn = $('#sendBtn');
+  const has = $('#input').value.trim().length > 0;
+  btn.innerHTML = has ? ICON_SEND : ICON_MIC;
+  btn.title = has ? 'Отправить' : 'Голосовое сообщение';
+  btn.classList.toggle('accent', true);
 }
 
 /* ---------- Запись голосового ---------- */
@@ -750,8 +941,8 @@ async function startRecording(){
   recStart = Date.now();
   recSendFlag = false;
 
-  $('#normalPanel').hidden = true;
-  $('#recPanel').hidden = false;
+  $('#cpNormal').hidden = true;
+  $('#cpRecording').hidden = false;
   $('#recTime').textContent = '0:00';
 
   recTimerId = setInterval(() => {
@@ -765,8 +956,8 @@ function stopRecording(send){
   try{ mediaRecorder.stop(); }catch(e){}
   clearInterval(recTimerId);
   if(recStream) recStream.getTracks().forEach(t => t.stop());
-  $('#recPanel').hidden = true;
-  $('#normalPanel').hidden = false;
+  $('#cpRecording').hidden = true;
+  $('#cpNormal').hidden = false;
   mediaRecorder = null;
   recStream = null;
 }
@@ -784,21 +975,30 @@ function onRecordingStop(){
     voice:{url, duration, bars: randomBars()}
   };
   chat.messages.push(m);
-  $('#messages').appendChild(messageEl(m));
+  $('#messages').appendChild(messageEl(m, true));
   scrollToBottom();
   renderChatList($('#search').value);
   toast('Голосовое отправлено');
 }
 
-/* ---------- Панель эмодзи ---------- */
+/* ---------- Эмодзи-панель ---------- */
 let emojiPanel = null;
+
 function closeEmojiPanel(){
   if(emojiPanel){ emojiPanel.remove(); emojiPanel = null; }
 }
+
 function toggleEmojiPanel(){
   if(emojiPanel){ closeEmojiPanel(); return; }
+
+  const pill = $('#composerPill');
+  const r = pill.getBoundingClientRect();
+
   const panel = document.createElement('div');
   panel.className = 'emoji-panel';
+  panel.style.left = Math.max(12, r.left) + 'px';
+  panel.style.bottom = (window.innerHeight - r.top + 8) + 'px';
+
   EMOJIS.concat(['😀','😁','😂','🤣','😊','😇','🙂','😉','😍','🥳','😭','😡','🤝','✌️','💪','🌟'])
     .forEach(em => {
       const b = document.createElement('button');
@@ -808,36 +1008,45 @@ function toggleEmojiPanel(){
         inp.value += em;
         inp.focus();
         autoResize();
+        updateComposerState();
       };
       panel.appendChild(b);
     });
-  $('.composer').appendChild(panel);
+
+  document.body.appendChild(panel);
   emojiPanel = panel;
 }
 
 /* ---------- События ---------- */
-$('#sendBtn').onclick = sendText;
+$('#sendBtn').onclick = () => {
+  if($('#input').value.trim()) sendText();
+  else startRecording();
+};
 
+$('#input').addEventListener('input', () => { autoResize(); updateComposerState(); });
 $('#input').addEventListener('keydown', e => {
   if(e.key === 'Enter' && !e.shiftKey){
     e.preventDefault();
     sendText();
   }
 });
-$('#input').addEventListener('input', autoResize);
 
-$('#micBtn').onclick = startRecording;
 $('#recCancel').onclick = () => stopRecording(false);
 $('#recSend').onclick = () => stopRecording(true);
 
 $('#emojiBtn').onclick = e => { e.stopPropagation(); toggleEmojiPanel(); };
 document.addEventListener('click', e => {
-  if(emojiPanel && !emojiPanel.contains(e.target) && e.target.id !== 'emojiBtn') closeEmojiPanel();
+  if(emojiPanel && !emojiPanel.contains(e.target) && e.target.id !== 'emojiBtn'){
+    closeEmojiPanel();
+  }
 });
 
 $('#search').addEventListener('input', e => renderChatList(e.target.value));
 
-$('#themeBtn').onclick = () => document.body.classList.toggle('light');
+$('#themeBtn').onclick = () => {
+  document.body.classList.toggle('light');
+  toast(document.body.classList.contains('light') ? 'Светлая тема' : 'Тёмная тема');
+};
 
 $('#backBtn').onclick = () => $('#app').classList.remove('chat-open');
 
@@ -845,10 +1054,13 @@ document.addEventListener('keydown', e => {
   if(e.key === 'Escape'){ closeContext(); closeEmojiPanel(); }
 });
 
+window.addEventListener('resize', closeEmojiPanel);
+
 /* ---------- Старт ---------- */
+updateComposerState();
 switchChat('anonym');
 renderChatList();
-setTimeout(() => { $('#chatStatus').textContent = 'в сети'; }, 800);
+setTimeout(() => toast('Двойной клик по сообщению — поставить ❤️'), 900);
 </script>
 </body>
 </html>
