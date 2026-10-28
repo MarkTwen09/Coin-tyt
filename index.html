@@ -8,27 +8,25 @@
 <title>anonimnet</title>
 <style>
 /* ============================================================
-   ANONIMNET — 1:1 Telegram iOS Clone
+   ANONIMNET — True Telegram iOS Clone
    ============================================================ */
 :root {
-  /* Official Telegram Dark Theme Colors */
-  --bg-main: #0e1621;
-  --bg-panel: #17212b;
-  --bg-search: #242f3d;
-  --bg-hover: #202b36;
-  --bg-active: #2b5278;
-  --text-main: #ffffff;
-  --text-dim: #7d8e9e;
-  --accent: #64b5ef;
-  --accent-solid: #3390ec;
+  /* Exact Telegram iOS Dark Theme Colors */
+  --tg-bg: #0e1621;
+  --tg-panel: #17212b;
+  --tg-search: #242f3d;
+  --tg-hover: #202b36;
+  --tg-active: #2b5278;
+  --tg-text: #ffffff;
+  --tg-text-dim: #7d8e9e;
+  --tg-accent: #64b5ef;
+  --tg-blue: #3390ec;
   
-  /* Bubbles */
-  --bubble-in: #182533;
-  --bubble-out: #2b5278;
+  --tg-bubble-in: #182533;
+  --tg-bubble-out: #2b5278;
   
-  /* Nav */
-  --nav-bg: rgba(23, 33, 43, 0.85);
-  --nav-border: rgba(255, 255, 255, 0.1);
+  --tg-border: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(23, 33, 43, 0.75);
 }
 
 * {
@@ -44,13 +42,13 @@ html, body {
   height: 100%; 
   height: 100dvh; 
   overflow: hidden; 
-  overflow-x: hidden;
-  background: var(--bg-main); 
-  color: var(--text-main);
+  background: var(--tg-bg); 
+  color: var(--tg-text);
   overscroll-behavior: none;
 }
 
-button { cursor: pointer; border: none; background: none; color: inherit; outline: none; }
+button { cursor: pointer; border: none; background: none; color: inherit; outline: none; transition: transform 0.1s; }
+button:active { transform: scale(0.9); }
 input, textarea { border: none; outline: none; background: none; color: inherit; font-family: inherit; }
 
 .app { 
@@ -62,45 +60,47 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 /* ===================== ЭКРАНЫ ===================== */
 .view-screen {
   position: absolute; inset: 0; display: flex; flex-direction: column;
-  background: var(--bg-main);
+  background: var(--tg-bg);
+  animation: viewFade 0.3s cubic-bezier(0.32, 0.72, 0, 1);
 }
+@keyframes viewFade { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
 .screen-header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 8px 16px; padding-top: calc(8px + env(safe-area-inset-top));
-  min-height: 44px; background: var(--bg-panel); z-index: 10;
+  min-height: 44px; background: var(--tg-panel); z-index: 10;
 }
 .header-title { font-size: 17px; font-weight: 600; letter-spacing: -0.4px; }
-.btn-text { font-size: 17px; color: var(--accent); font-weight: 400; }
-.icon-btn { display: grid; place-items: center; color: var(--accent); padding: 4px; }
+.btn-text { font-size: 17px; color: var(--tg-accent); font-weight: 400; }
+.icon-btn { display: grid; place-items: center; color: var(--tg-accent); padding: 4px; }
 
 /* ===================== СПИСОК ЧАТОВ ===================== */
-.search-wrap { padding: 8px 16px; background: var(--bg-panel); }
+.search-wrap { padding: 8px 16px; background: var(--tg-panel); }
 .search {
-  width: 100%; background: var(--bg-search); border-radius: 10px;
+  width: 100%; background: var(--tg-search); border-radius: 10px;
   padding: 7px 12px; display: flex; align-items: center; gap: 6px;
 }
-.search svg { width: 18px; height: 18px; fill: var(--text-dim); }
-.search input { width: 100%; font-size: 17px; color: var(--text-main); }
-.search input::placeholder { color: var(--text-dim); }
+.search svg { width: 18px; height: 18px; fill: var(--tg-text-dim); }
+.search input { width: 100%; font-size: 17px; color: var(--tg-text); }
+.search input::placeholder { color: var(--tg-text-dim); }
 
-.folders { display: flex; gap: 8px; padding: 8px 16px; background: var(--bg-panel); overflow-x: auto; scrollbar-width: none; }
+.folders { display: flex; gap: 8px; padding: 8px 16px; background: var(--tg-panel); overflow-x: auto; scrollbar-width: none; }
 .folders::-webkit-scrollbar { display: none; }
 .folder {
-  background: var(--bg-search); padding: 6px 14px; border-radius: 20px;
+  background: var(--tg-search); padding: 6px 14px; border-radius: 20px;
   font-size: 15px; font-weight: 500; white-space: nowrap; display: flex; align-items: center; gap: 6px;
-  cursor: pointer; color: var(--text-main); letter-spacing: -0.2px;
+  cursor: pointer; color: var(--tg-text);
 }
-.folder.active { background: var(--bg-active); }
+.folder.active { background: var(--tg-active); }
 
-.content-scroll { flex: 1; overflow-y: auto; padding-bottom: 120px; background: var(--bg-panel); }
+.content-scroll { flex: 1; overflow-y: auto; padding-bottom: 120px; background: var(--tg-panel); }
 .content-scroll::-webkit-scrollbar { display: none; }
 
 .chat-item {
   display: flex; align-items: center; gap: 12px; padding: 8px 16px;
-  cursor: pointer; transition: background 0.1s;
+  cursor: pointer;
 }
-.chat-item:active { background: var(--bg-hover); }
+.chat-item:active { background: var(--tg-hover); }
 
 .avatar-wrap { position: relative; flex: 0 0 auto; }
 .avatar {
@@ -109,31 +109,31 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 }
 .avatar-ring {
   position: absolute; inset: -2px; border-radius: 50%;
-  background: conic-gradient(from 0deg, var(--accent-solid), #30d158, var(--accent-solid));
+  background: conic-gradient(from 0deg, var(--tg-blue), #30d158, var(--tg-blue));
   z-index: -1; opacity: 0;
   animation: pulseRing 2s infinite;
 }
 .avatar-ring.active { opacity: 1; }
-.avatar-ring::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--bg-panel); }
+.avatar-ring::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--tg-panel); }
 @keyframes pulseRing { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.04); opacity: 0.7; } }
 
-.ci-body { flex: 1; min-width: 0; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; padding-top: 4px; }
+.ci-body { flex: 1; min-width: 0; border-bottom: 1px solid var(--tg-border); padding-bottom: 8px; padding-top: 4px; }
 .chat-item:last-child .ci-body { border-bottom: none; }
 
 .ci-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
 .ci-name { font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.3px; }
-.ci-time { font-size: 14px; color: var(--text-dim); display: flex; align-items: center; gap: 4px; }
+.ci-time { font-size: 14px; color: var(--tg-text-dim); display: flex; align-items: center; gap: 4px; }
 .ci-bottom { display: flex; justify-content: space-between; align-items: center; }
-.ci-sub { font-size: 15px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.2px; }
+.ci-sub { font-size: 15px; color: var(--tg-text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.2px; }
 .badge {
-  background: var(--accent-solid); color: #fff; border-radius: 11px; font-size: 13px; font-weight: 600;
+  background: var(--tg-blue); color: #fff; border-radius: 11px; font-size: 13px; font-weight: 600;
   padding: 2px 7px; min-width: 22px; text-align: center;
 }
-.badge.muted { background: var(--text-dim); }
+.badge.muted { background: var(--tg-text-dim); }
 
 /* ===================== ЧАТ ===================== */
 .chat-overlay {
-  position: fixed; inset: 0; background: var(--bg-main); z-index: 100;
+  position: fixed; inset: 0; background: var(--tg-bg); z-index: 100;
   display: flex; flex-direction: column;
   transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
 }
@@ -142,34 +142,34 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .chat-header {
   display: flex; align-items: center; gap: 10px; padding: 8px 12px;
   padding-top: calc(8px + env(safe-area-inset-top));
-  background: var(--bg-panel); border-bottom: 1px solid rgba(0,0,0,0.2); z-index: 10;
+  background: var(--tg-panel); border-bottom: 1px solid var(--tg-border); z-index: 10;
 }
 .chat-header .avatar { width: 40px; height: 40px; font-size: 16px; }
 .chat-title { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center;}
 .chat-title .name { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; }
-.chat-title .status { font-size: 13px; color: var(--text-dim); }
-.chat-title .status.online { color: var(--accent); }
+.chat-title .status { font-size: 13px; color: var(--tg-text-dim); }
+.chat-title .status.online { color: var(--tg-accent); }
 
 /* Сообщения */
-.msgs-wrap { position: relative; flex: 1; overflow: hidden; width: 100%; background: var(--bg-main); }
+.msgs-wrap { position: relative; flex: 1; overflow: hidden; width: 100%; background: var(--tg-bg); }
 
-/* ПЛОТНЫЙ КОСМИЧЕСКИЙ ПАТТЕРН */
-.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.3; }
+/* КОСМИЧЕСКИЙ ПАТТЕРН (Плотный, стильный) */
+.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.4; }
 .messages {
   position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 16px 16px 100px;
-  display: flex; flex-direction: column; gap: 4px; scroll-behavior: smooth; z-index: 2;
+  display: flex; flex-direction: column; gap: 6px; scroll-behavior: smooth; z-index: 2;
 }
 .messages::-webkit-scrollbar { display: none; }
 
 .date-chip {
-  align-self: center; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px);
+  align-self: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px);
   color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 500;
   margin: 12px 0;
 }
 
 /* ИДЕАЛЬНЫЕ ПУЗЫРИ (Telegram iOS) */
 .msg {
-  max-width: 82%; padding: 6px 10px 6px; border-radius: 16px;
+  max-width: 82%; padding: 7px 12px 6px; border-radius: 16px;
   font-size: 16px; line-height: 1.35; word-break: break-word; position: relative;
   animation: msgPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
@@ -178,32 +178,22 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* Хвостики через border-radius (Секрет идеального Telegram) */
 .msg.in { 
-  align-self: flex-start; background: var(--bubble-in); 
-  border-bottom-left-radius: 4px; 
+  align-self: flex-start; background: var(--tg-bubble-in); 
+  border-bottom-left-radius: 4px; /* Хвостик */
 }
-.msg.in::before {
-  content: ""; position: absolute; left: -6px; bottom: 0; width: 12px; height: 15px;
-  background: var(--bubble-in); border-bottom-right-radius: 15px;
-}
-
 .msg.out {
-  align-self: flex-end; background: var(--bubble-out); 
-  border-bottom-right-radius: 4px;
-}
-.msg.out::after {
-  content: ""; position: absolute; right: -6px; bottom: 0; width: 12px; height: 15px;
-  background: var(--bubble-out); border-bottom-left-radius: 15px;
+  align-self: flex-end; background: var(--tg-bubble-out); 
+  border-bottom-right-radius: 4px; /* Хвостик */
 }
 
 .msg .text { white-space: pre-wrap; letter-spacing: -0.2px; }
 .msg .meta {
   display: flex; align-items: center; justify-content: flex-end; gap: 4px;
-  font-size: 12px; margin-top: 3px; color: var(--text-dim);
+  font-size: 12px; margin-top: 3px; color: var(--tg-text-dim);
 }
 .msg.out .meta { color: rgba(255,255,255,0.6); }
-.tick { width: 15px; height: 15px; fill: var(--accent); margin-left: 2px;}
+.tick { width: 15px; height: 15px; fill: var(--tg-accent); margin-left: 2px;}
 
 /* Реакции */
 .reactions { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
@@ -216,7 +206,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 /* Голосовые */
 .voice-msg { display: flex; align-items: center; gap: 10px; min-width: 180px; }
 .play-btn { width: 32px; height: 32px; border-radius: 50%; background: #fff; color: #000; display: grid; place-items: center; font-size: 12px; padding-left: 2px;}
-.msg.in .play-btn { background: var(--accent-solid); color: #fff; }
+.msg.in .play-btn { background: var(--tg-blue); color: #fff; }
 .wave { display: flex; align-items: center; gap: 2px; height: 24px; flex: 1; }
 .wave span { width: 3px; border-radius: 2px; background: rgba(255,255,255,0.3); }
 .wave span.played { background: #fff; }
@@ -225,31 +215,31 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .composer-container {
   position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 16px;
   padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  background: linear-gradient(to top, rgba(14,22,33,0.95) 0%, rgba(14,22,33,0) 100%);
+  background: linear-gradient(to top, var(--tg-bg) 10%, rgba(14,22,33,0) 100%);
   z-index: 20; pointer-events: none;
 }
 .composer-glass {
   pointer-events: auto; display: flex; align-items: flex-end; gap: 6px;
-  background: rgba(36, 47, 61, 0.7);
+  background: var(--glass-bg);
   backdrop-filter: blur(30px) saturate(200%); -webkit-backdrop-filter: blur(30px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--tg-border);
   border-radius: 22px; padding: 5px 6px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
 }
-.attach-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--text-dim); }
+.attach-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--tg-text-dim); }
 .attach-btn svg { width: 24px; height: 24px; fill: currentColor; }
 .input-wrap { flex: 1; display: flex; align-items: flex-end; padding: 0 4px 0 0; }
 #input {
   width: 100%; resize: none; max-height: 120px; font-size: 17px;
-  padding: 7px 0; color: var(--text-main); line-height: 1.3;
+  padding: 7px 0; color: var(--tg-text); line-height: 1.3;
 }
-#input::placeholder { color: var(--text-dim); }
+#input::placeholder { color: var(--tg-text-dim); }
 .send-btn {
   width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
-  background: var(--accent-solid); color: #fff;
+  background: var(--tg-blue); color: #fff;
   flex: 0 0 auto;
 }
-.send-btn.mic { background: transparent; color: var(--text-dim); }
+.send-btn.mic { background: transparent; color: var(--tg-text-dim); }
 .send-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
 /* ===================== НИЖНЯЯ НАВИГАЦИЯ (СТРОГО GRID) ===================== */
@@ -265,11 +255,11 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .bottom-nav {
   pointer-events: auto;
   position: relative;
-  background: var(--nav-bg); 
+  background: var(--glass-bg); 
   backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
-  border: 1px solid var(--nav-border); border-radius: 35px;
+  border: 1px solid var(--tg-border); border-radius: 35px;
   display: grid; 
-  grid-template-columns: 1fr 1fr 1fr 1fr; /* ЖЕСТКАЯ СЕТКА, НИКАКОГО РАСТЯГИВАНИЯ */
+  grid-template-columns: repeat(4, 1fr); /* ЖЕСТКАЯ СЕТКА */
   padding: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   overflow: hidden;
 }
@@ -285,39 +275,38 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
 .nav-item {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
-  font-size: 10px; font-weight: 500; color: var(--text-dim); padding: 6px 0;
+  font-size: 10px; font-weight: 500; color: var(--tg-text-dim); padding: 6px 0;
   position: relative; z-index: 2; letter-spacing: -0.1px;
 }
-.nav-item.active { color: var(--accent); }
-.nav-item.active svg { fill: var(--accent); }
+.nav-item.active { color: var(--tg-accent); }
+.nav-item.active svg { fill: var(--tg-accent); }
 .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
 
-/* Меню */
+/* Меню и панели */
 .ctx {
   position: fixed; z-index: 200; background: #1c2733; 
   border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); min-width: 200px; padding: 6px;
-  border: 1px solid rgba(255,255,255,0.1); animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid var(--tg-border); animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
-.ctx-emojis { display: flex; gap: 4px; padding: 6px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 4px; }
+.ctx-emojis { display: flex; gap: 4px; padding: 6px; border-bottom: 1px solid var(--tg-border); margin-bottom: 4px; }
 .ctx-emoji { font-size: 22px; padding: 4px; border-radius: 50%; }
-.ctx-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; font-size: 16px; border-radius: 10px; color: var(--text-main); }
+.ctx-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; font-size: 16px; border-radius: 10px; color: var(--tg-text); }
 .ctx-item:active { background: rgba(255,255,255,0.1); }
 .ctx-item.danger { color: #ff453a; }
 .ctx-item svg { width: 20px; height: 20px; fill: currentColor; }
 
-/* Эмодзи */
 .emoji-panel {
   position: fixed; z-index: 150; background: #1c2733; 
   border-radius: 16px; padding: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); 
-  border: 1px solid rgba(255,255,255,0.1); display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  border: 1px solid var(--tg-border); display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
   animation: popIn 0.2s;
 }
 .emoji-panel button { font-size: 24px; padding: 4px; }
 
 .toast {
   position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: #1c2733; border: 1px solid rgba(255,255,255,0.1);
+  background: #1c2733; border: 1px solid var(--tg-border);
   color: #fff; padding: 12px 20px; border-radius: 20px; font-size: 14px;
   opacity: 0; transition: 0.3s; pointer-events: none; z-index: 300;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -359,9 +348,9 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
       <button class="btn-text">Создать</button>
     </div>
     <div class="content-scroll" style="padding-top:20px;">
-      <div style="padding: 0 16px; font-size: 16px; color: var(--text-dim);">Иван Иванов</div>
-      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.05);">Анна Смирнова</div>
-      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.05);">Максим Петров</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid var(--tg-border);">Иван Иванов</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid var(--tg-border);">Анна Смирнова</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid var(--tg-border);">Максим Петров</div>
     </div>
   </div>
 
@@ -374,9 +363,9 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
       </button>
     </div>
     <div class="content-scroll" style="padding-top:10px;">
-      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+      <div style="padding: 10px 16px; border-bottom: 1px solid var(--tg-border);">
         <div style="font-size: 17px;">Иван Иванов</div>
-        <div style="font-size: 14px; color: var(--text-dim);">Исходящий • 12:40</div>
+        <div style="font-size: 14px; color: var(--tg-text-dim);">Исходящий • 12:40</div>
       </div>
     </div>
   </div>
@@ -388,11 +377,11 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
       <button class="btn-text">Править</button>
     </div>
     <div class="content-scroll" style="padding-top:20px;">
-      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); display:flex; align-items:center; gap:12px;">
-        <div class="avatar" style="background: var(--accent-solid); width: 50px; height: 50px;">A</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid var(--tg-border); display:flex; align-items:center; gap:12px;">
+        <div class="avatar" style="background: var(--tg-blue); width: 50px; height: 50px;">A</div>
         <div>
           <div style="font-size: 17px; font-weight: 600;">Пользователь</div>
-          <div style="font-size: 14px; color: var(--text-dim);">@anonimnet_user</div>
+          <div style="font-size: 14px; color: var(--tg-text-dim);">@anonimnet_user</div>
         </div>
       </div>
     </div>
@@ -438,43 +427,56 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
     </header>
 
     <div class="msgs-wrap">
-      <!-- КОСМИЧЕСКИЙ ПАТТЕРН -->
+      <!-- КОСМИЧЕСКИЙ ПАТТЕРН (Идеально ровный) -->
       <svg class="doodle-bg" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <pattern id="spaceDoodle" width="300" height="300" patternUnits="userSpaceOnUse">
-            <g fill="none" stroke="#5c30ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
-              <g transform="translate(40, 40) scale(0.7)">
-                <circle cx="50" cy="50" r="20"/>
-                <ellipse cx="50" cy="50" rx="40" ry="10" transform="rotate(-15 50 50)"/>
+          <pattern id="spaceDoodle" width="400" height="400" patternUnits="userSpaceOnUse">
+            <g fill="none" stroke="#4a6a96" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
+              <!-- Планета с кольцами -->
+              <g transform="translate(50, 50) scale(0.8)">
+                <circle cx="50" cy="50" r="25"/>
+                <ellipse cx="50" cy="50" rx="45" ry="12" transform="rotate(-15 50 50)"/>
               </g>
-              <g transform="translate(180, 60) scale(0.7)">
-                <ellipse cx="50" cy="50" rx="30" ry="10" fill="none"/>
+              <!-- Летающая тарелка -->
+              <g transform="translate(250, 60) scale(0.8)">
+                <ellipse cx="50" cy="50" rx="35" ry="12" fill="none"/>
                 <path d="M 25 50 Q 50 15 75 50"/>
-                <circle cx="50" cy="40" r="8"/>
-                <path d="M 15 50 L 85 50"/>
+                <circle cx="50" cy="40" r="10"/>
+                <path d="M 10 50 L 90 50"/>
               </g>
-              <g transform="translate(260, 200) scale(0.6)">
+              <!-- Спутник -->
+              <g transform="translate(320, 200) scale(0.7)">
                 <rect x="40" y="40" width="20" height="20" rx="3"/>
                 <rect x="10" y="45" width="25" height="10"/>
                 <rect x="65" y="45" width="25" height="10"/>
                 <line x1="50" y1="40" x2="50" y2="20"/>
                 <circle cx="50" cy="15" r="5"/>
+                <line x1="40" y1="30" x2="25" y2="15"/>
+                <line x1="60" y1="30" x2="75" y2="15"/>
               </g>
-              <g transform="translate(60, 220)">
-                <circle cx="20" cy="20" r="6"/>
-                <path d="M 15 15 L -15 -15 M 25 15 L -5 -15 M 20 25 L -10 -5" stroke-width="1"/>
+              <!-- Комета -->
+              <g transform="translate(100, 250)">
+                <circle cx="20" cy="20" r="8"/>
+                <path d="M 15 15 L -20 -20 M 25 15 L -10 -20 M 20 25 L -15 -5" stroke-width="1.5" opacity="0.6"/>
               </g>
-              <g transform="translate(150, 160) scale(0.5)">
-                <circle cx="50" cy="30" r="12"/>
-                <rect x="38" y="42" width="24" height="30" rx="8"/>
-                <path d="M 38 50 L 20 65 M 62 50 L 80 65"/>
-                <path d="M 42 72 L 32 90 M 58 72 L 68 90"/>
+              <!-- Астронавт -->
+              <g transform="translate(220, 280) scale(0.6)">
+                <circle cx="50" cy="30" r="15"/>
+                <rect x="35" y="45" width="30" height="35" rx="10"/>
+                <path d="M 35 55 L 15 70 M 65 55 L 85 70"/>
+                <path d="M 40 80 L 30 100 M 60 80 L 70 100"/>
+                <rect x="40" y="25" width="20" height="10" rx="3" fill="currentColor" opacity="0.3"/>
               </g>
-              <path d="M 230 130 L 233 140 L 243 143 L 233 146 L 230 156 L 227 146 L 217 143 L 227 140 Z"/>
-              <path d="M 120 80 L 122 85 L 127 87 L 122 89 L 120 94 L 118 89 L 113 87 L 118 85 Z"/>
-              <circle cx="180" cy="260" r="1.5" fill="#5c30ff"/>
-              <circle cx="280" cy="40" r="1.5" fill="#5c30ff"/>
-              <circle cx="40" cy="150" r="1.5" fill="#5c30ff"/>
+              <!-- Звезды -->
+              <path d="M 280 130 L 285 145 L 300 150 L 285 155 L 280 170 L 275 155 L 260 150 L 275 145 Z" stroke-width="2"/>
+              <path d="M 150 120 L 153 130 L 163 133 L 153 136 L 150 146 L 147 136 L 137 133 L 147 130 Z" stroke-width="2"/>
+              <path d="M 350 320 L 352 326 L 358 328 L 352 330 L 350 336 L 348 330 L 342 328 L 348 326 Z" stroke-width="2"/>
+              <!-- Созвездие -->
+              <circle cx="80" cy="150" r="2" fill="currentColor"/>
+              <circle cx="120" cy="180" r="2" fill="currentColor"/>
+              <circle cx="60" cy="200" r="2" fill="currentColor"/>
+              <line x1="80" y1="150" x2="120" y2="180" stroke-width="1" opacity="0.4"/>
+              <line x1="120" y1="180" x2="60" y2="200" stroke-width="1" opacity="0.4"/>
             </g>
           </pattern>
         </defs>
@@ -499,11 +501,11 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
             <div style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 0 8px; height: 36px;">
               <div style="width: 10px; height: 10px; border-radius: 50%; background: #ff453a; animation: blink 1s infinite;"></div>
               <div style="font-size: 16px; font-weight: 500;" id="recTime">0:00</div>
-              <div style="flex: 1; color: var(--text-dim); font-size: 15px;">Запись...</div>
+              <div style="flex: 1; color: var(--tg-text-dim); font-size: 15px;">Запись...</div>
               <button id="recCancel" style="width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.1);">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
-              <button id="recSend" style="width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-solid);">
+              <button id="recSend" style="width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--tg-blue);">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
               </button>
             </div>
@@ -946,4 +948,3 @@ $('#app').classList.remove('chat-open');
 </script>
 </body>
 </html>
-
