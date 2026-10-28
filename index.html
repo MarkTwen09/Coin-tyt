@@ -8,7 +8,7 @@
 <title>anonimnet AI</title>
 <style>
 /* ============================================================
-   ANONIMNET — AI Assistant (Telegram iOS Style)
+   ANONIMNET — Smart AI (Telegram iOS Style)
    ============================================================ */
 :root {
   --tg-bg: #0e1621;
@@ -43,8 +43,12 @@ html, body {
   overscroll-behavior: none;
 }
 
-button { cursor: pointer; border: none; background: none; color: inherit; outline: none; transition: transform 0.1s; }
-button:active { transform: scale(0.9); }
+/* Эффект нажатия для всех кнопок */
+button { 
+  cursor: pointer; border: none; background: none; color: inherit; outline: none; 
+  transition: transform 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+button:active { transform: scale(0.85); }
 input, textarea { border: none; outline: none; background: none; color: inherit; font-family: inherit; }
 
 .app { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; width: 100vw; }
@@ -112,7 +116,6 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .ci-bottom { display: flex; justify-content: space-between; align-items: center; }
 .ci-sub { font-size: 15px; color: var(--tg-text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.2px; }
 .badge { background: var(--tg-blue); color: #fff; border-radius: 11px; font-size: 13px; font-weight: 600; padding: 2px 7px; min-width: 22px; text-align: center; }
-.badge.muted { background: var(--tg-text-dim); }
 
 /* ===================== ЧАТ ===================== */
 .chat-overlay {
@@ -127,7 +130,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   padding-top: calc(8px + env(safe-area-inset-top));
   background: var(--tg-panel); border-bottom: 1px solid var(--tg-border); z-index: 10;
 }
-.chat-header .avatar { width: 40px; height: 40px; font-size: 16px; }
+.chat-header .avatar { width: 40px; height: 40px; font-size: 18px; }
 .chat-title { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center;}
 .chat-title .name { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; display: flex; align-items: center; gap: 4px; }
 .chat-title .status { font-size: 13px; color: var(--tg-text-dim); }
@@ -153,30 +156,29 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .msg {
   max-width: 85%; padding: 7px 12px 6px; border-radius: 16px;
   font-size: 16px; line-height: 1.35; word-break: break-word; position: relative;
-  animation: msgPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation: msgPop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
 }
-@keyframes msgPop { 0% { opacity: 0; transform: scale(0.9) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes msgPop { 0% { opacity: 0; transform: scale(0.85) translateY(15px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
 .msg.in { align-self: flex-start; background: var(--tg-bubble-in); border-bottom-left-radius: 4px; }
 .msg.out { align-self: flex-end; background: var(--tg-bubble-out); border-bottom-right-radius: 4px; }
 
 .msg .text { white-space: pre-wrap; letter-spacing: -0.2px; }
-.msg .text pre { background: rgba(0,0,0,0.3); padding: 6px; border-radius: 6px; font-family: monospace; font-size: 14px; margin-top: 4px; overflow-x: auto; }
+.msg .text pre { background: rgba(0,0,0,0.4); padding: 8px; border-radius: 8px; font-family: monospace; font-size: 14px; margin-top: 6px; overflow-x: auto; }
 .msg .meta { display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 12px; margin-top: 3px; color: var(--tg-text-dim); }
 .msg.out .meta { color: rgba(255,255,255,0.6); }
 .tick { width: 15px; height: 15px; fill: var(--tg-accent); margin-left: 2px;}
 
 /* Анимация печати */
-.typing-indicator {
-  display: flex; align-items: center; gap: 4px; height: 20px; padding: 0 4px;
-}
+.typing-indicator { display: flex; align-items: center; gap: 4px; height: 20px; padding: 0 4px; }
 .typing-indicator span {
   width: 6px; height: 6px; border-radius: 50%; background: var(--tg-text-dim);
   animation: typingBounce 1.4s infinite ease-in-out both;
 }
 .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
 .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
-@keyframes typingBounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+@keyframes typingBounce { 0%, 80%, 100% { transform: scale(0); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
 
 /* Реакции */
 .reactions { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
@@ -190,7 +192,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .composer-container {
   position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 16px;
   padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  background: linear-gradient(to top, var(--tg-bg) 10%, rgba(14,22,33,0) 100%);
+  background: linear-gradient(to top, var(--tg-bg) 20%, rgba(14,22,33,0) 100%);
   z-index: 20; pointer-events: none;
 }
 .composer-glass {
@@ -206,8 +208,12 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .input-wrap { flex: 1; display: flex; align-items: flex-end; padding: 0 4px 0 0; }
 #input { width: 100%; resize: none; max-height: 120px; font-size: 17px; padding: 7px 0; color: var(--tg-text); line-height: 1.3; }
 #input::placeholder { color: var(--tg-text-dim); }
-.send-btn { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--tg-blue); color: #fff; flex: 0 0 auto; }
-.send-btn.mic { background: transparent; color: var(--tg-text-dim); }
+.send-btn { 
+  width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; 
+  background: var(--tg-blue); color: #fff; flex: 0 0 auto;
+  box-shadow: 0 2px 10px rgba(51, 144, 236, 0.4);
+}
+.send-btn.mic { background: transparent; box-shadow: none; color: var(--tg-text-dim); }
 .send-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
 /* ===================== НИЖНЯЯ НАВИГАЦИЯ ===================== */
@@ -265,6 +271,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
 <div class="app" id="app">
   
+  <!-- ЭКРАНЫ -->
   <div class="view-screen" id="view-chats">
     <div class="screen-header">
       <button class="btn-text">Изм.</button>
@@ -331,7 +338,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
       </button>
       <div class="avatar" id="chatAvatar" style="background: var(--tg-blue);">🤖</div>
       <div class="chat-title">
-        <div class="name" id="chatName">anonimnet AI <span style="font-size: 12px; background: var(--tg-active); padding: 2px 6px; border-radius: 4px; margin-left: 4px;">BOT</span></div>
+        <div class="name" id="chatName">anonimnet AI <span style="font-size: 11px; background: var(--tg-active); padding: 2px 6px; border-radius: 4px; margin-left: 4px;">BOT</span></div>
         <div class="status online" id="chatStatus">онлайн</div>
       </div>
       <button class="icon-btn" title="Очистить чат" onclick="clearChat()">
@@ -358,7 +365,6 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
                 <circle cx="20" cy="20" r="8"/><path d="M 15 15 L -20 -20 M 25 15 L -10 -20 M 20 25 L -15 -5" stroke-width="1.5" opacity="0.6"/>
               </g>
               <path d="M 280 130 L 285 145 L 300 150 L 285 155 L 280 170 L 275 155 L 260 150 L 275 145 Z" stroke-width="2"/>
-              <path d="M 150 120 L 153 130 L 163 133 L 153 136 L 150 146 L 147 136 L 137 133 L 147 130 Z" stroke-width="2"/>
             </g>
           </pattern>
         </defs>
@@ -410,20 +416,18 @@ function toast(text) {
 
 const EMOJIS = ['👍','❤️','🔥','😂','😮','😢','🎉','👏','🤔','💩','😍','🥰','😎','🤯','🙏','💯'];
 const SVG_PIN = `<svg class="icon-svg" style="width:14px; height:14px; fill:#7d8e9e;" viewBox="0 0 24 24"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/></svg>`;
-const SVG_MUTE = `<svg class="icon-svg" style="width:14px; height:14px; fill:#7d8e9e;" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>`;
 const SVG_DOUBLE_CHECK = `<svg class="tick" viewBox="0 0 24 24"><path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"/></svg>`;
 const SVG_MIC = `<svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>`;
 const SVG_SEND = `<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`;
 const SVG_TRASH = `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`;
 const SVG_COPY = `<svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>`;
 
-// Инициализация базы чатов
 const chats = [
   {
     id: 'ai', name: 'anonimnet AI', avatar: '🤖', color: '#3390ec',
     status: 'онлайн', time: nowTime(), unread: 0, pinned: true, muted: false,
     messages: [
-      {id:nid(), out:false, type:'text', time:nowTime(), text:'Привет! Я твой ИИ-помощник в anonimnet. 🤖\n\nЗадай мне любой вопрос, попроси рассказать шутку или написать код.', reactions:{}, mine:{}}
+      {id:nid(), out:false, type:'text', time:nowTime(), text:'Привет! Я — умный ассистент anonimnet. 🤖\n\nЯ умею:\n• Решать математику (например, 50*5)\n• Подсказывать время\n• Рассказывать шутки\n\nСпроси меня о чем-нибудь!', reactions:{}, mine:{}}
     ]
   }
 ];
@@ -432,7 +436,6 @@ let activeId = 'ai';
 const activeChat = () => chats.find(c => c.id === activeId);
 let isBotTyping = false;
 
-// Навигация
 const navItems = $$('.nav-item');
 const navIndicator = $('#navIndicator');
 const views = { chats: $('#view-chats'), contacts: $('#view-contacts'), calls: $('#view-calls'), settings: $('#view-settings') };
@@ -449,19 +452,16 @@ navItems.forEach((item, index) => {
   };
 });
 
-// Рендер списка
 function renderChatList(filter = '') {
-  const list = $('#chatList');
-  list.innerHTML = '';
+  const list = $('#chatList'); list.innerHTML = '';
   chats.filter(c => c.name.toLowerCase().includes(filter.toLowerCase())).forEach(c => {
-    const el = document.createElement('div');
-    el.className = 'chat-item';
+    const el = document.createElement('div'); el.className = 'chat-item';
     const ringHTML = `<div class="avatar-ring active"></div>`;
     let rightIcon = c.pinned ? SVG_PIN : '';
     let badge = c.unread > 0 ? `<div class="badge">${c.unread}</div>` : '';
     let lastMsg = c.messages[c.messages.length - 1];
     let sub = lastMsg ? (lastMsg.out ? 'Вы: ' : '') + (lastMsg.type === 'text' ? lastMsg.text : '🎤 Голосовое') : 'Нет сообщений';
-    if(sub.length > 30) sub = sub.substring(0, 30) + '...';
+    if(sub.length > 35) sub = sub.substring(0, 35) + '...';
 
     el.innerHTML = `
       <div class="avatar-wrap">${ringHTML}<div class="avatar" style="background:${c.color}">${c.avatar}</div></div>
@@ -476,21 +476,15 @@ function renderChatList(filter = '') {
 }
 
 function switchChat(id) {
-  activeId = id;
-  const c = activeChat(); c.unread = 0;
-  $('#chatName').textContent = c.name;
-  $('#chatStatus').textContent = c.status;
-  $('#chatAvatar').textContent = c.avatar;
-  $('#chatAvatar').style.background = c.color;
+  activeId = id; const c = activeChat(); c.unread = 0;
+  $('#chatName').textContent = c.name; $('#chatStatus').textContent = c.status;
+  $('#chatAvatar').textContent = c.avatar; $('#chatAvatar').style.background = c.color;
   renderMessages(); renderChatList($('#searchInput').value);
-  $('#app').classList.add('chat-open');
-  closeEmojiPanel(); closeContext();
+  $('#app').classList.add('chat-open'); closeEmojiPanel(); closeContext();
 }
 
-// Рендер сообщений
 function renderMessages() {
-  const box = $('#messages');
-  box.innerHTML = '';
+  const box = $('#messages'); box.innerHTML = '';
   const msgs = activeChat().messages;
   if (msgs.length) {
     const chip = document.createElement('div'); chip.className = 'date-chip'; chip.textContent = 'Сегодня'; box.appendChild(chip);
@@ -506,13 +500,11 @@ function scrollToBottom(instant) {
 
 function messageEl(m) {
   const el = document.createElement('div');
-  el.className = `msg ${m.out ? 'out' : 'in'}`;
-  el.dataset.id = m.id;
+  el.className = `msg ${m.out ? 'out' : 'in'}`; el.dataset.id = m.id;
 
   if (m.type === 'text') {
-    const t = document.createElement('div');
-    t.className = 'text';
-    t.innerHTML = m.text.replace(/```([\s\S]*?)```/g, '<pre>$1</pre>'); // Поддержка кода
+    const t = document.createElement('div'); t.className = 'text';
+    t.innerHTML = m.text.replace(/```([\s\S]*?)```/g, '<pre>$1</pre>');
     el.appendChild(t);
   } else {
     el.appendChild(voiceEl(m));
@@ -547,13 +539,52 @@ function toggleReaction(m, emoji) {
   if(box) renderReactions(box, m);
 }
 
-// === МОЗГ ИИ (Логика ответов) ===
-function getBotResponse(text) {
-  const t = text.toLowerCase();
+// ==========================================
+// УМНЫЙ ИИ-ДВИЖОК
+// ==========================================
+function getBotResponse(inputText) {
+  const t = inputText.toLowerCase().trim();
   
-  if (t.match(/привет|здравствуй|хай|ку/)) return "Привет! 👋 Чем я могу тебе помочь сегодня?";
-  if (t.match(/как дела|как ты/)) return "У меня всё отлично, я же ИИ! А у тебя как настроение?";
-  if (t.match(/шутка|анекдот|смешное/)) {
+  // 1. Математика (парсим числа)
+  const mathRegex = /(-?\d+(?:\.\d+)?)\s*([\+\-\*\/x])\s*(-?\d+(?:\.\d+)?)/;
+  const mathMatch = t.match(mathRegex);
+  if (mathMatch) {
+    const a = parseFloat(mathMatch[1]);
+    const op = mathMatch[2] === 'x' ? '*' : mathMatch[2];
+    const b = parseFloat(mathMatch[3]);
+    let result = 0;
+    if (op === '+') result = a + b;
+    else if (op === '-') result = a - b;
+    else if (op === '*') result = a * b;
+    else if (op === '/') result = b !== 0 ? (a / b) : 'на ноль делить нельзя! 🤦‍♂️';
+    
+    if (typeof result === 'number') {
+      result = Number(result.toFixed(4)); // Убираем лишние нули
+      return `Считаю: ${a} ${op} ${b} = **${result}**`;
+    }
+    return `Считаю: ${a} ${op} ${b} = ${result}`;
+  }
+
+  // 2. Время и Дата
+  if (t.match(/время|час|сколько времени/)) {
+    return `Сейчас ${nowTime()} по твоему местному времени. ⏰`;
+  }
+  if (t.match(/какое сегодня число|какая дата|какой сегодня день/)) {
+    const d = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    return `Сегодня ${d.toLocaleDateString('ru-RU', options)}. 📅`;
+  }
+
+  // 3. Приветствия и болтовня
+  if (t.match(/привет|здравствуй|хай|ку|доброе утро/)) return "Привет! 👋 Чем я могу тебе помочь?";
+  if (t.match(/как дела|как ты|как настроение/)) return "У меня всё отлично! Я же ИИ, у меня всегда 100% заряд. А у тебя как дела?";
+  if (t.match(/кто ты|что ты|расскажи о себе/)) return "Я — anonimnet AI. Мой код написан на JavaScript. Я живу прямо в твоем браузере и умею решать примеры, подсказывать время и болтать.";
+  if (t.match(/как тебя зовут|твое имя/)) return "Меня зовут anonimnet AI. Но ты можешь звать меня просто Бот. 🤖";
+  if (t.match(/спасибо|благодарю|круто|супер|молодец/)) return "Всегда пожалуйста! 😊 Обращайся, если что-то ещё понадобится.";
+  if (t.match(/пока|до свидания|бай/)) return "До встречи! Буду скучать. 👋";
+
+  // 4. Шутки и факты
+  if (t.match(/шутка|анекдот|рассмеши/)) {
     const jokes = [
       "— Почему программисты путают Хэллоуин и Рождество?\n— Потому что Oct 31 == Dec 25.",
       "— Сколько нужно программистов, чтобы вкрутить лампочку?\n— Ни одного, это проблема железа.",
@@ -561,21 +592,22 @@ function getBotResponse(text) {
     ];
     return jokes[Math.floor(Math.random() * jokes.length)];
   }
-  if (t.match(/код|напиши|программ|javascript|js/)) {
-    return "Вот простой пример на JavaScript:\n```\nfunction greet(name) {\n  console.log(`Привет, ${name}!`);\n}\ngreet('Мир');\n```\nЧто-нибудь еще?";
+  if (t.match(/факт|интересное/)) {
+    const facts = [
+      "Знаешь ли ты, что первый компьютерный баг был настоящим насекомым (мотыльком), застрявшим в реле компьютера в 1947 году? 🐛",
+      "Количество возможных комбинаций в шахматах больше, чем количество атомов во Вселенной! ♟️",
+      "Первый домен в интернете (symbolics.com) был зарегистрирован в 1985 году. 🌐"
+    ];
+    return facts[Math.floor(Math.random() * facts.length)];
   }
-  if (t.match(/кто ты|что ты умеешь/)) return "Я — anonimnet AI. Я умею отвечать на базовые вопросы, рассказывать шутки и даже писать простой код. Пока что я в разработке, но быстро учусь! 🚀";
-  if (t.match(/погода/)) return "Я пока не подключен к интернету, поэтому не знаю погоду. Но могу посоветовать одеться тепло! 🧥";
-  if (t.match(/спасибо|благодарю/)) return "Всегда пожалуйста! Рад помочь. 😊";
-  
-  // Дефолтные ответы
-  const defaults = [
-    "Интересный вопрос! К сожалению, мой создатель пока не научил меня отвечать на всё подряд. Но я работаю над этим! 😉",
-    "Хм, я об этом еще не думал. Дай мне немного времени, и я обязательно научусь отвечать на такие вопросы.",
-    "Я всего лишь бот в прототипе мессенджера. Но я запомню твой вопрос! (Нет, не запомню, я же локальный скрипт 😂)",
-    "Я бы ответил, но мои нейроны сейчас заняты обработкой космического фона. Спроси что-нибудь попроще!"
-  ];
-  return defaults[Math.floor(Math.random() * defaults.length)];
+
+  // 5. Код
+  if (t.match(/код|напиши|программ|javascript|html/)) {
+    return "Вот простой пример бесконечного цикла в JavaScript (не запускай его в консоли 😉):\n```\nwhile(true) {\n  console.log('Я работаю!');\n}\n```";
+  }
+
+  // 6. Умный fallback (если ничего не подошло)
+  return "Я пока не понимаю сложные запросы, так как работаю без доступа к интернету. Но я умею:\n1. Считать (попробуй написать: 20 * 50)\n2. Говорить время\n3. Рассказывать шутки\n\nСпроси меня об этом! 😉";
 }
 
 // Отправка сообщения
@@ -604,48 +636,38 @@ function sendText() {
   $('#messages').appendChild(messageEl(m));
   
   input.value = ''; input.style.height = 'auto'; updateComposer(); scrollToBottom();
-  
-  chat.time = nowTime();
-  renderChatList($('#searchInput').value);
+  chat.time = nowTime(); renderChatList($('#searchInput').value);
 
   // Запуск ответа ИИ
-  triggerBotReply();
+  triggerBotReply(text);
 }
 
-function triggerBotReply() {
+function triggerBotReply(userText) {
   isBotTyping = true;
-  const chat = activeChat();
-  const lastUserMsg = chat.messages[chat.messages.length - 1].text;
-
+  
   // 1. Показываем индикатор печати
   const typingId = 'typing-' + Date.now();
   const el = document.createElement('div');
-  el.className = 'msg in';
-  el.id = typingId;
+  el.className = 'msg in'; el.id = typingId;
   el.innerHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
   $('#messages').appendChild(el);
   scrollToBottom();
 
-  // 2. Ждем и отвечаем
+  // 2. Ждем и отвечаем (имитация набора текста)
+  const delay = 800 + Math.random() * 800; // 0.8 - 1.6 сек
   setTimeout(() => {
-    // Удаляем индикатор
     document.getElementById(typingId)?.remove();
     
-    // Генерируем ответ
-    const replyText = getBotResponse(lastUserMsg);
-    
-    // Добавляем сообщение от бота
+    const replyText = getBotResponse(userText);
+    const chat = activeChat();
     const m = { id: nid(), out: false, type: 'text', text: replyText, time: nowTime(), reactions: {}, mine: {} };
     chat.messages.push(m);
-    $('#messages').appendChild(messageEl(m));
     
-    // Обновляем статус
-    chat.time = nowTime();
-    renderChatList($('#searchInput').value);
-    scrollToBottom();
+    $('#messages').appendChild(messageEl(m));
+    chat.time = nowTime(); renderChatList($('#searchInput').value); scrollToBottom();
     
     isBotTyping = false;
-  }, 1500 + Math.random() * 1000); // Задержка 1.5-2.5 сек
+  }, delay);
 }
 
 // Очистка чата
