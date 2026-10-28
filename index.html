@@ -8,7 +8,7 @@
 <title>anonimnet AI</title>
 <style>
 /* ============================================================
-   ANONIMNET — Smart AI (Telegram iOS Style)
+   ANONIMNET — Smart AI Assistant (Premium Telegram Style)
    ============================================================ */
 :root {
   --tg-bg: #0e1621;
@@ -43,7 +43,6 @@ html, body {
   overscroll-behavior: none;
 }
 
-/* Эффект нажатия для всех кнопок */
 button { 
   cursor: pointer; border: none; background: none; color: inherit; outline: none; 
   transition: transform 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
@@ -139,8 +138,8 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 /* Сообщения */
 .msgs-wrap { position: relative; flex: 1; overflow: hidden; width: 100%; background: var(--tg-bg); }
 
-/* КОСМИЧЕСКИЙ ПАТТЕРН */
-.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.3; }
+/* ПАТТЕРН */
+.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.25; }
 .messages {
   position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 16px 16px 100px;
   display: flex; flex-direction: column; gap: 6px; scroll-behavior: smooth; z-index: 2;
@@ -152,7 +151,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 500; margin: 12px 0;
 }
 
-/* ИДЕАЛЬНЫЕ ПУЗЫРИ */
+/* ПУЗЫРИ */
 .msg {
   max-width: 85%; padding: 7px 12px 6px; border-radius: 16px;
   font-size: 16px; line-height: 1.35; word-break: break-word; position: relative;
@@ -202,6 +201,12 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   border: 1px solid var(--tg-border);
   border-radius: 22px; padding: 5px 6px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.composer-glass:focus-within {
+  border-color: rgba(100, 181, 239, 0.4);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
 }
 .attach-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--tg-text-dim); }
 .attach-btn svg { width: 24px; height: 24px; fill: currentColor; }
@@ -216,7 +221,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .send-btn.mic { background: transparent; box-shadow: none; color: var(--tg-text-dim); }
 .send-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
-/* ===================== НИЖНЯЯ НАВИГАЦИЯ ===================== */
+/* ===================== НАВИГАЦИЯ ===================== */
 .bottom-nav-wrapper {
   position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;
   padding: 0 16px 20px 16px; padding-bottom: calc(20px + env(safe-area-inset-bottom));
@@ -240,7 +245,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .nav-item.active svg { fill: var(--tg-accent); }
 .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
 
-/* Меню и панели */
+/* Меню */
 .ctx {
   position: fixed; z-index: 200; background: #1c2733; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); min-width: 200px; padding: 6px;
   border: 1px solid var(--tg-border); animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -271,7 +276,6 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
 <div class="app" id="app">
   
-  <!-- ЭКРАНЫ -->
   <div class="view-screen" id="view-chats">
     <div class="screen-header">
       <button class="btn-text">Изм.</button>
@@ -293,7 +297,6 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
     <div class="content-scroll" id="chatList"></div>
   </div>
 
-  <!-- Заглушки для вкладок -->
   <div class="view-screen" id="view-contacts" hidden>
     <div class="screen-header"><button class="btn-text">Группы</button><div class="header-title">Контакты</div><button class="btn-text">Создать</button></div>
     <div class="content-scroll" style="padding-top:20px;"><div style="padding: 10px 16px; border-bottom: 1px solid var(--tg-border);">Иван Иванов</div></div>
@@ -307,35 +310,19 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
     <div class="content-scroll" style="padding-top:20px;"><div style="padding: 10px 16px; display:flex; align-items:center; gap:12px;"><div class="avatar" style="background: var(--tg-blue); width: 50px; height: 50px;">A</div><div><div style="font-size: 17px; font-weight: 600;">Вы</div><div style="font-size: 14px; color: var(--tg-text-dim);">@anonimnet_user</div></div></div></div>
   </div>
 
-  <!-- НАВИГАЦИЯ -->
   <div class="bottom-nav-wrapper">
     <div class="bottom-nav">
       <div class="nav-indicator" id="navIndicator"></div>
-      <div class="nav-item" data-tab="contacts">
-        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-        Контакты
-      </div>
-      <div class="nav-item" data-tab="calls">
-        <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-        Звонки
-      </div>
-      <div class="nav-item active" data-tab="chats">
-        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-        Чаты
-      </div>
-      <div class="nav-item" data-tab="settings">
-        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-        Настройки
-      </div>
+      <div class="nav-item" data-tab="contacts"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Контакты</div>
+      <div class="nav-item" data-tab="calls"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>Звонки</div>
+      <div class="nav-item active" data-tab="chats"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>Чаты</div>
+      <div class="nav-item" data-tab="settings"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>Настройки</div>
     </div>
   </div>
 
-  <!-- ЧАТ С ИИ -->
   <main class="chat-overlay" id="chatOverlay">
     <header class="chat-header">
-      <button class="icon-btn" id="backBtn" style="margin-right: 2px;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-      </button>
+      <button class="icon-btn" id="backBtn" style="margin-right: 2px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
       <div class="avatar" id="chatAvatar" style="background: var(--tg-blue);">🤖</div>
       <div class="chat-title">
         <div class="name" id="chatName">anonimnet AI <span style="font-size: 11px; background: var(--tg-active); padding: 2px 6px; border-radius: 4px; margin-left: 4px;">BOT</span></div>
@@ -347,23 +334,14 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
     </header>
 
     <div class="msgs-wrap">
-      <!-- КОСМИЧЕСКИЙ ПАТТЕРН -->
       <svg class="doodle-bg" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="spaceDoodle" width="400" height="400" patternUnits="userSpaceOnUse">
             <g fill="none" stroke="#4a6a96" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
-              <g transform="translate(50, 50) scale(0.8)">
-                <circle cx="50" cy="50" r="25"/><ellipse cx="50" cy="50" rx="45" ry="12" transform="rotate(-15 50 50)"/>
-              </g>
-              <g transform="translate(250, 60) scale(0.8)">
-                <ellipse cx="50" cy="50" rx="35" ry="12" fill="none"/><path d="M 25 50 Q 50 15 75 50"/><circle cx="50" cy="40" r="10"/><path d="M 10 50 L 90 50"/>
-              </g>
-              <g transform="translate(320, 200) scale(0.7)">
-                <rect x="40" y="40" width="20" height="20" rx="3"/><rect x="10" y="45" width="25" height="10"/><rect x="65" y="45" width="25" height="10"/><line x1="50" y1="40" x2="50" y2="20"/><circle cx="50" cy="15" r="5"/>
-              </g>
-              <g transform="translate(100, 250)">
-                <circle cx="20" cy="20" r="8"/><path d="M 15 15 L -20 -20 M 25 15 L -10 -20 M 20 25 L -15 -5" stroke-width="1.5" opacity="0.6"/>
-              </g>
+              <g transform="translate(50, 50) scale(0.8)"><circle cx="50" cy="50" r="25"/><ellipse cx="50" cy="50" rx="45" ry="12" transform="rotate(-15 50 50)"/></g>
+              <g transform="translate(250, 60) scale(0.8)"><ellipse cx="50" cy="50" rx="35" ry="12" fill="none"/><path d="M 25 50 Q 50 15 75 50"/><circle cx="50" cy="40" r="10"/><path d="M 10 50 L 90 50"/></g>
+              <g transform="translate(320, 200) scale(0.7)"><rect x="40" y="40" width="20" height="20" rx="3"/><rect x="10" y="45" width="25" height="10"/><rect x="65" y="45" width="25" height="10"/><line x1="50" y1="40" x2="50" y2="20"/><circle cx="50" cy="15" r="5"/></g>
+              <g transform="translate(100, 250)"><circle cx="20" cy="20" r="8"/><path d="M 15 15 L -20 -20 M 25 15 L -10 -20 M 20 25 L -15 -5" stroke-width="1.5" opacity="0.6"/></g>
               <path d="M 280 130 L 285 145 L 300 150 L 285 155 L 280 170 L 275 155 L 260 150 L 275 145 Z" stroke-width="2"/>
             </g>
           </pattern>
@@ -373,16 +351,11 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
       <div class="messages" id="messages"></div>
 
-      <!-- COMPOSER -->
       <div class="composer-container">
         <div class="composer-glass" id="composerGlass">
           <div id="normalPanel" style="display:flex; width:100%; align-items:flex-end; gap:6px;">
-            <button class="attach-btn" id="emojiBtn">
-              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
-            </button>
-            <div class="input-wrap">
-              <textarea id="input" rows="1" placeholder="Спроси о чем-нибудь..."></textarea>
-            </div>
+            <button class="attach-btn" id="emojiBtn"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg></button>
+            <div class="input-wrap"><textarea id="input" rows="1" placeholder="Спроси о чем-нибудь..."></textarea></div>
             <button class="send-btn mic" id="sendBtn"></button>
           </div>
           <div id="recPanel" hidden style="display:flex; width:100%;">
@@ -415,7 +388,6 @@ function toast(text) {
 }
 
 const EMOJIS = ['👍','❤️','🔥','😂','😮','😢','🎉','👏','🤔','💩','😍','🥰','😎','🤯','🙏','💯'];
-const SVG_PIN = `<svg class="icon-svg" style="width:14px; height:14px; fill:#7d8e9e;" viewBox="0 0 24 24"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/></svg>`;
 const SVG_DOUBLE_CHECK = `<svg class="tick" viewBox="0 0 24 24"><path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"/></svg>`;
 const SVG_MIC = `<svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>`;
 const SVG_SEND = `<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`;
@@ -427,7 +399,7 @@ const chats = [
     id: 'ai', name: 'anonimnet AI', avatar: '🤖', color: '#3390ec',
     status: 'онлайн', time: nowTime(), unread: 0, pinned: true, muted: false,
     messages: [
-      {id:nid(), out:false, type:'text', time:nowTime(), text:'Привет! Я — умный ассистент anonimnet. 🤖\n\nЯ умею:\n• Решать математику (например, 50*5)\n• Подсказывать время\n• Рассказывать шутки\n\nСпроси меня о чем-нибудь!', reactions:{}, mine:{}}
+      {id:nid(), out:false, type:'text', time:nowTime(), text:'Привет! Я — твой персональный ИИ-ассистент. 🤖\n\nЯ умею:\n• Решать математику (даже словами: "5 умножить на 10")\n• Говорить время и дату\n• Рассказывать шутки и факты\n• Давать советы\n\nСпроси меня о чем-нибудь!', reactions:{}, mine:{}}
     ]
   }
 ];
@@ -435,6 +407,7 @@ const chats = [
 let activeId = 'ai';
 const activeChat = () => chats.find(c => c.id === activeId);
 let isBotTyping = false;
+let botState = { lastIntent: null };
 
 const navItems = $$('.nav-item');
 const navIndicator = $('#navIndicator');
@@ -457,8 +430,6 @@ function renderChatList(filter = '') {
   chats.filter(c => c.name.toLowerCase().includes(filter.toLowerCase())).forEach(c => {
     const el = document.createElement('div'); el.className = 'chat-item';
     const ringHTML = `<div class="avatar-ring active"></div>`;
-    let rightIcon = c.pinned ? SVG_PIN : '';
-    let badge = c.unread > 0 ? `<div class="badge">${c.unread}</div>` : '';
     let lastMsg = c.messages[c.messages.length - 1];
     let sub = lastMsg ? (lastMsg.out ? 'Вы: ' : '') + (lastMsg.type === 'text' ? lastMsg.text : '🎤 Голосовое') : 'Нет сообщений';
     if(sub.length > 35) sub = sub.substring(0, 35) + '...';
@@ -466,8 +437,8 @@ function renderChatList(filter = '') {
     el.innerHTML = `
       <div class="avatar-wrap">${ringHTML}<div class="avatar" style="background:${c.color}">${c.avatar}</div></div>
       <div class="ci-body">
-        <div class="ci-top"><div class="ci-name">${c.name}</div><div class="ci-time">${c.time} ${rightIcon}</div></div>
-        <div class="ci-bottom"><div class="ci-sub">${sub}</div>${badge}</div>
+        <div class="ci-top"><div class="ci-name">${c.name}</div><div class="ci-time">${c.time}</div></div>
+        <div class="ci-bottom"><div class="ci-sub">${sub}</div></div>
       </div>
     `;
     el.onclick = () => switchChat(c.id);
@@ -540,77 +511,167 @@ function toggleReaction(m, emoji) {
 }
 
 // ==========================================
-// УМНЫЙ ИИ-ДВИЖОК
+// ПРОДВИНУТЫЙ ИИ-ДВИЖОК
 // ==========================================
+function getJoke() {
+  const jokes = [
+    "— Почему программисты путают Хэллоуин и Рождество?\n— Потому что Oct 31 == Dec 25.",
+    "— Сколько нужно программистов, чтобы вкрутить лампочку?\n— Ни одного, это проблема железа.",
+    "— Как называется страх перед нейросетями?\n— Искусственный интеллект-фобия. (Ладно, это было плохо 😅)",
+    "— Что говорит один байт другому?\n— Мне не хватает бита до полного счастья.",
+    "— Почему у программистов путаются день и ночь?\n— Потому что они живут в 24/7.",
+    "— Как программист объясняет любовь?\n— Это бесконечный цикл с break по требованию.",
+    "— Что делает программист, когда замерзает?\n— Надевает свитер и закрывает все окна. (Windows)",
+    "— Что сказал ноль единице?\n— Ты такая толстая! (Шучу, ты просто больше меня в 1 раз)"
+  ];
+  return jokes[Math.floor(Math.random() * jokes.length)];
+}
+
+function getFact() {
+  const facts = [
+    "Знаешь ли ты, что первый компьютерный баг был настоящим насекомым (мотыльком), застрявшим в реле компьютера в 1947 году? 🐛",
+    "Количество возможных комбинаций в шахматах больше, чем количество атомов во Вселенной! ♟️",
+    "Первый домен в интернете (symbolics.com) был зарегистрирован в 1985 году. 🌐",
+    "Медоеды — настоящие бесстрашные бойцы. Они могут выдержать укусы нескольких ядовитых змей и даже уснуть после этого! 🦡",
+    "Группа The Beatles изначально называлась The Quarrymen. 🎸",
+    "На Венере день длится дольше, чем год. ☀️",
+    "У осьминогов три сердца и голубая кровь. 🐙",
+    "Человеческий глаз различает около 10 миллионов оттенков цвета. 👁️",
+    "Молния бьет в землю примерно 100 раз в секунду. ⚡",
+    "Вода замерзает быстрее, если она горячая (Эффект Мпембы). 🧊"
+  ];
+  return facts[Math.floor(Math.random() * facts.length)];
+}
+
+function getAdvice() {
+  const advices = [
+    "Мой совет: не откладывай на завтра то, что можно сделать сегодня. Но и не забывай отдыхать! 🛌",
+    "Если чувствуешь усталость — сделай перерыв. Выпей воды, разомнись. Твой мозг скажет спасибо. 💧",
+    "Хочешь выучить что-то новое? Начни с малого. 15 минут в день дадут результат через месяц! 📚",
+    "Не сравнивай себя с другими. Сравнивай себя с собой вчерашним. Прогресс — это главное. 📈",
+    "Улыбнись! Даже если грустно. Мозг воспринимает улыбку как сигнал, что всё хорошо. 😊",
+    "Пей больше воды, спи 8 часов и не сиди в телефоне перед сном. Банально, но работает! 📱🚫"
+  ];
+  return advices[Math.floor(Math.random() * advices.length)];
+}
+
 function getBotResponse(inputText) {
   const t = inputText.toLowerCase().trim();
   
-  // 1. Математика (парсим числа)
-  const mathRegex = /(-?\d+(?:\.\d+)?)\s*([\+\-\*\/x])\s*(-?\d+(?:\.\d+)?)/;
-  const mathMatch = t.match(mathRegex);
+  // 1. Математика (умная обработка слов)
+  let mathText = t.replace(/плюс/g, '+').replace(/минус/g, '-').replace(/умножить на/g, '*').replace(/умножить/g, '*').replace(/разделить на/g, '/').replace(/разделить/g, '/').replace(/х/g, '*');
+  const mathRegex = /(-?\d+(?:\.\d+)?)\s*([\+\-\*\/])\s*(-?\d+(?:\.\d+)?)/;
+  const mathMatch = mathText.match(mathRegex);
   if (mathMatch) {
     const a = parseFloat(mathMatch[1]);
-    const op = mathMatch[2] === 'x' ? '*' : mathMatch[2];
+    const op = mathMatch[2];
     const b = parseFloat(mathMatch[3]);
-    let result = 0;
+    let result;
     if (op === '+') result = a + b;
     else if (op === '-') result = a - b;
     else if (op === '*') result = a * b;
     else if (op === '/') result = b !== 0 ? (a / b) : 'на ноль делить нельзя! 🤦‍♂️';
     
     if (typeof result === 'number') {
-      result = Number(result.toFixed(4)); // Убираем лишние нули
+      result = Number(result.toFixed(4));
+      botState.lastIntent = 'math';
       return `Считаю: ${a} ${op} ${b} = **${result}**`;
     }
     return `Считаю: ${a} ${op} ${b} = ${result}`;
   }
 
-  // 2. Время и Дата
+  // 2. Контекст "Еще"
+  if (t.match(/еще|ещё|давай еще|расскажи еще/)) {
+    if (botState.lastIntent === 'joke') return getJoke();
+    if (botState.lastIntent === 'fact') return getFact();
+    if (botState.lastIntent === 'advice') return getAdvice();
+    return "Что именно рассказать еще? Шутку, факт или совет?";
+  }
+
+  // 3. Время и Дата
   if (t.match(/время|час|сколько времени/)) {
+    botState.lastIntent = 'time';
     return `Сейчас ${nowTime()} по твоему местному времени. ⏰`;
   }
   if (t.match(/какое сегодня число|какая дата|какой сегодня день/)) {
     const d = new Date();
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    botState.lastIntent = 'date';
     return `Сегодня ${d.toLocaleDateString('ru-RU', options)}. 📅`;
   }
 
-  // 3. Приветствия и болтовня
-  if (t.match(/привет|здравствуй|хай|ку|доброе утро/)) return "Привет! 👋 Чем я могу тебе помочь?";
-  if (t.match(/как дела|как ты|как настроение/)) return "У меня всё отлично! Я же ИИ, у меня всегда 100% заряд. А у тебя как дела?";
-  if (t.match(/кто ты|что ты|расскажи о себе/)) return "Я — anonimnet AI. Мой код написан на JavaScript. Я живу прямо в твоем браузере и умею решать примеры, подсказывать время и болтать.";
-  if (t.match(/как тебя зовут|твое имя/)) return "Меня зовут anonimnet AI. Но ты можешь звать меня просто Бот. 🤖";
-  if (t.match(/спасибо|благодарю|круто|супер|молодец/)) return "Всегда пожалуйста! 😊 Обращайся, если что-то ещё понадобится.";
-  if (t.match(/пока|до свидания|бай/)) return "До встречи! Буду скучать. 👋";
-
-  // 4. Шутки и факты
-  if (t.match(/шутка|анекдот|рассмеши/)) {
-    const jokes = [
-      "— Почему программисты путают Хэллоуин и Рождество?\n— Потому что Oct 31 == Dec 25.",
-      "— Сколько нужно программистов, чтобы вкрутить лампочку?\n— Ни одного, это проблема железа.",
-      "— Как называется страх перед нейросетями?\n— Искусственный интеллект-фобия. (Ладно, это было плохо 😅)"
+  // 4. Эмпатия и Настроение
+  if (t.match(/грустно|плохо|устал|депрессия|тяжело|болит/)) {
+    botState.lastIntent = 'empathy';
+    const responses = [
+      "Мне жаль это слышать... 🫂 Знай, что это временно. Попробуй отвлечься, выпей чаю. Я всегда здесь, если захочешь поговорить.",
+      "Плохие дни случаются у всех. Главное — помнить, что после дождя всегда выходит солнце. ☀️ Хочешь, расскажу шутку, чтобы поднять настроение?",
+      "Держись! Ты справишься. Иногда нужно просто выдохнуть и дать себе отдохнуть. 💙"
     ];
-    return jokes[Math.floor(Math.random() * jokes.length)];
+    return responses[Math.floor(Math.random() * responses.length)];
   }
-  if (t.match(/факт|интересное/)) {
-    const facts = [
-      "Знаешь ли ты, что первый компьютерный баг был настоящим насекомым (мотыльком), застрявшим в реле компьютера в 1947 году? 🐛",
-      "Количество возможных комбинаций в шахматах больше, чем количество атомов во Вселенной! ♟️",
-      "Первый домен в интернете (symbolics.com) был зарегистрирован в 1985 году. 🌐"
-    ];
-    return facts[Math.floor(Math.random() * facts.length)];
+  if (t.match(/рад|счастлив|отлично|супер|класс/)) {
+    botState.lastIntent = 'happy';
+    return "Я очень рад за тебя! 🥳 Пусть этот день будет лучшим. Что хорошего случилось?";
   }
 
-  // 5. Код
-  if (t.match(/код|напиши|программ|javascript|html/)) {
+  // 5. Шутки / Факты / Советы
+  if (t.match(/шутка|анекдот|рассмеши|пошути/)) {
+    botState.lastIntent = 'joke';
+    return getJoke();
+  }
+  if (t.match(/факт|интересное|расскажи что-то/)) {
+    botState.lastIntent = 'fact';
+    return getFact();
+  }
+  if (t.match(/совет|что делать|подскажи|как поступить/)) {
+    botState.lastIntent = 'advice';
+    return getAdvice();
+  }
+
+  // 6. О боте
+  if (t.match(/кто ты|что ты|расскажи о себе|как тебя зовут|твое имя/)) {
+    botState.lastIntent = 'about';
+    return "Я — anonimnet AI. 🤖 Меня написали на JavaScript. Я живу прямо в твоем браузере, поэтому могу работать даже без интернета! Я умею считать, подсказывать время, рассказывать шутки и давать советы. Чем займемся?";
+  }
+
+  // 7. Приветствия
+  if (t.match(/привет|здравствуй|хай|ку|доброе утро|добрый день|добрый вечер/)) {
+    botState.lastIntent = 'greet';
+    const greets = [
+      "Привет! 👋 Как сам?",
+      "Здравствуй! Рад тебя видеть. Чем могу помочь?",
+      "Хай! 😎 Готов к новым вопросам."
+    ];
+    return greets[Math.floor(Math.random() * greets.length)];
+  }
+  if (t.match(/пока|до свидания|бай/)) {
+    botState.lastIntent = 'bye';
+    return "До встречи! Буду скучать. Если что, я всегда онлайн. 👋";
+  }
+  if (t.match(/как дела|как ты|как настроение/)) {
+    botState.lastIntent = 'howareyou';
+    return "У меня всё отлично! Я же ИИ, у меня всегда 100% заряд. А у тебя как настроение?";
+  }
+
+  // 8. Код
+  if (t.match(/код|напиши|программ|javascript|html|css/)) {
+    botState.lastIntent = 'code';
     return "Вот простой пример бесконечного цикла в JavaScript (не запускай его в консоли 😉):\n```\nwhile(true) {\n  console.log('Я работаю!');\n}\n```";
   }
 
-  // 6. Умный fallback (если ничего не подошло)
-  return "Я пока не понимаю сложные запросы, так как работаю без доступа к интернету. Но я умею:\n1. Считать (попробуй написать: 20 * 50)\n2. Говорить время\n3. Рассказывать шутки\n\nСпроси меня об этом! 😉";
+  // 9. Умный Fallback
+  const fallbacks = [
+    "Интересная мысль. Но я пока не умею отвечать на такое. Попробуй спросить про шутку, факт или время!",
+    "Я немного туповат для таких сложных материй. 😅 Но я умею считать! Напиши: 500 * 20",
+    "Мой создатель пока не научил меня этому. Но я учусь. Может, расскажу шутку?",
+    "Хм, дай подумать... Нет, всё равно не знаю. Давай лучше я расскажу тебе факт! 🧠"
+  ];
+  botState.lastIntent = 'fallback';
+  return fallbacks[Math.floor(Math.random() * fallbacks.length)];
 }
 
-// Отправка сообщения
+// Отправка
 const input = $('#input');
 const sendBtn = $('#sendBtn');
 
@@ -638,14 +699,11 @@ function sendText() {
   input.value = ''; input.style.height = 'auto'; updateComposer(); scrollToBottom();
   chat.time = nowTime(); renderChatList($('#searchInput').value);
 
-  // Запуск ответа ИИ
   triggerBotReply(text);
 }
 
 function triggerBotReply(userText) {
   isBotTyping = true;
-  
-  // 1. Показываем индикатор печати
   const typingId = 'typing-' + Date.now();
   const el = document.createElement('div');
   el.className = 'msg in'; el.id = typingId;
@@ -653,8 +711,8 @@ function triggerBotReply(userText) {
   $('#messages').appendChild(el);
   scrollToBottom();
 
-  // 2. Ждем и отвечаем (имитация набора текста)
-  const delay = 800 + Math.random() * 800; // 0.8 - 1.6 сек
+  // Задержка зависит от длины ответа (имитация набора)
+  const delay = 800 + Math.random() * 800;
   setTimeout(() => {
     document.getElementById(typingId)?.remove();
     
@@ -670,7 +728,6 @@ function triggerBotReply(userText) {
   }, delay);
 }
 
-// Очистка чата
 window.clearChat = function() {
   if(confirm("Очистить историю сообщений?")) {
     const chat = activeChat();
