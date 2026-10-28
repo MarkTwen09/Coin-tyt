@@ -6,9 +6,10 @@
 <title>Аноним Нет</title>
 <style>
 /* ============================================================
-   АНОНИМ НЕТ — Premium Native iOS Style
+   АНОНИМ НЕТ — Premium iOS Interface (Supercharged)
    ============================================================ */
 :root {
+  /* Colors */
   --bg-base: #000000;
   --bg-panel: #1c1c1e;
   --bg-panel-hover: #2c2c2e;
@@ -18,14 +19,15 @@
   --accent: #0a84ff;
   --accent-gradient: linear-gradient(180deg, #0a84ff, #0066cc);
   
+  /* Bubbles */
   --bubble-in: #262628;
   --bubble-out: #0a84ff;
-  --bubble-out-gradient: linear-gradient(180deg, #0a84ff, #0077ed);
+  --bubble-out-gradient: linear-gradient(180deg, #1a8cff, #0077ed);
   
   --border: rgba(255, 255, 255, 0.08);
-  --glass-bg: rgba(30, 30, 32, 0.7);
+  --glass-bg: rgba(28, 28, 30, 0.65);
   --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15);
 }
 
 * {
@@ -43,7 +45,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
 .app { display: flex; height: 100vh; height: 100dvh; overflow: hidden; }
 
-/* ===================== САЙДБАР ===================== */
+/* ===================== СПИСОК ЧАТОВ ===================== */
 .sidebar {
   width: 100%; max-width: 480px; background: var(--bg-base);
   display: flex; flex-direction: column; position: relative;
@@ -55,7 +57,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   display: flex; align-items: center; justify-content: space-between;
   padding: 8px 16px; padding-top: calc(8px + env(safe-area-inset-top));
 }
-.btn-text { font-size: 17px; color: var(--accent); font-weight: 400; }
+.btn-text { font-size: 17px; color: var(--accent); font-weight: 400; letter-spacing: -0.2px; }
 .header-title { font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: 6px; letter-spacing: -0.3px; }
 .icon-btn-bg {
   width: 36px; height: 36px; border-radius: 50%; background: var(--bg-panel);
@@ -72,16 +74,18 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .search input { width: 100%; font-size: 17px; }
 .search input::placeholder { color: var(--text-dim); }
 
+/* Папки */
 .folders { display: flex; gap: 8px; padding: 8px 16px; overflow-x: auto; scrollbar-width: none; }
 .folders::-webkit-scrollbar { display: none; }
 .folder {
   background: var(--bg-panel); padding: 6px 14px; border-radius: 20px;
   font-size: 15px; font-weight: 500; white-space: nowrap; display: flex; align-items: center; gap: 6px;
-  transition: 0.2s; cursor: pointer; color: var(--text-main);
+  transition: 0.15s; cursor: pointer; color: var(--text-main); letter-spacing: -0.2px;
 }
 .folder.active { background: #3a3a3c; }
 .folder-badge { background: var(--bg-panel-hover); border-radius: 10px; padding: 1px 6px; font-size: 13px; color: var(--text-dim); }
 
+/* Список */
 .chat-list { flex: 1; overflow-y: auto; padding-bottom: 100px; }
 .chat-list::-webkit-scrollbar { display: none; }
 
@@ -93,10 +97,9 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
 .avatar-wrap { position: relative; flex: 0 0 auto; }
 .avatar {
-  width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center;
+  width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center;
   font-weight: 600; font-size: 22px; color: #fff;
-  background: linear-gradient(135deg, #2c2c2e, #1c1c1e);
-  box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.15);
 }
 .avatar-ring {
   position: absolute; inset: -2px; border-radius: 50%;
@@ -111,7 +114,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .ci-body { flex: 1; min-width: 0; border-bottom: 1px solid var(--border); padding-bottom: 8px; padding-top: 4px; }
 .chat-item:last-child .ci-body { border-bottom: none; }
 
-.ci-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+.ci-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
 .ci-name { font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px; letter-spacing: -0.3px;}
 .ci-time { font-size: 14px; color: var(--text-dim); display: flex; align-items: center; gap: 4px; }
 .ci-bottom { display: flex; justify-content: space-between; align-items: center; }
@@ -119,26 +122,27 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .ci-sub b { color: var(--text-main); font-weight: 400; }
 .badge {
   background: var(--text-dim); color: #fff; border-radius: 11px; font-size: 13px; font-weight: 600;
-  padding: 2px 7px; min-width: 22px; text-align: center;
+  padding: 2px 7px; min-width: 22px; text-align: center; letter-spacing: 0;
 }
 .badge.unread { background: var(--accent); }
 
-/* SVG Иконки в списке */
+/* Идеальные SVG-иконки */
 .icon-svg { width: 14px; height: 14px; fill: var(--text-dim); }
+.icon-svg.accent { fill: var(--accent); }
 
-/* Нижняя навигация (Liquid Glass) */
+/* Нижняя навигация */
 .bottom-nav {
   position: absolute; bottom: 20px; left: 16px; right: 16px;
-  background: rgba(28, 28, 30, 0.6); backdrop-filter: blur(35px) saturate(200%); -webkit-backdrop-filter: blur(35px) saturate(200%);
+  background: var(--glass-bg); backdrop-filter: blur(35px) saturate(200%); -webkit-backdrop-filter: blur(35px) saturate(200%);
   border: 1px solid var(--glass-border); border-radius: 30px;
   display: flex; justify-content: space-around; align-items: center;
-  padding: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1); z-index: 20;
+  padding: 6px; box-shadow: var(--glass-shadow); z-index: 20;
   padding-bottom: calc(6px + env(safe-area-inset-bottom));
 }
 .nav-item {
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
   font-size: 10px; font-weight: 500; color: var(--text-dim); padding: 6px 12px;
-  border-radius: 20px; transition: 0.2s; cursor: pointer; letter-spacing: -0.2px;
+  border-radius: 20px; transition: 0.2s; cursor: pointer; letter-spacing: -0.1px;
 }
 .nav-item.active { background: rgba(255,255,255,0.08); color: var(--accent); }
 .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
@@ -157,7 +161,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   background: rgba(0,0,0,0.75); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
   border-bottom: 1px solid var(--border); z-index: 10;
 }
-.chat-header .avatar { width: 42px; height: 42px; font-size: 16px; }
+.chat-header .avatar { width: 40px; height: 40px; font-size: 16px; }
 .chat-title { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center;}
 .chat-title .name { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 4px; letter-spacing: -0.3px; }
 .chat-title .status { font-size: 13px; color: var(--text-dim); }
@@ -166,7 +170,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
 /* Сообщения */
 .msgs-wrap { position: relative; flex: 1; overflow: hidden; }
-.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; color: rgba(255,255,255,0.025); pointer-events: none; }
+.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; color: rgba(255,255,255,0.03); pointer-events: none; }
 .messages {
   position: absolute; inset: 0; overflow-y: auto; padding: 16px 16px 110px;
   display: flex; flex-direction: column; gap: 4px; scroll-behavior: smooth;
@@ -176,14 +180,13 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .date-chip {
   align-self: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px);
   color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 500;
-  margin: 12px 0; user-select: none;
+  margin: 12px 0; user-select: none; letter-spacing: -0.1px;
 }
 
 /* 3D Сообщения */
 .msg {
-  max-width: 80%; padding: 8px 12px; border-radius: 18px;
+  max-width: 80%; padding: 7px 12px; border-radius: 18px;
   font-size: 16px; line-height: 1.35; word-break: break-word; position: relative;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
   transform-origin: bottom;
   animation: msgPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
@@ -191,10 +194,13 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   0% { opacity: 0; transform: scale(0.85) translateY(15px); }
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
-.msg.in { align-self: flex-start; background: var(--bubble-in); border-bottom-left-radius: 6px; }
+.msg.in { 
+  align-self: flex-start; background: var(--bubble-in); border-bottom-left-radius: 6px; 
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
 .msg.out {
   align-self: flex-end; background: var(--bubble-out-gradient); border-bottom-right-radius: 6px;
-  box-shadow: 0 2px 8px rgba(10, 132, 255, 0.25);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), 0 2px 8px rgba(10, 132, 255, 0.25);
 }
 
 .msg .text { white-space: pre-wrap; letter-spacing: -0.2px; }
@@ -203,8 +209,8 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   font-size: 12px; margin-top: 3px; color: rgba(255,255,255,0.6);
 }
 .msg.in .meta { color: var(--text-dim); }
-.tick { font-size: 14px; letter-spacing: -3px; color: #fff; margin-left: 2px;}
-.msg.in .tick { color: var(--accent); }
+.tick { width: 15px; height: 15px; fill: #fff; margin-left: 2px;}
+.msg.in .tick { fill: var(--accent); }
 
 /* Реакции */
 .reactions { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
@@ -239,9 +245,9 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .composer-glass {
   pointer-events: auto; display: flex; align-items: flex-end; gap: 6px;
   background: var(--glass-bg);
-  backdrop-filter: blur(35px) saturate(200%); -webkit-backdrop-filter: blur(35px) saturate(200%);
+  backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
   border: 1px solid var(--glass-border);
-  border-radius: 22px; padding: 5px 6px;
+  border-radius: 24px; padding: 5px 6px;
   box-shadow: var(--glass-shadow);
   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
@@ -260,19 +266,20 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .input-wrap { flex: 1; display: flex; align-items: flex-end; padding: 0 4px 0 0; }
 #input {
   width: 100%; resize: none; max-height: 120px; font-size: 17px;
-  padding: 7px 0; color: var(--text-main); line-height: 1.3;
+  padding: 7px 0; color: var(--text-main); line-height: 1.3; letter-spacing: -0.2px;
 }
 #input::placeholder { color: var(--text-dim); }
 
 .send-btn {
   width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
   background: var(--accent-gradient); color: #fff;
-  box-shadow: 0 2px 10px rgba(10, 132, 255, 0.4); transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.3), 0 2px 10px rgba(10, 132, 255, 0.4); 
+  transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   cursor: pointer; flex: 0 0 auto;
 }
 .send-btn:active { transform: scale(0.85); }
 .send-btn.mic { background: transparent; box-shadow: none; color: var(--text-dim); }
-.send-btn svg { width: 18px; height: 18px; fill: currentColor; }
+.send-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
 /* Запись */
 .recording-ui { display: flex; align-items: center; gap: 12px; width: 100%; padding: 0 8px; height: 36px; }
@@ -283,25 +290,27 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .rec-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.1); cursor: pointer; }
 .rec-btn.send { background: var(--accent); }
 
-/* Меню и панели */
+/* ===================== МЕНЮ И ПАНЕЛИ ===================== */
 .ctx {
-  position: fixed; z-index: 200; background: var(--bg-panel); border-radius: 14px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.8); min-width: 200px; padding: 6px;
-  border: 1px solid var(--border); animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: fixed; z-index: 200; background: rgba(40, 40, 44, 0.85); 
+  backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); min-width: 200px; padding: 6px;
+  border: 1px solid rgba(255,255,255,0.15); animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 @keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
-.ctx-emojis { display: flex; gap: 4px; padding: 6px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+.ctx-emojis { display: flex; gap: 4px; padding: 6px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 4px; }
 .ctx-emoji { font-size: 22px; padding: 4px; border-radius: 50%; transition: 0.1s; cursor: pointer; }
 .ctx-emoji:active { transform: scale(1.3); }
-.ctx-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; font-size: 16px; border-radius: 10px; transition: 0.1s; cursor: pointer; color: var(--text-main); }
-.ctx-item:active { background: var(--bg-panel-hover); }
+.ctx-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; font-size: 16px; border-radius: 10px; transition: 0.1s; cursor: pointer; color: var(--text-main); letter-spacing: -0.2px; }
+.ctx-item:active { background: rgba(255,255,255,0.1); }
 .ctx-item.danger { color: #ff453a; }
-.ctx-item svg { width: 18px; height: 18px; fill: currentColor; }
+.ctx-item svg { width: 20px; height: 20px; fill: currentColor; }
 
 .emoji-panel {
-  position: fixed; z-index: 150; background: var(--bg-panel); border-radius: 16px;
-  padding: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); border: 1px solid var(--border);
-  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  position: fixed; z-index: 150; background: rgba(40, 40, 44, 0.85); 
+  backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border-radius: 16px; padding: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); 
+  border: 1px solid rgba(255,255,255,0.15); display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
   animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .emoji-panel button { font-size: 24px; transition: 0.1s; cursor: pointer; padding: 4px; }
@@ -309,10 +318,10 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
 .toast {
   position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
+  background: rgba(40, 40, 44, 0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.15);
   color: #fff; padding: 12px 20px; border-radius: 20px; font-size: 14px;
   opacity: 0; transition: 0.3s; pointer-events: none; z-index: 300;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5); letter-spacing: -0.2px;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -463,11 +472,10 @@ function toast(text) {
 
 const EMOJIS = ['👍','❤️','🔥','😂','😮','😢','🎉','👏','🤔','💩','😍','🥰','😎','🤯','🙏','💯'];
 
-// === Идеальные SVG-иконки вместо эмодзи ===
+// === Идеальные SVG-иконки (SF Symbols Style) ===
 const SVG_PIN = `<svg class="icon-svg" viewBox="0 0 24 24"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/></svg>`;
 const SVG_MUTE = `<svg class="icon-svg" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>`;
-const SVG_CHECK = `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
-const SVG_DOUBLE_CHECK = `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"/></svg>`;
+const SVG_DOUBLE_CHECK = `<svg class="tick" viewBox="0 0 24 24"><path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"/></svg>`;
 const SVG_MIC = `<svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>`;
 const SVG_SEND = `<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`;
 const SVG_TRASH = `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`;
@@ -480,12 +488,12 @@ const chats = [
     status: 'в сети', time: '12:02', unread: 0, pinned: true, muted: false,
     messages: [
       {id:nid(), out:false, type:'text', time:'11:58', text:'Привет 👋 Добро пожаловать в Аноним Нет!', reactions:{}, mine:{}},
-      {id:nid(), out:false, type:'text', time:'11:59', text:'Оцени 3D-эффекты и жидкое стекло 🧊', reactions:{'🔥':3}, mine:{}},
-      {id:nid(), out:true, type:'text', time:'12:02', text:'Кайф! Выглядит супер свежо.', reactions:{}, mine:{}}
+      {id:nid(), out:false, type:'text', time:'11:59', text:'Оцени премиальный дизайн и жидкое стекло 🧊', reactions:{'🔥':3}, mine:{}},
+      {id:nid(), out:true, type:'text', time:'12:02', text:'Вот это уровень! Кайф!', reactions:{}, mine:{}}
     ]
   },
   {
-    id: 'secret', name: 'Секретный чат', avatar: '🔒', color: 'linear-gradient(135deg, #30d158, #248a3d)',
+    id: 'secret', name: 'Секретный чат', avatar: 'svg-lock', color: 'linear-gradient(135deg, #30d158, #248a3d)',
     status: 'был(а) недавно', time: '10:13', unread: 2, pinned: false, muted: false,
     messages: [
       {id:nid(), out:false, type:'text', time:'10:12', text:'Этот чат шифруется 🛡️', reactions:{}, mine:{}},
@@ -493,7 +501,7 @@ const chats = [
     ]
   },
   {
-    id: 'team', name: 'Команда', avatar: '👥', color: 'linear-gradient(135deg, #ff9f0a, #c93400)',
+    id: 'team', name: 'Команда', avatar: 'svg-team', color: 'linear-gradient(135deg, #ff9f0a, #c93400)',
     status: 'Вы: Принято!', time: '09:31', unread: 0, pinned: false, muted: true,
     messages: [
       {id:nid(), out:false, type:'text', time:'09:30', text:'Собираем релиз в пятницу 🚀', reactions:{'👍':5}, mine:{}},
@@ -504,6 +512,10 @@ const chats = [
 
 let activeId = 'anonym';
 const activeChat = () => chats.find(c => c.id === activeId);
+
+// === SVG иконки для аватарок ===
+const AVATAR_LOCK = `<svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>`;
+const AVATAR_TEAM = `<svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>`;
 
 // === Рендер списка чатов ===
 function renderChatList(filter = '') {
@@ -525,10 +537,14 @@ function renderChatList(filter = '') {
       badge = `<div class="badge ${c.muted ? 'muted' : 'unread'}">${c.unread}</div>`;
     }
 
+    let avatarContent = c.avatar;
+    if (c.avatar === 'svg-lock') avatarContent = AVATAR_LOCK;
+    if (c.avatar === 'svg-team') avatarContent = AVATAR_TEAM;
+
     el.innerHTML = `
       <div class="avatar-wrap">
         ${ringHTML}
-        <div class="avatar" style="background:${c.color}">${c.avatar}</div>
+        <div class="avatar" style="background:${c.color}">${avatarContent}</div>
       </div>
       <div class="ci-body">
         <div class="ci-top">
@@ -557,8 +573,9 @@ function switchChat(id) {
   $('#chatStatus').classList.toggle('online', c.status === 'в сети');
   
   const av = $('#chatAvatar');
-  av.textContent = c.avatar;
-  av.style.background = c.color;
+  if (c.avatar === 'svg-lock') { av.innerHTML = AVATAR_LOCK; av.style.background = c.color; }
+  else if (c.avatar === 'svg-team') { av.innerHTML = AVATAR_TEAM; av.style.background = c.color; }
+  else { av.textContent = c.avatar; av.style.background = c.color; }
 
   renderMessages();
   renderChatList($('#searchInput').value);
@@ -611,7 +628,7 @@ function messageEl(m) {
   // Мета
   const meta = document.createElement('div');
   meta.className = 'meta';
-  meta.innerHTML = `<span>${m.time}</span>` + (m.out ? `<span class="tick">${SVG_DOUBLE_CHECK}</span>` : '');
+  meta.innerHTML = `<span>${m.time}</span>` + (m.out ? SVG_DOUBLE_CHECK : '');
   el.appendChild(meta);
 
   // Реакции
@@ -806,7 +823,7 @@ function deleteMessage(id) {
   if(idx < 0) return;
   const el = document.querySelector(`.msg[data-id="${id}"]`);
   if(el) {
-    el.style.transform = 'scale(0.8)';
+    el.style.transform = 'scale(0.8) translateY(10px)';
     el.style.opacity = '0';
     setTimeout(() => {
       chat.messages.splice(idx, 1);
