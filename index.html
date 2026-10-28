@@ -6,7 +6,7 @@
 <title>Аноним Нет</title>
 <style>
 /* ============================================================
-   АНОНИМ НЕТ — Telegram iOS Style (Ultimate 3D Liquid Glass)
+   АНОНИМ НЕТ — Premium Native iOS Style
    ============================================================ */
 :root {
   --bg-base: #000000;
@@ -16,28 +16,30 @@
   --text-main: #ffffff;
   --text-dim: #8e8e93;
   --accent: #0a84ff;
-  --accent-gradient: linear-gradient(180deg, #0a84ff, #006ee6);
+  --accent-gradient: linear-gradient(180deg, #0a84ff, #0066cc);
   
   --bubble-in: #262628;
   --bubble-out: #0a84ff;
   --bubble-out-gradient: linear-gradient(180deg, #0a84ff, #0077ed);
   
   --border: rgba(255, 255, 255, 0.08);
-  --glass-bg: rgba(35, 35, 38, 0.65);
-  --glass-border: rgba(255, 255, 255, 0.15);
-  --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  --glass-bg: rgba(30, 30, 32, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 * {
   box-sizing: border-box; margin: 0; padding: 0; 
   -webkit-tap-highlight-color: transparent;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 [hidden] { display: none !important; }
 html, body { height: 100%; overflow: hidden; background: var(--bg-base); color: var(--text-main); }
 
 button { cursor: pointer; border: none; background: none; color: inherit; outline: none; }
-input, textarea { border: none; outline: none; background: none; color: inherit; }
+input, textarea { border: none; outline: none; background: none; color: inherit; font-family: inherit; }
 
 .app { display: flex; height: 100vh; height: 100dvh; overflow: hidden; }
 
@@ -45,28 +47,28 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .sidebar {
   width: 100%; max-width: 480px; background: var(--bg-base);
   display: flex; flex-direction: column; position: relative;
-  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
   z-index: 10;
 }
 
 .sb-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 16px; padding-top: calc(12px + env(safe-area-inset-top));
+  padding: 8px 16px; padding-top: calc(8px + env(safe-area-inset-top));
 }
-.btn-text { font-size: 17px; color: var(--text-main); }
-.btn-text.dim { color: var(--text-dim); }
-.header-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.btn-text { font-size: 17px; color: var(--accent); font-weight: 400; }
+.header-title { font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: 6px; letter-spacing: -0.3px; }
 .icon-btn-bg {
   width: 36px; height: 36px; border-radius: 50%; background: var(--bg-panel);
-  display: grid; place-items: center; font-size: 18px; transition: 0.2s;
+  display: grid; place-items: center; transition: 0.2s;
 }
 .icon-btn-bg:active { transform: scale(0.92); background: var(--bg-panel-hover); }
 
 .search-wrap { padding: 8px 16px; }
 .search {
-  width: 100%; background: var(--bg-search); border-radius: 12px;
-  padding: 8px 12px; display: flex; align-items: center; gap: 8px;
+  width: 100%; background: var(--bg-search); border-radius: 10px;
+  padding: 7px 12px; display: flex; align-items: center; gap: 6px;
 }
+.search svg { width: 18px; height: 18px; fill: var(--text-dim); }
 .search input { width: 100%; font-size: 17px; }
 .search input::placeholder { color: var(--text-dim); }
 
@@ -75,65 +77,70 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .folder {
   background: var(--bg-panel); padding: 6px 14px; border-radius: 20px;
   font-size: 15px; font-weight: 500; white-space: nowrap; display: flex; align-items: center; gap: 6px;
-  transition: 0.2s; cursor: pointer;
+  transition: 0.2s; cursor: pointer; color: var(--text-main);
 }
 .folder.active { background: #3a3a3c; }
-.folder-badge { background: var(--bg-panel-hover); border-radius: 10px; padding: 1px 6px; font-size: 13px; }
+.folder-badge { background: var(--bg-panel-hover); border-radius: 10px; padding: 1px 6px; font-size: 13px; color: var(--text-dim); }
 
 .chat-list { flex: 1; overflow-y: auto; padding-bottom: 100px; }
 .chat-list::-webkit-scrollbar { display: none; }
 
 .chat-item {
-  display: flex; align-items: center; gap: 12px; padding: 10px 16px;
-  transition: background 0.2s; cursor: pointer;
+  display: flex; align-items: center; gap: 12px; padding: 8px 16px;
+  transition: background 0.15s; cursor: pointer;
 }
 .chat-item:active { background: var(--bg-panel); }
 
 .avatar-wrap { position: relative; flex: 0 0 auto; }
 .avatar {
   width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center;
-  font-weight: 600; font-size: 22px; color: #fff; background: #3a3a3c;
+  font-weight: 600; font-size: 22px; color: #fff;
+  background: linear-gradient(135deg, #2c2c2e, #1c1c1e);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
 }
 .avatar-ring {
   position: absolute; inset: -2px; border-radius: 50%;
-  background: conic-gradient(from 0deg, #0a84ff, #30d158, #0a84ff);
-  z-index: -1; opacity: 0;
+  background: conic-gradient(from 0deg, var(--accent), #30d158, var(--accent));
+  z-index: -1; opacity: 0; transition: 0.3s;
 }
 .avatar-ring.active { opacity: 1; }
 .avatar-ring::after {
   content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--bg-base);
 }
 
-.ci-body { flex: 1; min-width: 0; border-bottom: 1px solid var(--border); padding-bottom: 10px; padding-top: 2px; }
+.ci-body { flex: 1; min-width: 0; border-bottom: 1px solid var(--border); padding-bottom: 8px; padding-top: 4px; }
 .chat-item:last-child .ci-body { border-bottom: none; }
 
 .ci-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
-.ci-name { font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px;}
+.ci-name { font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px; letter-spacing: -0.3px;}
 .ci-time { font-size: 14px; color: var(--text-dim); display: flex; align-items: center; gap: 4px; }
 .ci-bottom { display: flex; justify-content: space-between; align-items: center; }
-.ci-sub { font-size: 15px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ci-sub { font-size: 15px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.2px; }
+.ci-sub b { color: var(--text-main); font-weight: 400; }
 .badge {
   background: var(--text-dim); color: #fff; border-radius: 11px; font-size: 13px; font-weight: 600;
   padding: 2px 7px; min-width: 22px; text-align: center;
 }
 .badge.unread { background: var(--accent); }
-.icon-muted { font-size: 14px; color: var(--text-dim); }
 
-/* Нижняя навигация */
+/* SVG Иконки в списке */
+.icon-svg { width: 14px; height: 14px; fill: var(--text-dim); }
+
+/* Нижняя навигация (Liquid Glass) */
 .bottom-nav {
   position: absolute; bottom: 20px; left: 16px; right: 16px;
-  background: var(--glass-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+  background: rgba(28, 28, 30, 0.6); backdrop-filter: blur(35px) saturate(200%); -webkit-backdrop-filter: blur(35px) saturate(200%);
   border: 1px solid var(--glass-border); border-radius: 30px;
   display: flex; justify-content: space-around; align-items: center;
-  padding: 6px; box-shadow: var(--glass-shadow); z-index: 20;
+  padding: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1); z-index: 20;
   padding-bottom: calc(6px + env(safe-area-inset-bottom));
 }
 .nav-item {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
   font-size: 10px; font-weight: 500; color: var(--text-dim); padding: 6px 12px;
-  border-radius: 20px; transition: 0.2s; cursor: pointer;
+  border-radius: 20px; transition: 0.2s; cursor: pointer; letter-spacing: -0.2px;
 }
-.nav-item.active { background: rgba(255,255,255,0.1); color: var(--accent); }
+.nav-item.active { background: rgba(255,255,255,0.08); color: var(--accent); }
 .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
 
 /* ===================== ЧАТ ===================== */
@@ -145,24 +152,24 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .app.chat-open .chat { transform: translateX(0); }
 
 .chat-header {
-  display: flex; align-items: center; gap: 12px; padding: 8px 12px;
+  display: flex; align-items: center; gap: 10px; padding: 8px 12px;
   padding-top: calc(8px + env(safe-area-inset-top));
-  background: rgba(0,0,0,0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
   border-bottom: 1px solid var(--border); z-index: 10;
 }
 .chat-header .avatar { width: 42px; height: 42px; font-size: 16px; }
-.chat-title { flex: 1; min-width: 0; }
-.chat-title .name { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.chat-title { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center;}
+.chat-title .name { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 4px; letter-spacing: -0.3px; }
 .chat-title .status { font-size: 13px; color: var(--text-dim); }
 .chat-title .status.online { color: var(--accent); }
-.back-btn { color: var(--accent); font-size: 20px; margin-right: -4px; display: grid; place-items: center; cursor: pointer; }
+.back-btn { color: var(--accent); font-size: 20px; margin-right: 2px; display: grid; place-items: center; cursor: pointer; padding: 4px;}
 
 /* Сообщения */
 .msgs-wrap { position: relative; flex: 1; overflow: hidden; }
-.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; color: rgba(255,255,255,0.03); pointer-events: none; }
+.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; color: rgba(255,255,255,0.025); pointer-events: none; }
 .messages {
   position: absolute; inset: 0; overflow-y: auto; padding: 16px 16px 110px;
-  display: flex; flex-direction: column; gap: 6px; scroll-behavior: smooth;
+  display: flex; flex-direction: column; gap: 4px; scroll-behavior: smooth;
 }
 .messages::-webkit-scrollbar { display: none; }
 
@@ -176,117 +183,120 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .msg {
   max-width: 80%; padding: 8px 12px; border-radius: 18px;
   font-size: 16px; line-height: 1.35; word-break: break-word; position: relative;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
   transform-origin: bottom;
   animation: msgPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 @keyframes msgPop {
-  0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+  0% { opacity: 0; transform: scale(0.85) translateY(15px); }
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 .msg.in { align-self: flex-start; background: var(--bubble-in); border-bottom-left-radius: 6px; }
 .msg.out {
   align-self: flex-end; background: var(--bubble-out-gradient); border-bottom-right-radius: 6px;
-  box-shadow: 0 2px 10px rgba(10, 132, 255, 0.3);
+  box-shadow: 0 2px 8px rgba(10, 132, 255, 0.25);
 }
 
-.msg .text { white-space: pre-wrap; }
+.msg .text { white-space: pre-wrap; letter-spacing: -0.2px; }
 .msg .meta {
   display: flex; align-items: center; justify-content: flex-end; gap: 4px;
-  font-size: 12px; margin-top: 4px; color: rgba(255,255,255,0.6);
+  font-size: 12px; margin-top: 3px; color: rgba(255,255,255,0.6);
 }
 .msg.in .meta { color: var(--text-dim); }
-.tick { font-size: 14px; letter-spacing: -3px; color: #fff; }
+.tick { font-size: 14px; letter-spacing: -3px; color: #fff; margin-left: 2px;}
 .msg.in .tick { color: var(--accent); }
 
 /* Реакции */
-.reactions { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+.reactions { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
 .reaction {
   background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
   border-radius: 12px; padding: 2px 8px; font-size: 14px; color: #fff;
-  display: flex; align-items: center; gap: 4px; transition: 0.2s;
+  display: flex; align-items: center; gap: 4px; transition: 0.15s;
   animation: reactionPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  cursor: pointer;
+  cursor: pointer; border: 1px solid transparent;
 }
 @keyframes reactionPop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
-.reaction.mine { background: rgba(10, 132, 255, 0.4); border: 1px solid rgba(10, 132, 255, 0.6); }
+.reaction.mine { background: rgba(10, 132, 255, 0.5); border-color: rgba(10, 132, 255, 0.8); }
 .reaction:active { transform: scale(0.9); }
 
 /* Голосовые */
-.voice-msg { display: flex; align-items: center; gap: 12px; min-width: 180px; }
-.play-btn { width: 32px; height: 32px; border-radius: 50%; background: #fff; color: #000; display: grid; place-items: center; font-size: 12px; cursor: pointer; }
+.voice-msg { display: flex; align-items: center; gap: 10px; min-width: 180px; }
+.play-btn { width: 32px; height: 32px; border-radius: 50%; background: #fff; color: #000; display: grid; place-items: center; font-size: 12px; cursor: pointer; padding-left: 2px;}
 .msg.in .play-btn { background: var(--accent); color: #fff; }
 .wave { display: flex; align-items: center; gap: 2px; height: 24px; flex: 1; }
 .wave span { width: 3px; border-radius: 2px; background: rgba(255,255,255,0.4); transition: 0.2s; }
 .msg.in .wave span { background: rgba(255,255,255,0.2); }
 .wave span.played { background: #fff; }
 
-/* ===================== COMPOSER (Liquid Glass) ===================== */
+/* ===================== COMPOSER (Liquid Glass 3D) ===================== */
 .composer-container {
   position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 16px;
   padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);
   z-index: 20; pointer-events: none;
 }
 
 .composer-glass {
-  pointer-events: auto; display: flex; align-items: flex-end; gap: 8px;
+  pointer-events: auto; display: flex; align-items: flex-end; gap: 6px;
   background: var(--glass-bg);
-  backdrop-filter: blur(30px) saturate(200%); -webkit-backdrop-filter: blur(30px) saturate(200%);
+  backdrop-filter: blur(35px) saturate(200%); -webkit-backdrop-filter: blur(35px) saturate(200%);
   border: 1px solid var(--glass-border);
-  border-radius: 24px; padding: 6px;
+  border-radius: 22px; padding: 5px 6px;
   box-shadow: var(--glass-shadow);
   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 .composer-glass:focus-within {
   border-color: rgba(255,255,255,0.3);
-  box-shadow: 0 15px 50px rgba(0,0,0,0.8), inset 0 1px 3px rgba(255,255,255,0.4);
+  box-shadow: 0 15px 50px rgba(0,0,0,0.9), inset 0 1px 3px rgba(255,255,255,0.4);
 }
 
 .attach-btn {
   width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
-  color: var(--text-dim); font-size: 20px; transition: 0.2s; cursor: pointer;
+  color: var(--text-dim); transition: 0.2s; cursor: pointer;
 }
 .attach-btn:active { background: rgba(255,255,255,0.1); transform: scale(0.9); }
+.attach-btn svg { width: 24px; height: 24px; fill: currentColor; }
 
-.input-wrap { flex: 1; display: flex; align-items: flex-end; padding: 0 4px; }
+.input-wrap { flex: 1; display: flex; align-items: flex-end; padding: 0 4px 0 0; }
 #input {
   width: 100%; resize: none; max-height: 120px; font-size: 17px;
-  padding: 8px 0; color: var(--text-main); line-height: 1.3;
+  padding: 7px 0; color: var(--text-main); line-height: 1.3;
 }
 #input::placeholder { color: var(--text-dim); }
 
 .send-btn {
-  width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
-  background: var(--accent-gradient); color: #fff; font-size: 16px;
-  box-shadow: 0 4px 12px rgba(10, 132, 255, 0.4); transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  cursor: pointer;
+  width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent-gradient); color: #fff;
+  box-shadow: 0 2px 10px rgba(10, 132, 255, 0.4); transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer; flex: 0 0 auto;
 }
 .send-btn:active { transform: scale(0.85); }
 .send-btn.mic { background: transparent; box-shadow: none; color: var(--text-dim); }
+.send-btn svg { width: 18px; height: 18px; fill: currentColor; }
 
 /* Запись */
 .recording-ui { display: flex; align-items: center; gap: 12px; width: 100%; padding: 0 8px; height: 36px; }
 .rec-dot { width: 10px; height: 10px; border-radius: 50%; background: #ff453a; animation: blink 1s infinite; }
-@keyframes blink { 50% { opacity: 0.3; } }
-.rec-time { font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
+@keyframes blink { 50% { opacity: 0.2; } }
+.rec-time { font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: 0.5px; }
 .rec-hint { flex: 1; color: var(--text-dim); font-size: 15px; }
 .rec-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.1); cursor: pointer; }
 .rec-btn.send { background: var(--accent); }
 
 /* Меню и панели */
 .ctx {
-  position: fixed; z-index: 200; background: var(--bg-panel); border-radius: 16px;
+  position: fixed; z-index: 200; background: var(--bg-panel); border-radius: 14px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.8); min-width: 200px; padding: 6px;
   border: 1px solid var(--border); animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-@keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
 .ctx-emojis { display: flex; gap: 4px; padding: 6px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
 .ctx-emoji { font-size: 22px; padding: 4px; border-radius: 50%; transition: 0.1s; cursor: pointer; }
 .ctx-emoji:active { transform: scale(1.3); }
-.ctx-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; font-size: 16px; border-radius: 10px; transition: 0.1s; cursor: pointer; }
+.ctx-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; font-size: 16px; border-radius: 10px; transition: 0.1s; cursor: pointer; color: var(--text-main); }
 .ctx-item:active { background: var(--bg-panel-hover); }
 .ctx-item.danger { color: #ff453a; }
+.ctx-item svg { width: 18px; height: 18px; fill: currentColor; }
 
 .emoji-panel {
   position: fixed; z-index: 150; background: var(--bg-panel); border-radius: 16px;
@@ -294,7 +304,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
   animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.emoji-panel button { font-size: 24px; transition: 0.1s; cursor: pointer; }
+.emoji-panel button { font-size: 24px; transition: 0.1s; cursor: pointer; padding: 4px; }
 .emoji-panel button:active { transform: scale(1.3); }
 
 .toast {
@@ -302,6 +312,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
   color: #fff; padding: 12px 20px; border-radius: 20px; font-size: 14px;
   opacity: 0; transition: 0.3s; pointer-events: none; z-index: 300;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -317,14 +328,16 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   <!-- СПИСОК ЧАТОВ -->
   <aside class="sidebar" id="sidebar">
     <div class="sb-header">
-      <button class="btn-text dim">Изм.</button>
+      <button class="btn-text">Изм.</button>
       <div class="header-title">✈️ Аноним Нет</div>
-      <button class="icon-btn-bg" id="themeBtn">✎</button>
+      <button class="icon-btn-bg">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </button>
     </div>
 
     <div class="search-wrap">
       <div class="search">
-        <span style="color:var(--text-dim); font-size: 16px;">🔍</span>
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
         <input type="text" id="searchInput" placeholder="Поиск">
       </div>
     </div>
@@ -369,10 +382,13 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
         <div class="name" id="chatName">Аноним</div>
         <div class="status" id="chatStatus">в сети</div>
       </div>
-      <button class="icon-btn" style="color:var(--accent); font-size: 20px;">📞</button>
+      <button class="icon-btn-bg" style="background:transparent">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="var(--accent)"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+      </button>
     </header>
 
     <div class="msgs-wrap">
+      <!-- Фон Doodle -->
       <svg class="doodle-bg" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="doodle" width="400" height="400" patternUnits="userSpaceOnUse">
@@ -391,20 +407,18 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
       <div class="messages" id="messages"></div>
 
-      <!-- COMPOSER -->
+      <!-- COMPOSER (3D Liquid Glass) -->
       <div class="composer-container">
         <div class="composer-glass" id="composerGlass">
           
-          <div id="normalPanel" style="display:flex; width:100%; align-items:flex-end; gap:8px;">
+          <div id="normalPanel" style="display:flex; width:100%; align-items:flex-end; gap:6px;">
             <button class="attach-btn" id="emojiBtn">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
             </button>
             <div class="input-wrap">
               <textarea id="input" rows="1" placeholder="Сообщение"></textarea>
             </div>
-            <button class="send-btn mic" id="sendBtn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-            </button>
+            <button class="send-btn mic" id="sendBtn"></button>
           </div>
 
           <div id="recPanel" hidden style="display:flex; width:100%;">
@@ -412,9 +426,11 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
               <div class="rec-dot"></div>
               <div class="rec-time" id="recTime">0:00</div>
               <div class="rec-hint">Запись...</div>
-              <button class="rec-btn" id="recCancel">✕</button>
+              <button class="rec-btn" id="recCancel">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
               <button class="rec-btn send" id="recSend">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
               </button>
             </div>
           </div>
@@ -447,10 +463,20 @@ function toast(text) {
 
 const EMOJIS = ['👍','❤️','🔥','😂','😮','😢','🎉','👏','🤔','💩','😍','🥰','😎','🤯','🙏','💯'];
 
-// === Данные (Чистые и стильные) ===
+// === Идеальные SVG-иконки вместо эмодзи ===
+const SVG_PIN = `<svg class="icon-svg" viewBox="0 0 24 24"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/></svg>`;
+const SVG_MUTE = `<svg class="icon-svg" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>`;
+const SVG_CHECK = `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
+const SVG_DOUBLE_CHECK = `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"/></svg>`;
+const SVG_MIC = `<svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>`;
+const SVG_SEND = `<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`;
+const SVG_TRASH = `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`;
+const SVG_COPY = `<svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>`;
+
+// === Данные ===
 const chats = [
   {
-    id: 'anonym', name: 'Аноним', avatar: 'А', color: '#0a84ff',
+    id: 'anonym', name: 'Аноним', avatar: 'А', color: 'linear-gradient(135deg, #0a84ff, #0066cc)',
     status: 'в сети', time: '12:02', unread: 0, pinned: true, muted: false,
     messages: [
       {id:nid(), out:false, type:'text', time:'11:58', text:'Привет 👋 Добро пожаловать в Аноним Нет!', reactions:{}, mine:{}},
@@ -459,7 +485,7 @@ const chats = [
     ]
   },
   {
-    id: 'secret', name: 'Секретный чат', avatar: '🔒', color: '#30d158',
+    id: 'secret', name: 'Секретный чат', avatar: '🔒', color: 'linear-gradient(135deg, #30d158, #248a3d)',
     status: 'был(а) недавно', time: '10:13', unread: 2, pinned: false, muted: false,
     messages: [
       {id:nid(), out:false, type:'text', time:'10:12', text:'Этот чат шифруется 🛡️', reactions:{}, mine:{}},
@@ -467,7 +493,7 @@ const chats = [
     ]
   },
   {
-    id: 'team', name: 'Команда', avatar: '👥', color: '#ff9f0a',
+    id: 'team', name: 'Команда', avatar: '👥', color: 'linear-gradient(135deg, #ff9f0a, #c93400)',
     status: 'Вы: Принято!', time: '09:31', unread: 0, pinned: false, muted: true,
     messages: [
       {id:nid(), out:false, type:'text', time:'09:30', text:'Собираем релиз в пятницу 🚀', reactions:{'👍':5}, mine:{}},
@@ -488,12 +514,11 @@ function renderChatList(filter = '') {
     const el = document.createElement('div');
     el.className = 'chat-item';
     
-    // Аватарка с кольцом, если онлайн
     const ringHTML = c.status === 'в сети' ? `<div class="avatar-ring active"></div>` : '';
     
     let rightIcon = '';
-    if (c.pinned) rightIcon = `<span class="icon-muted">📌</span>`;
-    else if (c.muted) rightIcon = `<span class="icon-muted">🔕</span>`;
+    if (c.pinned) rightIcon = SVG_PIN;
+    else if (c.muted) rightIcon = SVG_MUTE;
 
     let badge = '';
     if (c.unread > 0) {
@@ -507,7 +532,7 @@ function renderChatList(filter = '') {
       </div>
       <div class="ci-body">
         <div class="ci-top">
-          <div class="ci-name">${c.name} ${c.muted ? '<span class="icon-muted" style="font-size:14px">🔕</span>' : ''}</div>
+          <div class="ci-name">${c.name} ${c.muted ? SVG_MUTE : ''}</div>
           <div class="ci-time">${c.time} ${rightIcon}</div>
         </div>
         <div class="ci-bottom">
@@ -583,10 +608,10 @@ function messageEl(m) {
     el.appendChild(voiceEl(m));
   }
 
-  // Мета (время + галочки)
+  // Мета
   const meta = document.createElement('div');
   meta.className = 'meta';
-  meta.innerHTML = `<span>${m.time}</span>` + (m.out ? `<span class="tick">✓✓</span>` : '');
+  meta.innerHTML = `<span>${m.time}</span>` + (m.out ? `<span class="tick">${SVG_DOUBLE_CHECK}</span>` : '');
   el.appendChild(meta);
 
   // Реакции
@@ -597,7 +622,7 @@ function messageEl(m) {
 
   attachContext(el, m);
 
-  // Двойной клик по сообщению = сердечко
+  // Двойной клик
   el.addEventListener('dblclick', e => {
     if(window.getSelection().toString()) return;
     e.preventDefault();
@@ -637,7 +662,7 @@ function voiceEl(m) {
   const bars = [...wave.children];
 
   if(!v.url) {
-    btn.onclick = e => { e.stopPropagation(); toast('Демо голосовое (без аудио)'); };
+    btn.onclick = e => { e.stopPropagation(); toast('Демо голосовое'); };
     return wrap;
   }
 
@@ -707,12 +732,11 @@ function toggleReaction(m, emoji) {
   if(box) renderReactions(box, m);
 }
 
-// === Контекстное меню (ПКМ / Долгий тап) ===
+// === Контекстное меню ===
 let ctxEl = null;
 function closeContext() { if(ctxEl) { ctxEl.remove(); ctxEl = null; } }
 document.addEventListener('click', closeContext);
 document.addEventListener('contextmenu', e => {
-  // Закрываем меню при клике вне сообщения
   if (!e.target.closest('.msg')) closeContext();
 });
 
@@ -721,7 +745,6 @@ function openContext(x, y, m) {
   const menu = document.createElement('div');
   menu.className = 'ctx';
 
-  // Эмодзи
   const row = document.createElement('div');
   row.className = 'ctx-emojis';
   EMOJIS.slice(0, 7).forEach(em => {
@@ -733,10 +756,9 @@ function openContext(x, y, m) {
   });
   menu.appendChild(row);
 
-  // Копировать
   const copy = document.createElement('button');
   copy.className = 'ctx-item';
-  copy.innerHTML = '<span>📋</span> Копировать';
+  copy.innerHTML = `${SVG_COPY} Копировать`;
   copy.onclick = e => {
     e.stopPropagation();
     if(m.type === 'text') navigator.clipboard.writeText(m.text);
@@ -745,16 +767,14 @@ function openContext(x, y, m) {
   };
   menu.appendChild(copy);
 
-  // Удалить
   const del = document.createElement('button');
   del.className = 'ctx-item danger';
-  del.innerHTML = '<span>🗑</span> Удалить';
+  del.innerHTML = `${SVG_TRASH} Удалить`;
   del.onclick = e => { e.stopPropagation(); deleteMessage(m.id); closeContext(); };
   menu.appendChild(del);
 
   document.body.appendChild(menu);
   
-  // Позиционирование
   const r = menu.getBoundingClientRect();
   menu.style.left = Math.max(10, Math.min(x, window.innerWidth - r.width - 10)) + 'px';
   menu.style.top = Math.max(10, Math.min(y, window.innerHeight - r.height - 10)) + 'px';
@@ -762,14 +782,12 @@ function openContext(x, y, m) {
 }
 
 function attachContext(el, m) {
-  // ПКМ
   el.addEventListener('contextmenu', e => { 
     e.preventDefault(); 
     e.stopPropagation();
     openContext(e.clientX, e.clientY, m); 
   });
   
-  // Долгий тап для мобилок
   let timer;
   el.addEventListener('touchstart', e => {
     const touch = e.touches[0];
@@ -805,10 +823,10 @@ const sendBtn = $('#sendBtn');
 function updateComposer() {
   if(input.value.trim().length > 0) {
     sendBtn.classList.remove('mic');
-    sendBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>`;
+    sendBtn.innerHTML = SVG_SEND;
   } else {
     sendBtn.classList.add('mic');
-    sendBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>`;
+    sendBtn.innerHTML = SVG_MIC;
   }
 }
 
@@ -818,7 +836,6 @@ input.addEventListener('input', () => {
   updateComposer();
 });
 
-// Отправка по Enter
 input.addEventListener('keydown', e => {
   if(e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
@@ -840,22 +857,19 @@ function sendText() {
   const m = { id: nid(), out: true, type: 'text', text, time: nowTime(), reactions: {}, mine: {} };
   chat.messages.push(m);
   
-  // Плавно добавляем в DOM
   $('#messages').appendChild(messageEl(m));
   
-  // Очищаем инпут
   input.value = '';
   input.style.height = 'auto';
   updateComposer();
   scrollToBottom();
   
-  // Обновляем превью в списке
   chat.status = 'Вы: ' + text;
   chat.time = nowTime();
   renderChatList($('#searchInput').value);
 }
 
-// === Запись голосового ===
+// === Запись ===
 let mediaRecorder, chunks = [], recStart = 0, recTimerId, recStream, recSendFlag = false;
 
 async function startRecording() {
@@ -919,7 +933,7 @@ function onRecordingStop() {
 $('#recCancel').onclick = () => stopRecording(false);
 $('#recSend').onclick = () => stopRecording(true);
 
-// === Эмодзи панель ===
+// === Эмодзи ===
 let emojiPanel = null;
 function closeEmojiPanel() { if(emojiPanel) { emojiPanel.remove(); emojiPanel = null; } }
 
@@ -959,6 +973,7 @@ $('#backBtn').onclick = () => $('#app').classList.remove('chat-open');
 $('#searchInput').addEventListener('input', e => renderChatList(e.target.value));
 
 // Инициализация
+updateComposer();
 renderChatList();
 switchChat('anonym');
 </script>
