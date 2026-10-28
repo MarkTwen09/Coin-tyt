@@ -5,13 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>anonimnet</title>
+<title>anonimnet AI</title>
 <style>
 /* ============================================================
-   ANONIMNET — True Telegram iOS Clone
+   ANONIMNET — AI Assistant (Telegram iOS Style)
    ============================================================ */
 :root {
-  /* Exact Telegram iOS Dark Theme Colors */
   --tg-bg: #0e1621;
   --tg-panel: #17212b;
   --tg-search: #242f3d;
@@ -39,11 +38,8 @@
 
 [hidden] { display: none !important; }
 html, body { 
-  height: 100%; 
-  height: 100dvh; 
-  overflow: hidden; 
-  background: var(--tg-bg); 
-  color: var(--tg-text);
+  height: 100%; height: 100dvh; overflow: hidden; 
+  background: var(--tg-bg); color: var(--tg-text);
   overscroll-behavior: none;
 }
 
@@ -51,17 +47,12 @@ button { cursor: pointer; border: none; background: none; color: inherit; outlin
 button:active { transform: scale(0.9); }
 input, textarea { border: none; outline: none; background: none; color: inherit; font-family: inherit; }
 
-.app { 
-  position: absolute; inset: 0; 
-  display: flex; flex-direction: column; 
-  overflow: hidden; width: 100vw;
-}
+.app { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; width: 100vw; }
 
 /* ===================== ЭКРАНЫ ===================== */
 .view-screen {
   position: absolute; inset: 0; display: flex; flex-direction: column;
-  background: var(--tg-bg);
-  animation: viewFade 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  background: var(--tg-bg); animation: viewFade 0.3s ease;
 }
 @keyframes viewFade { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
@@ -73,6 +64,9 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .header-title { font-size: 17px; font-weight: 600; letter-spacing: -0.4px; }
 .btn-text { font-size: 17px; color: var(--tg-accent); font-weight: 400; }
 .icon-btn { display: grid; place-items: center; color: var(--tg-accent); padding: 4px; }
+
+.content-scroll { flex: 1; overflow-y: auto; padding-bottom: 120px; background: var(--tg-panel); }
+.content-scroll::-webkit-scrollbar { display: none; }
 
 /* ===================== СПИСОК ЧАТОВ ===================== */
 .search-wrap { padding: 8px 16px; background: var(--tg-panel); }
@@ -93,13 +87,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 }
 .folder.active { background: var(--tg-active); }
 
-.content-scroll { flex: 1; overflow-y: auto; padding-bottom: 120px; background: var(--tg-panel); }
-.content-scroll::-webkit-scrollbar { display: none; }
-
-.chat-item {
-  display: flex; align-items: center; gap: 12px; padding: 8px 16px;
-  cursor: pointer;
-}
+.chat-item { display: flex; align-items: center; gap: 12px; padding: 8px 16px; cursor: pointer; }
 .chat-item:active { background: var(--tg-hover); }
 
 .avatar-wrap { position: relative; flex: 0 0 auto; }
@@ -110,8 +98,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .avatar-ring {
   position: absolute; inset: -2px; border-radius: 50%;
   background: conic-gradient(from 0deg, var(--tg-blue), #30d158, var(--tg-blue));
-  z-index: -1; opacity: 0;
-  animation: pulseRing 2s infinite;
+  z-index: -1; opacity: 0; animation: pulseRing 2s infinite;
 }
 .avatar-ring.active { opacity: 1; }
 .avatar-ring::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--tg-panel); }
@@ -119,16 +106,12 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
 .ci-body { flex: 1; min-width: 0; border-bottom: 1px solid var(--tg-border); padding-bottom: 8px; padding-top: 4px; }
 .chat-item:last-child .ci-body { border-bottom: none; }
-
 .ci-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
 .ci-name { font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.3px; }
 .ci-time { font-size: 14px; color: var(--tg-text-dim); display: flex; align-items: center; gap: 4px; }
 .ci-bottom { display: flex; justify-content: space-between; align-items: center; }
 .ci-sub { font-size: 15px; color: var(--tg-text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.2px; }
-.badge {
-  background: var(--tg-blue); color: #fff; border-radius: 11px; font-size: 13px; font-weight: 600;
-  padding: 2px 7px; min-width: 22px; text-align: center;
-}
+.badge { background: var(--tg-blue); color: #fff; border-radius: 11px; font-size: 13px; font-weight: 600; padding: 2px 7px; min-width: 22px; text-align: center; }
 .badge.muted { background: var(--tg-text-dim); }
 
 /* ===================== ЧАТ ===================== */
@@ -146,15 +129,15 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 }
 .chat-header .avatar { width: 40px; height: 40px; font-size: 16px; }
 .chat-title { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center;}
-.chat-title .name { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; }
+.chat-title .name { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; display: flex; align-items: center; gap: 4px; }
 .chat-title .status { font-size: 13px; color: var(--tg-text-dim); }
 .chat-title .status.online { color: var(--tg-accent); }
 
 /* Сообщения */
 .msgs-wrap { position: relative; flex: 1; overflow: hidden; width: 100%; background: var(--tg-bg); }
 
-/* КОСМИЧЕСКИЙ ПАТТЕРН (Плотный, стильный) */
-.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.4; }
+/* КОСМИЧЕСКИЙ ПАТТЕРН */
+.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.3; }
 .messages {
   position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 16px 16px 100px;
   display: flex; flex-direction: column; gap: 6px; scroll-behavior: smooth; z-index: 2;
@@ -163,37 +146,37 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
 .date-chip {
   align-self: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px);
-  color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 500;
-  margin: 12px 0;
+  color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 500; margin: 12px 0;
 }
 
-/* ИДЕАЛЬНЫЕ ПУЗЫРИ (Telegram iOS) */
+/* ИДЕАЛЬНЫЕ ПУЗЫРИ */
 .msg {
-  max-width: 82%; padding: 7px 12px 6px; border-radius: 16px;
+  max-width: 85%; padding: 7px 12px 6px; border-radius: 16px;
   font-size: 16px; line-height: 1.35; word-break: break-word; position: relative;
   animation: msgPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
-@keyframes msgPop {
-  0% { opacity: 0; transform: scale(0.9) translateY(10px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
-}
+@keyframes msgPop { 0% { opacity: 0; transform: scale(0.9) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
-.msg.in { 
-  align-self: flex-start; background: var(--tg-bubble-in); 
-  border-bottom-left-radius: 4px; /* Хвостик */
-}
-.msg.out {
-  align-self: flex-end; background: var(--tg-bubble-out); 
-  border-bottom-right-radius: 4px; /* Хвостик */
-}
+.msg.in { align-self: flex-start; background: var(--tg-bubble-in); border-bottom-left-radius: 4px; }
+.msg.out { align-self: flex-end; background: var(--tg-bubble-out); border-bottom-right-radius: 4px; }
 
 .msg .text { white-space: pre-wrap; letter-spacing: -0.2px; }
-.msg .meta {
-  display: flex; align-items: center; justify-content: flex-end; gap: 4px;
-  font-size: 12px; margin-top: 3px; color: var(--tg-text-dim);
-}
+.msg .text pre { background: rgba(0,0,0,0.3); padding: 6px; border-radius: 6px; font-family: monospace; font-size: 14px; margin-top: 4px; overflow-x: auto; }
+.msg .meta { display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 12px; margin-top: 3px; color: var(--tg-text-dim); }
 .msg.out .meta { color: rgba(255,255,255,0.6); }
 .tick { width: 15px; height: 15px; fill: var(--tg-accent); margin-left: 2px;}
+
+/* Анимация печати */
+.typing-indicator {
+  display: flex; align-items: center; gap: 4px; height: 20px; padding: 0 4px;
+}
+.typing-indicator span {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--tg-text-dim);
+  animation: typingBounce 1.4s infinite ease-in-out both;
+}
+.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+@keyframes typingBounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
 /* Реакции */
 .reactions { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
@@ -203,15 +186,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 }
 .reaction.mine { background: rgba(100, 181, 239, 0.2); border-color: rgba(100, 181, 239, 0.4); }
 
-/* Голосовые */
-.voice-msg { display: flex; align-items: center; gap: 10px; min-width: 180px; }
-.play-btn { width: 32px; height: 32px; border-radius: 50%; background: #fff; color: #000; display: grid; place-items: center; font-size: 12px; padding-left: 2px;}
-.msg.in .play-btn { background: var(--tg-blue); color: #fff; }
-.wave { display: flex; align-items: center; gap: 2px; height: 24px; flex: 1; }
-.wave span { width: 3px; border-radius: 2px; background: rgba(255,255,255,0.3); }
-.wave span.played { background: #fff; }
-
-/* ===================== COMPOSER (Liquid Glass) ===================== */
+/* ===================== COMPOSER ===================== */
 .composer-container {
   position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 16px;
   padding-bottom: calc(10px + env(safe-area-inset-bottom));
@@ -229,63 +204,39 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .attach-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--tg-text-dim); }
 .attach-btn svg { width: 24px; height: 24px; fill: currentColor; }
 .input-wrap { flex: 1; display: flex; align-items: flex-end; padding: 0 4px 0 0; }
-#input {
-  width: 100%; resize: none; max-height: 120px; font-size: 17px;
-  padding: 7px 0; color: var(--tg-text); line-height: 1.3;
-}
+#input { width: 100%; resize: none; max-height: 120px; font-size: 17px; padding: 7px 0; color: var(--tg-text); line-height: 1.3; }
 #input::placeholder { color: var(--tg-text-dim); }
-.send-btn {
-  width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
-  background: var(--tg-blue); color: #fff;
-  flex: 0 0 auto;
-}
+.send-btn { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--tg-blue); color: #fff; flex: 0 0 auto; }
 .send-btn.mic { background: transparent; color: var(--tg-text-dim); }
 .send-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
-/* ===================== НИЖНЯЯ НАВИГАЦИЯ (СТРОГО GRID) ===================== */
+/* ===================== НИЖНЯЯ НАВИГАЦИЯ ===================== */
 .bottom-nav-wrapper {
   position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;
-  padding: 0 16px 20px 16px;
-  padding-bottom: calc(20px + env(safe-area-inset-bottom));
-  transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.3s;
-  pointer-events: none;
+  padding: 0 16px 20px 16px; padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.3s; pointer-events: none;
 }
 .app.chat-open .bottom-nav-wrapper { transform: translateY(150px); opacity: 0; }
 
 .bottom-nav {
-  pointer-events: auto;
-  position: relative;
-  background: var(--glass-bg); 
+  pointer-events: auto; position: relative; background: var(--glass-bg); 
   backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
   border: 1px solid var(--tg-border); border-radius: 35px;
-  display: grid; 
-  grid-template-columns: repeat(4, 1fr); /* ЖЕСТКАЯ СЕТКА */
-  padding: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  overflow: hidden;
+  display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden;
 }
-
 .nav-indicator {
-  position: absolute; top: 6px; bottom: 6px;
-  width: calc(25% - 3px); left: 6px; 
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 25px;
-  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 1; pointer-events: none;
+  position: absolute; top: 6px; bottom: 6px; width: calc(25% - 3px); left: 6px; 
+  background: rgba(255, 255, 255, 0.1); border-radius: 25px;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1; pointer-events: none;
 }
-
-.nav-item {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  font-size: 10px; font-weight: 500; color: var(--tg-text-dim); padding: 6px 0;
-  position: relative; z-index: 2; letter-spacing: -0.1px;
-}
+.nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 500; color: var(--tg-text-dim); padding: 6px 0; position: relative; z-index: 2; }
 .nav-item.active { color: var(--tg-accent); }
 .nav-item.active svg { fill: var(--tg-accent); }
 .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
 
 /* Меню и панели */
 .ctx {
-  position: fixed; z-index: 200; background: #1c2733; 
-  border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); min-width: 200px; padding: 6px;
+  position: fixed; z-index: 200; background: #1c2733; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); min-width: 200px; padding: 6px;
   border: 1px solid var(--tg-border); animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
@@ -297,19 +248,15 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .ctx-item svg { width: 20px; height: 20px; fill: currentColor; }
 
 .emoji-panel {
-  position: fixed; z-index: 150; background: #1c2733; 
-  border-radius: 16px; padding: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); 
-  border: 1px solid var(--tg-border); display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
-  animation: popIn 0.2s;
+  position: fixed; z-index: 150; background: #1c2733; border-radius: 16px; padding: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); 
+  border: 1px solid var(--tg-border); display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; animation: popIn 0.2s;
 }
 .emoji-panel button { font-size: 24px; padding: 4px; }
 
 .toast {
   position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: #1c2733; border: 1px solid var(--tg-border);
-  color: #fff; padding: 12px 20px; border-radius: 20px; font-size: 14px;
-  opacity: 0; transition: 0.3s; pointer-events: none; z-index: 300;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  background: #1c2733; border: 1px solid var(--tg-border); color: #fff; padding: 12px 20px; border-radius: 20px; font-size: 14px;
+  opacity: 0; transition: 0.3s; pointer-events: none; z-index: 300; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
@@ -318,11 +265,10 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
 <div class="app" id="app">
   
-  <!-- ЭКРАНЫ -->
   <div class="view-screen" id="view-chats">
     <div class="screen-header">
       <button class="btn-text">Изм.</button>
-      <div class="header-title">anonimnet</div>
+      <div class="header-title">anonimnet AI</div>
       <button class="icon-btn">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
       </button>
@@ -335,56 +281,23 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
     </div>
     <div class="folders">
       <div class="folder active">Все</div>
-      <div class="folder">Избранное <span class="folder-badge">2</span></div>
-      <div class="folder">Архив <span class="folder-badge">1</span></div>
+      <div class="folder">Боты <span class="folder-badge">1</span></div>
     </div>
     <div class="content-scroll" id="chatList"></div>
   </div>
 
+  <!-- Заглушки для вкладок -->
   <div class="view-screen" id="view-contacts" hidden>
-    <div class="screen-header">
-      <button class="btn-text">Группы</button>
-      <div class="header-title">Контакты</div>
-      <button class="btn-text">Создать</button>
-    </div>
-    <div class="content-scroll" style="padding-top:20px;">
-      <div style="padding: 10px 16px; border-bottom: 1px solid var(--tg-border);">Иван Иванов</div>
-      <div style="padding: 10px 16px; border-bottom: 1px solid var(--tg-border);">Анна Смирнова</div>
-      <div style="padding: 10px 16px; border-bottom: 1px solid var(--tg-border);">Максим Петров</div>
-    </div>
+    <div class="screen-header"><button class="btn-text">Группы</button><div class="header-title">Контакты</div><button class="btn-text">Создать</button></div>
+    <div class="content-scroll" style="padding-top:20px;"><div style="padding: 10px 16px; border-bottom: 1px solid var(--tg-border);">Иван Иванов</div></div>
   </div>
-
   <div class="view-screen" id="view-calls" hidden>
-    <div class="screen-header">
-      <button class="btn-text"></button>
-      <div class="header-title">Звонки</div>
-      <button class="icon-btn">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-      </button>
-    </div>
-    <div class="content-scroll" style="padding-top:10px;">
-      <div style="padding: 10px 16px; border-bottom: 1px solid var(--tg-border);">
-        <div style="font-size: 17px;">Иван Иванов</div>
-        <div style="font-size: 14px; color: var(--tg-text-dim);">Исходящий • 12:40</div>
-      </div>
-    </div>
+    <div class="screen-header"><button class="btn-text"></button><div class="header-title">Звонки</div><button class="icon-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></button></div>
+    <div class="content-scroll" style="padding-top:10px;"><div style="padding: 10px 16px; border-bottom: 1px solid var(--tg-border);"><div style="font-size: 17px;">Иван Иванов</div><div style="font-size: 14px; color: var(--tg-text-dim);">Исходящий • 12:40</div></div></div>
   </div>
-
   <div class="view-screen" id="view-settings" hidden>
-    <div class="screen-header">
-      <button class="btn-text"></button>
-      <div class="header-title">Настройки</div>
-      <button class="btn-text">Править</button>
-    </div>
-    <div class="content-scroll" style="padding-top:20px;">
-      <div style="padding: 10px 16px; border-bottom: 1px solid var(--tg-border); display:flex; align-items:center; gap:12px;">
-        <div class="avatar" style="background: var(--tg-blue); width: 50px; height: 50px;">A</div>
-        <div>
-          <div style="font-size: 17px; font-weight: 600;">Пользователь</div>
-          <div style="font-size: 14px; color: var(--tg-text-dim);">@anonimnet_user</div>
-        </div>
-      </div>
-    </div>
+    <div class="screen-header"><button class="btn-text"></button><div class="header-title">Настройки</div><button class="btn-text">Править</button></div>
+    <div class="content-scroll" style="padding-top:20px;"><div style="padding: 10px 16px; display:flex; align-items:center; gap:12px;"><div class="avatar" style="background: var(--tg-blue); width: 50px; height: 50px;">A</div><div><div style="font-size: 17px; font-weight: 600;">Вы</div><div style="font-size: 14px; color: var(--tg-text-dim);">@anonimnet_user</div></div></div></div>
   </div>
 
   <!-- НАВИГАЦИЯ -->
@@ -410,73 +323,42 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
     </div>
   </div>
 
-  <!-- ЧАТ -->
+  <!-- ЧАТ С ИИ -->
   <main class="chat-overlay" id="chatOverlay">
     <header class="chat-header">
       <button class="icon-btn" id="backBtn" style="margin-right: 2px;">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
-      <div class="avatar" id="chatAvatar">A</div>
+      <div class="avatar" id="chatAvatar" style="background: var(--tg-blue);">🤖</div>
       <div class="chat-title">
-        <div class="name" id="chatName">anonimnet</div>
-        <div class="status" id="chatStatus">в сети</div>
+        <div class="name" id="chatName">anonimnet AI <span style="font-size: 12px; background: var(--tg-active); padding: 2px 6px; border-radius: 4px; margin-left: 4px;">BOT</span></div>
+        <div class="status online" id="chatStatus">онлайн</div>
       </div>
-      <button class="icon-btn">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+      <button class="icon-btn" title="Очистить чат" onclick="clearChat()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
       </button>
     </header>
 
     <div class="msgs-wrap">
-      <!-- КОСМИЧЕСКИЙ ПАТТЕРН (Идеально ровный) -->
+      <!-- КОСМИЧЕСКИЙ ПАТТЕРН -->
       <svg class="doodle-bg" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="spaceDoodle" width="400" height="400" patternUnits="userSpaceOnUse">
             <g fill="none" stroke="#4a6a96" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5">
-              <!-- Планета с кольцами -->
               <g transform="translate(50, 50) scale(0.8)">
-                <circle cx="50" cy="50" r="25"/>
-                <ellipse cx="50" cy="50" rx="45" ry="12" transform="rotate(-15 50 50)"/>
+                <circle cx="50" cy="50" r="25"/><ellipse cx="50" cy="50" rx="45" ry="12" transform="rotate(-15 50 50)"/>
               </g>
-              <!-- Летающая тарелка -->
               <g transform="translate(250, 60) scale(0.8)">
-                <ellipse cx="50" cy="50" rx="35" ry="12" fill="none"/>
-                <path d="M 25 50 Q 50 15 75 50"/>
-                <circle cx="50" cy="40" r="10"/>
-                <path d="M 10 50 L 90 50"/>
+                <ellipse cx="50" cy="50" rx="35" ry="12" fill="none"/><path d="M 25 50 Q 50 15 75 50"/><circle cx="50" cy="40" r="10"/><path d="M 10 50 L 90 50"/>
               </g>
-              <!-- Спутник -->
               <g transform="translate(320, 200) scale(0.7)">
-                <rect x="40" y="40" width="20" height="20" rx="3"/>
-                <rect x="10" y="45" width="25" height="10"/>
-                <rect x="65" y="45" width="25" height="10"/>
-                <line x1="50" y1="40" x2="50" y2="20"/>
-                <circle cx="50" cy="15" r="5"/>
-                <line x1="40" y1="30" x2="25" y2="15"/>
-                <line x1="60" y1="30" x2="75" y2="15"/>
+                <rect x="40" y="40" width="20" height="20" rx="3"/><rect x="10" y="45" width="25" height="10"/><rect x="65" y="45" width="25" height="10"/><line x1="50" y1="40" x2="50" y2="20"/><circle cx="50" cy="15" r="5"/>
               </g>
-              <!-- Комета -->
               <g transform="translate(100, 250)">
-                <circle cx="20" cy="20" r="8"/>
-                <path d="M 15 15 L -20 -20 M 25 15 L -10 -20 M 20 25 L -15 -5" stroke-width="1.5" opacity="0.6"/>
+                <circle cx="20" cy="20" r="8"/><path d="M 15 15 L -20 -20 M 25 15 L -10 -20 M 20 25 L -15 -5" stroke-width="1.5" opacity="0.6"/>
               </g>
-              <!-- Астронавт -->
-              <g transform="translate(220, 280) scale(0.6)">
-                <circle cx="50" cy="30" r="15"/>
-                <rect x="35" y="45" width="30" height="35" rx="10"/>
-                <path d="M 35 55 L 15 70 M 65 55 L 85 70"/>
-                <path d="M 40 80 L 30 100 M 60 80 L 70 100"/>
-                <rect x="40" y="25" width="20" height="10" rx="3" fill="currentColor" opacity="0.3"/>
-              </g>
-              <!-- Звезды -->
               <path d="M 280 130 L 285 145 L 300 150 L 285 155 L 280 170 L 275 155 L 260 150 L 275 145 Z" stroke-width="2"/>
               <path d="M 150 120 L 153 130 L 163 133 L 153 136 L 150 146 L 147 136 L 137 133 L 147 130 Z" stroke-width="2"/>
-              <path d="M 350 320 L 352 326 L 358 328 L 352 330 L 350 336 L 348 330 L 342 328 L 348 326 Z" stroke-width="2"/>
-              <!-- Созвездие -->
-              <circle cx="80" cy="150" r="2" fill="currentColor"/>
-              <circle cx="120" cy="180" r="2" fill="currentColor"/>
-              <circle cx="60" cy="200" r="2" fill="currentColor"/>
-              <line x1="80" y1="150" x2="120" y2="180" stroke-width="1" opacity="0.4"/>
-              <line x1="120" y1="180" x2="60" y2="200" stroke-width="1" opacity="0.4"/>
             </g>
           </pattern>
         </defs>
@@ -493,7 +375,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
               <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
             </button>
             <div class="input-wrap">
-              <textarea id="input" rows="1" placeholder="Сообщение"></textarea>
+              <textarea id="input" rows="1" placeholder="Спроси о чем-нибудь..."></textarea>
             </div>
             <button class="send-btn mic" id="sendBtn"></button>
           </div>
@@ -502,12 +384,8 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
               <div style="width: 10px; height: 10px; border-radius: 50%; background: #ff453a; animation: blink 1s infinite;"></div>
               <div style="font-size: 16px; font-weight: 500;" id="recTime">0:00</div>
               <div style="flex: 1; color: var(--tg-text-dim); font-size: 15px;">Запись...</div>
-              <button id="recCancel" style="width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.1);">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              </button>
-              <button id="recSend" style="width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--tg-blue);">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
-              </button>
+              <button id="recCancel" style="width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+              <button id="recSend" style="width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--tg-blue);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></button>
             </div>
           </div>
         </div>
@@ -522,18 +400,12 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const nid = () => 'm' + Date.now() + Math.random().toString(36).substr(2, 5);
-const nowTime = () => {
-  const d = new Date();
-  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
-};
+const nowTime = () => { const d = new Date(); return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); };
 const fmt = s => Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
 
 function toast(text) {
-  const t = $('#toast');
-  t.textContent = text;
-  t.classList.add('show');
-  clearTimeout(t._tm);
-  t._tm = setTimeout(() => t.classList.remove('show'), 2000);
+  const t = $('#toast'); t.textContent = text; t.classList.add('show');
+  clearTimeout(t._tm); t._tm = setTimeout(() => t.classList.remove('show'), 2000);
 }
 
 const EMOJIS = ['👍','❤️','🔥','😂','😮','😢','🎉','👏','🤔','💩','😍','🥰','😎','🤯','🙏','💯'];
@@ -544,52 +416,27 @@ const SVG_MIC = `<svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-
 const SVG_SEND = `<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`;
 const SVG_TRASH = `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`;
 const SVG_COPY = `<svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>`;
-const AVATAR_LOCK = `<svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>`;
-const AVATAR_TEAM = `<svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>`;
 
+// Инициализация базы чатов
 const chats = [
   {
-    id: 'anonym', name: 'anonimnet', avatar: 'A', color: '#3390ec',
-    status: 'в сети', time: '12:02', unread: 0, pinned: true, muted: false,
+    id: 'ai', name: 'anonimnet AI', avatar: '🤖', color: '#3390ec',
+    status: 'онлайн', time: nowTime(), unread: 0, pinned: true, muted: false,
     messages: [
-      {id:nid(), out:false, type:'text', time:'11:58', text:'Привет 👋 Добро пожаловать в anonimnet!', reactions:{}, mine:{}},
-      {id:nid(), out:false, type:'text', time:'11:59', text:'Оцени премиальный дизайн 🚀', reactions:{'🔥':3}, mine:{}},
-      {id:nid(), out:true, type:'text', time:'12:02', text:'Вот это уровень! Кайф!', reactions:{}, mine:{}}
-    ]
-  },
-  {
-    id: 'secret', name: 'Секретный чат', avatar: 'svg-lock', color: '#30d158',
-    status: 'был(а) недавно', time: '10:13', unread: 2, pinned: false, muted: false,
-    messages: [
-      {id:nid(), out:false, type:'text', time:'10:12', text:'Этот чат шифруется 🛡️', reactions:{}, mine:{}},
-      {id:nid(), out:false, type:'voice', time:'10:13', reactions:{'❤️':1}, mine:{}, voice:{url:null, duration:6, bars:Array.from({length:30},()=>Math.random()*0.8+0.2)}}
-    ]
-  },
-  {
-    id: 'team', name: 'Команда', avatar: 'svg-team', color: '#ff9f0a',
-    status: 'Вы: Привет', time: '12:58', unread: 0, pinned: false, muted: true,
-    messages: [
-      {id:nid(), out:false, type:'text', time:'09:30', text:'Собираем релиз в пятницу 🚀', reactions:{'👍':5}, mine:{}},
-      {id:nid(), out:true, type:'text', time:'12:58', text:'Привет', reactions:{}, mine:{}}
+      {id:nid(), out:false, type:'text', time:nowTime(), text:'Привет! Я твой ИИ-помощник в anonimnet. 🤖\n\nЗадай мне любой вопрос, попроси рассказать шутку или написать код.', reactions:{}, mine:{}}
     ]
   }
 ];
 
-let activeId = 'anonym';
+let activeId = 'ai';
 const activeChat = () => chats.find(c => c.id === activeId);
+let isBotTyping = false;
 
+// Навигация
 const navItems = $$('.nav-item');
 const navIndicator = $('#navIndicator');
-const views = {
-  chats: $('#view-chats'),
-  contacts: $('#view-contacts'),
-  calls: $('#view-calls'),
-  settings: $('#view-settings')
-};
-
-function updateIndicator(index) {
-  navIndicator.style.transform = `translateX(${index * 100}%)`;
-}
+const views = { chats: $('#view-chats'), contacts: $('#view-contacts'), calls: $('#view-calls'), settings: $('#view-settings') };
+function updateIndicator(index) { navIndicator.style.transform = `translateX(${index * 100}%)`; }
 updateIndicator(2);
 
 navItems.forEach((item, index) => {
@@ -602,30 +449,25 @@ navItems.forEach((item, index) => {
   };
 });
 
+// Рендер списка
 function renderChatList(filter = '') {
   const list = $('#chatList');
   list.innerHTML = '';
   chats.filter(c => c.name.toLowerCase().includes(filter.toLowerCase())).forEach(c => {
     const el = document.createElement('div');
     el.className = 'chat-item';
-    const ringHTML = c.status === 'в сети' ? `<div class="avatar-ring active"></div>` : '';
-    let rightIcon = c.pinned ? SVG_PIN : (c.muted ? SVG_MUTE : '');
-    let badge = c.unread > 0 ? `<div class="badge ${c.muted ? 'muted' : 'unread'}">${c.unread}</div>` : '';
-    let avatarContent = c.avatar;
-    if (c.avatar === 'svg-lock') avatarContent = AVATAR_LOCK;
-    if (c.avatar === 'svg-team') avatarContent = AVATAR_TEAM;
+    const ringHTML = `<div class="avatar-ring active"></div>`;
+    let rightIcon = c.pinned ? SVG_PIN : '';
+    let badge = c.unread > 0 ? `<div class="badge">${c.unread}</div>` : '';
+    let lastMsg = c.messages[c.messages.length - 1];
+    let sub = lastMsg ? (lastMsg.out ? 'Вы: ' : '') + (lastMsg.type === 'text' ? lastMsg.text : '🎤 Голосовое') : 'Нет сообщений';
+    if(sub.length > 30) sub = sub.substring(0, 30) + '...';
 
     el.innerHTML = `
-      <div class="avatar-wrap">${ringHTML}<div class="avatar" style="background:${c.color}">${avatarContent}</div></div>
+      <div class="avatar-wrap">${ringHTML}<div class="avatar" style="background:${c.color}">${c.avatar}</div></div>
       <div class="ci-body">
-        <div class="ci-top">
-          <div class="ci-name">${c.name} ${c.muted ? SVG_MUTE : ''}</div>
-          <div class="ci-time">${c.time} ${rightIcon}</div>
-        </div>
-        <div class="ci-bottom">
-          <div class="ci-sub">${c.status}</div>
-          ${badge}
-        </div>
+        <div class="ci-top"><div class="ci-name">${c.name}</div><div class="ci-time">${c.time} ${rightIcon}</div></div>
+        <div class="ci-bottom"><div class="ci-sub">${sub}</div>${badge}</div>
       </div>
     `;
     el.onclick = () => switchChat(c.id);
@@ -635,35 +477,23 @@ function renderChatList(filter = '') {
 
 function switchChat(id) {
   activeId = id;
-  const c = activeChat();
-  c.unread = 0;
-  
+  const c = activeChat(); c.unread = 0;
   $('#chatName').textContent = c.name;
   $('#chatStatus').textContent = c.status;
-  $('#chatStatus').classList.toggle('online', c.status === 'в сети');
-  
-  const av = $('#chatAvatar');
-  if (c.avatar === 'svg-lock') { av.innerHTML = AVATAR_LOCK; av.style.background = c.color; }
-  else if (c.avatar === 'svg-team') { av.innerHTML = AVATAR_TEAM; av.style.background = c.color; }
-  else { av.textContent = c.avatar; av.style.background = c.color; }
-
-  renderMessages();
-  renderChatList($('#searchInput').value);
-  
+  $('#chatAvatar').textContent = c.avatar;
+  $('#chatAvatar').style.background = c.color;
+  renderMessages(); renderChatList($('#searchInput').value);
   $('#app').classList.add('chat-open');
-  closeEmojiPanel();
-  closeContext();
+  closeEmojiPanel(); closeContext();
 }
 
+// Рендер сообщений
 function renderMessages() {
   const box = $('#messages');
   box.innerHTML = '';
   const msgs = activeChat().messages;
   if (msgs.length) {
-    const chip = document.createElement('div');
-    chip.className = 'date-chip';
-    chip.textContent = 'Сегодня';
-    box.appendChild(chip);
+    const chip = document.createElement('div'); chip.className = 'date-chip'; chip.textContent = 'Сегодня'; box.appendChild(chip);
   }
   msgs.forEach(m => box.appendChild(messageEl(m)));
   scrollToBottom(true);
@@ -671,9 +501,7 @@ function renderMessages() {
 
 function scrollToBottom(instant) {
   const box = $('#messages');
-  requestAnimationFrame(() => {
-    box.scrollTo({ top: box.scrollHeight, behavior: instant ? 'auto' : 'smooth' });
-  });
+  requestAnimationFrame(() => { box.scrollTo({ top: box.scrollHeight, behavior: instant ? 'auto' : 'smooth' }); });
 }
 
 function messageEl(m) {
@@ -684,72 +512,21 @@ function messageEl(m) {
   if (m.type === 'text') {
     const t = document.createElement('div');
     t.className = 'text';
-    t.textContent = m.text;
+    t.innerHTML = m.text.replace(/```([\s\S]*?)```/g, '<pre>$1</pre>'); // Поддержка кода
     el.appendChild(t);
   } else {
     el.appendChild(voiceEl(m));
   }
 
-  const meta = document.createElement('div');
-  meta.className = 'meta';
+  const meta = document.createElement('div'); meta.className = 'meta';
   meta.innerHTML = `<span>${m.time}</span>` + (m.out ? SVG_DOUBLE_CHECK : '');
   el.appendChild(meta);
 
-  const react = document.createElement('div');
-  react.className = 'reactions';
-  el.appendChild(react);
-  renderReactions(react, m);
-
+  const react = document.createElement('div'); react.className = 'reactions'; el.appendChild(react); renderReactions(react, m);
   attachContext(el, m);
-  el.addEventListener('dblclick', e => {
-    if(window.getSelection().toString()) return;
-    e.preventDefault();
-    toggleReaction(m, '❤️');
-  });
-
-  return el;
-}
-
-let currentAudio = null;
-function voiceEl(m) {
-  const v = m.voice;
-  const wrap = document.createElement('div');
-  wrap.className = 'voice-msg';
-  const btn = document.createElement('button');
-  btn.className = 'play-btn';
-  btn.innerHTML = '▶';
-  wrap.appendChild(btn);
-  const wave = document.createElement('div');
-  wave.className = 'wave';
-  v.bars.forEach(h => {
-    const b = document.createElement('span');
-    b.style.height = Math.round(h * 100) + '%';
-    wave.appendChild(b);
-  });
-  wrap.appendChild(wave);
-  const dur = document.createElement('span');
-  dur.style.fontSize = '12px';
-  dur.textContent = fmt(v.duration);
-  wrap.appendChild(dur);
-  const bars = [...wave.children];
-
-  if(!v.url) { btn.onclick = e => { e.stopPropagation(); toast('Демо голосовое'); }; return wrap; }
   
-  const audio = new Audio(v.url);
-  btn.onclick = e => {
-    e.stopPropagation();
-    if(currentAudio && currentAudio !== audio) { currentAudio.pause(); currentAudio.dispatchEvent(new Event('pause')); }
-    if(audio.paused) { audio.play(); btn.innerHTML = '❚❚'; currentAudio = audio; } 
-    else { audio.pause(); btn.innerHTML = '▶'; }
-  };
-  audio.ontimeupdate = () => {
-    const p = audio.duration ? audio.currentTime / audio.duration : 0;
-    bars.forEach((b,i) => b.classList.toggle('played', i / bars.length < p));
-    dur.textContent = fmt(Math.max(0, audio.duration - audio.currentTime));
-  };
-  audio.onended = () => { btn.innerHTML = '▶'; bars.forEach(b=>b.classList.remove('played')); dur.textContent = fmt(v.duration); currentAudio = null; };
-  audio.onpause = () => { btn.innerHTML = '▶'; };
-  return wrap;
+  el.addEventListener('dblclick', e => { if(window.getSelection().toString()) return; e.preventDefault(); toggleReaction(m, '❤️'); });
+  return el;
 }
 
 function renderReactions(container, m) {
@@ -764,50 +541,144 @@ function renderReactions(container, m) {
 }
 
 function toggleReaction(m, emoji) {
-  if(m.mine[emoji]) {
-    m.reactions[emoji]--;
-    if(m.reactions[emoji] <= 0) delete m.reactions[emoji];
-    delete m.mine[emoji];
-  } else {
-    m.reactions[emoji] = (m.reactions[emoji] || 0) + 1;
-    m.mine[emoji] = true;
-  }
+  if(m.mine[emoji]) { m.reactions[emoji]--; if(m.reactions[emoji] <= 0) delete m.reactions[emoji]; delete m.mine[emoji]; } 
+  else { m.reactions[emoji] = (m.reactions[emoji] || 0) + 1; m.mine[emoji] = true; }
   const box = document.querySelector(`.msg[data-id="${m.id}"] .reactions`);
   if(box) renderReactions(box, m);
 }
 
+// === МОЗГ ИИ (Логика ответов) ===
+function getBotResponse(text) {
+  const t = text.toLowerCase();
+  
+  if (t.match(/привет|здравствуй|хай|ку/)) return "Привет! 👋 Чем я могу тебе помочь сегодня?";
+  if (t.match(/как дела|как ты/)) return "У меня всё отлично, я же ИИ! А у тебя как настроение?";
+  if (t.match(/шутка|анекдот|смешное/)) {
+    const jokes = [
+      "— Почему программисты путают Хэллоуин и Рождество?\n— Потому что Oct 31 == Dec 25.",
+      "— Сколько нужно программистов, чтобы вкрутить лампочку?\n— Ни одного, это проблема железа.",
+      "— Как называется страх перед нейросетями?\n— Искусственный интеллект-фобия. (Ладно, это было плохо 😅)"
+    ];
+    return jokes[Math.floor(Math.random() * jokes.length)];
+  }
+  if (t.match(/код|напиши|программ|javascript|js/)) {
+    return "Вот простой пример на JavaScript:\n```\nfunction greet(name) {\n  console.log(`Привет, ${name}!`);\n}\ngreet('Мир');\n```\nЧто-нибудь еще?";
+  }
+  if (t.match(/кто ты|что ты умеешь/)) return "Я — anonimnet AI. Я умею отвечать на базовые вопросы, рассказывать шутки и даже писать простой код. Пока что я в разработке, но быстро учусь! 🚀";
+  if (t.match(/погода/)) return "Я пока не подключен к интернету, поэтому не знаю погоду. Но могу посоветовать одеться тепло! 🧥";
+  if (t.match(/спасибо|благодарю/)) return "Всегда пожалуйста! Рад помочь. 😊";
+  
+  // Дефолтные ответы
+  const defaults = [
+    "Интересный вопрос! К сожалению, мой создатель пока не научил меня отвечать на всё подряд. Но я работаю над этим! 😉",
+    "Хм, я об этом еще не думал. Дай мне немного времени, и я обязательно научусь отвечать на такие вопросы.",
+    "Я всего лишь бот в прототипе мессенджера. Но я запомню твой вопрос! (Нет, не запомню, я же локальный скрипт 😂)",
+    "Я бы ответил, но мои нейроны сейчас заняты обработкой космического фона. Спроси что-нибудь попроще!"
+  ];
+  return defaults[Math.floor(Math.random() * defaults.length)];
+}
+
+// Отправка сообщения
+const input = $('#input');
+const sendBtn = $('#sendBtn');
+
+function updateComposer() {
+  if(input.value.trim().length > 0) { sendBtn.classList.remove('mic'); sendBtn.innerHTML = SVG_SEND; } 
+  else { sendBtn.classList.add('mic'); sendBtn.innerHTML = SVG_MIC; }
+}
+
+input.addEventListener('input', () => {
+  input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 120) + 'px'; updateComposer();
+});
+
+input.addEventListener('keydown', e => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendText(); } });
+sendBtn.onclick = (e) => { e.preventDefault(); if(input.value.trim() && !isBotTyping) sendText(); };
+
+function sendText() {
+  const text = input.value.trim();
+  if(!text || isBotTyping) return;
+  
+  const chat = activeChat();
+  const m = { id: nid(), out: true, type: 'text', text, time: nowTime(), reactions: {}, mine: {} };
+  chat.messages.push(m);
+  $('#messages').appendChild(messageEl(m));
+  
+  input.value = ''; input.style.height = 'auto'; updateComposer(); scrollToBottom();
+  
+  chat.time = nowTime();
+  renderChatList($('#searchInput').value);
+
+  // Запуск ответа ИИ
+  triggerBotReply();
+}
+
+function triggerBotReply() {
+  isBotTyping = true;
+  const chat = activeChat();
+  const lastUserMsg = chat.messages[chat.messages.length - 1].text;
+
+  // 1. Показываем индикатор печати
+  const typingId = 'typing-' + Date.now();
+  const el = document.createElement('div');
+  el.className = 'msg in';
+  el.id = typingId;
+  el.innerHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
+  $('#messages').appendChild(el);
+  scrollToBottom();
+
+  // 2. Ждем и отвечаем
+  setTimeout(() => {
+    // Удаляем индикатор
+    document.getElementById(typingId)?.remove();
+    
+    // Генерируем ответ
+    const replyText = getBotResponse(lastUserMsg);
+    
+    // Добавляем сообщение от бота
+    const m = { id: nid(), out: false, type: 'text', text: replyText, time: nowTime(), reactions: {}, mine: {} };
+    chat.messages.push(m);
+    $('#messages').appendChild(messageEl(m));
+    
+    // Обновляем статус
+    chat.time = nowTime();
+    renderChatList($('#searchInput').value);
+    scrollToBottom();
+    
+    isBotTyping = false;
+  }, 1500 + Math.random() * 1000); // Задержка 1.5-2.5 сек
+}
+
+// Очистка чата
+window.clearChat = function() {
+  if(confirm("Очистить историю сообщений?")) {
+    const chat = activeChat();
+    chat.messages = [
+      {id:nid(), out:false, type:'text', time:nowTime(), text:'Чат очищен. Чем я могу помочь? 🤖', reactions:{}, mine:{}}
+    ];
+    renderMessages();
+  }
+}
+
+// Контекстное меню
 let ctxEl = null;
 function closeContext() { if(ctxEl) { ctxEl.remove(); ctxEl = null; } }
 document.addEventListener('click', closeContext);
 document.addEventListener('contextmenu', e => { if (!e.target.closest('.msg')) closeContext(); });
 
 function openContext(x, y, m) {
-  closeContext();
-  const menu = document.createElement('div');
-  menu.className = 'ctx';
-  const row = document.createElement('div');
-  row.className = 'ctx-emojis';
+  closeContext(); const menu = document.createElement('div'); menu.className = 'ctx';
+  const row = document.createElement('div'); row.className = 'ctx-emojis';
   EMOJIS.slice(0, 7).forEach(em => {
-    const b = document.createElement('button');
-    b.className = 'ctx-emoji';
-    b.textContent = em;
-    b.onclick = e => { e.stopPropagation(); toggleReaction(m, em); closeContext(); };
-    row.appendChild(b);
+    const b = document.createElement('button'); b.className = 'ctx-emoji'; b.textContent = em;
+    b.onclick = e => { e.stopPropagation(); toggleReaction(m, em); closeContext(); }; row.appendChild(b);
   });
   menu.appendChild(row);
-
-  const copy = document.createElement('button');
-  copy.className = 'ctx-item';
-  copy.innerHTML = `${SVG_COPY} Копировать`;
+  const copy = document.createElement('button'); copy.className = 'ctx-item'; copy.innerHTML = `${SVG_COPY} Копировать`;
   copy.onclick = e => { e.stopPropagation(); if(m.type === 'text') navigator.clipboard.writeText(m.text); toast('Скопировано'); closeContext(); };
   menu.appendChild(copy);
-
-  const del = document.createElement('button');
-  del.className = 'ctx-item danger';
-  del.innerHTML = `${SVG_TRASH} Удалить`;
+  const del = document.createElement('button'); del.className = 'ctx-item danger'; del.innerHTML = `${SVG_TRASH} Удалить`;
   del.onclick = e => { e.stopPropagation(); deleteMessage(m.id); closeContext(); };
   menu.appendChild(del);
-
   document.body.appendChild(menu);
   const r = menu.getBoundingClientRect();
   menu.style.left = Math.max(10, Math.min(x, window.innerWidth - r.width - 10)) + 'px';
@@ -823,127 +694,34 @@ function attachContext(el, m) {
 }
 
 function deleteMessage(id) {
-  const chat = activeChat();
-  const idx = chat.messages.findIndex(m => m.id === id);
+  const chat = activeChat(); const idx = chat.messages.findIndex(m => m.id === id);
   if(idx < 0) return;
   const el = document.querySelector(`.msg[data-id="${id}"]`);
-  if(el) {
-    el.style.transform = 'scale(0.8) translateY(10px)';
-    el.style.opacity = '0';
-    setTimeout(() => { chat.messages.splice(idx, 1); renderMessages(); toast('Удалено'); }, 200);
-  }
+  if(el) { el.style.transform = 'scale(0.8) translateY(10px)'; el.style.opacity = '0';
+    setTimeout(() => { chat.messages.splice(idx, 1); renderMessages(); toast('Удалено'); }, 200); }
 }
 
-const input = $('#input');
-const sendBtn = $('#sendBtn');
-
-function updateComposer() {
-  if(input.value.trim().length > 0) {
-    sendBtn.classList.remove('mic');
-    sendBtn.innerHTML = SVG_SEND;
-  } else {
-    sendBtn.classList.add('mic');
-    sendBtn.innerHTML = SVG_MIC;
-  }
-}
-
-input.addEventListener('input', () => {
-  input.style.height = 'auto';
-  input.style.height = Math.min(input.scrollHeight, 120) + 'px';
-  updateComposer();
-});
-
-input.addEventListener('keydown', e => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendText(); } });
-sendBtn.onclick = (e) => { e.preventDefault(); if(input.value.trim()) sendText(); else startRecording(); };
-
-function sendText() {
-  const text = input.value.trim();
-  if(!text) return;
-  const chat = activeChat();
-  const m = { id: nid(), out: true, type: 'text', text, time: nowTime(), reactions: {}, mine: {} };
-  chat.messages.push(m);
-  $('#messages').appendChild(messageEl(m));
-  input.value = '';
-  input.style.height = 'auto';
-  updateComposer();
-  scrollToBottom();
-  chat.status = 'Вы: ' + text;
-  chat.time = nowTime();
-  renderChatList($('#searchInput').value);
-}
-
-let mediaRecorder, chunks = [], recStart = 0, recTimerId, recStream, recSendFlag = false;
-async function startRecording() {
-  if(!navigator.mediaDevices?.getUserMedia) return toast('Запись недоступна');
-  try { recStream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch { return toast('Нет доступа к микрофону'); }
-  chunks = [];
-  mediaRecorder = new MediaRecorder(recStream);
-  mediaRecorder.ondataavailable = e => chunks.push(e.data);
-  mediaRecorder.onstop = onRecordingStop;
-  mediaRecorder.start();
-  recStart = Date.now();
-  recSendFlag = false;
-  $('#normalPanel').hidden = true;
-  $('#recPanel').hidden = false;
-  $('#recTime').textContent = '0:00';
-  recTimerId = setInterval(() => { $('#recTime').textContent = fmt((Date.now() - recStart) / 1000); }, 200);
-}
-
-function stopRecording(send) {
-  if(!mediaRecorder) return;
-  recSendFlag = send;
-  mediaRecorder.stop();
-  clearInterval(recTimerId);
-  if(recStream) recStream.getTracks().forEach(t => t.stop());
-  $('#recPanel').hidden = true;
-  $('#normalPanel').hidden = false;
-}
-
-function onRecordingStop() {
-  const duration = Math.max(1, Math.round((Date.now() - recStart) / 1000));
-  if(!recSendFlag || !chunks.length) return;
-  const blob = new Blob(chunks, { type: chunks[0].type || 'audio/webm' });
-  const url = URL.createObjectURL(blob);
-  const chat = activeChat();
-  const m = { id: nid(), out: true, type: 'voice', time: nowTime(), reactions: {}, mine: {}, voice: { url, duration, bars: Array.from({length:30},()=>Math.random()*0.8+0.2) } };
-  chat.messages.push(m);
-  $('#messages').appendChild(messageEl(m));
-  scrollToBottom();
-  chat.status = '🎤 Голосовое сообщение';
-  chat.time = nowTime();
-  renderChatList($('#searchInput').value);
-}
-
-$('#recCancel').onclick = () => stopRecording(false);
-$('#recSend').onclick = () => stopRecording(true);
-
+// Эмодзи
 let emojiPanel = null;
 function closeEmojiPanel() { if(emojiPanel) { emojiPanel.remove(); emojiPanel = null; } }
 $('#emojiBtn').onclick = e => {
-  e.stopPropagation();
-  if(emojiPanel) return closeEmojiPanel();
-  const r = $('#composerGlass').getBoundingClientRect();
-  const panel = document.createElement('div');
-  panel.className = 'emoji-panel';
-  panel.style.left = '16px';
-  panel.style.bottom = (window.innerHeight - r.top + 8) + 'px';
+  e.stopPropagation(); if(emojiPanel) return closeEmojiPanel();
+  const r = $('#composerGlass').getBoundingClientRect(); const panel = document.createElement('div'); panel.className = 'emoji-panel';
+  panel.style.left = '16px'; panel.style.bottom = (window.innerHeight - r.top + 8) + 'px';
   EMOJIS.concat(['😀','😂','🥰','😎','🤔','🙃','😴','🤯','🥳','😭','😡','🤝','✌️','💪','🌟','✨']).forEach(em => {
-    const b = document.createElement('button');
-    b.textContent = em;
+    const b = document.createElement('button'); b.textContent = em;
     b.onclick = (ev) => { ev.stopPropagation(); input.value += em; input.focus(); updateComposer(); input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 120) + 'px'; };
     panel.appendChild(b);
   });
-  document.body.appendChild(panel);
-  emojiPanel = panel;
+  document.body.appendChild(panel); emojiPanel = panel;
 };
-
 document.addEventListener('click', e => { if(emojiPanel && !emojiPanel.contains(e.target) && e.target.id !== 'emojiBtn') closeEmojiPanel(); });
 $('#backBtn').onclick = () => $('#app').classList.remove('chat-open');
 $('#searchInput').addEventListener('input', e => renderChatList(e.target.value));
 
 updateComposer();
 renderChatList();
-switchChat('anonym');
+switchChat('ai');
 $('#app').classList.remove('chat-open');
 </script>
 </body>
