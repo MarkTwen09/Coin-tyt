@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<title>Аноним Нет</title>
+<title>anonimnet</title>
 <style>
 /* ============================================================
-   АНОНИМ НЕТ — Ultimate iOS Telegram Style
+   ANONIMNET — Ultimate Premium iOS Interface
    ============================================================ */
 :root {
   --bg-base: #000000;
@@ -25,7 +25,7 @@
   --border: rgba(255, 255, 255, 0.08);
   --glass-bg: rgba(28, 28, 30, 0.65);
   --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
 }
 
 * {
@@ -38,15 +38,16 @@
 [hidden] { display: none !important; }
 html, body { height: 100%; overflow: hidden; background: var(--bg-base); color: var(--text-main); }
 
-button { cursor: pointer; border: none; background: none; color: inherit; outline: none; }
+button { cursor: pointer; border: none; background: none; color: inherit; outline: none; transition: transform 0.1s; }
+button:active { transform: scale(0.92); }
 input, textarea { border: none; outline: none; background: none; color: inherit; font-family: inherit; }
 
 .app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; overflow: hidden; position: relative; }
 
-/* ===================== ОБЩИЕ ЭКРАНЫ (ВКЛАДКИ) ===================== */
+/* ===================== ОБЩИЕ ЭКРАНЫ ===================== */
 .view-container {
   position: absolute; inset: 0; display: flex; flex-direction: column;
-  animation: viewFade 0.3s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  animation: viewFade 0.25s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 @keyframes viewFade { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
@@ -55,7 +56,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   padding: 8px 16px; padding-top: calc(8px + env(safe-area-inset-top));
   min-height: 44px;
 }
-.header-title { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
+.header-title { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
 .btn-text { font-size: 17px; color: var(--accent); font-weight: 400; }
 .icon-btn-bg {
   width: 36px; height: 36px; border-radius: 50%; background: var(--bg-panel);
@@ -63,7 +64,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 }
 .icon-btn-bg:active { transform: scale(0.92); background: var(--bg-panel-hover); }
 
-.content-scroll { flex: 1; overflow-y: auto; padding-bottom: 100px; }
+.content-scroll { flex: 1; overflow-y: auto; padding-bottom: 110px; }
 .content-scroll::-webkit-scrollbar { display: none; }
 
 /* ===================== СПИСОК ЧАТОВ ===================== */
@@ -133,7 +134,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 }
 .list-item:last-child { border-bottom: none; }
 .list-item:active { background: var(--bg-panel-hover); }
-.list-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; color: #fff; }
+.list-icon { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; color: #fff; }
 .list-text { flex: 1; font-size: 17px; letter-spacing: -0.3px; }
 .list-text.danger { color: #ff453a; }
 .list-sub { font-size: 14px; color: var(--text-dim); margin-top: 2px; }
@@ -179,7 +180,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   max-width: 80%; padding: 7px 12px; border-radius: 18px;
   font-size: 16px; line-height: 1.35; word-break: break-word; position: relative;
   transform-origin: bottom;
-  animation: msgPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation: msgPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 @keyframes msgPop {
   0% { opacity: 0; transform: scale(0.85) translateY(15px); }
@@ -268,16 +269,25 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .send-btn.mic { background: transparent; box-shadow: none; color: var(--text-dim); }
 .send-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
+/* Запись */
+.recording-ui { display: flex; align-items: center; gap: 12px; width: 100%; padding: 0 8px; height: 36px; }
+.rec-dot { width: 10px; height: 10px; border-radius: 50%; background: #ff453a; animation: blink 1s infinite; }
+@keyframes blink { 50% { opacity: 0.2; } }
+.rec-time { font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: 0.5px; }
+.rec-hint { flex: 1; color: var(--text-dim); font-size: 15px; }
+.rec-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.1); cursor: pointer; }
+.rec-btn.send { background: var(--accent); }
+
 /* ===================== НИЖНЯЯ НАВИГАЦИЯ (Liquid Glass) ===================== */
 .bottom-nav {
   position: absolute; bottom: 20px; left: 16px; right: 16px;
   background: rgba(28, 28, 30, 0.65); 
-  backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
+  backdrop-filter: blur(45px) saturate(200%); -webkit-backdrop-filter: blur(45px) saturate(200%);
   border: 1px solid var(--glass-border); border-radius: 35px;
   display: flex; justify-content: space-around; align-items: center;
   padding: 6px; box-shadow: var(--glass-shadow); z-index: 20;
   padding-bottom: calc(6px + env(safe-area-inset-bottom));
-  transition: transform 0.3s, opacity 0.3s;
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.3s;
 }
 .app.chat-open .bottom-nav { transform: translateY(150px); opacity: 0; pointer-events: none; }
 
@@ -330,7 +340,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   <div class="view-container" id="view-chats">
     <div class="screen-header">
       <button class="btn-text">Изм.</button>
-      <div class="header-title">✈️ Аноним Нет</div>
+      <div class="header-title">anonimnet</div>
       <button class="icon-btn-bg">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
       </button>
@@ -368,15 +378,15 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
     <div class="content-scroll">
       <div class="list-group" style="margin-top:20px;">
         <div class="list-item">
-          <div class="list-icon" style="background:#0a84ff"><svg viewBox="0 0 24 24" fill="#fff" width="18" height="18"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+          <div class="list-icon" style="background:#0a84ff"><svg viewBox="0 0 24 24" fill="#fff" width="20" height="20"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
           <div class="list-text">Иван Иванов</div>
         </div>
         <div class="list-item">
-          <div class="list-icon" style="background:#30d158"><svg viewBox="0 0 24 24" fill="#fff" width="18" height="18"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+          <div class="list-icon" style="background:#30d158"><svg viewBox="0 0 24 24" fill="#fff" width="20" height="20"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
           <div class="list-text">Анна Смирнова</div>
         </div>
         <div class="list-item">
-          <div class="list-icon" style="background:#ff9f0a"><svg viewBox="0 0 24 24" fill="#fff" width="18" height="18"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+          <div class="list-icon" style="background:#ff9f0a"><svg viewBox="0 0 24 24" fill="#fff" width="20" height="20"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
           <div class="list-text">Максим Петров</div>
         </div>
       </div>
@@ -395,7 +405,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
     <div class="content-scroll" style="padding-top: 10px;">
       <div class="list-group">
         <div class="list-item">
-          <div class="list-icon" style="background:#ff453a"><svg viewBox="0 0 24 24" fill="#fff" width="18" height="18"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.2c.28-.28.36-.67.25-1.02C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg></div>
+          <div class="list-icon" style="background:#ff453a"><svg viewBox="0 0 24 24" fill="#fff" width="20" height="20"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.2c.28-.28.36-.67.25-1.02C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg></div>
           <div class="list-text" style="flex:1">
             <div>Иван Иванов</div>
             <div class="list-sub">Исходящий • 12:40</div>
@@ -403,7 +413,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
           <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--accent)"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
         </div>
         <div class="list-item">
-          <div class="list-icon" style="background:#30d158"><svg viewBox="0 0 24 24" fill="#fff" width="18" height="18"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.2c.28-.28.36-.67.25-1.02C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg></div>
+          <div class="list-icon" style="background:#30d158"><svg viewBox="0 0 24 24" fill="#fff" width="20" height="20"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.2c.28-.28.36-.67.25-1.02C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg></div>
           <div class="list-text" style="flex:1">
             <div>Анна Смирнова</div>
             <div class="list-sub" style="color:#ff453a">Пропущенный • 10:15</div>
@@ -424,10 +434,10 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
     <div class="content-scroll">
       <div class="list-group" style="margin-top: 20px;">
         <div class="list-item">
-          <div class="list-icon" style="background:#0a84ff"><svg viewBox="0 0 24 24" fill="#fff" width="18" height="18"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+          <div class="list-icon" style="background:#0a84ff"><svg viewBox="0 0 24 24" fill="#fff" width="20" height="20"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
           <div class="list-text" style="flex:1">
-            <div style="font-weight:600;">Аноним</div>
-            <div class="list-sub">+7 999 123-45-67</div>
+            <div style="font-weight:600;">Пользователь</div>
+            <div class="list-sub">@anonimnet_user</div>
           </div>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </div>
@@ -484,7 +494,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
       </button>
       <div class="avatar" id="chatAvatar">А</div>
       <div class="chat-title">
-        <div class="name" id="chatName">Аноним</div>
+        <div class="name" id="chatName">anonimnet</div>
         <div class="status" id="chatStatus">в сети</div>
       </div>
       <button class="icon-btn-bg" style="background:transparent">
@@ -583,10 +593,10 @@ const AVATAR_TEAM = `<svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"
 // === Данные ===
 const chats = [
   {
-    id: 'anonym', name: 'Аноним', avatar: 'А', color: 'linear-gradient(135deg, #0a84ff, #0066cc)',
+    id: 'anonym', name: 'anonimnet', avatar: 'A', color: 'linear-gradient(135deg, #0a84ff, #0066cc)',
     status: 'в сети', time: '12:02', unread: 0, pinned: true, muted: false,
     messages: [
-      {id:nid(), out:false, type:'text', time:'11:58', text:'Привет 👋 Добро пожаловать в Аноним Нет!', reactions:{}, mine:{}},
+      {id:nid(), out:false, type:'text', time:'11:58', text:'Привет 👋 Добро пожаловать в anonimnet!', reactions:{}, mine:{}},
       {id:nid(), out:false, type:'text', time:'11:59', text:'Оцени премиальный дизайн и жидкое стекло 🧊', reactions:{'🔥':3}, mine:{}},
       {id:nid(), out:true, type:'text', time:'12:02', text:'Вот это уровень! Кайф!', reactions:{}, mine:{}}
     ]
@@ -612,7 +622,7 @@ const chats = [
 let activeId = 'anonym';
 const activeChat = () => chats.find(c => c.id === activeId);
 
-// === Переключение вкладок (Нижнее меню) ===
+// === Переключение вкладок ===
 const navItems = $$('.nav-item');
 const views = {
   chats: $('#view-chats'),
@@ -623,15 +633,11 @@ const views = {
 
 navItems.forEach(item => {
   item.onclick = () => {
-    // Убираем активный класс у всех
     navItems.forEach(n => n.classList.remove('active'));
-    // Добавляем нажатой
     item.classList.add('active');
     
-    // Скрываем все экраны
     Object.values(views).forEach(v => v.hidden = true);
     
-    // Показываем нужный
     const tabId = item.dataset.tab;
     views[tabId].hidden = false;
   };
