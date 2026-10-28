@@ -6,33 +6,26 @@
 <title>Аноним Нет</title>
 <style>
 /* ============================================================
-   АНОНИМ НЕТ — Telegram iOS Style (3D Liquid Glass)
+   АНОНИМ НЕТ — Telegram iOS Style (Ultimate 3D Liquid Glass)
    ============================================================ */
 :root {
-  /* iOS Telegram Colors */
   --bg-base: #000000;
   --bg-panel: #1c1c1e;
   --bg-panel-hover: #2c2c2e;
   --bg-search: #1c1c1e;
-  --bg-nav: rgba(28, 28, 30, 0.75);
-  
   --text-main: #ffffff;
   --text-dim: #8e8e93;
-  --accent: #0a84ff; /* iOS Blue */
-  --accent-gradient: linear-gradient(135deg, #0a84ff, #0066cc);
+  --accent: #0a84ff;
+  --accent-gradient: linear-gradient(180deg, #0a84ff, #006ee6);
   
-  /* Bubbles */
   --bubble-in: #262628;
   --bubble-out: #0a84ff;
   --bubble-out-gradient: linear-gradient(180deg, #0a84ff, #0077ed);
   
-  --doodle: rgba(255, 255, 255, 0.03);
   --border: rgba(255, 255, 255, 0.08);
-  
-  /* Glassmorphism */
-  --glass-bg: rgba(30, 30, 32, 0.65);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  --glass-bg: rgba(35, 35, 38, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 * {
@@ -43,64 +36,55 @@
 [hidden] { display: none !important; }
 html, body { height: 100%; overflow: hidden; background: var(--bg-base); color: var(--text-main); }
 
-button { cursor: pointer; border: none; background: none; color: inherit; }
+button { cursor: pointer; border: none; background: none; color: inherit; outline: none; }
 input, textarea { border: none; outline: none; background: none; color: inherit; }
 
 .app { display: flex; height: 100vh; height: 100dvh; overflow: hidden; }
 
-/* ===================== САЙДБАР (СПИСОК ЧАТОВ) ===================== */
+/* ===================== САЙДБАР ===================== */
 .sidebar {
-  width: 100%; max-width: 420px; background: var(--bg-base);
+  width: 100%; max-width: 480px; background: var(--bg-base);
   display: flex; flex-direction: column; position: relative;
   transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
   z-index: 10;
 }
 
-/* Шапка */
 .sb-header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 16px; padding-top: calc(12px + env(safe-area-inset-top));
 }
-.btn-text { font-size: 17px; color: var(--text-main); font-weight: 400; }
+.btn-text { font-size: 17px; color: var(--text-main); }
 .btn-text.dim { color: var(--text-dim); }
-.header-center { display: flex; gap: 16px; align-items: center; }
-.header-title { font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-.icon-btn { font-size: 22px; color: var(--text-main); display: grid; place-items: center; }
+.header-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 .icon-btn-bg {
   width: 36px; height: 36px; border-radius: 50%; background: var(--bg-panel);
   display: grid; place-items: center; font-size: 18px; transition: 0.2s;
 }
 .icon-btn-bg:active { transform: scale(0.92); background: var(--bg-panel-hover); }
 
-/* Поиск */
 .search-wrap { padding: 8px 16px; }
 .search {
   width: 100%; background: var(--bg-search); border-radius: 12px;
-  padding: 8px 12px; font-size: 17px; color: var(--text-main);
-  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; display: flex; align-items: center; gap: 8px;
 }
 .search input { width: 100%; font-size: 17px; }
 .search input::placeholder { color: var(--text-dim); }
 
-/* Папки */
-.folders {
-  display: flex; gap: 8px; padding: 8px 16px; overflow-x: auto; scrollbar-width: none;
-}
+.folders { display: flex; gap: 8px; padding: 8px 16px; overflow-x: auto; scrollbar-width: none; }
 .folders::-webkit-scrollbar { display: none; }
 .folder {
   background: var(--bg-panel); padding: 6px 14px; border-radius: 20px;
   font-size: 15px; font-weight: 500; white-space: nowrap; display: flex; align-items: center; gap: 6px;
-  transition: 0.2s;
+  transition: 0.2s; cursor: pointer;
 }
 .folder.active { background: #3a3a3c; }
 .folder-badge { background: var(--bg-panel-hover); border-radius: 10px; padding: 1px 6px; font-size: 13px; }
 
-/* Список чатов */
 .chat-list { flex: 1; overflow-y: auto; padding-bottom: 100px; }
 .chat-list::-webkit-scrollbar { display: none; }
 
 .chat-item {
-  display: flex; align-items: center; gap: 12px; padding: 8px 16px;
+  display: flex; align-items: center; gap: 12px; padding: 10px 16px;
   transition: background 0.2s; cursor: pointer;
 }
 .chat-item:active { background: var(--bg-panel); }
@@ -120,7 +104,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--bg-base);
 }
 
-.ci-body { flex: 1; min-width: 0; border-bottom: 1px solid var(--border); padding-bottom: 8px; padding-top: 4px; }
+.ci-body { flex: 1; min-width: 0; border-bottom: 1px solid var(--border); padding-bottom: 10px; padding-top: 2px; }
 .chat-item:last-child .ci-body { border-bottom: none; }
 
 .ci-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
@@ -128,13 +112,11 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .ci-time { font-size: 14px; color: var(--text-dim); display: flex; align-items: center; gap: 4px; }
 .ci-bottom { display: flex; justify-content: space-between; align-items: center; }
 .ci-sub { font-size: 15px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ci-sub b { color: var(--text-main); font-weight: 400; }
 .badge {
   background: var(--text-dim); color: #fff; border-radius: 11px; font-size: 13px; font-weight: 600;
   padding: 2px 7px; min-width: 22px; text-align: center;
 }
 .badge.unread { background: var(--accent); }
-.badge.muted { background: #3a3a3c; color: var(--text-dim); }
 .icon-muted { font-size: 14px; color: var(--text-dim); }
 
 /* Нижняя навигация */
@@ -143,13 +125,13 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   background: var(--glass-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
   border: 1px solid var(--glass-border); border-radius: 30px;
   display: flex; justify-content: space-around; align-items: center;
-  padding: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 20;
+  padding: 6px; box-shadow: var(--glass-shadow); z-index: 20;
   padding-bottom: calc(6px + env(safe-area-inset-bottom));
 }
 .nav-item {
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
   font-size: 10px; font-weight: 500; color: var(--text-dim); padding: 6px 12px;
-  border-radius: 20px; transition: 0.2s;
+  border-radius: 20px; transition: 0.2s; cursor: pointer;
 }
 .nav-item.active { background: rgba(255,255,255,0.1); color: var(--accent); }
 .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
@@ -165,7 +147,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .chat-header {
   display: flex; align-items: center; gap: 12px; padding: 8px 12px;
   padding-top: calc(8px + env(safe-area-inset-top));
-  background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border); z-index: 10;
 }
 .chat-header .avatar { width: 42px; height: 42px; font-size: 16px; }
@@ -173,14 +155,14 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .chat-title .name { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
 .chat-title .status { font-size: 13px; color: var(--text-dim); }
 .chat-title .status.online { color: var(--accent); }
-.back-btn { color: var(--accent); font-size: 20px; margin-right: -4px; display: grid; place-items: center; }
+.back-btn { color: var(--accent); font-size: 20px; margin-right: -4px; display: grid; place-items: center; cursor: pointer; }
 
 /* Сообщения */
 .msgs-wrap { position: relative; flex: 1; overflow: hidden; }
-.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--doodle); pointer-events: none; }
+.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; color: rgba(255,255,255,0.03); pointer-events: none; }
 .messages {
-  position: absolute; inset: 0; overflow-y: auto; padding: 16px 16px 100px;
-  display: flex; flex-direction: column; gap: 4px; scroll-behavior: smooth;
+  position: absolute; inset: 0; overflow-y: auto; padding: 16px 16px 110px;
+  display: flex; flex-direction: column; gap: 6px; scroll-behavior: smooth;
 }
 .messages::-webkit-scrollbar { display: none; }
 
@@ -190,7 +172,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   margin: 12px 0; user-select: none;
 }
 
-/* 3D Bubbles */
+/* 3D Сообщения */
 .msg {
   max-width: 80%; padding: 8px 12px; border-radius: 18px;
   font-size: 16px; line-height: 1.35; word-break: break-word; position: relative;
@@ -202,9 +184,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   0% { opacity: 0; transform: scale(0.8) translateY(20px); }
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
-.msg.in {
-  align-self: flex-start; background: var(--bubble-in); border-bottom-left-radius: 6px;
-}
+.msg.in { align-self: flex-start; background: var(--bubble-in); border-bottom-left-radius: 6px; }
 .msg.out {
   align-self: flex-end; background: var(--bubble-out-gradient); border-bottom-right-radius: 6px;
   box-shadow: 0 2px 10px rgba(10, 132, 255, 0.3);
@@ -223,9 +203,10 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .reactions { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
 .reaction {
   background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
-  border-radius: 12px; padding: 2px 8px; font-size: 14px;
+  border-radius: 12px; padding: 2px 8px; font-size: 14px; color: #fff;
   display: flex; align-items: center; gap: 4px; transition: 0.2s;
   animation: reactionPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
 }
 @keyframes reactionPop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
 .reaction.mine { background: rgba(10, 132, 255, 0.4); border: 1px solid rgba(10, 132, 255, 0.6); }
@@ -233,14 +214,14 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
 /* Голосовые */
 .voice-msg { display: flex; align-items: center; gap: 12px; min-width: 180px; }
-.play-btn { width: 32px; height: 32px; border-radius: 50%; background: #fff; color: #000; display: grid; place-items: center; font-size: 12px; }
+.play-btn { width: 32px; height: 32px; border-radius: 50%; background: #fff; color: #000; display: grid; place-items: center; font-size: 12px; cursor: pointer; }
 .msg.in .play-btn { background: var(--accent); color: #fff; }
 .wave { display: flex; align-items: center; gap: 2px; height: 24px; flex: 1; }
 .wave span { width: 3px; border-radius: 2px; background: rgba(255,255,255,0.4); transition: 0.2s; }
 .msg.in .wave span { background: rgba(255,255,255,0.2); }
 .wave span.played { background: #fff; }
 
-/* ===================== 3D LIQUID GLASS COMPOSER ===================== */
+/* ===================== COMPOSER (Liquid Glass) ===================== */
 .composer-container {
   position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 16px;
   padding-bottom: calc(10px + env(safe-area-inset-bottom));
@@ -253,20 +234,18 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   background: var(--glass-bg);
   backdrop-filter: blur(30px) saturate(200%); -webkit-backdrop-filter: blur(30px) saturate(200%);
   border: 1px solid var(--glass-border);
-  border-radius: 24px;
-  padding: 6px;
+  border-radius: 24px; padding: 6px;
   box-shadow: var(--glass-shadow);
   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
-
 .composer-glass:focus-within {
-  border-color: rgba(255,255,255,0.25);
-  box-shadow: 0 15px 50px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255,255,255,0.3);
+  border-color: rgba(255,255,255,0.3);
+  box-shadow: 0 15px 50px rgba(0,0,0,0.8), inset 0 1px 3px rgba(255,255,255,0.4);
 }
 
 .attach-btn {
   width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
-  color: var(--text-dim); font-size: 20px; transition: 0.2s;
+  color: var(--text-dim); font-size: 20px; transition: 0.2s; cursor: pointer;
 }
 .attach-btn:active { background: rgba(255,255,255,0.1); transform: scale(0.9); }
 
@@ -281,17 +260,18 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
   background: var(--accent-gradient); color: #fff; font-size: 16px;
   box-shadow: 0 4px 12px rgba(10, 132, 255, 0.4); transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
 }
 .send-btn:active { transform: scale(0.85); }
 .send-btn.mic { background: transparent; box-shadow: none; color: var(--text-dim); }
 
-/* Запись голосового */
+/* Запись */
 .recording-ui { display: flex; align-items: center; gap: 12px; width: 100%; padding: 0 8px; height: 36px; }
 .rec-dot { width: 10px; height: 10px; border-radius: 50%; background: #ff453a; animation: blink 1s infinite; }
 @keyframes blink { 50% { opacity: 0.3; } }
 .rec-time { font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .rec-hint { flex: 1; color: var(--text-dim); font-size: 15px; }
-.rec-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.1); }
+.rec-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.1); cursor: pointer; }
 .rec-btn.send { background: var(--accent); }
 
 /* Меню и панели */
@@ -302,9 +282,9 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 }
 @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
 .ctx-emojis { display: flex; gap: 4px; padding: 6px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
-.ctx-emoji { font-size: 22px; padding: 4px; border-radius: 50%; transition: 0.1s; }
+.ctx-emoji { font-size: 22px; padding: 4px; border-radius: 50%; transition: 0.1s; cursor: pointer; }
 .ctx-emoji:active { transform: scale(1.3); }
-.ctx-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; font-size: 16px; border-radius: 10px; transition: 0.1s; }
+.ctx-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; font-size: 16px; border-radius: 10px; transition: 0.1s; cursor: pointer; }
 .ctx-item:active { background: var(--bg-panel-hover); }
 .ctx-item.danger { color: #ff453a; }
 
@@ -314,7 +294,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
   animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.emoji-panel button { font-size: 24px; transition: 0.1s; }
+.emoji-panel button { font-size: 24px; transition: 0.1s; cursor: pointer; }
 .emoji-panel button:active { transform: scale(1.3); }
 
 .toast {
@@ -338,12 +318,8 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   <aside class="sidebar" id="sidebar">
     <div class="sb-header">
       <button class="btn-text dim">Изм.</button>
-      <div class="header-center">
-        <div class="header-title">
-          <span style="color:var(--accent); font-size: 20px;">✈️</span> Аноним Нет
-        </div>
-      </div>
-      <button class="icon-btn icon-btn-bg" id="themeBtn">✎</button>
+      <div class="header-title">✈️ Аноним Нет</div>
+      <button class="icon-btn-bg" id="themeBtn">✎</button>
     </div>
 
     <div class="search-wrap">
@@ -355,9 +331,8 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
     <div class="folders">
       <div class="folder active">Все</div>
-      <div class="folder">Vz <span class="folder-badge">14</span></div>
-      <div class="folder">Перелив <span class="folder-badge">2</span></div>
-      <div class="folder">1 <span class="folder-badge">1</span></div>
+      <div class="folder">Избранное <span class="folder-badge">2</span></div>
+      <div class="folder">Архив <span class="folder-badge">1</span></div>
     </div>
 
     <div class="chat-list" id="chatList"></div>
@@ -416,7 +391,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 
       <div class="messages" id="messages"></div>
 
-      <!-- 3D LIQUID GLASS COMPOSER -->
+      <!-- COMPOSER -->
       <div class="composer-container">
         <div class="composer-glass" id="composerGlass">
           
@@ -453,9 +428,8 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 <div class="toast" id="toast"></div>
 
 <script>
+// === Утилиты ===
 const $ = s => document.querySelector(s);
-const $$ = s => [...document.querySelectorAll(s)];
-
 const nid = () => 'm' + Date.now() + Math.random().toString(36).substr(2, 5);
 const nowTime = () => {
   const d = new Date();
@@ -473,23 +447,11 @@ function toast(text) {
 
 const EMOJIS = ['👍','❤️','🔥','😂','😮','😢','🎉','👏','🤔','💩','😍','🥰','😎','🤯','🙏','💯'];
 
-// Данные с учетом стиля скриншота
+// === Данные (Чистые и стильные) ===
 const chats = [
   {
-    id: 'archive', name: 'Архив чатов', avatar: '📁', color: '#3a3a3c',
-    status: 'Взаимные подписки ❤️', time: '', unread: 182, muted: false, pinned: true,
-    messages: []
-  },
-  {
-    id: '9g', name: '9г', avatar: '9г', color: '#ff453a',
-    status: 'Максон: Опять', time: '13:10', unread: 0, muted: true, pinned: true,
-    messages: [
-      {id:nid(), out:false, type:'text', time:'13:09', text:'Опять', reactions:{}, mine:{}}
-    ]
-  },
-  {
     id: 'anonym', name: 'Аноним', avatar: 'А', color: '#0a84ff',
-    status: 'в сети', time: '12:02', unread: 0, muted: false, pinned: false,
+    status: 'в сети', time: '12:02', unread: 0, pinned: true, muted: false,
     messages: [
       {id:nid(), out:false, type:'text', time:'11:58', text:'Привет 👋 Добро пожаловать в Аноним Нет!', reactions:{}, mine:{}},
       {id:nid(), out:false, type:'text', time:'11:59', text:'Оцени 3D-эффекты и жидкое стекло 🧊', reactions:{'🔥':3}, mine:{}},
@@ -498,10 +460,18 @@ const chats = [
   },
   {
     id: 'secret', name: 'Секретный чат', avatar: '🔒', color: '#30d158',
-    status: 'был(а) недавно', time: '10:13', unread: 2, muted: false, pinned: false,
+    status: 'был(а) недавно', time: '10:13', unread: 2, pinned: false, muted: false,
     messages: [
       {id:nid(), out:false, type:'text', time:'10:12', text:'Этот чат шифруется 🛡️', reactions:{}, mine:{}},
       {id:nid(), out:false, type:'voice', time:'10:13', reactions:{'❤️':1}, mine:{}, voice:{url:null, duration:6, bars:Array.from({length:30},()=>Math.random()*0.8+0.2)}}
+    ]
+  },
+  {
+    id: 'team', name: 'Команда', avatar: '👥', color: '#ff9f0a',
+    status: 'Вы: Принято!', time: '09:31', unread: 0, pinned: false, muted: true,
+    messages: [
+      {id:nid(), out:false, type:'text', time:'09:30', text:'Собираем релиз в пятницу 🚀', reactions:{'👍':5}, mine:{}},
+      {id:nid(), out:true, type:'text', time:'09:31', text:'Принято!', reactions:{}, mine:{}}
     ]
   }
 ];
@@ -509,23 +479,22 @@ const chats = [
 let activeId = 'anonym';
 const activeChat = () => chats.find(c => c.id === activeId);
 
-// Рендер списка чатов
+// === Рендер списка чатов ===
 function renderChatList(filter = '') {
   const list = $('#chatList');
   list.innerHTML = '';
+  
   chats.filter(c => c.name.toLowerCase().includes(filter.toLowerCase())).forEach(c => {
     const el = document.createElement('div');
     el.className = 'chat-item';
     
-    // Кольцо вокруг аватара (для архива)
-    const ringHTML = c.id === 'archive' ? `<div class="avatar-ring active"></div>` : '';
+    // Аватарка с кольцом, если онлайн
+    const ringHTML = c.status === 'в сети' ? `<div class="avatar-ring active"></div>` : '';
     
-    // Иконки справа
     let rightIcon = '';
     if (c.pinned) rightIcon = `<span class="icon-muted">📌</span>`;
     else if (c.muted) rightIcon = `<span class="icon-muted">🔕</span>`;
 
-    // Бейдж
     let badge = '';
     if (c.unread > 0) {
       badge = `<div class="badge ${c.muted ? 'muted' : 'unread'}">${c.unread}</div>`;
@@ -552,7 +521,7 @@ function renderChatList(filter = '') {
   });
 }
 
-// Переключение чата
+// === Переключение чата ===
 function switchChat(id) {
   activeId = id;
   const c = activeChat();
@@ -574,7 +543,7 @@ function switchChat(id) {
   closeContext();
 }
 
-// Рендер сообщений
+// === Рендер сообщений ===
 function renderMessages() {
   const box = $('#messages');
   box.innerHTML = '';
@@ -600,7 +569,6 @@ function scrollToBottom(instant) {
   });
 }
 
-// Создание элемента сообщения
 function messageEl(m) {
   const el = document.createElement('div');
   el.className = `msg ${m.out ? 'out' : 'in'}`;
@@ -629,7 +597,7 @@ function messageEl(m) {
 
   attachContext(el, m);
 
-  // Двойной клик = сердечко
+  // Двойной клик по сообщению = сердечко
   el.addEventListener('dblclick', e => {
     if(window.getSelection().toString()) return;
     e.preventDefault();
@@ -639,7 +607,8 @@ function messageEl(m) {
   return el;
 }
 
-// Голосовое сообщение
+// === Голосовые ===
+let currentAudio = null;
 function voiceEl(m) {
   const v = m.voice;
   const wrap = document.createElement('div');
@@ -663,20 +632,28 @@ function voiceEl(m) {
   dur.style.fontSize = '12px';
   dur.style.fontWeight = '500';
   dur.textContent = fmt(v.duration);
+  wrap.appendChild(dur);
+
+  const bars = [...wave.children];
 
   if(!v.url) {
-    btn.onclick = e => { e.stopPropagation(); toast('Демо голосовое'); };
+    btn.onclick = e => { e.stopPropagation(); toast('Демо голосовое (без аудио)'); };
     return wrap;
   }
 
   const audio = new Audio(v.url);
-  const bars = [...wave.children];
 
   btn.onclick = e => {
     e.stopPropagation();
+    if(currentAudio && currentAudio !== audio) {
+      currentAudio.pause();
+      currentAudio.dispatchEvent(new Event('pause'));
+    }
+    
     if(audio.paused) {
       audio.play();
       btn.innerHTML = '❚❚';
+      currentAudio = audio;
     } else {
       audio.pause();
       btn.innerHTML = '▶';
@@ -688,20 +665,31 @@ function voiceEl(m) {
     bars.forEach((b,i) => b.classList.toggle('played', i / bars.length < p));
     dur.textContent = fmt(Math.max(0, audio.duration - audio.currentTime));
   };
-  audio.onended = () => { btn.innerHTML = '▶'; bars.forEach(b=>b.classList.remove('played')); dur.textContent = fmt(v.duration); };
+  
+  audio.onended = () => { 
+    btn.innerHTML = '▶'; 
+    bars.forEach(b=>b.classList.remove('played')); 
+    dur.textContent = fmt(v.duration); 
+    currentAudio = null;
+  };
+  audio.onpause = () => { btn.innerHTML = '▶'; };
 
   return wrap;
 }
 
-// Реакции
+// === Реакции ===
 function renderReactions(container, m) {
   container.innerHTML = '';
   const entries = Object.entries(m.reactions).filter(([,c]) => c > 0);
+  
   entries.forEach(([emoji, count]) => {
     const chip = document.createElement('button');
     chip.className = 'reaction' + (m.mine[emoji] ? ' mine' : '');
     chip.innerHTML = `<span>${emoji}</span><b>${count}</b>`;
-    chip.onclick = e => { e.stopPropagation(); toggleReaction(m, emoji); };
+    chip.onclick = e => { 
+      e.stopPropagation(); 
+      toggleReaction(m, emoji); 
+    };
     container.appendChild(chip);
   });
 }
@@ -719,16 +707,21 @@ function toggleReaction(m, emoji) {
   if(box) renderReactions(box, m);
 }
 
-// Контекстное меню
+// === Контекстное меню (ПКМ / Долгий тап) ===
 let ctxEl = null;
 function closeContext() { if(ctxEl) { ctxEl.remove(); ctxEl = null; } }
 document.addEventListener('click', closeContext);
+document.addEventListener('contextmenu', e => {
+  // Закрываем меню при клике вне сообщения
+  if (!e.target.closest('.msg')) closeContext();
+});
 
 function openContext(x, y, m) {
   closeContext();
   const menu = document.createElement('div');
   menu.className = 'ctx';
 
+  // Эмодзи
   const row = document.createElement('div');
   row.className = 'ctx-emojis';
   EMOJIS.slice(0, 7).forEach(em => {
@@ -740,6 +733,19 @@ function openContext(x, y, m) {
   });
   menu.appendChild(row);
 
+  // Копировать
+  const copy = document.createElement('button');
+  copy.className = 'ctx-item';
+  copy.innerHTML = '<span>📋</span> Копировать';
+  copy.onclick = e => {
+    e.stopPropagation();
+    if(m.type === 'text') navigator.clipboard.writeText(m.text);
+    toast('Скопировано');
+    closeContext();
+  };
+  menu.appendChild(copy);
+
+  // Удалить
   const del = document.createElement('button');
   del.className = 'ctx-item danger';
   del.innerHTML = '<span>🗑</span> Удалить';
@@ -747,6 +753,8 @@ function openContext(x, y, m) {
   menu.appendChild(del);
 
   document.body.appendChild(menu);
+  
+  // Позиционирование
   const r = menu.getBoundingClientRect();
   menu.style.left = Math.max(10, Math.min(x, window.innerWidth - r.width - 10)) + 'px';
   menu.style.top = Math.max(10, Math.min(y, window.innerHeight - r.height - 10)) + 'px';
@@ -754,10 +762,26 @@ function openContext(x, y, m) {
 }
 
 function attachContext(el, m) {
-  el.addEventListener('contextmenu', e => { e.preventDefault(); openContext(e.clientX, e.clientY, m); });
+  // ПКМ
+  el.addEventListener('contextmenu', e => { 
+    e.preventDefault(); 
+    e.stopPropagation();
+    openContext(e.clientX, e.clientY, m); 
+  });
+  
+  // Долгий тап для мобилок
+  let timer;
+  el.addEventListener('touchstart', e => {
+    const touch = e.touches[0];
+    timer = setTimeout(() => openContext(touch.clientX, touch.clientY, m), 450);
+  }, {passive: true});
+  
+  ['touchend', 'touchmove', 'touchcancel'].forEach(ev => 
+    el.addEventListener(ev, () => clearTimeout(timer), {passive: true})
+  );
 }
 
-// Удаление
+// === Удаление ===
 function deleteMessage(id) {
   const chat = activeChat();
   const idx = chat.messages.findIndex(m => m.id === id);
@@ -769,11 +793,12 @@ function deleteMessage(id) {
     setTimeout(() => {
       chat.messages.splice(idx, 1);
       renderMessages();
+      toast('Сообщение удалено');
     }, 200);
   }
 }
 
-// Ввод и отправка
+// === Ввод и отправка ===
 const input = $('#input');
 const sendBtn = $('#sendBtn');
 
@@ -793,6 +818,7 @@ input.addEventListener('input', () => {
   updateComposer();
 });
 
+// Отправка по Enter
 input.addEventListener('keydown', e => {
   if(e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
@@ -800,7 +826,8 @@ input.addEventListener('keydown', e => {
   }
 });
 
-sendBtn.onclick = () => {
+sendBtn.onclick = (e) => {
+  e.preventDefault();
   if(input.value.trim()) sendText();
   else startRecording();
 };
@@ -808,31 +835,37 @@ sendBtn.onclick = () => {
 function sendText() {
   const text = input.value.trim();
   if(!text) return;
+  
   const chat = activeChat();
   const m = { id: nid(), out: true, type: 'text', text, time: nowTime(), reactions: {}, mine: {} };
   chat.messages.push(m);
   
-  // 3D-эффект вылета
+  // Плавно добавляем в DOM
   $('#messages').appendChild(messageEl(m));
+  
+  // Очищаем инпут
   input.value = '';
   input.style.height = 'auto';
   updateComposer();
   scrollToBottom();
   
-  // Обновляем превью в списке чатов
-  const c = chats.find(c => c.id === activeId);
-  c.status = 'Вы: ' + text;
-  c.time = nowTime();
-  renderChatList();
+  // Обновляем превью в списке
+  chat.status = 'Вы: ' + text;
+  chat.time = nowTime();
+  renderChatList($('#searchInput').value);
 }
 
-// Запись голосового
+// === Запись голосового ===
 let mediaRecorder, chunks = [], recStart = 0, recTimerId, recStream, recSendFlag = false;
 
 async function startRecording() {
   if(!navigator.mediaDevices?.getUserMedia) return toast('Запись недоступна');
-  try { recStream = await navigator.mediaDevices.getUserMedia({ audio: true }); } 
-  catch { return toast('Нет доступа к микрофону'); }
+  
+  try { 
+    recStream = await navigator.mediaDevices.getUserMedia({ audio: true }); 
+  } catch { 
+    return toast('Нет доступа к микрофону'); 
+  }
 
   chunks = [];
   mediaRecorder = new MediaRecorder(recStream);
@@ -870,18 +903,23 @@ function onRecordingStop() {
   const url = URL.createObjectURL(blob);
   
   const chat = activeChat();
-  const m = { id: nid(), out: true, type: 'voice', time: nowTime(), reactions: {}, mine: {}, voice: { url, duration, bars: Array.from({length:30},()=>Math.random()*0.8+0.2) } };
+  const m = { 
+    id: nid(), out: true, type: 'voice', time: nowTime(), reactions: {}, mine: {}, 
+    voice: { url, duration, bars: Array.from({length:30},()=>Math.random()*0.8+0.2) } 
+  };
   chat.messages.push(m);
   $('#messages').appendChild(messageEl(m));
   scrollToBottom();
   
-  renderChatList();
+  chat.status = '🎤 Голосовое сообщение';
+  chat.time = nowTime();
+  renderChatList($('#searchInput').value);
 }
 
 $('#recCancel').onclick = () => stopRecording(false);
 $('#recSend').onclick = () => stopRecording(true);
 
-// Эмодзи панель
+// === Эмодзи панель ===
 let emojiPanel = null;
 function closeEmojiPanel() { if(emojiPanel) { emojiPanel.remove(); emojiPanel = null; } }
 
@@ -898,7 +936,8 @@ $('#emojiBtn').onclick = e => {
   EMOJIS.concat(['😀','😂','🥰','😎','🤔','🙃','😴','🤯','🥳','😭','😡','🤝','✌️','💪','🌟','✨']).forEach(em => {
     const b = document.createElement('button');
     b.textContent = em;
-    b.onclick = () => {
+    b.onclick = (ev) => {
+      ev.stopPropagation();
       input.value += em;
       input.focus();
       updateComposer();
