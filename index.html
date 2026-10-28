@@ -8,271 +8,233 @@
 <title>anonimnet</title>
 <style>
 /* ============================================================
-   ANONIMNET — Ultimate Cosmic Premium UI
+   ANONIMNET — 1:1 Telegram iOS Clone
    ============================================================ */
 :root {
-  --bg-base: #000000;
-  --bg-panel: #1c1c1e;
-  --bg-panel-hover: #2c2c2e;
-  --bg-search: #1c1c1e;
+  /* Official Telegram Dark Theme Colors */
+  --bg-main: #0e1621;
+  --bg-panel: #17212b;
+  --bg-search: #242f3d;
+  --bg-hover: #202b36;
+  --bg-active: #2b5278;
   --text-main: #ffffff;
-  --text-dim: #8e8e93;
-  --accent: #0a84ff;
-  --accent-gradient: linear-gradient(180deg, #0a84ff, #0066cc);
+  --text-dim: #7d8e9e;
+  --accent: #64b5ef;
+  --accent-solid: #3390ec;
   
   /* Bubbles */
-  --bubble-in: #262628;
-  --bubble-out-gradient: linear-gradient(180deg, #1a8cff, #006ce6);
+  --bubble-in: #182533;
+  --bubble-out: #2b5278;
   
-  --border: rgba(255, 255, 255, 0.08);
-  
-  /* Premium Glassmorphism */
-  --glass-bg: rgba(28, 28, 30, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-  --glass-blur: blur(40px) saturate(200%);
+  /* Nav */
+  --nav-bg: rgba(23, 33, 43, 0.85);
+  --nav-border: rgba(255, 255, 255, 0.1);
 }
 
 * {
   box-sizing: border-box; margin: 0; padding: 0; 
   -webkit-tap-highlight-color: transparent;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   user-select: none;
 }
+
 [hidden] { display: none !important; }
 html, body { 
   height: 100%; 
   height: 100dvh; 
   overflow: hidden; 
-  overflow-x: hidden; /* Убираем горизонтальный скролл */
-  background: var(--bg-base); 
+  overflow-x: hidden;
+  background: var(--bg-main); 
   color: var(--text-main);
   overscroll-behavior: none;
 }
 
-button { cursor: pointer; border: none; background: none; color: inherit; outline: none; transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-button:active { transform: scale(0.9); }
+button { cursor: pointer; border: none; background: none; color: inherit; outline: none; }
 input, textarea { border: none; outline: none; background: none; color: inherit; font-family: inherit; }
 
 .app { 
-  position: absolute; 
-  inset: 0; 
-  display: flex; 
-  flex-direction: column; 
-  overflow: hidden; 
-  width: 100vw;
+  position: absolute; inset: 0; 
+  display: flex; flex-direction: column; 
+  overflow: hidden; width: 100vw;
 }
 
-/* ===================== ОБЩИЕ ЭКРАНЫ ===================== */
-.view-container {
+/* ===================== ЭКРАНЫ ===================== */
+.view-screen {
   position: absolute; inset: 0; display: flex; flex-direction: column;
-  animation: viewFade 0.35s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  background: var(--bg-main);
 }
-@keyframes viewFade { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
 .screen-header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 8px 16px; padding-top: calc(8px + env(safe-area-inset-top));
-  min-height: 44px;
+  min-height: 44px; background: var(--bg-panel); z-index: 10;
 }
-.header-title { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; }
+.header-title { font-size: 17px; font-weight: 600; letter-spacing: -0.4px; }
 .btn-text { font-size: 17px; color: var(--accent); font-weight: 400; }
-.icon-btn-bg {
-  width: 36px; height: 36px; border-radius: 50%; background: var(--bg-panel);
-  display: grid; place-items: center;
-}
-.icon-btn-bg:active { background: var(--bg-panel-hover); }
-
-.content-scroll { flex: 1; overflow-y: auto; padding-bottom: 120px; }
-.content-scroll::-webkit-scrollbar { display: none; }
+.icon-btn { display: grid; place-items: center; color: var(--accent); padding: 4px; }
 
 /* ===================== СПИСОК ЧАТОВ ===================== */
-.search-wrap { padding: 8px 16px; }
+.search-wrap { padding: 8px 16px; background: var(--bg-panel); }
 .search {
   width: 100%; background: var(--bg-search); border-radius: 10px;
   padding: 7px 12px; display: flex; align-items: center; gap: 6px;
 }
 .search svg { width: 18px; height: 18px; fill: var(--text-dim); }
-.search input { width: 100%; font-size: 17px; }
+.search input { width: 100%; font-size: 17px; color: var(--text-main); }
 .search input::placeholder { color: var(--text-dim); }
 
-.folders { display: flex; gap: 8px; padding: 8px 16px; overflow-x: auto; scrollbar-width: none; }
+.folders { display: flex; gap: 8px; padding: 8px 16px; background: var(--bg-panel); overflow-x: auto; scrollbar-width: none; }
 .folders::-webkit-scrollbar { display: none; }
 .folder {
-  background: var(--bg-panel); padding: 6px 14px; border-radius: 20px;
+  background: var(--bg-search); padding: 6px 14px; border-radius: 20px;
   font-size: 15px; font-weight: 500; white-space: nowrap; display: flex; align-items: center; gap: 6px;
   cursor: pointer; color: var(--text-main); letter-spacing: -0.2px;
 }
-.folder.active { background: #3a3a3c; }
-.folder-badge { background: var(--bg-panel-hover); border-radius: 10px; padding: 1px 6px; font-size: 13px; color: var(--text-dim); }
+.folder.active { background: var(--bg-active); }
+
+.content-scroll { flex: 1; overflow-y: auto; padding-bottom: 120px; background: var(--bg-panel); }
+.content-scroll::-webkit-scrollbar { display: none; }
 
 .chat-item {
   display: flex; align-items: center; gap: 12px; padding: 8px 16px;
-  cursor: pointer;
+  cursor: pointer; transition: background 0.1s;
 }
-.chat-item:active { background: var(--bg-panel); }
+.chat-item:active { background: var(--bg-hover); }
 
 .avatar-wrap { position: relative; flex: 0 0 auto; }
 .avatar {
   width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center;
   font-weight: 600; font-size: 22px; color: #fff;
-  box-shadow: inset 0 1px 1px rgba(255,255,255,0.15);
 }
 .avatar-ring {
   position: absolute; inset: -2px; border-radius: 50%;
-  background: conic-gradient(from 0deg, var(--accent), #30d158, var(--accent));
+  background: conic-gradient(from 0deg, var(--accent-solid), #30d158, var(--accent-solid));
   z-index: -1; opacity: 0;
   animation: pulseRing 2s infinite;
 }
 .avatar-ring.active { opacity: 1; }
-.avatar-ring::after {
-  content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--bg-base);
-}
-@keyframes pulseRing {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.04); opacity: 0.7; }
-  100% { transform: scale(1); opacity: 1; }
-}
+.avatar-ring::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: var(--bg-panel); }
+@keyframes pulseRing { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.04); opacity: 0.7; } }
 
-.ci-body { flex: 1; min-width: 0; border-bottom: 1px solid var(--border); padding-bottom: 8px; padding-top: 4px; }
+.ci-body { flex: 1; min-width: 0; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; padding-top: 4px; }
 .chat-item:last-child .ci-body { border-bottom: none; }
 
 .ci-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
-.ci-name { font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px; letter-spacing: -0.3px;}
+.ci-name { font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.3px; }
 .ci-time { font-size: 14px; color: var(--text-dim); display: flex; align-items: center; gap: 4px; }
 .ci-bottom { display: flex; justify-content: space-between; align-items: center; }
 .ci-sub { font-size: 15px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.2px; }
 .badge {
-  background: var(--text-dim); color: #fff; border-radius: 11px; font-size: 13px; font-weight: 600;
+  background: var(--accent-solid); color: #fff; border-radius: 11px; font-size: 13px; font-weight: 600;
   padding: 2px 7px; min-width: 22px; text-align: center;
 }
-.badge.unread { background: var(--accent); }
-
-.icon-svg { width: 14px; height: 14px; fill: var(--text-dim); }
-
-/* ===================== СПИСКИ ===================== */
-.list-group { background: var(--bg-panel); margin: 10px 16px; border-radius: 12px; overflow: hidden; }
-.list-item {
-  display: flex; align-items: center; gap: 12px; padding: 12px 16px;
-  border-bottom: 1px solid var(--border); cursor: pointer;
-}
-.list-item:last-child { border-bottom: none; }
-.list-item:active { background: var(--bg-panel-hover); }
-.list-icon { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; color: #fff; }
-.list-text { flex: 1; font-size: 17px; letter-spacing: -0.3px; }
-.list-sub { font-size: 14px; color: var(--text-dim); margin-top: 2px; }
+.badge.muted { background: var(--text-dim); }
 
 /* ===================== ЧАТ ===================== */
 .chat-overlay {
-  position: fixed; inset: 0; background: var(--bg-base); z-index: 100;
+  position: fixed; inset: 0; background: var(--bg-main); z-index: 100;
   display: flex; flex-direction: column;
-  transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
 }
 .app.chat-open .chat-overlay { transform: translateX(0); }
 
 .chat-header {
   display: flex; align-items: center; gap: 10px; padding: 8px 12px;
   padding-top: calc(8px + env(safe-area-inset-top));
-  background: rgba(0,0,0,0.75); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-  border-bottom: 1px solid var(--border); z-index: 10;
+  background: var(--bg-panel); border-bottom: 1px solid rgba(0,0,0,0.2); z-index: 10;
 }
 .chat-header .avatar { width: 40px; height: 40px; font-size: 16px; }
 .chat-title { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center;}
-.chat-title .name { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 4px; letter-spacing: -0.3px; }
+.chat-title .name { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; }
 .chat-title .status { font-size: 13px; color: var(--text-dim); }
 .chat-title .status.online { color: var(--accent); }
-.back-btn { color: var(--accent); font-size: 20px; margin-right: 2px; display: grid; place-items: center; padding: 4px;}
 
 /* Сообщения */
-.msgs-wrap { position: relative; flex: 1; overflow: hidden; width: 100%; }
+.msgs-wrap { position: relative; flex: 1; overflow: hidden; width: 100%; background: var(--bg-main); }
 
-/* КОСМИЧЕСКИЙ ПАТТЕРН (Отрисован вручную) */
-.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.25; }
+/* ПЛОТНЫЙ КОСМИЧЕСКИЙ ПАТТЕРН */
+.doodle-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.3; }
 .messages {
-  position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 16px 16px 110px;
+  position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 16px 16px 100px;
   display: flex; flex-direction: column; gap: 4px; scroll-behavior: smooth; z-index: 2;
 }
 .messages::-webkit-scrollbar { display: none; }
 
 .date-chip {
-  align-self: center; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+  align-self: center; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px);
   color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 500;
-  margin: 12px 0; letter-spacing: -0.1px;
+  margin: 12px 0;
 }
 
-/* ИДЕАЛЬНЫЕ ПУЗЫРИ (Как в современном Telegram) */
+/* ИДЕАЛЬНЫЕ ПУЗЫРИ (Telegram iOS) */
 .msg {
-  max-width: 82%; padding: 7px 12px 6px; border-radius: 18px;
+  max-width: 82%; padding: 6px 10px 6px; border-radius: 16px;
   font-size: 16px; line-height: 1.35; word-break: break-word; position: relative;
   animation: msgPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 @keyframes msgPop {
   0% { opacity: 0; transform: scale(0.9) translateY(10px); }
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* Входящее */
+/* Хвостики через border-radius (Секрет идеального Telegram) */
 .msg.in { 
   align-self: flex-start; background: var(--bubble-in); 
-  border-bottom-left-radius: 4px; /* Классический скос */
+  border-bottom-left-radius: 4px; 
 }
-/* Исходящее */
+.msg.in::before {
+  content: ""; position: absolute; left: -6px; bottom: 0; width: 12px; height: 15px;
+  background: var(--bubble-in); border-bottom-right-radius: 15px;
+}
+
 .msg.out {
-  align-self: flex-end; background: var(--bubble-out-gradient); 
-  border-bottom-right-radius: 4px; /* Классический скос */
-  box-shadow: inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 8px rgba(10, 132, 255, 0.25);
+  align-self: flex-end; background: var(--bubble-out); 
+  border-bottom-right-radius: 4px;
+}
+.msg.out::after {
+  content: ""; position: absolute; right: -6px; bottom: 0; width: 12px; height: 15px;
+  background: var(--bubble-out); border-bottom-left-radius: 15px;
 }
 
 .msg .text { white-space: pre-wrap; letter-spacing: -0.2px; }
 .msg .meta {
   display: flex; align-items: center; justify-content: flex-end; gap: 4px;
-  font-size: 12px; margin-top: 3px; color: rgba(255,255,255,0.6);
+  font-size: 12px; margin-top: 3px; color: var(--text-dim);
 }
-.msg.in .meta { color: var(--text-dim); }
-.tick { width: 15px; height: 15px; fill: #fff; margin-left: 2px;}
-.msg.in .tick { fill: var(--accent); }
+.msg.out .meta { color: rgba(255,255,255,0.6); }
+.tick { width: 15px; height: 15px; fill: var(--accent); margin-left: 2px;}
 
 /* Реакции */
 .reactions { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
 .reaction {
-  background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
-  border-radius: 12px; padding: 2px 8px; font-size: 14px; color: #fff;
-  display: flex; align-items: center; gap: 4px;
-  animation: reactionPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  border: 1px solid transparent;
+  background: rgba(255,255,255,0.1); border-radius: 12px; padding: 2px 8px; font-size: 14px; color: #fff;
+  display: flex; align-items: center; gap: 4px; border: 1px solid transparent;
 }
-@keyframes reactionPop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
-.reaction.mine { background: rgba(10, 132, 255, 0.5); border-color: rgba(10, 132, 255, 0.8); }
+.reaction.mine { background: rgba(100, 181, 239, 0.2); border-color: rgba(100, 181, 239, 0.4); }
 
 /* Голосовые */
 .voice-msg { display: flex; align-items: center; gap: 10px; min-width: 180px; }
 .play-btn { width: 32px; height: 32px; border-radius: 50%; background: #fff; color: #000; display: grid; place-items: center; font-size: 12px; padding-left: 2px;}
-.msg.in .play-btn { background: var(--accent); color: #fff; }
+.msg.in .play-btn { background: var(--accent-solid); color: #fff; }
 .wave { display: flex; align-items: center; gap: 2px; height: 24px; flex: 1; }
-.wave span { width: 3px; border-radius: 2px; background: rgba(255,255,255,0.4); }
-.msg.in .wave span { background: rgba(255,255,255,0.2); }
+.wave span { width: 3px; border-radius: 2px; background: rgba(255,255,255,0.3); }
 .wave span.played { background: #fff; }
 
 /* ===================== COMPOSER (Liquid Glass) ===================== */
 .composer-container {
   position: absolute; bottom: 0; left: 0; right: 0; padding: 10px 16px;
   padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);
+  background: linear-gradient(to top, rgba(14,22,33,0.95) 0%, rgba(14,22,33,0) 100%);
   z-index: 20; pointer-events: none;
 }
 .composer-glass {
   pointer-events: auto; display: flex; align-items: flex-end; gap: 6px;
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  border-radius: 24px; padding: 5px 6px;
-  box-shadow: var(--glass-shadow);
-}
-.composer-glass:focus-within {
-  border-color: rgba(255,255,255,0.3);
+  background: rgba(36, 47, 61, 0.7);
+  backdrop-filter: blur(30px) saturate(200%); -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 22px; padding: 5px 6px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1);
 }
 .attach-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--text-dim); }
 .attach-btn svg { width: 24px; height: 24px; fill: currentColor; }
@@ -284,43 +246,37 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 #input::placeholder { color: var(--text-dim); }
 .send-btn {
   width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
-  background: var(--accent-gradient); color: #fff;
-  box-shadow: inset 0 1px 1px rgba(255,255,255,0.3), 0 2px 10px rgba(10, 132, 255, 0.4); 
+  background: var(--accent-solid); color: #fff;
   flex: 0 0 auto;
 }
-.send-btn.mic { background: transparent; box-shadow: none; color: var(--text-dim); }
+.send-btn.mic { background: transparent; color: var(--text-dim); }
 .send-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
-/* Запись */
-.recording-ui { display: flex; align-items: center; gap: 12px; width: 100%; padding: 0 8px; height: 36px; }
-.rec-dot { width: 10px; height: 10px; border-radius: 50%; background: #ff453a; animation: blink 1s infinite; }
-@keyframes blink { 50% { opacity: 0.2; } }
-.rec-time { font-size: 16px; font-weight: 500; }
-.rec-hint { flex: 1; color: var(--text-dim); font-size: 15px; }
-.rec-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.1); }
-.rec-btn.send { background: var(--accent); }
-
-/* ===================== НИЖНЯЯ НАВИГАЦИЯ ===================== */
+/* ===================== НИЖНЯЯ НАВИГАЦИЯ (СТРОГО GRID) ===================== */
 .bottom-nav-wrapper {
-  position: absolute; bottom: 20px; left: 16px; right: 16px; z-index: 20;
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;
+  padding: 0 16px 20px 16px;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
   transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.3s;
+  pointer-events: none;
 }
-.app.chat-open .bottom-nav-wrapper { transform: translateY(150px); opacity: 0; pointer-events: none; }
+.app.chat-open .bottom-nav-wrapper { transform: translateY(150px); opacity: 0; }
 
 .bottom-nav {
+  pointer-events: auto;
   position: relative;
-  background: var(--glass-bg); 
-  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border); border-radius: 35px;
-  display: flex; align-items: center;
-  padding: 6px; box-shadow: var(--glass-shadow);
-  padding-bottom: calc(6px + env(safe-area-inset-bottom));
+  background: var(--nav-bg); 
+  backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 1px solid var(--nav-border); border-radius: 35px;
+  display: grid; 
+  grid-template-columns: 1fr 1fr 1fr 1fr; /* ЖЕСТКАЯ СЕТКА, НИКАКОГО РАСТЯГИВАНИЯ */
+  padding: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   overflow: hidden;
 }
 
 .nav-indicator {
-  position: absolute; top: 6px; bottom: calc(6px + env(safe-area-inset-bottom));
-  width: 25%; left: 0; 
+  position: absolute; top: 6px; bottom: 6px;
+  width: calc(25% - 3px); left: 6px; 
   background: rgba(255, 255, 255, 0.1);
   border-radius: 25px;
   transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -328,21 +284,19 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 }
 
 .nav-item {
-  width: 25%; flex: 0 0 25%;
   display: flex; flex-direction: column; align-items: center; gap: 4px;
   font-size: 10px; font-weight: 500; color: var(--text-dim); padding: 6px 0;
   position: relative; z-index: 2; letter-spacing: -0.1px;
 }
 .nav-item.active { color: var(--accent); }
-.nav-item.active svg { fill: var(--accent); transform: scale(1.1); }
-.nav-item svg { width: 24px; height: 24px; fill: currentColor; transition: transform 0.3s; }
+.nav-item.active svg { fill: var(--accent); }
+.nav-item svg { width: 24px; height: 24px; fill: currentColor; }
 
-/* Меню и панели */
+/* Меню */
 .ctx {
-  position: fixed; z-index: 200; background: rgba(40, 40, 44, 0.85); 
-  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  position: fixed; z-index: 200; background: #1c2733; 
   border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); min-width: 200px; padding: 6px;
-  border: 1px solid rgba(255,255,255,0.15); animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(255,255,255,0.1); animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
 .ctx-emojis { display: flex; gap: 4px; padding: 6px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 4px; }
@@ -352,18 +306,18 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 .ctx-item.danger { color: #ff453a; }
 .ctx-item svg { width: 20px; height: 20px; fill: currentColor; }
 
+/* Эмодзи */
 .emoji-panel {
-  position: fixed; z-index: 150; background: rgba(40, 40, 44, 0.85); 
-  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  position: fixed; z-index: 150; background: #1c2733; 
   border-radius: 16px; padding: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); 
-  border: 1px solid rgba(255,255,255,0.15); display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
-  animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(255,255,255,0.1); display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  animation: popIn 0.2s;
 }
 .emoji-panel button { font-size: 24px; padding: 4px; }
 
 .toast {
   position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: rgba(40, 40, 44, 0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.15);
+  background: #1c2733; border: 1px solid rgba(255,255,255,0.1);
   color: #fff; padding: 12px 20px; border-radius: 20px; font-size: 14px;
   opacity: 0; transition: 0.3s; pointer-events: none; z-index: 300;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -376,12 +330,12 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
 <div class="app" id="app">
   
   <!-- ЭКРАНЫ -->
-  <div class="view-container" id="view-chats">
+  <div class="view-screen" id="view-chats">
     <div class="screen-header">
       <button class="btn-text">Изм.</button>
       <div class="header-title">anonimnet</div>
-      <button class="icon-btn-bg">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      <button class="icon-btn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
       </button>
     </div>
     <div class="search-wrap">
@@ -398,62 +352,47 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
     <div class="content-scroll" id="chatList"></div>
   </div>
 
-  <div class="view-container" id="view-contacts" hidden>
+  <div class="view-screen" id="view-contacts" hidden>
     <div class="screen-header">
       <button class="btn-text">Группы</button>
       <div class="header-title">Контакты</div>
       <button class="btn-text">Создать</button>
     </div>
-    <div class="content-scroll">
-      <div class="list-group" style="margin-top:20px;">
-        <div class="list-item">
-          <div class="list-icon" style="background:#0a84ff"><svg viewBox="0 0 24 24" fill="#fff" width="20" height="20"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
-          <div class="list-text">Иван Иванов</div>
-        </div>
-        <div class="list-item">
-          <div class="list-icon" style="background:#30d158"><svg viewBox="0 0 24 24" fill="#fff" width="20" height="20"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
-          <div class="list-text">Анна Смирнова</div>
-        </div>
-      </div>
+    <div class="content-scroll" style="padding-top:20px;">
+      <div style="padding: 0 16px; font-size: 16px; color: var(--text-dim);">Иван Иванов</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.05);">Анна Смирнова</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.05);">Максим Петров</div>
     </div>
   </div>
 
-  <div class="view-container" id="view-calls" hidden>
+  <div class="view-screen" id="view-calls" hidden>
     <div class="screen-header">
       <button class="btn-text"></button>
       <div class="header-title">Звонки</div>
-      <button class="icon-btn-bg">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent)"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+      <button class="icon-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
       </button>
     </div>
-    <div class="content-scroll" style="padding-top: 10px;">
-      <div class="list-group">
-        <div class="list-item">
-          <div class="list-icon" style="background:#ff453a"><svg viewBox="0 0 24 24" fill="#fff" width="20" height="20"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.2c.28-.28.36-.67.25-1.02C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg></div>
-          <div class="list-text" style="flex:1">
-            <div>Иван Иванов</div>
-            <div class="list-sub">Исходящий • 12:40</div>
-          </div>
-        </div>
+    <div class="content-scroll" style="padding-top:10px;">
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+        <div style="font-size: 17px;">Иван Иванов</div>
+        <div style="font-size: 14px; color: var(--text-dim);">Исходящий • 12:40</div>
       </div>
     </div>
   </div>
 
-  <div class="view-container" id="view-settings" hidden>
+  <div class="view-screen" id="view-settings" hidden>
     <div class="screen-header">
       <button class="btn-text"></button>
       <div class="header-title">Настройки</div>
       <button class="btn-text">Править</button>
     </div>
-    <div class="content-scroll">
-      <div class="list-group" style="margin-top: 20px;">
-        <div class="list-item">
-          <div class="list-icon" style="background:#0a84ff"><svg viewBox="0 0 24 24" fill="#fff" width="20" height="20"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
-          <div class="list-text" style="flex:1">
-            <div style="font-weight:600;">Пользователь</div>
-            <div class="list-sub">@anonimnet_user</div>
-          </div>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    <div class="content-scroll" style="padding-top:20px;">
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); display:flex; align-items:center; gap:12px;">
+        <div class="avatar" style="background: var(--accent-solid); width: 50px; height: 50px;">A</div>
+        <div>
+          <div style="font-size: 17px; font-weight: 600;">Пользователь</div>
+          <div style="font-size: 14px; color: var(--text-dim);">@anonimnet_user</div>
         </div>
       </div>
     </div>
@@ -485,7 +424,7 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
   <!-- ЧАТ -->
   <main class="chat-overlay" id="chatOverlay">
     <header class="chat-header">
-      <button class="back-btn" id="backBtn">
+      <button class="icon-btn" id="backBtn" style="margin-right: 2px;">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
       <div class="avatar" id="chatAvatar">A</div>
@@ -493,80 +432,50 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
         <div class="name" id="chatName">anonimnet</div>
         <div class="status" id="chatStatus">в сети</div>
       </div>
-      <button class="icon-btn-bg" style="background:transparent">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="var(--accent)"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+      <button class="icon-btn">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
       </button>
     </header>
 
     <div class="msgs-wrap">
-      <!-- ПЛОТНЫЙ КОСМИЧЕСКИЙ ПАТТЕРН (Точно как на фото) -->
+      <!-- КОСМИЧЕСКИЙ ПАТТЕРН -->
       <svg class="doodle-bg" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <pattern id="spaceDoodle" width="400" height="400" patternUnits="userSpaceOnUse">
-            <g fill="none" stroke="url(#spaceGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              
-              <!-- Планета с кольцами -->
-              <g transform="translate(50, 50) scale(0.8)">
-                <circle cx="50" cy="50" r="25"/>
-                <ellipse cx="50" cy="50" rx="45" ry="12" transform="rotate(-15 50 50)"/>
-                <path d="M 30 45 Q 50 35 70 45" opacity="0.5"/>
-                <path d="M 35 60 Q 50 65 65 60" opacity="0.5"/>
+          <pattern id="spaceDoodle" width="300" height="300" patternUnits="userSpaceOnUse">
+            <g fill="none" stroke="#5c30ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
+              <g transform="translate(40, 40) scale(0.7)">
+                <circle cx="50" cy="50" r="20"/>
+                <ellipse cx="50" cy="50" rx="40" ry="10" transform="rotate(-15 50 50)"/>
               </g>
-              
-              <!-- Летающая тарелка -->
-              <g transform="translate(250, 60) scale(0.8)">
-                <ellipse cx="50" cy="50" rx="35" ry="12" fill="none"/>
+              <g transform="translate(180, 60) scale(0.7)">
+                <ellipse cx="50" cy="50" rx="30" ry="10" fill="none"/>
                 <path d="M 25 50 Q 50 15 75 50"/>
-                <circle cx="50" cy="40" r="10"/>
-                <path d="M 10 50 L 90 50"/>
+                <circle cx="50" cy="40" r="8"/>
+                <path d="M 15 50 L 85 50"/>
               </g>
-
-              <!-- Спутник -->
-              <g transform="translate(320, 200) scale(0.7)">
+              <g transform="translate(260, 200) scale(0.6)">
                 <rect x="40" y="40" width="20" height="20" rx="3"/>
                 <rect x="10" y="45" width="25" height="10"/>
                 <rect x="65" y="45" width="25" height="10"/>
                 <line x1="50" y1="40" x2="50" y2="20"/>
                 <circle cx="50" cy="15" r="5"/>
-                <line x1="40" y1="30" x2="25" y2="15"/>
-                <line x1="60" y1="30" x2="75" y2="15"/>
               </g>
-              
-              <!-- Комета -->
-              <g transform="translate(100, 250)">
-                <circle cx="20" cy="20" r="8"/>
-                <path d="M 15 15 L -20 -20 M 25 15 L -10 -20 M 20 25 L -15 -5" stroke-width="1.5" opacity="0.6"/>
+              <g transform="translate(60, 220)">
+                <circle cx="20" cy="20" r="6"/>
+                <path d="M 15 15 L -15 -15 M 25 15 L -5 -15 M 20 25 L -10 -5" stroke-width="1"/>
               </g>
-
-              <!-- Астронавт -->
-              <g transform="translate(220, 280) scale(0.6)">
-                <circle cx="50" cy="30" r="15"/>
-                <rect x="35" y="45" width="30" height="35" rx="10"/>
-                <path d="M 35 55 L 15 70 M 65 55 L 85 70"/>
-                <path d="M 40 80 L 30 100 M 60 80 L 70 100"/>
-                <rect x="40" y="25" width="20" height="10" rx="3" fill="currentColor" opacity="0.3"/>
+              <g transform="translate(150, 160) scale(0.5)">
+                <circle cx="50" cy="30" r="12"/>
+                <rect x="38" y="42" width="24" height="30" rx="8"/>
+                <path d="M 38 50 L 20 65 M 62 50 L 80 65"/>
+                <path d="M 42 72 L 32 90 M 58 72 L 68 90"/>
               </g>
-
-              <!-- Звезды -->
-              <path d="M 280 130 L 285 145 L 300 150 L 285 155 L 280 170 L 275 155 L 260 150 L 275 145 Z" stroke-width="2"/>
-              <path d="M 150 120 L 153 130 L 163 133 L 153 136 L 150 146 L 147 136 L 137 133 L 147 130 Z" stroke-width="2"/>
-              <path d="M 350 320 L 352 326 L 358 328 L 352 330 L 350 336 L 348 330 L 342 328 L 348 326 Z" stroke-width="2"/>
-              
-              <!-- Созвездие -->
-              <circle cx="80" cy="150" r="2" fill="currentColor"/>
-              <circle cx="120" cy="180" r="2" fill="currentColor"/>
-              <circle cx="60" cy="200" r="2" fill="currentColor"/>
-              <line x1="80" y1="150" x2="120" y2="180" stroke-width="1" opacity="0.4"/>
-              <line x1="120" y1="180" x2="60" y2="200" stroke-width="1" opacity="0.4"/>
-
+              <path d="M 230 130 L 233 140 L 243 143 L 233 146 L 230 156 L 227 146 L 217 143 L 227 140 Z"/>
+              <path d="M 120 80 L 122 85 L 127 87 L 122 89 L 120 94 L 118 89 L 113 87 L 118 85 Z"/>
+              <circle cx="180" cy="260" r="1.5" fill="#5c30ff"/>
+              <circle cx="280" cy="40" r="1.5" fill="#5c30ff"/>
+              <circle cx="40" cy="150" r="1.5" fill="#5c30ff"/>
             </g>
-            <!-- Градиент для линий -->
-            <defs>
-              <linearGradient id="spaceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#5c30ff" stop-opacity="0.7"/>
-                <stop offset="100%" stop-color="#00b3ff" stop-opacity="0.7"/>
-              </linearGradient>
-            </defs>
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#spaceDoodle)"/>
@@ -587,14 +496,14 @@ input, textarea { border: none; outline: none; background: none; color: inherit;
             <button class="send-btn mic" id="sendBtn"></button>
           </div>
           <div id="recPanel" hidden style="display:flex; width:100%;">
-            <div class="recording-ui">
-              <div class="rec-dot"></div>
-              <div class="rec-time" id="recTime">0:00</div>
-              <div class="rec-hint">Запись...</div>
-              <button class="rec-btn" id="recCancel">
+            <div style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 0 8px; height: 36px;">
+              <div style="width: 10px; height: 10px; border-radius: 50%; background: #ff453a; animation: blink 1s infinite;"></div>
+              <div style="font-size: 16px; font-weight: 500;" id="recTime">0:00</div>
+              <div style="flex: 1; color: var(--text-dim); font-size: 15px;">Запись...</div>
+              <button id="recCancel" style="width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.1);">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
-              <button class="rec-btn send" id="recSend">
+              <button id="recSend" style="width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-solid);">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
               </button>
             </div>
@@ -626,8 +535,8 @@ function toast(text) {
 }
 
 const EMOJIS = ['👍','❤️','🔥','😂','😮','😢','🎉','👏','🤔','💩','😍','🥰','😎','🤯','🙏','💯'];
-const SVG_PIN = `<svg class="icon-svg" viewBox="0 0 24 24"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/></svg>`;
-const SVG_MUTE = `<svg class="icon-svg" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>`;
+const SVG_PIN = `<svg class="icon-svg" style="width:14px; height:14px; fill:#7d8e9e;" viewBox="0 0 24 24"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/></svg>`;
+const SVG_MUTE = `<svg class="icon-svg" style="width:14px; height:14px; fill:#7d8e9e;" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>`;
 const SVG_DOUBLE_CHECK = `<svg class="tick" viewBox="0 0 24 24"><path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"/></svg>`;
 const SVG_MIC = `<svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>`;
 const SVG_SEND = `<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`;
@@ -638,16 +547,16 @@ const AVATAR_TEAM = `<svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"
 
 const chats = [
   {
-    id: 'anonym', name: 'anonimnet', avatar: 'A', color: 'linear-gradient(135deg, #0a84ff, #0066cc)',
+    id: 'anonym', name: 'anonimnet', avatar: 'A', color: '#3390ec',
     status: 'в сети', time: '12:02', unread: 0, pinned: true, muted: false,
     messages: [
       {id:nid(), out:false, type:'text', time:'11:58', text:'Привет 👋 Добро пожаловать в anonimnet!', reactions:{}, mine:{}},
-      {id:nid(), out:false, type:'text', time:'11:59', text:'Оцени премиальный дизайн и космическое стекло 🚀', reactions:{'🔥':3}, mine:{}},
+      {id:nid(), out:false, type:'text', time:'11:59', text:'Оцени премиальный дизайн 🚀', reactions:{'🔥':3}, mine:{}},
       {id:nid(), out:true, type:'text', time:'12:02', text:'Вот это уровень! Кайф!', reactions:{}, mine:{}}
     ]
   },
   {
-    id: 'secret', name: 'Секретный чат', avatar: 'svg-lock', color: 'linear-gradient(135deg, #30d158, #248a3d)',
+    id: 'secret', name: 'Секретный чат', avatar: 'svg-lock', color: '#30d158',
     status: 'был(а) недавно', time: '10:13', unread: 2, pinned: false, muted: false,
     messages: [
       {id:nid(), out:false, type:'text', time:'10:12', text:'Этот чат шифруется 🛡️', reactions:{}, mine:{}},
@@ -655,7 +564,7 @@ const chats = [
     ]
   },
   {
-    id: 'team', name: 'Команда', avatar: 'svg-team', color: 'linear-gradient(135deg, #ff9f0a, #c93400)',
+    id: 'team', name: 'Команда', avatar: 'svg-team', color: '#ff9f0a',
     status: 'Вы: Привет', time: '12:58', unread: 0, pinned: false, muted: true,
     messages: [
       {id:nid(), out:false, type:'text', time:'09:30', text:'Собираем релиз в пятницу 🚀', reactions:{'👍':5}, mine:{}},
@@ -1037,3 +946,4 @@ $('#app').classList.remove('chat-open');
 </script>
 </body>
 </html>
+
