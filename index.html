@@ -1,136 +1,936 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Новостной портал</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shirma — Новости</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f8f8f8;
+      --text: #111111;
+      --text-muted: #666666;
+      --accent: #c9a86c;
+      --accent-hover: #b89455;
+      --header-bg: #0a0a0a;
+      --border: #e5e5e5;
+      --danger: #c0392b;
+      --radius: 4px;
+      --max-width: 1120px;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #0d1117;
-            color: #c9d1d9;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        .wrapper {
-            max-width: 700px;
-            width: 100%;
-        }
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            border-bottom: 1px solid #30363d;
-            padding-bottom: 15px;
-        }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-        h1 {
-            color: #ffffff;
-            font-size: 22px;
-        }
+    button, input, textarea {
+      font-family: inherit;
+    }
 
-        .badge {
-            background: rgba(56, 139, 253, 0.15);
-            color: #58a6ff;
-            border: 1px solid rgba(56, 139, 253, 0.4);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
+    /* ========== HEADER ========== */
+    .header {
+      background: var(--header-bg);
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #222;
+    }
 
-        .news-container {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+    .header-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
 
-        .news-card {
-            background-color: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            padding: 20px;
-            transition: border-color 0.2s;
-        }
+    .logo {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      color: var(--accent);
+      transition: opacity 0.2s;
+    }
 
-        .news-card:hover {
-            border-color: #8b949e;
-        }
+    .logo:hover {
+      opacity: 0.85;
+    }
 
-        .news-category {
-            font-size: 12px;
-            color: #58a6ff;
-            text-transform: uppercase;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
+    .nav {
+      display: flex;
+      gap: 28px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
 
-        .news-title {
-            color: #ffffff;
-            font-size: 18px;
-            margin-bottom: 8px;
-            text-decoration: none;
-            display: block;
-        }
+    .nav a {
+      color: #ccc;
+      transition: color 0.2s;
+    }
 
-        .news-title:hover {
-            color: #58a6ff;
-        }
+    .nav a:hover,
+    .nav a.active {
+      color: #fff;
+    }
 
-        .news-desc {
-            font-size: 14px;
-            color: #8b949e;
-            line-height: 1.5;
-        }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
 
-        .news-date {
-            font-size: 12px;
-            color: #484f58;
-            margin-top: 12px;
-        }
-    </style>
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #111;
+    }
+
+    .btn-accent:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: #ccc;
+      border: 1px solid #444;
+    }
+
+    .btn-ghost:hover {
+      color: #fff;
+      border-color: #666;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .btn-danger:hover {
+      background: #a93226;
+    }
+
+    .btn-sm {
+      padding: 7px 14px;
+      font-size: 13px;
+    }
+
+    .user-badge {
+      font-size: 13px;
+      color: #aaa;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user-badge span {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* ========== MAIN ========== */
+    .main {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: 42px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .page-subtitle {
+      color: var(--text-muted);
+      font-size: 16px;
+      margin-bottom: 40px;
+    }
+
+    /* ========== FEED ========== */
+    .feed {
+      display: grid;
+      gap: 0;
+    }
+
+    .post-card {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .post-card:hover {
+      background: var(--bg-secondary);
+    }
+
+    .post-card.has-image {
+      grid-template-columns: 280px 1fr;
+      gap: 28px;
+    }
+
+    .post-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      background: #eee;
+    }
+
+    .post-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .post-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 10px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .post-meta .tag {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .post-title {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 600;
+      line-height: 1.25;
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
+    }
+
+    .post-excerpt {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state h2 {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    /* ========== ARTICLE VIEW ========== */
+    .article {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .article-header {
+      margin-bottom: 32px;
+    }
+
+    .article-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .article-title {
+      font-family: var(--font-serif);
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      margin-bottom: 20px;
+    }
+
+    .article-image {
+      width: 100%;
+      max-height: 480px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      margin-bottom: 32px;
+      background: #eee;
+    }
+
+    .article-body {
+      font-size: 18px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .article-body p {
+      margin-bottom: 1.2em;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--text);
+    }
+
+    /* ========== ADMIN ========== */
+    .admin-panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px;
+      margin-bottom: 40px;
+    }
+
+    .admin-panel h2 {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 15px;
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-group textarea {
+      min-height: 160px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .image-preview {
+      margin-top: 12px;
+      max-width: 240px;
+      border-radius: var(--radius);
+      display: none;
+    }
+
+    .image-preview.visible {
+      display: block;
+    }
+
+    /* ========== MODAL ========== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.25s;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      padding: 32px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      transform: translateY(20px);
+      transition: transform 0.25s;
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0);
+    }
+
+    .modal h2 {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .modal p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .modal .form-group {
+      margin-bottom: 16px;
+    }
+
+    .modal-error {
+      color: var(--danger);
+      font-size: 13px;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .modal-error.show {
+      display: block;
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      background: var(--header-bg);
+      color: #888;
+      padding: 40px 24px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .footer a {
+      color: var(--accent);
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 768px) {
+      .nav {
+        display: none;
+      }
+
+      .post-card.has-image {
+        grid-template-columns: 1fr;
+      }
+
+      .post-image {
+        height: 200px;
+      }
+
+      .post-title {
+        font-size: 22px;
+      }
+
+      .article-title {
+        font-size: 28px;
+      }
+
+      .page-title {
+        font-size: 32px;
+      }
+
+      .header-inner {
+        padding: 0 16px;
+      }
+
+      .main {
+        padding: 28px 16px 60px;
+      }
+    }
+
+    /* Utility */
+    .hidden {
+      display: none !important;
+    }
+
+    .admin-only {
+      display: none;
+    }
+
+    body.is-admin .admin-only {
+      display: block;
+    }
+
+    body.is-admin .guest-only {
+      display: none;
+    }
+  </style>
 </head>
 <body>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="#" class="logo" onclick="showFeed(); return false;">shirma</a>
+      
+      <nav class="nav">
+        <a href="#" class="active" onclick="showFeed(); return false;">Новости</a>
+        <a href="#" onclick="showFeed(); return false;">Истории</a>
+        <a href="#" onclick="alert('Раздел в разработке'); return false;">Разбор</a>
+      </nav>
 
-    <div class="wrapper">
-        <header>
-            <h1>📰 Лента новостей</h1>
-            <div class="badge">Live</div>
-        </header>
-
-        <div class="news-container">
-            <div class="news-card">
-                <div class="news-category">Технологии</div>
-                <a href="#" class="news-title">Запуск новой версии платформы и обновление интерфейса</a>
-                <div class="news-desc">Команда разработчиков выкатила свежий патч: улучшена скорость работы, исправлены баги интерфейса и добавлена поддержка новых тем оформления.</div>
-                <div class="news-date">Сегодня, 14:20</div>
-            </div>
-
-            <div class="news-card">
-                <div class="news-category">Игры</div>
-                <div class="news-title">Главные анонсы недели: что показали разработчики</div>
-                <div class="news-desc">Обзор свежих трейлеров, патчноутов популярных мобильных и ПК-игр, а также инсайды со стримов разработчиков.</div>
-                <div class="news-date">Вчера, 21:05</div>
-            </div>
-
-            <div class="news-card">
-                <div class="news-category">Сообщество</div>
-                <div class="news-title">Как развиваются независимые проекты на GitHub Pages</div>
-                <div class="news-desc">Разбор того, как запустить свой мини-сервис, настроить хостинг без лишней боли и собрать вокруг него активное комьюнити.</div>
-                <div class="news-date">3 дня назад</div>
-            </div>
+      <div class="header-actions">
+        <div class="user-badge guest-only">
+          <button class="btn btn-ghost btn-sm" onclick="openLogin()">Войти</button>
         </div>
+        <div class="user-badge admin-only">
+          <span id="adminName">Админ</span>
+          <button class="btn btn-ghost btn-sm" onclick="logout()">Выйти</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- FEED VIEW -->
+    <div id="feedView">
+      <div class="admin-only">
+        <div class="admin-panel">
+          <h2>Новый материал</h2>
+          <form id="postForm" onsubmit="publishPost(event)">
+            <div class="form-group">
+              <label>Заголовок</label>
+              <input type="text" id="postTitle" required placeholder="Крупный и цепляющий заголовок" maxlength="200">
+            </div>
+            <div class="form-group">
+              <label>Текст материала</label>
+              <textarea id="postBody" required placeholder="Основной текст новости или статьи..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Изображение (URL или загрузи файл)</label>
+              <input type="url" id="postImageUrl" placeholder="https://example.com/photo.jpg">
+              <input type="file" id="postImageFile" accept="image/*" style="margin-top: 8px;" onchange="handleImageUpload(event)">
+              <img id="imagePreview" class="image-preview" alt="Превью">
+            </div>
+            <div class="form-group">
+              <label>Рубрика</label>
+              <select id="postTag">
+                <option value="новости">Новости</option>
+                <option value="истории">Истории</option>
+                <option value="разбор">Разбор</option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-accent">Опубликовать</button>
+              <button type="button" class="btn btn-ghost" onclick="resetForm()">Очистить</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <h1 class="page-title">Новости</h1>
+      <p class="page-subtitle">Актуальные материалы Shirma</p>
+
+      <div id="feed" class="feed">
+        <!-- posts will be rendered here -->
+      </div>
     </div>
 
+    <!-- ARTICLE VIEW -->
+    <div id="articleView" class="hidden">
+      <a href="#" class="back-link" onclick="showFeed(); return false;">← Назад к ленте</a>
+      <article class="article" id="articleContent">
+        <!-- filled by JS -->
+      </article>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2026 Shirma. Независимые новости.</p>
+    <p style="margin-top: 8px;">Сделано с уважением к свободной журналистике</p>
+  </footer>
+
+  <!-- LOGIN MODAL -->
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal">
+      <h2>Вход в редакцию</h2>
+      <p>Только авторизованные редакторы могут публиковать материалы.</p>
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Логин</label>
+          <input type="text" id="loginUser" required autocomplete="username" placeholder="admin">
+        </div>
+        <div class="form-group">
+          <label>Пароль</label>
+          <input type="password" id="loginPass" required autocomplete="current-password" placeholder="••••••••">
+        </div>
+        <div class="modal-error" id="loginError">Неверный логин или пароль</div>
+        <div class="form-actions" style="margin-top: 20px;">
+          <button type="submit" class="btn btn-accent" style="flex: 1;">Войти</button>
+          <button type="button" class="btn btn-ghost" onclick="closeLogin()">Отмена</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ========== CONFIG ==========
+    // Измени эти данные под себя!
+    const ADMIN_CREDENTIALS = {
+      username: 'admin',
+      password: 'shirma2026'   // ← смени пароль!
+    };
+
+    // ========== STATE ==========
+    let posts = [];
+    let currentUser = null;
+    let imageDataUrl = null;
+
+    // ========== INIT ==========
+    document.addEventListener('DOMContentLoaded', () => {
+      loadPosts();
+      checkAuth();
+      renderFeed();
+    });
+
+    // ========== AUTH ==========
+    function checkAuth() {
+      const saved = localStorage.getItem('shirma_auth');
+      if (saved === 'true') {
+        currentUser = ADMIN_CREDENTIALS.username;
+        document.body.classList.add('is-admin');
+        document.getElementById('adminName').textContent = currentUser;
+      }
+    }
+
+    function openLogin() {
+      document.getElementById('loginModal').classList.add('open');
+      document.getElementById('loginUser').focus();
+    }
+
+    function closeLogin() {
+      document.getElementById('loginModal').classList.remove('open');
+      document.getElementById('loginError').classList.remove('show');
+      document.getElementById('loginUser').value = '';
+      document.getElementById('loginPass').value = '';
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById('loginUser').value.trim();
+      const pass = document.getElementById('loginPass').value;
+
+      if (user === ADMIN_CREDENTIALS.username && pass === ADMIN_CREDENTIALS.password) {
+        currentUser = user;
+        localStorage.setItem('shirma_auth', 'true');
+        document.body.classList.add('is-admin');
+        document.getElementById('adminName').textContent = user;
+        closeLogin();
+      } else {
+        document.getElementById('loginError').classList.add('show');
+      }
+    }
+
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('shirma_auth');
+      document.body.classList.remove('is-admin');
+      showFeed();
+    }
+
+    // ========== POSTS STORAGE ==========
+    function loadPosts() {
+      try {
+        const data = localStorage.getItem('shirma_posts');
+        posts = data ? JSON.parse(data) : getDemoPosts();
+      } catch {
+        posts = getDemoPosts();
+      }
+    }
+
+    function savePosts() {
+      localStorage.setItem('shirma_posts', JSON.stringify(posts));
+    }
+
+    function getDemoPosts() {
+      return [
+        {
+          id: 'demo1',
+          title: 'Добро пожаловать в Shirma',
+          body: 'Это демо-материал. Войдите как редактор, чтобы публиковать свои новости и статьи.\n\nЛогин: admin\nПароль: shirma2026\n\nПосле входа появится форма публикации. Можно добавлять заголовок, текст, фото (по URL или с компьютера) и выбирать рубрику.',
+          image: '',
+          tag: 'новости',
+          date: new Date().toISOString(),
+          author: 'Редакция'
+        }
+      ];
+    }
+
+    // ========== RENDER ==========
+    function renderFeed() {
+      const container = document.getElementById('feed');
+      
+      if (posts.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h2>Пока пусто</h2>
+            <p>Опубликуйте первый материал</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Sort newest first
+      const sorted = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      container.innerHTML = sorted.map(post => {
+        const hasImage = !!post.image;
+        const excerpt = post.body.replace(/\n/g, ' ').slice(0, 180) + (post.body.length > 180 ? '…' : '');
+        const timeAgo = formatTimeAgo(post.date);
+
+        return `
+          <article class="post-card ${hasImage ? 'has-image' : ''}" onclick="showArticle('${post.id}')">
+            ${hasImage ? `<img class="post-image" src="${escapeHtml(post.image)}" alt="" loading="lazy">` : ''}
+            <div class="post-content">
+              <div class="post-meta">
+                <span class="tag">${escapeHtml(post.tag)}</span>
+                <span>${timeAgo}</span>
+              </div>
+              <h2 class="post-title">${escapeHtml(post.title)}</h2>
+              <p class="post-excerpt">${escapeHtml(excerpt)}</p>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function showArticle(id) {
+      const post = posts.find(p => p.id === id);
+      if (!post) return;
+
+      const content = document.getElementById('articleContent');
+      const time = formatFullDate(post.date);
+
+      content.innerHTML = `
+        <div class="article-header">
+          <div class="article-meta">
+            <span style="color: var(--accent); font-weight: 600; text-transform: uppercase;">${escapeHtml(post.tag)}</span>
+            <span>${time}</span>
+            <span>${escapeHtml(post.author || 'Редакция')}</span>
+          </div>
+          <h1 class="article-title">${escapeHtml(post.title)}</h1>
+        </div>
+        ${post.image ? `<img class="article-image" src="${escapeHtml(post.image)}" alt="">` : ''}
+        <div class="article-body">${formatBody(post.body)}</div>
+        ${currentUser ? `
+          <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border);">
+            <button class="btn btn-danger btn-sm" onclick="deletePost('${post.id}')">Удалить материал</button>
+          </div>
+        ` : ''}
+      `;
+
+      document.getElementById('feedView').classList.add('hidden');
+      document.getElementById('articleView').classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    function showFeed() {
+      document.getElementById('articleView').classList.add('hidden');
+      document.getElementById('feedView').classList.remove('hidden');
+      renderFeed();
+      window.scrollTo(0, 0);
+    }
+
+    // ========== PUBLISH ==========
+    function handleImageUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (file.size > 2 * 1024 * 1024) {
+        alert('Файл слишком большой. Максимум 2 МБ.');
+        e.target.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        imageDataUrl = ev.target.result;
+        const preview = document.getElementById('imagePreview');
+        preview.src = imageDataUrl;
+        preview.classList.add('visible');
+        document.getElementById('postImageUrl').value = '';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function publishPost(e) {
+      e.preventDefault();
+      if (!currentUser) return;
+
+      const title = document.getElementById('postTitle').value.trim();
+      const body = document.getElementById('postBody').value.trim();
+      const tag = document.getElementById('postTag').value;
+      const url = document.getElementById('postImageUrl').value.trim();
+
+      const image = imageDataUrl || url || '';
+
+      const post = {
+        id: 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+        title,
+        body,
+        image,
+        tag,
+        date: new Date().toISOString(),
+        author: currentUser
+      };
+
+      posts.unshift(post);
+      savePosts();
+      resetForm();
+      renderFeed();
+      
+      // Feedback
+      const btn = e.target.querySelector('button[type="submit"]');
+      const original = btn.textContent;
+      btn.textContent = 'Опубликовано ✓';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.disabled = false;
+      }, 1500);
+    }
+
+    function deletePost(id) {
+      if (!confirm('Удалить этот материал?')) return;
+      posts = posts.filter(p => p.id !== id);
+      savePosts();
+      showFeed();
+    }
+
+    function resetForm() {
+      document.getElementById('postForm').reset();
+      imageDataUrl = null;
+      const preview = document.getElementById('imagePreview');
+      preview.src = '';
+      preview.classList.remove('visible');
+    }
+
+    // ========== HELPERS ==========
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function formatBody(text) {
+      return escapeHtml(text)
+        .split(/\n\n+/)
+        .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
+        .join('');
+    }
+
+    function formatTimeAgo(iso) {
+      const diff = Date.now() - new Date(iso).getTime();
+      const mins = Math.floor(diff / 60000);
+      if (mins < 1) return 'только что';
+      if (mins < 60) return mins + ' мин. назад';
+      const hours = Math.floor(mins / 60);
+      if (hours < 24) return hours + ' ч. назад';
+      const days = Math.floor(hours / 24);
+      if (days < 7) return days + ' дн. назад';
+      return formatFullDate(iso);
+    }
+
+    function formatFullDate(iso) {
+      const d = new Date(iso);
+      return d.toLocaleDateString('ru-RU', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    // Close modal on overlay click
+    document.getElementById('loginModal').addEventListener('click', (e) => {
+      if (e.target.id === 'loginModal') closeLogin();
+    });
+
+    // ESC to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLogin();
+    });
+  </script>
 </body>
 </html>
