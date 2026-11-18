@@ -4,9 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Shirma</title>
-
   <style>
-    /* ===== Переменные и базовые стили ===== */
     :root {
       --tx: #efede8;
       --mu: #908e89;
@@ -19,29 +17,22 @@
       box-sizing: border-box;
       padding-top: env(safe-area-inset-top, 0px);
     }
-
     html {
       background: #0b0b0d;
       color-scheme: dark;
       scroll-behavior: smooth;
     }
-
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
-
-    ::selection {
-      background: rgba(212, 168, 105, .35);
-    }
-
+    ::selection { background: rgba(212, 168, 105, .35); }
     body {
       margin: 0;
       color: var(--tx);
       font: 16px/1.5 var(--sans);
       padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
     }
-
     body::after {
       content: "";
       position: fixed;
@@ -53,12 +44,7 @@
         radial-gradient(60% 40% at 0% 100%, rgba(255, 95, 115, .14), transparent 70%),
         #0b0b0d;
     }
-
-    .w {
-      max-width: 640px;
-      margin: 0 auto;
-    }
-
+    .w { max-width: 640px; margin: 0 auto; }
     svg {
       width: 24px;
       height: 24px;
@@ -68,12 +54,7 @@
       stroke-linecap: round;
       stroke-linejoin: round;
     }
-
-    button, input, textarea, select {
-      font-family: inherit;
-      color: inherit;
-    }
-
+    button, input, textarea, select { font-family: inherit; color: inherit; }
     .gl {
       background: var(--gl);
       -webkit-backdrop-filter: blur(24px) saturate(170%);
@@ -81,8 +62,6 @@
       border: 1px solid var(--gb);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 8px 30px rgba(0, 0, 0, .35);
     }
-
-    /* ===== Верхняя панель ===== */
     .top {
       position: sticky;
       top: env(safe-area-inset-top, 0px);
@@ -92,7 +71,6 @@
       justify-content: space-between;
       padding: 10px 16px;
     }
-
     .top::before {
       content: "";
       position: absolute;
@@ -105,7 +83,6 @@
       -webkit-mask-image: linear-gradient(#000 62%, transparent);
       mask-image: linear-gradient(#000 62%, transparent);
     }
-
     #pg {
       position: absolute;
       left: 0;
@@ -115,7 +92,6 @@
       background: var(--ac);
       border-radius: 2px;
     }
-
     .logo {
       font: 800 30px/1 var(--serif);
       letter-spacing: -1px;
@@ -124,26 +100,9 @@
       user-select: none;
       -webkit-user-select: none;
     }
-
-    .logo i {
-      color: var(--ac);
-      font-style: normal;
-    }
-
-    .adm {
-      padding: 0 16px;
-      font: 700 12px var(--sans);
-      letter-spacing: 1.2px;
-      color: var(--ac);
-    }
-
-    .pill {
-      display: flex;
-      padding: 4px;
-      border-radius: 99px;
-      align-items: center;
-    }
-
+    .logo i { color: var(--ac); font-style: normal; }
+    .adm { padding: 0 16px; font: 700 12px var(--sans); letter-spacing: 1.2px; color: var(--ac); }
+    .pill { display: flex; padding: 4px; border-radius: 99px; align-items: center; }
     .ic {
       width: 44px;
       height: 44px;
@@ -157,14 +116,11 @@
       cursor: pointer;
       transition: transform .15s, background .25s;
     }
-
     .ic:active { transform: scale(.88); }
     .ic.gl { border-radius: 50%; }
     .ic.on { color: var(--ac); }
     .ic.red { color: var(--rd); }
     .ic.aa { font: 500 22px var(--sans); }
-
-    /* ===== Табы категорий ===== */
     .tabs {
       display: flex;
       gap: 8px;
@@ -172,9 +128,7 @@
       padding: 4px 16px 14px;
       scrollbar-width: none;
     }
-
     .tabs::-webkit-scrollbar { display: none; }
-
     .tabs button {
       flex: none;
       border-radius: 99px;
@@ -183,35 +137,14 @@
       cursor: pointer;
       transition: background .25s, color .25s;
     }
-
-    .tabs button.on {
-      background: var(--tx);
-      color: #111;
-      border-color: transparent;
-    }
-
-    main {
-      animation: in .45s cubic-bezier(.2, .7, .2, 1) both;
-    }
-
+    .tabs button.on { background: var(--tx); color: #111; border-color: transparent; }
+    main { animation: in .45s cubic-bezier(.2, .7, .2, 1) both; }
     @keyframes in {
       from { opacity: 0; transform: translateY(14px); }
       to { opacity: 1; transform: none; }
     }
-
-    .k {
-      font: 700 11px var(--sans);
-      letter-spacing: 1.6px;
-      text-transform: uppercase;
-      color: var(--ac);
-    }
-
-    .mt {
-      font-size: 13px;
-      color: var(--mu);
-    }
-
-    /* ===== Карточки ===== */
+    .k { font: 700 11px var(--sans); letter-spacing: 1.6px; text-transform: uppercase; color: var(--ac); }
+    .mt { font-size: 13px; color: var(--mu); }
     .hc {
       position: relative;
       display: block;
@@ -224,17 +157,8 @@
       box-shadow: 0 20px 50px rgba(0, 0, 0, .5);
       transition: transform .25s;
     }
-
     .hc:active { transform: scale(.985); }
-
-    .hc img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
+    .hc img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .hc .ov {
       position: absolute;
       left: 0;
@@ -243,25 +167,14 @@
       padding: 90px 22px 24px;
       background: linear-gradient(transparent, rgba(0, 0, 0, .85));
     }
-
-    .hc h2 {
-      font: 700 29px/1.18 var(--serif);
-      letter-spacing: -.3px;
-      margin: 10px 0;
-    }
-
+    .hc h2 { font: 700 29px/1.18 var(--serif); letter-spacing: -.3px; margin: 10px 0; }
     .hc .mt { color: rgba(255, 255, 255, .7); }
-
     .hc.ni {
       aspect-ratio: auto;
       min-height: 280px;
-      background:
-        radial-gradient(120% 90% at 0% 0%, rgba(212, 168, 105, .34), transparent 60%),
-        radial-gradient(100% 80% at 100% 100%, rgba(122, 92, 255, .34), transparent 62%),
-        #14141a;
+      background: radial-gradient(120% 90% at 0% 0%, rgba(212, 168, 105, .34), transparent 60%), radial-gradient(100% 80% at 100% 100%, rgba(122, 92, 255, .34), transparent 62%), #14141a;
       border: 1px solid var(--gb);
     }
-
     .hc.ni::after {
       content: "S.";
       position: absolute;
@@ -271,22 +184,9 @@
       color: rgba(255, 255, 255, .045);
       pointer-events: none;
     }
-
-    .hc.ni .ov {
-      position: relative;
-      background: none;
-      padding: 120px 24px 26px;
-    }
-
+    .hc.ni .ov { position: relative; background: none; padding: 120px 24px 26px; }
     .hc.ni h2 { font-size: 32px; }
-
-    .dl {
-      padding: 2px 20px 12px;
-      font: 600 13px var(--sans);
-      letter-spacing: .3px;
-      color: var(--mu);
-    }
-
+    .dl { padding: 2px 20px 12px; font: 600 13px var(--sans); letter-spacing: .3px; color: var(--mu); }
     .sh {
       display: flex;
       align-items: center;
@@ -297,32 +197,10 @@
       text-transform: uppercase;
       color: var(--mu);
     }
-
-    .sh::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: rgba(255, 255, 255, .1);
-    }
-
-    .ft {
-      padding: 40px 20px 10px;
-      text-align: center;
-      font: 500 12px/1.7 var(--sans);
-      color: var(--mu);
-    }
-
-    .cap {
-      margin: 10px 20px 0;
-      font: 400 12.5px/1.45 var(--sans);
-      color: var(--mu);
-    }
-
-    .meta b {
-      color: var(--tx);
-      font-weight: 600;
-    }
-
+    .sh::after { content: ""; flex: 1; height: 1px; background: rgba(255, 255, 255, .1); }
+    .ft { padding: 40px 20px 10px; text-align: center; font: 500 12px/1.7 var(--sans); color: var(--mu); }
+    .cap { margin: 10px 20px 0; font: 400 12.5px/1.45 var(--sans); color: var(--mu); }
+    .meta b { color: var(--tx); font-weight: 600; }
     .hs {
       display: flex;
       gap: 12px;
@@ -331,31 +209,17 @@
       padding: 2px 16px 16px;
       scrollbar-width: none;
     }
-
     .hs::-webkit-scrollbar { display: none; }
-
-    .hs .hc {
-      flex: none;
-      width: 84%;
-      margin: 0;
-      scroll-snap-align: center;
-    }
-
+    .hs .hc { flex: none; width: 84%; margin: 0; scroll-snap-align: center; }
     .hs .hc h2 { font-size: 25px; }
     .hs .hc.ni h2 { font-size: 26px; }
     .hs .hc.ni { min-height: 300px; }
-
-    .hc img, .th, .hero {
-      animation: fi .8s both;
-    }
-
+    .hc img, .th, .hero { animation: fi .8s both; }
     @keyframes fi {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-
     h1, h2 { text-wrap: balance; }
-
     .rl {
       margin: 0 0 8px;
       color: var(--mu);
@@ -365,8 +229,6 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-
-    /* ===== Список статей ===== */
     .rw {
       display: flex;
       gap: 16px;
@@ -380,23 +242,9 @@
       animation-delay: var(--d, 0ms);
       transition: opacity .2s;
     }
-
     .rw:active { opacity: .55; }
-
-    .rw h2 {
-      font: 700 21px/1.3 var(--serif);
-      margin: 6px 0 8px;
-      letter-spacing: -.2px;
-    }
-
-    .th {
-      width: 96px;
-      height: 96px;
-      border-radius: 20px;
-      object-fit: cover;
-      flex: none;
-    }
-
+    .rw h2 { font: 700 21px/1.3 var(--serif); margin: 6px 0 8px; letter-spacing: -.2px; }
+    .th { width: 96px; height: 96px; border-radius: 20px; object-fit: cover; flex: none; }
     .hero {
       display: block;
       width: calc(100% - 32px);
@@ -405,28 +253,10 @@
       object-fit: cover;
       border-radius: 28px;
     }
-
-    /* ===== Статья ===== */
     .art { padding: 24px 20px; }
-
-    .art h1 {
-      font: 700 30px/1.2 var(--sans);
-      letter-spacing: -.7px;
-      margin: 10px 0 10px;
-    }
-
-    .art .ld {
-      font: 400 22px/1.38 var(--serif);
-      color: var(--mu);
-      margin: 0 0 22px;
-    }
-
-    .art .meta {
-      margin-bottom: 24px;
-      padding-bottom: 22px;
-      border-bottom: 1px solid rgba(255, 255, 255, .08);
-    }
-
+    .art h1 { font: 700 30px/1.2 var(--sans); letter-spacing: -.7px; margin: 10px 0 10px; }
+    .art .ld { font: 400 22px/1.38 var(--serif); color: var(--mu); margin: 0 0 22px; }
+    .art .meta { margin-bottom: 24px; padding-bottom: 22px; border-bottom: 1px solid rgba(255, 255, 255, .08); }
     .upd {
       margin: 0 0 28px;
       padding: 18px 20px;
@@ -437,54 +267,13 @@
       -webkit-backdrop-filter: blur(14px);
       backdrop-filter: blur(14px);
     }
-
-    .upd b {
-      display: block;
-      color: var(--ac);
-      font: 700 11px var(--sans);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .upd a, .bd a {
-      color: var(--tx);
-      text-decoration: none;
-      border-bottom: 2px solid var(--ac);
-    }
-
-    .bd {
-      font-size: var(--fs, 20px);
-      -webkit-hyphens: auto;
-      hyphens: auto;
-      text-wrap: pretty;
-    }
-
-    .bd p {
-      font: 500 1em/1.72 var(--serif);
-      margin: 0 0 1.1em;
-      color: #e8e5de;
-    }
-
-    .bd p:first-child {
-      font: 600 1.06em/1.62 var(--serif);
-      color: var(--tx);
-    }
-
-    .bd h3 {
-      font: 700 1.15em/1.35 var(--sans);
-      margin: 34px 0 14px;
-    }
-
-    .bd blockquote {
-      margin: 0 0 24px;
-      padding: 4px 0 4px 18px;
-      border-left: 3px solid var(--ac);
-      font: italic 500 1.05em/1.55 var(--serif);
-      color: #d9d6cf;
-    }
-
-    /* ===== Реклама ===== */
+    .upd b { display: block; color: var(--ac); font: 700 11px var(--sans); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+    .upd a, .bd a { color: var(--tx); text-decoration: none; border-bottom: 2px solid var(--ac); }
+    .bd { font-size: var(--fs, 20px); -webkit-hyphens: auto; hyphens: auto; text-wrap: pretty; }
+    .bd p { font: 500 1em/1.72 var(--serif); margin: 0 0 1.1em; color: #e8e5de; }
+    .bd p:first-child { font: 600 1.06em/1.62 var(--serif); color: var(--tx); }
+    .bd h3 { font: 700 1.15em/1.35 var(--sans); margin: 34px 0 14px; }
+    .bd blockquote { margin: 0 0 24px; padding: 4px 0 4px 18px; border-left: 3px solid var(--ac); font: italic 500 1.05em/1.55 var(--serif); color: #d9d6cf; }
     .ad {
       display: block;
       border-radius: 28px;
@@ -497,90 +286,22 @@
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 20px 50px rgba(0, 0, 0, .4);
       transition: transform .2s;
     }
-
     .ad:active { transform: scale(.985); }
-
-    .am {
-      position: relative;
-      aspect-ratio: 4/3;
-      margin: 10px;
-      border-radius: 20px;
-      overflow: hidden;
-      background: #111;
-    }
-
-    .am img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .am .bl {
-      object-fit: cover;
-      filter: blur(28px) brightness(.7) saturate(1.3);
-      transform: scale(1.3);
-    }
-
+    .am { position: relative; aspect-ratio: 4/3; margin: 10px; border-radius: 20px; overflow: hidden; background: #111; }
+    .am img { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .am .bl { object-fit: cover; filter: blur(28px) brightness(.7) saturate(1.3); transform: scale(1.3); }
     .am .fg { object-fit: contain; }
-
     .ad .ab { padding: 14px 20px 20px; }
-
-    .ad h4 {
-      font: 700 23px/1.2 var(--serif);
-      letter-spacing: -.2px;
-      margin: 0 0 8px;
-    }
-
-    .ad p {
-      margin: 0 0 18px;
-      font: 400 16px/1.5 var(--sans);
-      color: #cfcdc8;
-    }
-
-    .ad .lb {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font: 600 11px var(--sans);
-      letter-spacing: 1.3px;
-      text-transform: uppercase;
-      color: var(--mu);
-      margin-bottom: 10px;
-    }
-
-    .ad .lb::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: rgb(var(--ar));
-    }
-
-    .cta {
-      display: block;
-      text-align: center;
-      padding: 14px;
-      border-radius: 99px;
-      background: rgb(var(--ar));
-      color: #161616;
-      font: 700 14px var(--sans);
-    }
-
+    .ad h4 { font: 700 23px/1.2 var(--serif); letter-spacing: -.2px; margin: 0 0 8px; }
+    .ad p { margin: 0 0 18px; font: 400 16px/1.5 var(--sans); color: #cfcdc8; }
+    .ad .lb { display: flex; align-items: center; gap: 7px; font: 600 11px var(--sans); letter-spacing: 1.3px; text-transform: uppercase; color: var(--mu); margin-bottom: 10px; }
+    .ad .lb::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: rgb(var(--ar)); }
+    .cta { display: block; text-align: center; padding: 14px; border-radius: 99px; background: rgb(var(--ar)); color: #161616; font: 700 14px var(--sans); }
     .c0 { --ar: 212, 168, 105; }
     .c1 { --ar: 139, 120, 255; }
     .c2 { --ar: 60, 199, 230; }
     .c3 { --ar: 233, 233, 238; }
-
-    .relh {
-      font: 700 12px var(--sans);
-      letter-spacing: 1.6px;
-      text-transform: uppercase;
-      color: var(--mu);
-      padding: 34px 20px 0;
-    }
-
-    /* ===== Док-панель ===== */
+    .relh { font: 700 12px var(--sans); letter-spacing: 1.6px; text-transform: uppercase; color: var(--mu); padding: 34px 20px 0; }
     .dock {
       position: fixed;
       left: 50%;
@@ -596,45 +317,13 @@
       backdrop-filter: blur(30px) saturate(180%);
       transition: transform .35s cubic-bezier(.2, .7, .2, 1);
     }
-
-    .dock .ic {
-      width: 58px;
-      height: 48px;
-      border-radius: 99px;
-    }
-
+    .dock .ic { width: 58px; height: 48px; border-radius: 99px; }
     .dock .ic.on { background: rgba(255, 255, 255, .16); }
     .dock.hide { transform: translate(-50%, 170%); }
-
-    /* ===== Экран входа ===== */
-    .gate {
-      min-height: 88vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 32px 24px;
-      animation: in .6s both;
-    }
-
-    .logo2 {
-      font: 700 52px var(--sans);
-      letter-spacing: -2px;
-      margin-bottom: 12px;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    .logo2 i {
-      color: var(--ac);
-      font-style: normal;
-    }
-
-    .gate p {
-      font: 400 21px/1.4 var(--serif);
-      color: var(--mu);
-      margin: 0 0 40px;
-    }
-
+    .gate { min-height: 88vh; display: flex; flex-direction: column; justify-content: center; padding: 32px 24px; animation: in .6s both; }
+    .logo2 { font: 700 52px var(--sans); letter-spacing: -2px; margin-bottom: 12px; user-select: none; -webkit-user-select: none; }
+    .logo2 i { color: var(--ac); font-style: normal; }
+    .gate p { font: 400 21px/1.4 var(--serif); color: var(--mu); margin: 0 0 40px; }
     .b {
       display: block;
       width: 100%;
@@ -651,23 +340,11 @@
       backdrop-filter: blur(20px);
       transition: transform .15s;
     }
-
     .b:active { transform: scale(.97); }
     .b.p { background: var(--ac); color: #1b1b1b; border-color: transparent; }
     .b.d { background: var(--rd); border-color: transparent; color: #fff; }
-
-    /* ===== Формы ===== */
     form, .pad { padding: 12px 20px; }
-
-    label {
-      display: block;
-      font: 600 11px var(--sans);
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      color: var(--mu);
-      margin-bottom: 16px;
-    }
-
+    label { display: block; font: 600 11px var(--sans); letter-spacing: 1.2px; text-transform: uppercase; color: var(--mu); margin-bottom: 16px; }
     input, textarea, select {
       display: block;
       width: 100%;
@@ -681,77 +358,18 @@
       text-transform: none;
       letter-spacing: 0;
     }
-
-    input:focus, textarea:focus, select:focus {
-      border-color: var(--ac);
-    }
-
+    input:focus, textarea:focus, select:focus { border-color: var(--ac); }
     select option { color: #111; }
-
-    textarea {
-      min-height: 220px;
-      font-family: var(--serif);
-      line-height: 1.5;
-    }
-
+    textarea { min-height: 220px; font-family: var(--serif); line-height: 1.5; }
     textarea.s { min-height: 90px; }
-
-    .tb {
-      display: flex;
-      gap: 8px;
-      margin: 8px 0;
-    }
-
-    .tb button {
-      flex: 1;
-      border-radius: 99px;
-      padding: 9px;
-      font: 700 13px var(--sans);
-      cursor: pointer;
-    }
-
-    .pv {
-      width: 100%;
-      border-radius: 16px;
-      margin-bottom: 16px;
-      display: none;
-    }
-
-    .sec {
-      font: 700 13px var(--sans);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--ac);
-      margin: 30px 0 14px;
-    }
-
-    .em {
-      text-align: center;
-      color: var(--mu);
-      padding: 80px 30px;
-      font: 400 18px var(--serif);
-    }
-
-    .sz {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-
-    .sz button {
-      flex: 1;
-      border-radius: 99px;
-      padding: 12px;
-      cursor: pointer;
-      font-family: var(--serif);
-    }
-
-    .sz button.on {
-      background: var(--tx);
-      color: #111;
-    }
-
-    /* ===== Модальное окно ===== */
+    .tb { display: flex; gap: 8px; margin: 8px 0; }
+    .tb button { flex: 1; border-radius: 99px; padding: 9px; font: 700 13px var(--sans); cursor: pointer; }
+    .pv { width: 100%; border-radius: 16px; margin-bottom: 16px; display: none; }
+    .sec { font: 700 13px var(--sans); letter-spacing: 1.5px; text-transform: uppercase; color: var(--ac); margin: 30px 0 14px; }
+    .em { text-align: center; color: var(--mu); padding: 80px 30px; font: 400 18px var(--serif); }
+    .sz { display: flex; gap: 8px; margin-bottom: 20px; }
+    .sz button { flex: 1; border-radius: 99px; padding: 12px; cursor: pointer; font-family: var(--serif); }
+    .sz button.on { background: var(--tx); color: #111; }
     .sheet {
       position: fixed;
       inset: 0;
@@ -761,7 +379,6 @@
       align-items: flex-end;
       animation: in .2s both;
     }
-
     .sheet > div {
       width: calc(100% - 24px);
       max-width: 616px;
@@ -773,12 +390,7 @@
       backdrop-filter: blur(30px);
       border: 1px solid var(--gb);
     }
-
-    .sheet h3 {
-      font: 700 20px var(--sans);
-      margin: 0 0 20px;
-    }
-
+    .sheet h3 { font: 700 20px var(--sans); margin: 0 0 20px; }
     .toast {
       position: fixed;
       left: 50%;
@@ -793,17 +405,12 @@
     }
   </style>
 </head>
-
 <body>
-  <div class="w">
-    <div id="root"></div>
-  </div>
+  <div class="w"><div id="root"></div></div>
   <div class="dock gl" id="dock" style="display:none"></div>
 
   <script>
-    /* ===================== Константы и иконки ===================== */
     var CATS = ["Все", "Новости", "Истории", "Мир", "Россия", "Технологии", "Культура", "Мнения"];
-
     var I = {
       back: '<path d="M15 5l-7 7 7 7"/>',
       share: '<path d="M12 15V4M8 8l4-4 4 4M5 13v6h14v-6"/>',
@@ -814,39 +421,24 @@
       user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
       plus: '<path d="M12 5v14M5 12h14"/>'
     };
-
     function ic(n) { return '<svg viewBox="0 0 24 24">' + I[n] + '</svg>'; }
-
-    /* ===================== Хранилище ===================== */
     function ld(k, d) {
       try {
         var v = localStorage.getItem(k);
         return v ? JSON.parse(v) : d;
       } catch (e) { return d; }
     }
-
     function sv(k, v) {
       try {
         localStorage.setItem(k, JSON.stringify(v));
         return true;
       } catch (e) { return false; }
     }
-
-    function rm(k) {
-      try { localStorage.removeItem(k); } catch (e) {}
-    }
-
-    /* ===================== Цвета категорий ===================== */
+    function rm(k) { try { localStorage.removeItem(k); } catch (e) {} }
     var KC = {
-      "Новости": "#d4a869",
-      "Истории": "#9b8cff",
-      "Мир": "#4fd1e8",
-      "Россия": "#ff6b7d",
-      "Технологии": "#5fe3a1",
-      "Культура": "#ff8fd0",
-      "Мнения": "#ffb15c"
+      "Новости": "#d4a869", "Истории": "#9b8cff", "Мир": "#4fd1e8", "Россия": "#ff6b7d",
+      "Технологии": "#5fe3a1", "Культура": "#ff8fd0", "Мнения": "#ffb15c"
     };
-
     var FT = '<div class="ft">© 2026 Shirma<br>Материалы редакции</div>';
     var ly = 0;
 
@@ -857,79 +449,41 @@
       else if (y < ly - 6 || y < 160) d.classList.remove("hide");
       ly = y;
     }
-
     function dstr() {
       var x = new Date().toLocaleDateString("ru-RU", { weekday: "long", day: "numeric", month: "long" });
       return x.charAt(0).toUpperCase() + x.slice(1);
     }
-
-    /* ===================== Состояние ===================== */
-    var posts = ld("sh_posts", null) || null;
-    var role = ld("sh_role", "reader") || "reader";
-    var saved = ld("sh_saved", []);
-    var fs = ld("sh_fs", 20);
-    var cat = "Все";
-    var cur = "";
-    var adimg = "";
-    var tc = 0, tm;
+    var posts = ld("sh_posts", null) || null, role = ld("sh_role", "reader") || "reader", saved = ld("sh_saved", []), fs = ld("sh_fs", 20), cat = "Все", cur = "", adimg = "", tc = 0, tm;
 
     if (role === "admin" && Date.now() > ld("sh_aexp", 0)) {
       role = "reader";
       sv("sh_role", "reader");
     }
-
     if (!posts) {
       posts = [{
-        id: "1",
-        title: "Добро пожаловать в Shirma",
-        lead: "Пример поста с обновлением и рекламой",
+        id: "1", title: "Добро пожаловать в Shirma", lead: "Пример поста с обновлением и рекламой",
         body: "Это пример поста. Абзацы разделяются пустой строкой.\n## Подзаголовок\nМожно выделять **жирным** и вставлять [ссылки](https://example.com).\n> А ещё — цитаты.",
-        cat: "Новости",
-        img: "",
-        ts: Date.now() - 36e5,
+        cat: "Новости", img: "", ts: Date.now() - 36e5,
         upd: "Обновление можно добавить к любому посту — оно выделяется отдельным блоком.",
         uts: Date.now() - 18e5,
-        ad: {
-          h: "Здесь ваша реклама",
-          t: "Заголовок, текст, фото и ссылка — всё настраивается в редакторе.",
-          u: "https://example.com",
-          img: "",
-          c: "c0"
-        }
+        ad: { h: "Здесь ваша реклама", t: "Заголовок, текст, фото и ссылка — всё настраивается в редакторе.", u: "https://example.com", img: "", c: "c0" }
       }];
       sv("sh_posts", posts);
     }
-
-    var $ = function (i) { return document.getElementById(i); };
-    var R = $("root");
-    var LOGO = '<div class="logo" onclick="logoTap()">Shirma<i>.</i></div>';
-
-    /* ===================== Утилиты ===================== */
+    var $ = function (i) { return document.getElementById(i); }, R = $("root"), LOGO = '<div class="logo" onclick="logoTap()">Shirma<i>.</i></div>';
+    
     function esc(s) {
       return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
         return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
       });
     }
-
-    function si(s) {
-      return typeof s === "string" && s.indexOf("data:image/") === 0 ? s : "";
-    }
-
-    function su(u) {
-      return /^https?:\/\//i.test(u || "") ? esc(u) : "";
-    }
-
+    function si(s) { return typeof s === "string" && s.indexOf("data:image/") === 0 ? s : ""; }
+    function su(u) { return /^https?:\/\//i.test(u || "") ? esc(u) : ""; }
     function dt(t) {
       var d = new Date(t);
-      return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + ", " +
-        d.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }).replace(" г.", "");
+      return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + ", " + d.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }).replace(" г.", "");
     }
-
-    function pl(n, a) {
-      var m = n % 100, k = n % 10;
-      return n + " " + (m > 10 && m < 20 ? a[2] : k == 1 ? a[0] : k > 1 && k < 5 ? a[1] : a[2]);
-    }
-
+    function pl(n, a) { var m = n % 100, k = n % 10; return n + " " + (m > 10 && m < 20 ? a[2] : k == 1 ? a[0] : k > 1 && k < 5 ? a[1] : a[2]); }
     function ago(t) {
       var m = Math.round((Date.now() - t) / 6e4);
       if (m < 1) return "только что";
@@ -938,11 +492,7 @@
       if (h < 24) return pl(h, ["час", "часа", "часов"]) + " назад";
       return dt(t);
     }
-
-    function rt(p) {
-      return Math.max(1, Math.round(((p.body || "").split(/\s+/).length) / 170)) + " мин чтения";
-    }
-
+    function rt(p) { return Math.max(1, Math.round(((p.body || "").split(/\s+/).length) / 170)) + " мин чтения"; }
     function toast(t) {
       var d = document.createElement("div");
       d.className = "toast gl";
@@ -950,7 +500,6 @@
       document.body.appendChild(d);
       setTimeout(function () { d.remove(); }, 2400);
     }
-
     function ask(t, ok) {
       var s = document.createElement("div");
       s.className = "sheet";
@@ -959,27 +508,17 @@
       s.onclick = function (e) { if (e.target === s || e.target.id === "n") s.remove(); };
       $("y").onclick = function () { s.remove(); ok(); };
     }
-
     function dock(it) {
       var d = $("dock");
       d.classList.remove("hide");
       if (!it) { d.style.display = "none"; return; }
       d.style.display = "flex";
-      d.innerHTML = it.map(function (i) {
-        return '<button class="ic ' + (i[2] || "") + '" onclick="' + i[1] + '">' + ic(i[0]) + "</button>";
-      }).join("");
+      d.innerHTML = it.map(function (i) { return '<button class="ic ' + (i[2] || "") + '" onclick="' + i[1] + '">' + ic(i[0]) + "</button>"; }).join("");
     }
-
-    function topbar(l, r, x) {
-      return '<div class="top">' + l + (r ? '<div class="pill gl">' + r + "</div>" : "<span></span>") + (x || "") + "</div>";
-    }
-
+    function topbar(l, r, x) { return '<div class="top">' + l + (r ? '<div class="pill gl">' + r + "</div>" : "<span></span>") + (x || "") + "</div>"; }
     function inl(x) {
-      return x
-        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-        .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+      return x.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
     }
-
     function fmt(s) {
       return esc(s).split(/\n+/).map(function (x) {
         if (x.indexOf("## ") == 0) return "<h3>" + inl(x.slice(3)) + "</h3>";
@@ -987,30 +526,29 @@
         return "<p>" + inl(x) + "</p>";
       }).join("");
     }
-
-    /* ===================== Безопасность: PBKDF2 + соль ===================== */
-    function hx(b) {
-      return Array.prototype.map.call(new Uint8Array(b), function (x) {
-        return ("0" + x.toString(16)).slice(-2);
-      }).join("");
-    }
-
+    function hx(b) { return Array.prototype.map.call(new Uint8Array(b), function (x) { return ("0" + x.toString(16)).slice(-2); }).join(""); }
     function kdf(p, s) {
       return crypto.subtle.importKey("raw", new TextEncoder().encode(p), "PBKDF2", false, ["deriveBits"])
-        .then(function (k) {
-          return crypto.subtle.deriveBits({
-            name: "PBKDF2",
-            hash: "SHA-256",
-            salt: new Uint8Array(s),
-            iterations: 150000
-          }, k, 256);
-        })
+        .then(function (k) { return crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: new Uint8Array(s), iterations: 150000 }, k, 256); })
         .then(hx);
     }
-
     function setPw(p) {
       var s = Array.prototype.slice.call(crypto.getRandomValues(new Uint8Array(16)));
-      return kdf(p, s).then(function (h) {
-        sv("sh_salt", s);
-
-                            
+      return kdf(p, s).then(function (h) { sv("sh_salt", s); sv("sh_pw2", h); });
+    }
+    function logoTap() {
+      tc++; clearTimeout(tm); tm = setTimeout(function () { tc = 0; }, 2500);
+      if (tc >= 7) { tc = 0; adminAsk(); return; }
+      if (location.hash) location.hash = ""; else window.scrollTo(0, 0);
+    }
+    function loginOk() {
+      sv("sh_fail", 0); sv("sh_aexp", Date.now() + 432e5);
+      role = "admin"; sv("sh_role", "admin"); location.hash = ""; render(); toast("Режим админа включён");
+    }
+    function adminAsk() {
+      if (role === "admin") { location.hash = "me"; return; }
+      var has = ld("sh_pw2", null); dock();
+      R.innerHTML = '<div class="gate"><div class="logo2">' + (has ? "Вход" : "Создайте пароль") + '</div><p>' + (has ? "Только для администратора" : "Минимум 8 символов. Запомните его — восстановить нельзя.") + '</p><input id="pw" type="password" placeholder="Пароль" autocomplete="' + (has ? "current-password" : "new-password") + '" style="margin:0 0 14px">' + (has ? "" : '<input id="pw2" type="password" placeholder="Повторите пароль" autocomplete="new-password" style="margin:0 0 14px">') + '<button class="b p" onclick="' + (has ? "tryLogin()" : "firstPw()") + '">' + (has ? "Войти" : "Сохранить и войти") + '</button><button class="b" onclick="render()">Назад</button></div>';
+      $("pw").onkeydown = function (e) { if (e.key === "Enter" && has) tryLogin(); };
+    }
+    function firstP
