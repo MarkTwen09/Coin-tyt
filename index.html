@@ -6,267 +6,75 @@
   <title>Shirma</title>
   <style>
     :root {
-      --tx: #efede8;
-      --mu: #908e89;
-      --ac: #d4a869;
-      --rd: #ff5f73;
-      --gl: rgba(255, 255, 255, .08);
-      --gb: rgba(255, 255, 255, .14);
+      --tx: #efede8; --mu: #908e89; --ac: #d4a869; --rd: #ff5f73;
+      --gl: rgba(255,255,255,.08); --gb: rgba(255,255,255,.14);
       --sans: "Avenir Next", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
       --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-      box-sizing: border-box;
-      padding-top: env(safe-area-inset-top, 0px);
+      box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px);
     }
-    html {
-      background: #0b0b0d;
-      color-scheme: dark;
-      scroll-behavior: smooth;
-    }
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-    ::selection { background: rgba(212, 168, 105, .35); }
-    body {
-      margin: 0;
-      color: var(--tx);
-      font: 16px/1.5 var(--sans);
-      padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
-    }
+    html { background: #0b0b0d; color-scheme: dark; scroll-behavior: smooth; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    ::selection { background: rgba(212,168,105,.35); }
+    body { margin: 0; color: var(--tx); font: 16px/1.5 var(--sans); padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)); }
     body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background:
-        radial-gradient(60% 40% at 10% 0%, rgba(212, 168, 105, .24), transparent 70%),
-        radial-gradient(55% 40% at 100% 38%, rgba(110, 90, 255, .2), transparent 70%),
-        radial-gradient(60% 40% at 0% 100%, rgba(255, 95, 115, .14), transparent 70%),
-        #0b0b0d;
+      content: ""; position: fixed; inset: 0; z-index: -1;
+      background: radial-gradient(60% 40% at 10% 0%, rgba(212,168,105,.24), transparent 70%), radial-gradient(55% 40% at 100% 38%, rgba(110,90,255,.2), transparent 70%), radial-gradient(60% 40% at 0% 100%, rgba(255,95,115,.14), transparent 70%), #0b0b0d;
     }
     .w { max-width: 640px; margin: 0 auto; }
-    svg {
-      width: 24px;
-      height: 24px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.7;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
+    svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
     button, input, textarea, select { font-family: inherit; color: inherit; }
-    .gl {
-      background: var(--gl);
-      -webkit-backdrop-filter: blur(24px) saturate(170%);
-      backdrop-filter: blur(24px) saturate(170%);
-      border: 1px solid var(--gb);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 8px 30px rgba(0, 0, 0, .35);
-    }
-    .top {
-      position: sticky;
-      top: env(safe-area-inset-top, 0px);
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-    }
-    .top::before {
-      content: "";
-      position: absolute;
-      inset: -20px 0 -14px;
-      z-index: -1;
-      pointer-events: none;
-      background: linear-gradient(rgba(11, 11, 13, .92) 55%, transparent);
-      -webkit-backdrop-filter: blur(12px);
-      backdrop-filter: blur(12px);
-      -webkit-mask-image: linear-gradient(#000 62%, transparent);
-      mask-image: linear-gradient(#000 62%, transparent);
-    }
-    #pg {
-      position: absolute;
-      left: 0;
-      bottom: -4px;
-      height: 2px;
-      width: 0;
-      background: var(--ac);
-      border-radius: 2px;
-    }
-    .logo {
-      font: 800 30px/1 var(--serif);
-      letter-spacing: -1px;
-      padding: 8px 2px;
-      cursor: pointer;
-      user-select: none;
-      -webkit-user-select: none;
-    }
+    .gl { background: var(--gl); -webkit-backdrop-filter: blur(24px) saturate(170%); backdrop-filter: blur(24px) saturate(170%); border: 1px solid var(--gb); box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 8px 30px rgba(0,0,0,.35); }
+    .top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; }
+    .top::before { content: ""; position: absolute; inset: -20px 0 -14px; z-index: -1; pointer-events: none; background: linear-gradient(rgba(11,11,13,.92) 55%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); -webkit-mask-image: linear-gradient(#000 62%, transparent); mask-image: linear-gradient(#000 62%, transparent); }
+    #pg { position: absolute; left: 0; bottom: -4px; height: 2px; width: 0; background: var(--ac); border-radius: 2px; }
+    .logo { font: 800 30px/1 var(--serif); letter-spacing: -1px; padding: 8px 2px; cursor: pointer; user-select: none; -webkit-user-select: none; }
     .logo i { color: var(--ac); font-style: normal; }
     .adm { padding: 0 16px; font: 700 12px var(--sans); letter-spacing: 1.2px; color: var(--ac); }
     .pill { display: flex; padding: 4px; border-radius: 99px; align-items: center; }
-    .ic {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background: none;
-      border: 0;
-      padding: 0;
-      color: var(--tx);
-      cursor: pointer;
-      transition: transform .15s, background .25s;
-    }
-    .ic:active { transform: scale(.88); }
-    .ic.gl { border-radius: 50%; }
-    .ic.on { color: var(--ac); }
-    .ic.red { color: var(--rd); }
-    .ic.aa { font: 500 22px var(--sans); }
-    .tabs {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 4px 16px 14px;
-      scrollbar-width: none;
-    }
+    .ic { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: none; border: 0; padding: 0; color: var(--tx); cursor: pointer; transition: transform .15s, background .25s; }
+    .ic:active { transform: scale(.88); } .ic.gl { border-radius: 50%; } .ic.on { color: var(--ac); } .ic.red { color: var(--rd); } .ic.aa { font: 500 22px var(--sans); }
+    .tabs { display: flex; gap: 8px; overflow-x: auto; padding: 4px 16px 14px; scrollbar-width: none; }
     .tabs::-webkit-scrollbar { display: none; }
-    .tabs button {
-      flex: none;
-      border-radius: 99px;
-      padding: 9px 17px;
-      font: 600 13px var(--sans);
-      cursor: pointer;
-      transition: background .25s, color .25s;
-    }
+    .tabs button { flex: none; border-radius: 99px; padding: 9px 17px; font: 600 13px var(--sans); cursor: pointer; transition: background .25s, color .25s; }
     .tabs button.on { background: var(--tx); color: #111; border-color: transparent; }
-    main { animation: in .45s cubic-bezier(.2, .7, .2, 1) both; }
-    @keyframes in {
-      from { opacity: 0; transform: translateY(14px); }
-      to { opacity: 1; transform: none; }
-    }
+    main { animation: in .45s cubic-bezier(.2,.7,.2,1) both; }
+    @keyframes in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
     .k { font: 700 11px var(--sans); letter-spacing: 1.6px; text-transform: uppercase; color: var(--ac); }
     .mt { font-size: 13px; color: var(--mu); }
-    .hc {
-      position: relative;
-      display: block;
-      margin: 4px 16px 10px;
-      border-radius: 30px;
-      overflow: hidden;
-      aspect-ratio: 4/5;
-      color: #fff;
-      text-decoration: none;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, .5);
-      transition: transform .25s;
-    }
+    .hc { position: relative; display: block; margin: 4px 16px 10px; border-radius: 30px; overflow: hidden; aspect-ratio: 4/5; color: #fff; text-decoration: none; box-shadow: 0 20px 50px rgba(0,0,0,.5); transition: transform .25s; }
     .hc:active { transform: scale(.985); }
     .hc img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .hc .ov {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      padding: 90px 22px 24px;
-      background: linear-gradient(transparent, rgba(0, 0, 0, .85));
-    }
+    .hc .ov { position: absolute; left: 0; right: 0; bottom: 0; padding: 90px 22px 24px; background: linear-gradient(transparent, rgba(0,0,0,.85)); }
     .hc h2 { font: 700 29px/1.18 var(--serif); letter-spacing: -.3px; margin: 10px 0; }
-    .hc .mt { color: rgba(255, 255, 255, .7); }
-    .hc.ni {
-      aspect-ratio: auto;
-      min-height: 280px;
-      background: radial-gradient(120% 90% at 0% 0%, rgba(212, 168, 105, .34), transparent 60%), radial-gradient(100% 80% at 100% 100%, rgba(122, 92, 255, .34), transparent 62%), #14141a;
-      border: 1px solid var(--gb);
-    }
-    .hc.ni::after {
-      content: "S.";
-      position: absolute;
-      right: -6px;
-      top: -34px;
-      font: 800 230px/1 var(--sans);
-      color: rgba(255, 255, 255, .045);
-      pointer-events: none;
-    }
+    .hc .mt { color: rgba(255,255,255,.7); }
+    .hc.ni { aspect-ratio: auto; min-height: 280px; background: radial-gradient(120% 90% at 0% 0%, rgba(212,168,105,.34), transparent 60%), radial-gradient(100% 80% at 100% 100%, rgba(122,92,255,.34), transparent 62%), #14141a; border: 1px solid var(--gb); }
+    .hc.ni::after { content: "S."; position: absolute; right: -6px; top: -34px; font: 800 230px/1 var(--sans); color: rgba(255,255,255,.045); pointer-events: none; }
     .hc.ni .ov { position: relative; background: none; padding: 120px 24px 26px; }
     .hc.ni h2 { font-size: 32px; }
     .dl { padding: 2px 20px 12px; font: 600 13px var(--sans); letter-spacing: .3px; color: var(--mu); }
-    .sh {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 16px 20px 12px;
-      font: 700 11px var(--sans);
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
-      color: var(--mu);
-    }
-    .sh::after { content: ""; flex: 1; height: 1px; background: rgba(255, 255, 255, .1); }
+    .sh { display: flex; align-items: center; gap: 12px; padding: 16px 20px 12px; font: 700 11px var(--sans); letter-spacing: 1.8px; text-transform: uppercase; color: var(--mu); }
+    .sh::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,.1); }
     .ft { padding: 40px 20px 10px; text-align: center; font: 500 12px/1.7 var(--sans); color: var(--mu); }
     .cap { margin: 10px 20px 0; font: 400 12.5px/1.45 var(--sans); color: var(--mu); }
     .meta b { color: var(--tx); font-weight: 600; }
-    .hs {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      padding: 2px 16px 16px;
-      scrollbar-width: none;
-    }
+    .hs { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 2px 16px 16px; scrollbar-width: none; }
     .hs::-webkit-scrollbar { display: none; }
     .hs .hc { flex: none; width: 84%; margin: 0; scroll-snap-align: center; }
-    .hs .hc h2 { font-size: 25px; }
-    .hs .hc.ni h2 { font-size: 26px; }
-    .hs .hc.ni { min-height: 300px; }
+    .hs .hc h2 { font-size: 25px; } .hs .hc.ni h2 { font-size: 26px; } .hs .hc.ni { min-height: 300px; }
     .hc img, .th, .hero { animation: fi .8s both; }
-    @keyframes fi {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+    @keyframes fi { from { opacity: 0; } to { opacity: 1; } }
     h1, h2 { text-wrap: balance; }
-    .rl {
-      margin: 0 0 8px;
-      color: var(--mu);
-      font: 400 15px/1.4 var(--serif);
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .rw {
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      padding: 22px 20px;
-      margin: 0 4px;
-      color: inherit;
-      text-decoration: none;
-      border-bottom: 1px solid rgba(255, 255, 255, .07);
-      animation: in .5s both;
-      animation-delay: var(--d, 0ms);
-      transition: opacity .2s;
-    }
+    .rl { margin: 0 0 8px; color: var(--mu); font: 400 15px/1.4 var(--serif); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .rw { display: flex; gap: 16px; align-items: flex-start; padding: 22px 20px; margin: 0 4px; color: inherit; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.07); animation: in .5s both; animation-delay: var(--d,0ms); transition: opacity .2s; }
     .rw:active { opacity: .55; }
     .rw h2 { font: 700 21px/1.3 var(--serif); margin: 6px 0 8px; letter-spacing: -.2px; }
     .th { width: 96px; height: 96px; border-radius: 20px; object-fit: cover; flex: none; }
-    .hero {
-      display: block;
-      width: calc(100% - 32px);
-      margin: 6px 16px 0;
-      aspect-ratio: 1/1;
-      object-fit: cover;
-      border-radius: 28px;
-    }
+    .hero { display: block; width: calc(100% - 32px); margin: 6px 16px 0; aspect-ratio: 1/1; object-fit: cover; border-radius: 28px; }
     .art { padding: 24px 20px; }
     .art h1 { font: 700 30px/1.2 var(--sans); letter-spacing: -.7px; margin: 10px 0 10px; }
     .art .ld { font: 400 22px/1.38 var(--serif); color: var(--mu); margin: 0 0 22px; }
-    .art .meta { margin-bottom: 24px; padding-bottom: 22px; border-bottom: 1px solid rgba(255, 255, 255, .08); }
-    .upd {
-      margin: 0 0 28px;
-      padding: 18px 20px;
-      border-radius: 22px;
-      background: rgba(212, 168, 105, .13);
-      border: 1px solid rgba(212, 168, 105, .28);
-      font: 400 17px/1.55 var(--sans);
-      -webkit-backdrop-filter: blur(14px);
-      backdrop-filter: blur(14px);
-    }
+    .art .meta { margin-bottom: 24px; padding-bottom: 22px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .upd { margin: 0 0 28px; padding: 18px 20px; border-radius: 22px; background: rgba(212,168,105,.13); border: 1px solid rgba(212,168,105,.28); font: 400 17px/1.55 var(--sans); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
     .upd b { display: block; color: var(--ac); font: 700 11px var(--sans); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
     .upd a, .bd a { color: var(--tx); text-decoration: none; border-bottom: 2px solid var(--ac); }
     .bd { font-size: var(--fs, 20px); -webkit-hyphens: auto; hyphens: auto; text-wrap: pretty; }
@@ -274,18 +82,7 @@
     .bd p:first-child { font: 600 1.06em/1.62 var(--serif); color: var(--tx); }
     .bd h3 { font: 700 1.15em/1.35 var(--sans); margin: 34px 0 14px; }
     .bd blockquote { margin: 0 0 24px; padding: 4px 0 4px 18px; border-left: 3px solid var(--ac); font: italic 500 1.05em/1.55 var(--serif); color: #d9d6cf; }
-    .ad {
-      display: block;
-      border-radius: 28px;
-      margin: 44px 0 10px;
-      overflow: hidden;
-      color: var(--tx);
-      text-decoration: none;
-      background: linear-gradient(160deg, rgba(var(--ar), .2), rgba(255, 255, 255, .04) 60%);
-      border: 1px solid rgba(var(--ar), .32);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 20px 50px rgba(0, 0, 0, .4);
-      transition: transform .2s;
-    }
+    .ad { display: block; border-radius: 28px; margin: 44px 0 10px; overflow: hidden; color: var(--tx); text-decoration: none; background: linear-gradient(160deg, rgba(var(--ar),.2), rgba(255,255,255,.04) 60%); border: 1px solid rgba(var(--ar),.32); box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 20px 50px rgba(0,0,0,.4); transition: transform .2s; }
     .ad:active { transform: scale(.985); }
     .am { position: relative; aspect-ratio: 4/3; margin: 10px; border-radius: 20px; overflow: hidden; background: #111; }
     .am img { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -297,112 +94,31 @@
     .ad .lb { display: flex; align-items: center; gap: 7px; font: 600 11px var(--sans); letter-spacing: 1.3px; text-transform: uppercase; color: var(--mu); margin-bottom: 10px; }
     .ad .lb::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: rgb(var(--ar)); }
     .cta { display: block; text-align: center; padding: 14px; border-radius: 99px; background: rgb(var(--ar)); color: #161616; font: 700 14px var(--sans); }
-    .c0 { --ar: 212, 168, 105; }
-    .c1 { --ar: 139, 120, 255; }
-    .c2 { --ar: 60, 199, 230; }
-    .c3 { --ar: 233, 233, 238; }
+    .c0 { --ar: 212,168,105; } .c1 { --ar: 139,120,255; } .c2 { --ar: 60,199,230; } .c3 { --ar: 233,233,238; }
     .relh { font: 700 12px var(--sans); letter-spacing: 1.6px; text-transform: uppercase; color: var(--mu); padding: 34px 20px 0; }
-    .dock {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-      z-index: 25;
-      display: flex;
-      gap: 4px;
-      padding: 6px;
-      border-radius: 99px;
-      background: rgba(30, 30, 36, .72);
-      -webkit-backdrop-filter: blur(30px) saturate(180%);
-      backdrop-filter: blur(30px) saturate(180%);
-      transition: transform .35s cubic-bezier(.2, .7, .2, 1);
-    }
-    .dock .ic { width: 58px; height: 48px; border-radius: 99px; }
-    .dock .ic.on { background: rgba(255, 255, 255, .16); }
-    .dock.hide { transform: translate(-50%, 170%); }
+    .dock { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); z-index: 25; display: flex; gap: 4px; padding: 6px; border-radius: 99px; background: rgba(30,30,36,.72); -webkit-backdrop-filter: blur(30px) saturate(180%); backdrop-filter: blur(30px) saturate(180%); transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+    .dock .ic { width: 58px; height: 48px; border-radius: 99px; } .dock .ic.on { background: rgba(255,255,255,.16); } .dock.hide { transform: translate(-50%, 170%); }
     .gate { min-height: 88vh; display: flex; flex-direction: column; justify-content: center; padding: 32px 24px; animation: in .6s both; }
     .logo2 { font: 700 52px var(--sans); letter-spacing: -2px; margin-bottom: 12px; user-select: none; -webkit-user-select: none; }
     .logo2 i { color: var(--ac); font-style: normal; }
     .gate p { font: 400 21px/1.4 var(--serif); color: var(--mu); margin: 0 0 40px; }
-    .b {
-      display: block;
-      width: 100%;
-      border-radius: 99px;
-      padding: 17px;
-      font: 700 13px var(--sans);
-      letter-spacing: 1.3px;
-      text-transform: uppercase;
-      cursor: pointer;
-      margin-bottom: 12px;
-      background: var(--gl);
-      border: 1px solid var(--gb);
-      -webkit-backdrop-filter: blur(20px);
-      backdrop-filter: blur(20px);
-      transition: transform .15s;
-    }
-    .b:active { transform: scale(.97); }
-    .b.p { background: var(--ac); color: #1b1b1b; border-color: transparent; }
-    .b.d { background: var(--rd); border-color: transparent; color: #fff; }
+    .b { display: block; width: 100%; border-radius: 99px; padding: 17px; font: 700 13px var(--sans); letter-spacing: 1.3px; text-transform: uppercase; cursor: pointer; margin-bottom: 12px; background: var(--gl); border: 1px solid var(--gb); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); transition: transform .15s; }
+    .b:active { transform: scale(.97); } .b.p { background: var(--ac); color: #1b1b1b; border-color: transparent; } .b.d { background: var(--rd); border-color: transparent; color: #fff; }
     form, .pad { padding: 12px 20px; }
     label { display: block; font: 600 11px var(--sans); letter-spacing: 1.2px; text-transform: uppercase; color: var(--mu); margin-bottom: 16px; }
-    input, textarea, select {
-      display: block;
-      width: 100%;
-      margin-top: 8px;
-      background: rgba(255, 255, 255, .06);
-      border: 1px solid var(--gb);
-      border-radius: 16px;
-      padding: 14px;
-      font: 500 16px var(--sans);
-      outline: 0;
-      text-transform: none;
-      letter-spacing: 0;
-    }
+    input, textarea, select { display: block; width: 100%; margin-top: 8px; background: rgba(255,255,255,.06); border: 1px solid var(--gb); border-radius: 16px; padding: 14px; font: 500 16px var(--sans); outline: 0; text-transform: none; letter-spacing: 0; }
     input:focus, textarea:focus, select:focus { border-color: var(--ac); }
     select option { color: #111; }
-    textarea { min-height: 220px; font-family: var(--serif); line-height: 1.5; }
-    textarea.s { min-height: 90px; }
-    .tb { display: flex; gap: 8px; margin: 8px 0; }
-    .tb button { flex: 1; border-radius: 99px; padding: 9px; font: 700 13px var(--sans); cursor: pointer; }
+    textarea { min-height: 220px; font-family: var(--serif); line-height: 1.5; } textarea.s { min-height: 90px; }
+    .tb { display: flex; gap: 8px; margin: 8px 0; } .tb button { flex: 1; border-radius: 99px; padding: 9px; font: 700 13px var(--sans); cursor: pointer; }
     .pv { width: 100%; border-radius: 16px; margin-bottom: 16px; display: none; }
     .sec { font: 700 13px var(--sans); letter-spacing: 1.5px; text-transform: uppercase; color: var(--ac); margin: 30px 0 14px; }
     .em { text-align: center; color: var(--mu); padding: 80px 30px; font: 400 18px var(--serif); }
-    .sz { display: flex; gap: 8px; margin-bottom: 20px; }
-    .sz button { flex: 1; border-radius: 99px; padding: 12px; cursor: pointer; font-family: var(--serif); }
-    .sz button.on { background: var(--tx); color: #111; }
-    .sheet {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .55);
-      z-index: 40;
-      display: flex;
-      align-items: flex-end;
-      animation: in .2s both;
-    }
-    .sheet > div {
-      width: calc(100% - 24px);
-      max-width: 616px;
-      margin: 0 auto 12px;
-      padding: 24px 20px 12px;
-      border-radius: 30px;
-      background: rgba(30, 30, 34, .85);
-      -webkit-backdrop-filter: blur(30px);
-      backdrop-filter: blur(30px);
-      border: 1px solid var(--gb);
-    }
+    .sz { display: flex; gap: 8px; margin-bottom: 20px; } .sz button { flex: 1; border-radius: 99px; padding: 12px; cursor: pointer; font-family: var(--serif); } .sz button.on { background: var(--tx); color: #111; }
+    .sheet { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 40; display: flex; align-items: flex-end; animation: in .2s both; }
+    .sheet > div { width: calc(100% - 24px); max-width: 616px; margin: 0 auto 12px; padding: 24px 20px 12px; border-radius: 30px; background: rgba(30,30,34,.85); -webkit-backdrop-filter: blur(30px); backdrop-filter: blur(30px); border: 1px solid var(--gb); }
     .sheet h3 { font: 700 20px var(--sans); margin: 0 0 20px; }
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: calc(94px + env(safe-area-inset-bottom, 0px));
-      transform: translateX(-50%);
-      padding: 12px 22px;
-      border-radius: 99px;
-      font: 600 14px var(--sans);
-      z-index: 50;
-      animation: in .3s both;
-      white-space: nowrap;
-    }
+    .toast { position: fixed; left: 50%; bottom: calc(94px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); padding: 12px 22px; border-radius: 99px; font: 600 14px var(--sans); z-index: 50; animation: in .3s both; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -412,143 +128,134 @@
   <script>
     var CATS = ["Все", "Новости", "Истории", "Мир", "Россия", "Технологии", "Культура", "Мнения"];
     var I = {
-      back: '<path d="M15 5l-7 7 7 7"/>',
-      share: '<path d="M12 15V4M8 8l4-4 4 4M5 13v6h14v-6"/>',
-      edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/>',
-      trash: '<path d="M5 7h14M10 11v6M14 11v6M7 7l1 13h8l1-13M9 7V4h6v3"/>',
-      bm: '<path d="M7 4h10v16l-5-4-5 4z"/>',
-      home: '<path d="M4 11l8-7 8 7v9H4z"/>',
-      user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
-      plus: '<path d="M12 5v14M5 12h14"/>'
+      back: '<path d="M15 5l-7 7 7 7"/>', share: '<path d="M12 15V4M8 8l4-4 4 4M5 13v6h14v-6"/>', edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/>',
+      trash: '<path d="M5 7h14M10 11v6M14 11v6M7 7l1 13h8l1-13M9 7V4h6v3"/>', bm: '<path d="M7 4h10v16l-5-4-5 4z"/>',
+      home: '<path d="M4 11l8-7 8 7v9H4z"/>', user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>', plus: '<path d="M12 5v14M5 12h14"/>'
     };
     function ic(n) { return '<svg viewBox="0 0 24 24">' + I[n] + '</svg>'; }
-    function ld(k, d) {
-      try {
-        var v = localStorage.getItem(k);
-        return v ? JSON.parse(v) : d;
-      } catch (e) { return d; }
-    }
-    function sv(k, v) {
-      try {
-        localStorage.setItem(k, JSON.stringify(v));
-        return true;
-      } catch (e) { return false; }
-    }
+    function ld(k, d) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+    function sv(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
     function rm(k) { try { localStorage.removeItem(k); } catch (e) {} }
-    var KC = {
-      "Новости": "#d4a869", "Истории": "#9b8cff", "Мир": "#4fd1e8", "Россия": "#ff6b7d",
-      "Технологии": "#5fe3a1", "Культура": "#ff8fd0", "Мнения": "#ffb15c"
-    };
+    var KC = {"Новости": "#d4a869", "Истории": "#9b8cff", "Мир": "#4fd1e8", "Россия": "#ff6b7d", "Технологии": "#5fe3a1", "Культура": "#ff8fd0", "Мнения": "#ffb15c"};
     var FT = '<div class="ft">© 2026 Shirma<br>Материалы редакции</div>';
     var ly = 0;
-
-    function dh() {
-      var y = window.scrollY, d = $("dock");
-      if (!d) return;
-      if (y > ly + 6 && y > 160) d.classList.add("hide");
-      else if (y < ly - 6 || y < 160) d.classList.remove("hide");
-      ly = y;
-    }
-    function dstr() {
-      var x = new Date().toLocaleDateString("ru-RU", { weekday: "long", day: "numeric", month: "long" });
-      return x.charAt(0).toUpperCase() + x.slice(1);
-    }
+    function dh() { var y = window.scrollY, d = $("dock"); if (!d) return; if (y > ly + 6 && y > 160) d.classList.add("hide"); else if (y < ly - 6 || y < 160) d.classList.remove("hide"); ly = y; }
+    function dstr() { var x = new Date().toLocaleDateString("ru-RU", { weekday: "long", day: "numeric", month: "long" }); return x.charAt(0).toUpperCase() + x.slice(1); }
     var posts = ld("sh_posts", null) || null, role = ld("sh_role", "reader") || "reader", saved = ld("sh_saved", []), fs = ld("sh_fs", 20), cat = "Все", cur = "", adimg = "", tc = 0, tm;
-
-    if (role === "admin" && Date.now() > ld("sh_aexp", 0)) {
-      role = "reader";
-      sv("sh_role", "reader");
-    }
+    if (role === "admin" && Date.now() > ld("sh_aexp", 0)) { role = "reader"; sv("sh_role", "reader"); }
     if (!posts) {
-      posts = [{
-        id: "1", title: "Добро пожаловать в Shirma", lead: "Пример поста с обновлением и рекламой",
-        body: "Это пример поста. Абзацы разделяются пустой строкой.\n## Подзаголовок\nМожно выделять **жирным** и вставлять [ссылки](https://example.com).\n> А ещё — цитаты.",
-        cat: "Новости", img: "", ts: Date.now() - 36e5,
-        upd: "Обновление можно добавить к любому посту — оно выделяется отдельным блоком.",
-        uts: Date.now() - 18e5,
-        ad: { h: "Здесь ваша реклама", t: "Заголовок, текст, фото и ссылка — всё настраивается в редакторе.", u: "https://example.com", img: "", c: "c0" }
-      }];
+      posts = [{ id: "1", title: "Добро пожаловать в Shirma", lead: "Пример поста с обновлением и рекламой", body: "Это пример поста. Абзацы разделяются пустой строкой.\n## Подзаголовок\nМожно выделять **жирным** и вставлять [ссылки](https://example.com).\n> А ещё — цитаты.", cat: "Новости", img: "", ts: Date.now() - 36e5, upd: "Обновление можно добавить к любому посту — оно выделяется отдельным блоком.", uts: Date.now() - 18e5, ad: { h: "Здесь ваша реклама", t: "Заголовок, текст, фото и ссылка — всё настраивается в редакторе.", u: "https://example.com", img: "", c: "c0" } }];
       sv("sh_posts", posts);
     }
     var $ = function (i) { return document.getElementById(i); }, R = $("root"), LOGO = '<div class="logo" onclick="logoTap()">Shirma<i>.</i></div>';
-    
-    function esc(s) {
-      return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
-        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
-      });
-    }
+    function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
     function si(s) { return typeof s === "string" && s.indexOf("data:image/") === 0 ? s : ""; }
     function su(u) { return /^https?:\/\//i.test(u || "") ? esc(u) : ""; }
-    function dt(t) {
-      var d = new Date(t);
-      return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + ", " + d.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }).replace(" г.", "");
-    }
+    function dt(t) { var d = new Date(t); return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + ", " + d.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }).replace(" г.", ""); }
     function pl(n, a) { var m = n % 100, k = n % 10; return n + " " + (m > 10 && m < 20 ? a[2] : k == 1 ? a[0] : k > 1 && k < 5 ? a[1] : a[2]); }
-    function ago(t) {
-      var m = Math.round((Date.now() - t) / 6e4);
-      if (m < 1) return "только что";
-      if (m < 60) return pl(m, ["минуту", "минуты", "минут"]) + " назад";
-      var h = Math.round(m / 60);
-      if (h < 24) return pl(h, ["час", "часа", "часов"]) + " назад";
-      return dt(t);
-    }
+    function ago(t) { var m = Math.round((Date.now() - t) / 6e4); if (m < 1) return "только что"; if (m < 60) return pl(m, ["минуту", "минуты", "минут"]) + " назад"; var h = Math.round(m / 60); if (h < 24) return pl(h, ["час", "часа", "часов"]) + " назад"; return dt(t); }
     function rt(p) { return Math.max(1, Math.round(((p.body || "").split(/\s+/).length) / 170)) + " мин чтения"; }
-    function toast(t) {
-      var d = document.createElement("div");
-      d.className = "toast gl";
-      d.textContent = t;
-      document.body.appendChild(d);
-      setTimeout(function () { d.remove(); }, 2400);
-    }
-    function ask(t, ok) {
-      var s = document.createElement("div");
-      s.className = "sheet";
-      s.innerHTML = '<div><h3>' + t + '</h3><button class="b d" id="y">Удалить</button><button class="b" id="n">Отмена</button></div>';
-      document.body.appendChild(s);
-      s.onclick = function (e) { if (e.target === s || e.target.id === "n") s.remove(); };
-      $("y").onclick = function () { s.remove(); ok(); };
-    }
-    function dock(it) {
-      var d = $("dock");
-      d.classList.remove("hide");
-      if (!it) { d.style.display = "none"; return; }
-      d.style.display = "flex";
-      d.innerHTML = it.map(function (i) { return '<button class="ic ' + (i[2] || "") + '" onclick="' + i[1] + '">' + ic(i[0]) + "</button>"; }).join("");
-    }
+    function toast(t) { var d = document.createElement("div"); d.className = "toast gl"; d.textContent = t; document.body.appendChild(d); setTimeout(function () { d.remove(); }, 2400); }
+    function ask(t, ok) { var s = document.createElement("div"); s.className = "sheet"; s.innerHTML = '<div><h3>' + t + '</h3><button class="b d" id="y">Удалить</button><button class="b" id="n">Отмена</button></div>'; document.body.appendChild(s); s.onclick = function (e) { if (e.target === s || e.target.id === "n") s.remove(); }; $("y").onclick = function () { s.remove(); ok(); }; }
+    function dock(it) { var d = $("dock"); d.classList.remove("hide"); if (!it) { d.style.display = "none"; return; } d.style.display = "flex"; d.innerHTML = it.map(function (i) { return '<button class="ic ' + (i[2] || "") + '" onclick="' + i[1] + '">' + ic(i[0]) + "</button>"; }).join(""); }
     function topbar(l, r, x) { return '<div class="top">' + l + (r ? '<div class="pill gl">' + r + "</div>" : "<span></span>") + (x || "") + "</div>"; }
-    function inl(x) {
-      return x.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
-    }
-    function fmt(s) {
-      return esc(s).split(/\n+/).map(function (x) {
-        if (x.indexOf("## ") == 0) return "<h3>" + inl(x.slice(3)) + "</h3>";
-        if (x.indexOf("&gt; ") == 0) return "<blockquote>" + inl(x.slice(5)) + "</blockquote>";
-        return "<p>" + inl(x) + "</p>";
-      }).join("");
-    }
+    function inl(x) { return x.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'); }
+    function fmt(s) { return esc(s).split(/\n+/).map(function (x) { if (x.indexOf("## ") == 0) return "<h3>" + inl(x.slice(3)) + "</h3>"; if (x.indexOf("&gt; ") == 0) return "<blockquote>" + inl(x.slice(5)) + "</blockquote>"; return "<p>" + inl(x) + "</p>"; }).join(""); }
+    
     function hx(b) { return Array.prototype.map.call(new Uint8Array(b), function (x) { return ("0" + x.toString(16)).slice(-2); }).join(""); }
-    function kdf(p, s) {
-      return crypto.subtle.importKey("raw", new TextEncoder().encode(p), "PBKDF2", false, ["deriveBits"])
-        .then(function (k) { return crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: new Uint8Array(s), iterations: 150000 }, k, 256); })
-        .then(hx);
+    function kdf(p, s) { return crypto.subtle.importKey("raw", new TextEncoder().encode(p), "PBKDF2", false, ["deriveBits"]).then(function (k) { return crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: new Uint8Array(s), iterations: 150000 }, k, 256); }).then(hx); }
+    function setPw(p) { var s = Array.prototype.slice.call(crypto.getRandomValues(new Uint8Array(16))); return kdf(p, s).then(function (h) { sv("sh_salt", s); sv("sh_pw2", h); }); }
+    function logoTap() { tc++; clearTimeout(tm); tm = setTimeout(function () { tc = 0; }, 2500); if (tc >= 7) { tc = 0; adminAsk(); return; } if (location.hash) location.hash = ""; else window.scrollTo(0, 0); }
+    function loginOk() { sv("sh_fail", 0); sv("sh_aexp", Date.now() + 432e5); role = "admin"; sv("sh_role", "admin"); location.hash = ""; render(); toast("Режим админа включён"); }
+    function adminAsk() { if (role === "admin") { location.hash = "me"; return; } var has = ld("sh_pw2", null); dock(); R.innerHTML = '<div class="gate"><div class="logo2">' + (has ? "Вход" : "Создайте пароль") + '</div><p>' + (has ? "Только для администратора" : "Минимум 8 символов. Запомните его — восстановить нельзя.") + '</p><input id="pw" type="password" placeholder="Пароль" autocomplete="' + (has ? "current-password" : "new-password") + '" style="margin:0 0 14px">' + (has ? "" : '<input id="pw2" type="password" placeholder="Повторите пароль" autocomplete="new-password" style="margin:0 0 14px">') + '<button class="b p" onclick="' + (has ? "tryLogin()" : "firstPw()") + '">' + (has ? "Войти" : "Сохранить и войти") + '</button><button class="b" onclick="render()">Назад</button></div>'; $("pw").onkeydown = function (e) { if (e.key === "Enter" && has) tryLogin(); }; }
+    function firstPw() { var a = $("pw").value, b = $("pw2").value; if (a.length < 8) { toast("Минимум 8 символов"); return; } if (a !== b) { toast("Пароли не совпадают"); return; } setPw(a).then(loginOk).catch(function () { toast("Ошибка"); }); }
+    function tryLogin() { var lk = ld("sh_lock", 0); if (Date.now() < lk) { toast("Подождите " + Math.ceil((lk - Date.now()) / 1000) + " сек"); return; } kdf($("pw").value, ld("sh_salt", [])).then(function (h) { if (h === ld("sh_pw2", "")) { loginOk(); } else { var n = ld("sh_fail", 0) + 1; sv("sh_fail", n); if (n >= 5) { var c = ld("sh_lc", 0); sv("sh_lc", c + 1); sv("sh_lock", Date.now() + 6e4 * Math.pow(2, Math.min(c, 6))); sv("sh_fail", 0); toast("Слишком много попыток. Вход заблокирован"); } else toast("Неверный пароль (" + n + "/5)"); } }).catch(function () { toast("Ошибка"); }); }
+    function chpw() { var v = $("np").value; if (v.length < 8) { toast("Минимум 8 символов"); return; } setPw(v).then(function () { $("np").value = ""; toast("Пароль изменён"); }); }
+    function setRole(r) { role = r; sv("sh_role", r); location.hash = ""; render(); }
+    function render() { window.scrollTo(0, 0); window.onscroll = null; var h = location.hash.slice(1); if (!h && !ld("sh_seen", false)) { splash(); return; } if (h.indexOf("post-") == 0) art(h.slice(5)); else if (h === "new") edit(); else if (h.indexOf("edit-") == 0) edit(h.slice(5)); else if (h === "saved") feed(true); else if (h === "me") me(); else feed(); }
+    function splash() { dock(); R.innerHTML = '<div class="gate"><div class="logo2" onclick="logoTap()">Shirma<i>.</i></div><p>Новости, репортажи и разборы.</p><button class="b p" onclick="sv(\'sh_seen\',true);render()">Начать читать</button></div>'; }
+    function nav(a) { var l = [["home", "location.hash=\'\'", a === "" ? "on" : ""], ["bm", "location.hash=\'saved\'", a == "s" ? "on" : ""]]; if (role === "admin") l.push(["plus", "location.hash=\'new\'"]); l.push(["user", "location.hash=\'me\'", a == "m" ? "on" : ""]); dock(l); }
+    function feed(s) {
+      var l = posts.filter(function (p) { return s ? saved.indexOf(p.id) > -1 : (cat === "Все" || p.cat === cat); }).sort(function (a, b) { return b.ts - a.ts; });
+      nav(s ? "s" : "");
+      var h = topbar(LOGO, role === "admin" ? '<span class="adm">АДМИН</span>' : "") + (s ? "" : '<div class="dl">' + dstr() + '</div><div class="tabs">' + CATS.map(function (c) { return '<button class="gl' + (c === cat ? " on" : "") + '" data-c="' + c + '">' + c + "</button>"; }).join("") + "</div>") + "<main>";
+      if (!l.length) h += '<div class="em">' + (s ? "Закладок пока нет" : "Здесь пока пусто") + "</div>";
+      l.forEach(function (p, i) {
+        var g = si(p.img), u = "#post-" + esc(p.id);
+        if (i < 3 && !s) {
+          h += (i === 0 ? '<div class="sh">Главное</div><div class="hs">' : "") + '<a class="hc' + (g ? "" : " ni") + '" href="' + u + '">' + (g ? '<img src="' + g + '">' : "") + '<div class="ov"><span class="k" style="color:#f0d9b0">' + esc(p.cat) + "</span><h2>" + esc(p.title) + '</h2><div class="mt">' + ago(p.ts) + " · " + rt(p) + "</div></div></a>" + (i === 2 || i === l.length - 1 ? "</div>" : "");
+        } else {
+          h += (i === 3 && !s ? '<div class="sh">Свежее</div>' : "") + '<a class="rw" style="--d:' + i * 45 + 'ms" href="' + u + '"><div style="flex:1;min-width:0"><span class="k" style="color:' + (KC[p.cat] || "#d4a869") + '">' + esc(p.cat) + "</span><h2>" + esc(p.title) + '</h2>' + (p.lead ? '<p class="rl">' + esc(p.lead) + "</p>" : "") + '<div class="mt">' + ago(p.ts) + " · " + rt(p) + "</div></div>" + (g ? '<img class="th" src="' + g + '">' : "") + "</a>";
+        }
+      });
+      R.innerHTML = h + "</main>" + FT; window.onscroll = dh;
+      var t = R.querySelector(".tabs"); if (t) t.onclick = function (e) { var c = e.target.getAttribute("data-c"); if (c) { cat = c; feed(); } };
     }
-    function setPw(p) {
-      var s = Array.prototype.slice.call(crypto.getRandomValues(new Uint8Array(16)));
-      return kdf(p, s).then(function (h) { sv("sh_salt", s); sv("sh_pw2", h); });
+    function adHtml(a) {
+      if (!a) return ""; var u = su(a.u), g = si(a.img), tg = u ? "a" : "div";
+      return "<" + tg + (u ? ' href="' + u + '" target="_blank" rel="noopener noreferrer sponsored"' : "") + ' class="ad ' + esc(/^c[0-3]$/.test(a.c) ? a.c : "c0") + '">' + (g ? '<div class="am"><img class="bl" src="' + g + '"><img class="fg" src="' + g + '"></div>' : "") + '<div class="ab"><span class="lb">Реклама</span>' + (a.h ? "<h4>" + esc(a.h) + "</h4>" : "") + (a.t ? "<p>" + esc(a.t) + "</p>" : "") + (u ? '<span class="cta">Подробнее</span>' : "") + "</div></" + tg + ">";
     }
-    function logoTap() {
-      tc++; clearTimeout(tm); tm = setTimeout(function () { tc = 0; }, 2500);
-      if (tc >= 7) { tc = 0; adminAsk(); return; }
-      if (location.hash) location.hash = ""; else window.scrollTo(0, 0);
+    function art(id) {
+      var p = posts.filter(function (x) { return x.id === id; })[0]; if (!p) { location.hash = ""; return; }
+      var s = saved.indexOf(id) > -1, adm = role === "admin", g = si(p.img), more = posts.filter(function (x) { return x.id !== id; }).sort(function (a, b) { return b.ts - a.ts; }).slice(0, 3);
+      R.innerHTML = topbar('<button class="ic gl" onclick="location.hash=\'\'">' + ic("back") + "</button>", '<button class="ic aa" onclick="bigger()">Aa</button><button class="ic ' + (s ? "on" : "") + '" onclick="mark(\'' + id + '\')">' + ic("bm") + "</button>", '<i id="pg"></i>') + (g ? '<img class="hero" src="' + g + '">' + (p.cap ? '<div class="cap">' + esc(p.cap) + "</div>" : "") : "") + '<main class="art"><span class="k" style="color:' + (KC[p.cat] || "#d4a869") + '">' + esc(p.cat) + "</span><h1>" + esc(p.title) + "</h1>" + (p.lead ? '<p class="ld">' + esc(p.lead) + "</p>" : "") + '<div class="mt meta">' + (p.author ? "<b>" + esc(p.author) + "</b><br>" : "") + dt(p.ts) + " · " + rt(p) + "<br>Источник: Shirma</div>" + (p.upd ? '<div class="upd"><b>Обновление · ' + dt(p.uts || p.ts) + "</b>" + esc(p.upd).split(/\n+/).map(inl).join("<br>") + "</div>" : "") + '<div class="bd" style="--fs:' + fs + 'px">' + fmt(p.body) + "</div>" + adHtml(p.ad) + '<button class="b" style="margin-top:26px" onclick="share(\'' + id + '\')">Поделиться статьёй</button></main>' + (more.length ? '<div class="relh">Читайте также</div>' + more.map(function (x) { var y = si(x.img); return '<a class="rw" href="#post-' + esc(x.id) + '"><div style="flex:1;min-width:0"><h2>' + esc(x.title) + '</h2><div class="mt">' + ago(x.ts) + "</div></div>" + (y ? '<img class="th" src="' + y + '">' : "") + "</a>"; }).join("") : "") + FT;
+      var d = [["share", "share('" + id + "')"]]; if (adm) { d.push(["edit", "location.hash='edit-" + id + "'"]); d.push(["trash", "del('" + id + "')", "red"]); } dock(d);
+      window.onscroll = function () { dh(); var e = document.documentElement, b = $("pg"); if (b) b.style.width = Math.min(100, e.scrollTop / ((e.scrollHeight - e.clientHeight) || 1) * 100) + "%"; };
     }
-    function loginOk() {
-      sv("sh_fail", 0); sv("sh_aexp", Date.now() + 432e5);
-      role = "admin"; sv("sh_role", "admin"); location.hash = ""; render(); toast("Режим админа включён");
+    function bigger() { fs = fs >= 26 ? 17 : fs + 3; sv("sh_fs", fs); var y = window.scrollY; render(); window.scrollTo(0, y); }
+    function mark(id) { var i = saved.indexOf(id); if (i > -1) saved.splice(i, 1); else saved.push(id); sv("sh_saved", saved); toast(i > -1 ? "Убрано из закладок" : "В закладках"); var y = window.scrollY; render(); window.scrollTo(0, y); }
+    function share(id) { var u = location.href.split("#")[0] + "#post-" + id; if (navigator.share) navigator.share({ title: "Shirma", url: u }).catch(function () {}); else { try { navigator.clipboard.writeText(u); toast("Ссылка скопирована"); } catch (e) { toast(u); } } }
+    function del(id) { if (role !== "admin") return; ask("Удалить этот пост?", function () { posts = posts.filter(function (x) { return x.id !== id; }); sv("sh_posts", posts); toast("Пост удалён"); location.hash = ""; }); }
+    function pick(inp, img, w, cb) { inp.onchange = function (e) { var f = e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { var m = new Image(); m.onload = function () { var k = Math.min(1, w / m.width), c = document.createElement("canvas"); c.width = m.width * k; c.height = m.height * k; c.getContext("2d").drawImage(m, 0, 0, c.width, c.height); var d = c.toDataURL("image/jpeg", .8); img.src = d; img.style.display = "block"; cb(d); }; m.src = r.result; }; r.readAsDataURL(f); }; }
+    function ins(k) { var t = $("b"), s = t.selectionStart, e = t.selectionEnd, v = t.value, x = v.slice(s, e), r; if (k === "h") r = "\n\n## " + (x || "Заголовок") + "\n\n"; else if (k === "b") r = "**" + (x || "текст") + "**"; else if (k === "q") r = "\n\n> " + (x || "Цитата") + "\n\n"; else r = "[" + (x || "текст") + "](https://)"; t.value = v.slice(0, s) + r + v.slice(e); t.focus(); t.dispatchEvent(new Event("input", { bubbles: true })); }
+    function edit(id) {
+      if (role !== "admin") { location.hash = ""; return; }
+      var p = id ? posts.filter(function (x) { return x.id === id; })[0] : null, a = (p && p.ad) || {}, f = p ? { t: p.title, l: p.lead, c: p.cat, b: p.body, u: p.upd || "", ah: a.h, at: a.t, au: a.u, ac: a.c, a: p.author, pc: p.cap } : (ld("sh_draft", null) || {});
+      cur = p ? p.img : ""; adimg = a.img || ""; dock();
+      R.innerHTML = topbar('<button class="ic gl" onclick="history.back()">' + ic("back") + "</button>", "") + `<form id="f"><p class="k">${p ? "Редактирование" : "Новый пост"}${p ? "" : " · черновик сохраняется сам"}</p><br>
+<label>Заголовок<input id="t" value="${esc(f.t)}"></label>
+<label>Подзаголовок<input id="l" value="${esc(f.l)}"></label>
+<label>Автор<input id="pa" value="${esc(f.a)}"></label>
+<label>Рубрика<select id="c">${CATS.slice(1).map(function (c) { return "<option" + (f.c === c ? " selected" : "") + ">" + c + "</option>"; }).join("")}</select></label>
+<label>Фото<input type="file" id="i" accept="image/*"></label><img class="pv" id="pv" ${si(cur) ? 'src="' + si(cur) + '" style="display:block"' : ""}>
+<label>Подпись к фото (автор снимка, источник)<input id="pc" value="${esc(f.pc)}"></label><button type="button" class="b" id="rm0">Убрать фото</button>
+<label style="margin-bottom:0">Текст</label><div class="tb"><button type="button" class="gl" onclick="ins('h')">H</button><button type="button" class="gl" onclick="ins('b')">B</button><button type="button" class="gl" onclick="ins('q')">❝</button><button type="button" class="gl" onclick="ins('l')">🔗</button></div>
+<textarea id="b">${esc(f.b)}</textarea>
+<div class="sec">Обновление</div>
+<label>Текст обновления (пусто — без блока)<textarea class="s" id="u">${esc(f.u)}</textarea></label>
+<div class="sec">Реклама в конце поста</div>
+<label>Заголовок<input id="ah" value="${esc(f.ah)}"></label>
+<label>Текст<input id="at" value="${esc(f.at)}"></label>
+<label>Ссылка (https://…)<input id="au" value="${esc(f.au)}"></label>
+<label>Цвет акцента<select id="ac">${[["c0", "Золото"], ["c1", "Фиолетовый"], ["c2", "Океан"], ["c3", "Графит"]].map(function (c) { return '<option value="' + c[0] + '"' + (f.ac === c[0] ? " selected" : "") + ">" + c[1] + "</option>"; }).join("")}</select></label>
+<label>Картинка рекламы<input type="file" id="ai" accept="image/*"></label><img class="pv" id="apv" ${si(adimg) ? 'src="' + si(adimg) + '" style="display:block"' : ""}>
+<button type="button" class="b" id="rm">Убрать картинку рекламы</button>
+<button type="button" class="b p" id="s">${p ? "Сохранить" : "Опубликовать"}</button></form>`;
+      pick($("i"), $("pv"), 1200, function (d) { cur = d; }); pick($("ai"), $("apv"), 900, function (d) { adimg = d; });
+      $("rm0").onclick = function () { cur = ""; $("pv").style.display = "none"; }; $("rm").onclick = function () { adimg = ""; $("apv").style.display = "none"; };
+      $("f").oninput = function () { if (!p) sv("sh_draft", { a: $("pa").value, pc: $("pc").value, t: $("t").value, l: $("l").value, c: $("c").value, b: $("b").value, u: $("u").value, ah: $("ah").value, at: $("at").value, au: $("au").value, ac: $("ac").value }); };
+      $("s").onclick = function () {
+        var t = $("t").value.trim(), b = $("b").value.trim(), au = $("au").value.trim(), ah = $("ah").value.trim(), at = $("at").value.trim(), u = $("u").value.trim();
+        if (!t || !b) { toast("Нужны заголовок и текст"); return; }
+        if (au && !/^https?:\/\//i.test(au)) { toast("Ссылка должна начинаться с https://"); return; }
+        var o = { id: p ? p.id : String(Date.now()), title: t, author: $("pa").value.trim(), cap: $("pc").value.trim(), lead: $("l").value.trim(), body: b, cat: $("c").value, img: cur, ts: p ? p.ts : Date.now(), upd: u, uts: u ? (p && p.upd === u ? p.uts : Date.now()) : 0, ad: (ah || at || adimg) ? { h: ah, t: at, u: au, img: adimg, c: $("ac").value } : null };
+        var old = posts.slice(); if (p) posts[posts.indexOf(p)] = o; else posts.unshift(o);
+        if (!sv("sh_posts", posts)) { posts = old; toast("Нет места — возьми фото поменьше"); return; }
+        rm("sh_draft"); toast("Опубликовано"); location.hash = "post-" + o.id;
+      };
     }
-    function adminAsk() {
-      if (role === "admin") { location.hash = "me"; return; }
-      var has = ld("sh_pw2", null); dock();
-      R.innerHTML = '<div class="gate"><div class="logo2">' + (has ? "Вход" : "Создайте пароль") + '</div><p>' + (has ? "Только для администратора" : "Минимум 8 символов. Запомните его — восстановить нельзя.") + '</p><input id="pw" type="password" placeholder="Пароль" autocomplete="' + (has ? "current-password" : "new-password") + '" style="margin:0 0 14px">' + (has ? "" : '<input id="pw2" type="password" placeholder="Повторите пароль" autocomplete="new-password" style="margin:0 0 14px">') + '<button class="b p" onclick="' + (has ? "tryLogin()" : "firstPw()") + '">' + (has ? "Войти" : "Сохранить и войти") + '</button><button class="b" onclick="render()">Назад</button></div>';
-      $("pw").onkeydown = function (e) { if (e.key === "Enter" && has) tryLogin(); };
+    function bk() { try { navigator.clipboard.writeText(JSON.stringify(posts)); toast("Копия скопирована"); } catch (e) { toast("Не удалось скопировать"); } }
+    function rs() { try { var d = JSON.parse($("rs").value); if (!Array.isArray(d)) throw 0; posts = d.filter(function (x) { return x && /^[\w-]{1,20}$/.test(x.id) && x.title; }); sv("sh_posts", posts); toast("Восстановлено: " + posts.length); $("rs").value = ""; } catch (e) { toast("Неверная копия"); } }
+    function setFs(n) { fs = n; sv("sh_fs", n); me(); }
+    function me() {
+      nav("m"); var a = role === "admin";
+      R.innerHTML = topbar(LOGO, "") + '<div class="pad"><p class="k">' + (a ? "Админ" : "Профиль") + '</p><h2 style="font:700 26px var(--sans);margin:8px 0 24px">' + (a ? "Управление" : "Настройки чтения") + '</h2><label>Размер текста</label><div class="sz">' + [[17, "A"], [20, "A"], [23, "A"], [26, "A"]].map(function (x, i) { return '<button class="gl' + (fs === x[0] ? " on" : "") + '" style="font-size:' + (14 + i * 3) + 'px" onclick="setFs(' + x[0] + ')">A</button>'; }).join("") + "</div>" +
+        (a ? '<button class="b p" onclick="location.hash=\'new\'">Новый пост</button><label style="margin-top:26px">Новый пароль (от 8 символов)<input id="np" type="password" autocomplete="new-password"></label><button class="b" onclick="chpw()">Сменить пароль</button><div class="sec">Резервная копия</div><button class="b" onclick="bk()">Скопировать копию постов</button><textarea class="s" id="rs" placeholder="Вставьте копию сюда"></textarea><button class="b" style="margin-top:12px" onclick="rs()">Восстановить из копии</button><button class="b d" onclick="setRole(\'reader\')">Выйти из режима админа</button>' : '<button class="b" onclick="saved=[];sv(\'sh_saved\',[]);toast(\'Закладки очищены\')">Очистить закладки</button><p class="mt" style="text-align:center;margin-top:30px">Shirma · новости</p><p class="mt" style="text-align:center;margin-top:46px"><button onclick="adminAsk()" style="background:none;border:0;color:inherit;font:inherit;cursor:pointer;opacity:.5">Вход для редакции</button></p>') + "</div>";
     }
-    function firstP
+    window.addEventListener("hashchange", render); render();
+    var sx = 0, sy = 0;
+    document.addEventListener("touchstart", function (e) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener("touchend", function (e) { var t = e.changedTouches[0]; if (sx < 28 && t.clientX - sx > 90 && Math.abs(t.clientY - sy) < 60 && location.hash) location.hash = ""; }, { passive: true });
+  </script>
+</body>
+</html>
