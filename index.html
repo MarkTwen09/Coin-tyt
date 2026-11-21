@@ -2,833 +2,105 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090e1b">
 <title>Gift Lab — Studio</title>
-
 <style>
-:root{
-  color-scheme:dark;
-  --bg:#090e1b;
-  --text:#f2f5fc;
-  --muted:#929fb9;
-  --accent:#c5b5ec;
-  --green:#acdfc9;
-  --ease:cubic-bezier(.22,1,.36,1);
-  --glass:linear-gradient(135deg,#ffffff0e,#ffffff03);
-}
+:root{color-scheme:dark;--bg:#090e1b;--text:#f2f5fc;--muted:#929fb9;--glass:linear-gradient(135deg,#ffffff0e,#ffffff03);--ease:cubic-bezier(.22,1,.36,1)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{
-  margin:0;color:var(--text);
-  background:
-    radial-gradient(ellipse at 0 0,#77608f2b,transparent 45%),
-    radial-gradient(ellipse at 100% 30%,#367c891a,transparent 45%),
-    var(--bg);
-  background-attachment:fixed;
-  font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-}
+body{margin:0;color:var(--text);background:radial-gradient(ellipse at 0 0,#77608f2b,transparent 45%),radial-gradient(ellipse at 100% 30%,#367c891a,transparent 45%),var(--bg);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 button,input,select,textarea{font:inherit}
-button{
-  color:inherit;border:0;cursor:pointer;
-  touch-action:manipulation;
-  transition:transform .2s,background .2s,filter .2s;
-}
+button{color:inherit;border:0;cursor:pointer;touch-action:manipulation;transition:transform .2s,background .2s}
 button:active:not(:disabled){transform:scale(.97)}
 button:disabled{opacity:.4;cursor:not-allowed}
-button:focus-visible,input:focus-visible,textarea:focus-visible,
-select:focus-visible,a:focus-visible{
-  outline:2px solid #d4c3f5;outline-offset:3px;
-}
-a{color:#d4c4f3}
 h1,h2,h3,p{margin-top:0}
-h1{font-size:45px;line-height:1.04;letter-spacing:-1.7px;margin:16px 0}
-h2{font-size:21px;letter-spacing:-.5px;margin-bottom:0}
+h1{font-size:42px;line-height:1.05;letter-spacing:-1.6px}
+h2{font-size:21px;margin-bottom:0}
 h3{font-size:14px;margin-bottom:6px}
 p{color:var(--muted);line-height:1.8}
-button img{pointer-events:none}
-.app{
-  max-width:1140px;margin:auto;
-  padding:calc(22px + env(safe-area-inset-top,0px))
-    24px calc(125px + env(safe-area-inset-bottom,0px));
-}
-.top{display:flex;align-items:center;gap:10px;margin-bottom:23px}
-.logo{
-  display:grid;place-items:center;width:42px;height:42px;
-  border:1px solid #ffffff55;border-radius:14px;
-  background:linear-gradient(135deg,#baa8d9aa,#7387b477);
-  box-shadow:inset 0 1px 0 #fff8,0 8px 25px #0003;
-}
-.word{font-size:13px;font-weight:800;letter-spacing:2px}
-.word small{
-  display:block;margin-top:5px;color:var(--muted);
-  font-size:8px;font-weight:400;letter-spacing:1px;
-}
-.balance{
-  margin-left:auto;white-space:nowrap;
-  font-weight:750;font-variant-numeric:tabular-nums;
-  border:1px solid #ffffff25;border-radius:14px;
-  padding:11px 14px;background:var(--glass);
-  box-shadow:inset 0 1px 0 #ffffff25;
-}
-.balance.bump{animation:bump .35s var(--ease)}
-.star{width:18px;height:18px;vertical-align:-3px;object-fit:contain}
-.ic{width:21px;height:21px;vertical-align:middle;flex-shrink:0}
-.iconbtn{
-  display:inline-grid;place-items:center;
-  width:35px;height:35px;border:1px solid #ffffff20;
-  border-radius:12px;background:var(--glass);
-}
-.iconbtn.on{color:#e0cffc;background:#b7a2f322}
-.avatar{
-  display:grid;place-items:center;overflow:hidden;
-  border:1px solid #ffffff44;border-radius:50%;
-  background:linear-gradient(135deg,var(--avatar,#a396ce),#53627f);
-  font-weight:750;
-}
-.avatar img{width:100%;height:100%;object-fit:cover}
-.avatar.small-avatar{width:34px;height:34px;font-size:12px}
-.avatar.big-avatar{width:86px;height:86px;font-size:30px}
-.row,.heading{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-}
-.heading{margin:27px 0 16px}
-.small{color:var(--muted);font-size:11px;line-height:1.8}
-.muted{color:var(--muted);font-size:12px}
-.eyebrow{
-  display:flex;align-items:center;gap:7px;
-  font-size:8px;font-weight:700;letter-spacing:1.5px;color:#cbbbeb;
-}
-.dot{
-  width:5px;height:5px;border-radius:50%;
-  background:#b2e2ce;box-shadow:0 0 10px #a6d9c633;
-}
-.pill{
-  display:inline-block;padding:6px 9px;white-space:nowrap;
-  border:1px solid #c7b8f02b;border-radius:20px;
-  background:#c7b8f009;color:#d4c8ec;font-size:10px;
-}
-.pill.green{color:#b6e3d1;border-color:#b6e3d125;background:#b6e3d109}
-.btn{
-  position:relative;overflow:hidden;
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  min-height:45px;padding:13px 17px;
-  border:1px solid #ffffff3b;border-radius:14px;
-  background:linear-gradient(125deg,#baa7dc,#8194c7);
-  box-shadow:inset 0 1px 0 #ffffff77,0 7px 22px #8d78cc13;
-  font-size:12px;font-weight:750;
-}
-.btn:before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(#ffffff20,transparent 60%);
-}
-.btn.secondary{
-  background:var(--glass);border-color:#ffffff20;
-  box-shadow:inset 0 1px 0 #ffffff15;
-}
+.app{max-width:1140px;margin:auto;padding:20px 18px 125px}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.logo{display:grid;place-items:center;width:42px;height:42px;border:1px solid #ffffff55;border-radius:14px;background:linear-gradient(135deg,#baa8d9aa,#7387b477);font-weight:800}
+.balance{margin-left:auto;font-weight:750;border:1px solid #ffffff25;border-radius:14px;padding:11px 14px;background:var(--glass)}
+.panel{padding:20px;border:1px solid #ffffff1b;border-radius:22px;background:var(--glass);margin-bottom:15px}
+.hero{position:relative;overflow:hidden;border:1px solid #ffffff2b;border-radius:26px;background:radial-gradient(ellipse at 90% 0%,#9b7fac30,transparent 65%),var(--glass);padding:30px}
+.hero p{margin-bottom:20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:45px;padding:13px 17px;border:1px solid #ffffff3b;border-radius:14px;background:linear-gradient(125deg,#baa7dc,#8194c7);font-size:12px;font-weight:750}
+.btn.secondary{background:var(--glass)}
 .btn.danger{background:#a5637d25;border-color:#dc9bb133}
+.btn.full{width:100%}
 .btn.mini{min-height:33px;padding:8px 11px;border-radius:10px;font-size:10px}
-.full{width:100%}
-.panel{
-  padding:21px;border:1px solid #ffffff1b;border-radius:23px;
-  background:var(--glass);
-  box-shadow:inset 0 1px 0 #ffffff20,0 12px 30px #0000000d;
-}
-.round-banner{
-  display:none;align-items:center;gap:12px;
-  margin-bottom:18px;padding:13px 15px;
-  border:1px solid #c1a9ed3b;border-radius:17px;
-  background:linear-gradient(135deg,#b49bdc15,#ffffff04);
-}
-.round-banner .small{flex:1}
-.hero{
-  position:relative;isolation:isolate;overflow:hidden;
-  display:grid;grid-template-columns:1.2fr 1fr;min-height:315px;
-  border:1px solid #ffffff2b;border-radius:29px;
-  background:
-    radial-gradient(ellipse at 90% 0%,#9b7fac30,transparent 65%),
-    var(--glass);
-  box-shadow:inset 0 1px 0 #ffffff35,0 25px 60px #0002;
-}
-.hero-copy{z-index:2;padding:35px}
-.hero p{font-size:12px;margin-bottom:22px}
-.hero-stage{
-  position:relative;display:grid;place-items:center;min-width:0;
-  perspective:1000px;
-}
-.hero-stage:before{
-  content:"";position:absolute;bottom:25px;
-  width:210px;height:45px;border:1px solid #d6c7ff2b;
-  border-radius:50%;background:#b6a7ff12;
-  transform:rotateX(60deg);box-shadow:0 0 55px #c3aaff20;
-}
-.hero-card{
-  width:195px;overflow:hidden;border:1px solid #ffffff66;
-  border-radius:23px;background:#2d354a;
-  box-shadow:-20px 25px 45px #0005,6px 0 0 #737198;
-  animation:hero-float 8s ease-in-out infinite;
-}
-.hero-card .media{border-radius:22px;border-color:#ffffff55}
-.hero-label{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:12px 14px;font-size:11px;background:#ffffff06;
-}
-.hero-label small{font-size:8px;color:#bfc1d8}
-.cases{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-.case{
-  position:relative;overflow:hidden;min-width:0;padding:0;text-align:left;
-  border:1px solid #ffffff22;border-radius:24px;background:var(--glass);
-  box-shadow:inset 0 1px 0 #ffffff25,0 12px 30px #0002;
-  transition:transform .6s var(--ease),border-color .4s;
-}
-.case-showcase{
-  position:relative;overflow:hidden;height:200px;padding:14px;
-  background:radial-gradient(ellipse at 35% 5%,var(--tint),#1b2335 90%);
-  perspective:900px;
-}
-.case-showcase:before{
-  content:"";position:absolute;inset:0;opacity:.13;
-  background-image:radial-gradient(#ffffff33 1px,transparent 1px);
-  background-size:18px 18px;
-}
-.case-tag{
-  position:relative;z-index:3;display:inline-block;padding:5px 7px;
-  border:1px solid #ffffff22;border-radius:7px;
-  background:#ffffff0d;color:#e6dfef;font-size:7px;letter-spacing:.7px;
-}
-.case-object{
-  position:absolute;left:calc(50% - 51px);top:57px;width:102px;
-  border-radius:18px;transform:rotateY(-15deg) rotate(-7deg);
-  box-shadow:7px 1px 0 #ffffff19,0 18px 24px #0005;
-  transition:transform .8s var(--ease);
-}
-.case-object .media{border-color:#ffffff66;border-radius:18px}
-.case-ghost{
-  position:absolute;left:calc(50% - 46px);top:65px;
-  width:92px;height:92px;border:1px solid #ffffff29;
-  border-radius:18px;background:var(--glass);
-  transform:translateX(31px) rotate(14deg);
-}
-.case-stamp{
-  position:absolute;right:11px;bottom:11px;
-  display:grid;place-items:center;width:29px;height:29px;
-  border:1px solid #ffffff35;border-radius:10px;background:#d2c1ff15;
-}
-.case-stamp .ic{width:16px;height:16px}
-.case-body{padding:14px}
-.case h3{font-size:14px;margin:0 0 7px}
-.case p{font-size:10px;min-height:34px;margin:0 0 14px}
-.case-foot{
-  display:flex;align-items:center;justify-content:space-between;
-  padding-top:12px;border-top:1px solid #ffffff12;
-}
-.price{font-weight:750;white-space:nowrap}
-.case .price{font-size:13px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
-.stat strong{display:block;font-size:25px;margin-bottom:6px}
-.stat span{font-size:10px;color:var(--muted)}
-.nav{
-  position:fixed;z-index:30;left:50%;bottom:0;transform:translateX(-50%);
-  display:flex;gap:4px;width:min(690px,100%);
-  padding:9px 8px calc(9px + env(safe-area-inset-bottom,0px));
-  border:1px solid #ffffff35;border-bottom:0;border-radius:24px 24px 0 0;
-  background:linear-gradient(135deg,#3c465eaf,#171f32e8);
-  backdrop-filter:blur(26px) saturate(145%);
-  -webkit-backdrop-filter:blur(26px) saturate(145%);
-  box-shadow:inset 0 1px 0 #ffffff35,0 -10px 40px #0003;
-}
-.nav button{
-  flex:1;display:flex;align-items:center;flex-direction:column;gap:6px;
-  padding:10px 2px 8px;border-radius:14px;
-  background:transparent;color:#939db3;font-size:10px;
-}
-.nav button.active{
-  border:1px solid #ffffff22;background:linear-gradient(135deg,#c6b8ff20,#ffffff04);
-  color:#e6dcf9;box-shadow:inset 0 1px 0 #ffffff20;
-}
-.toolbar{display:flex;gap:9px;margin:17px 0 12px}
-input,select,textarea{
-  min-width:0;padding:12px;border:1px solid #ffffff22;
-  border-radius:13px;background:#1c263bd9;color:var(--text);
-}
-textarea{resize:vertical;min-height:85px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.gift{position:relative;overflow:hidden;padding:0;text-align:left;border:1px solid #ffffff25;border-radius:20px;background:var(--glass)}
+.gift-stage{padding:10px;background:radial-gradient(ellipse at 40% 10%,var(--a),var(--b))}
+.media{position:relative;overflow:hidden;width:100%;aspect-ratio:1;border:1px solid #ffffff44;border-radius:14px;background:#182030}
+.photo{width:100%;height:100%;object-fit:cover;display:block}
+.gift-body{padding:11px}
+.gift-name{font-size:13px;font-weight:700;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gift-sub{font-size:9px;color:#929db6;margin-bottom:8px}
+.price{font-weight:750;font-size:13px}
+.badge{position:absolute;top:7px;left:7px;z-index:3;padding:4px 6px;border:1px solid #ffffff2b;border-radius:7px;background:#222034c4;font-size:8px}
+.nav{position:fixed;z-index:30;left:50%;bottom:0;transform:translateX(-50%);display:flex;gap:4px;width:min(690px,100%);padding:9px 8px calc(9px + env(safe-area-inset-bottom,0px));border:1px solid #ffffff35;border-bottom:0;border-radius:24px 24px 0 0;background:linear-gradient(135deg,#3c465eaf,#171f32e8);backdrop-filter:blur(20px)}
+.nav button{flex:1;padding:10px 2px;border-radius:14px;background:transparent;color:#939db3;font-size:10px}
+.nav button.active{border:1px solid #ffffff22;background:#c6b8ff20;color:#e6dcf9}
+.toolbar{display:flex;gap:8px;margin:15px 0}
+input,select,textarea{min-width:0;padding:12px;border:1px solid #ffffff22;border-radius:12px;background:#1c263bd9;color:var(--text)}
+textarea{resize:vertical;min-height:80px;width:100%}
 .toolbar input{flex:1}
-.toolbar select{max-width:165px}
-.chips{display:flex;gap:7px;overflow:auto;padding-bottom:13px}
-.chips button{
-  padding:9px 12px;border:1px solid #ffffff17;border-radius:11px;
-  background:#ffffff06;color:var(--muted);font-size:11px;white-space:nowrap;
-}
+.chips{display:flex;gap:7px;overflow:auto;padding-bottom:12px}
+.chips button{padding:9px 12px;border:1px solid #ffffff17;border-radius:11px;background:#ffffff06;color:var(--muted);font-size:11px;white-space:nowrap}
 .chips button.on{border-color:#c2b2ff55;background:#bbaaff1b;color:#e2d6f5}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
-.gift{
-  position:relative;isolation:isolate;overflow:hidden;min-width:0;padding:0;text-align:left;
-  border:1px solid #ffffff25;border-radius:23px;background:var(--glass);
-  box-shadow:inset 0 1px 0 #ffffff25,0 14px 28px #0003;
-  transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
-  transition:transform .4s var(--ease),border-color .4s,box-shadow .4s;
-}
-.gift:after{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(circle at var(--mx,50%) var(--my,20%),#ffffff22,transparent 65%);
-  opacity:0;transition:opacity .3s;
-}
-.gift-stage{
-  position:relative;isolation:isolate;overflow:hidden;padding:13px;
-  background:radial-gradient(ellipse at 40% 10%,var(--a),var(--b));
-}
-.gift-stage:before{
-  content:"";position:absolute;left:18%;right:18%;bottom:3px;height:24px;
-  border-radius:50%;background:#0004;filter:blur(10px);
-}
-.media{
-  position:relative;isolation:isolate;display:grid;place-items:center;overflow:hidden;
-  width:100%;aspect-ratio:1;border:1px solid #ffffff44;border-radius:16px;
-  background:#182030;box-shadow:0 12px 20px #0004,inset 0 1px 0 #fff4;
-}
-.photo{
-  display:block;width:100%;height:100%;object-fit:cover;
-  opacity:0;transition:opacity .4s;
-}
-.photo.loaded{opacity:1}
-.media:after{
-  content:"";position:absolute;z-index:2;inset:0;pointer-events:none;
-  background:linear-gradient(125deg,#ffffff25,transparent 30%,transparent 65%,#ffffff0a);
-}
-.gift.inview .media{animation:breathe 8s ease-in-out infinite;animation-delay:var(--delay,0s)}
-.gift.inview .photo.loaded{animation:drift 12s ease-in-out infinite;animation-delay:var(--delay,0s)}
-.skeleton{
-  position:absolute;z-index:-1;inset:0;
-  background:linear-gradient(110deg,#212a3c 20%,#333d55 45%,#212a3c 70%);
-  background-size:220% 100%;animation:shimmer 1.7s ease-in-out infinite;
-}
-.img-error{
-  position:absolute;inset:0;display:none;align-items:center;
-  justify-content:center;flex-direction:column;gap:8px;padding:8px;
-  text-align:center;color:#a4abc1;font-size:9px;line-height:1.6;
-}
-.media.failed .img-error{display:flex}
-.media.failed .skeleton{display:none}
-.fallback-label{
-  position:absolute;z-index:3;bottom:4px;left:4px;right:4px;
-  padding:3px;border-radius:5px;background:#111b;
-  color:#d2d4e0;font-size:7px;text-align:center;
-}
-.badge{
-  position:absolute;z-index:3;top:7px;left:7px;padding:4px 6px;
-  border:1px solid #ffffff2b;border-radius:7px;background:#222034c4;
-  color:#fff;font-size:8px;
-}
-.levelbadge{
-  position:absolute;z-index:3;right:7px;bottom:7px;padding:5px 7px;
-  border:1px solid #e1c4ff66;border-radius:8px;background:#382a52dd;
-  color:#f1ddff;font-size:9px;
-}
-.gift-body{padding:12px}
-.gift-name{
-  overflow:hidden;margin-bottom:5px;font-size:13px;font-weight:700;
-  text-overflow:ellipsis;white-space:nowrap;
-}
-.gift-sub{margin-bottom:9px;color:#929db6;font-size:9px}
-.gift-body .price{font-size:13px}
-.change{font-size:9px;color:var(--green)}
-.change.down{color:#df9caa}
-.empty{
-  padding:40px 20px;border:1px dashed #ffffff25;border-radius:22px;
-  text-align:center;color:var(--muted);line-height:1.9;
-}
-.earn-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:15px}
-.tap-zone{position:relative;display:grid;place-items:center;overflow:hidden;height:265px}
-.tap{
-  position:relative;display:grid;place-items:center;width:178px;height:178px;
-  border:1px solid #ffe4a455;border-radius:50%;
-  background:radial-gradient(circle at 35% 15%,#fff0bc25,transparent 55%),
-    radial-gradient(circle,#ffcc571b,transparent 70%);
-  box-shadow:inset 0 1px 0 #fff8,0 18px 45px #0002,0 0 0 22px #ffd78004;
-}
-.tap img{
-  width:130px;height:130px;
-  filter:drop-shadow(0 13px 22px #ffce4d33);animation:float 5s ease-in-out infinite;
-}
-.tap:active:not(:disabled){transform:scale(.92)}
-.floater{
-  position:absolute;pointer-events:none;color:#ffe8b5;
-  font-size:23px;font-weight:800;animation:rise .8s ease-out forwards;
-}
-.progress{overflow:hidden;height:6px;border-radius:6px;background:#ffffff0d}
-.progress i{
-  display:block;height:100%;background:linear-gradient(90deg,#8397db,#c2a8e5);
-  transition:width .25s var(--ease);
-}
-.progress.gold i{background:linear-gradient(90deg,#d8b574,#ffe0a0)}
-.task{
-  display:flex;align-items:center;gap:12px;margin-top:11px;padding:15px;
-  border:1px solid #ffffff19;border-radius:17px;background:var(--glass);
-}
-.task-content{flex:1;min-width:0}
-.task h3{font-size:13px;margin:0 0 5px}
-.task p{font-size:11px;margin:0}
-.feed div{
-  padding:10px 0;border-bottom:1px solid #ffffff0b;
-  color:var(--muted);font-size:11px;line-height:1.7;
-}
-.album{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:15px}
-.album-tile{
-  position:relative;overflow:hidden;aspect-ratio:1;
-  border:1px solid #ffffff20;border-radius:11px;background:#222b3d;
-}
-.album-tile img{width:100%;height:100%;object-fit:cover}
-.album-tile.locked{opacity:.2;filter:grayscale(1)}
-.album-tile span{
-  position:absolute;right:3px;bottom:3px;padding:2px 4px;
-  border-radius:4px;background:#0008;font-size:9px;
-}
-.overlay{
-  position:fixed;z-index:50;inset:0;display:grid;place-items:center;padding:17px;
-  background:#060913c2;backdrop-filter:blur(18px) saturate(135%);
-  -webkit-backdrop-filter:blur(18px) saturate(135%);animation:fade .25s ease both;
-}
-.sheet{
-  position:relative;overflow:auto;overscroll-behavior:contain;width:100%;max-width:490px;
-  max-height:91vh;max-height:91dvh;border:1px solid #ffffff35;border-radius:28px;
-  background:linear-gradient(135deg,#ffffff0a,#ffffff02),#182033f5;
-  box-shadow:inset 0 1px 0 #ffffff3b,0 35px 100px #0009;
-  animation:sheet .5s var(--ease) both;
-}
-.close{
-  position:absolute;z-index:5;top:12px;right:12px;display:grid;place-items:center;
-  width:34px;height:34px;border:1px solid #ffffff33;border-radius:50%;background:#202737dd;
-}
-.sheet-body{padding:22px}
-.inspect-stage{
-  position:relative;isolation:isolate;display:grid;place-items:center;overflow:hidden;
-  min-height:305px;padding:36px 70px 28px;
-  background:radial-gradient(ellipse at 35% 0%,var(--a),var(--b));perspective:1000px;
-}
-.inspect-stage:before{
-  content:"";position:absolute;bottom:14px;width:210px;height:45px;
-  border-radius:50%;background:#0004;filter:blur(16px);
-}
-.inspect-card{
-  width:100%;border-radius:20px;
-  box-shadow:8px 0 0 #ffffff20,0 20px 30px #0005;
-  animation:inspect 8s ease-in-out infinite;
-}
-.inspect-card .media{border-radius:20px;box-shadow:none}
-.stage-label{
-  position:absolute;z-index:2;top:15px;left:16px;padding:6px 8px;
-  border:1px solid #ffffff25;border-radius:8px;background:#0002;
-  color:#fffc;font-size:8px;letter-spacing:1px;
-}
-.stage-caption{position:absolute;bottom:8px;color:#fff9;font-size:8px}
-.forge-aura{box-shadow:8px 0 0 #d2a9ff33,0 0 35px #bb8bee44,0 20px 30px #0005}
-.attrs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:18px 0}
-.attrs div{padding:10px 7px;border:1px solid #ffffff15;border-radius:11px;background:#ffffff06;font-size:10px}
-.attrs small{display:block;margin-bottom:5px;color:var(--muted);font-size:9px}
-.receipt{
-  display:flex;justify-content:space-between;gap:10px;margin:14px 0;padding-top:13px;
-  border-top:1px solid #ffffff15;color:var(--muted);font-size:12px;
-}
-.actions{display:grid;gap:10px;margin-top:17px}
-.sale-box,.forge-box{
-  padding:14px;border:1px solid #ffffff20;border-radius:17px;background:#ffffff05;
-}
-.forge-box{margin-bottom:15px;border-color:#c9a4ef33;background:linear-gradient(135deg,#b38bdf0d,#ffffff03)}
-.stepper{display:grid;grid-template-columns:39px minmax(0,1fr) 39px;gap:7px;margin:12px 0}
-.stepper input{
-  width:100%;padding:12px 5px;border-color:#b7aaff3b;background:#111927aa;
-  font-size:22px;font-weight:750;text-align:center;appearance:textfield;-moz-appearance:textfield;
-}
-.step{border:1px solid #a59cff33;border-radius:12px;background:#a59cff20;font-size:23px}
-.presets{display:flex;gap:6px;margin-bottom:14px}
-.preset{
-  flex:1;padding:9px 4px;border:1px solid #ffffff19;border-radius:10px;
-  background:#ffffff06;color:var(--muted);font-size:10px;line-height:1.6;
-}
-.preset.on{border-color:#c6b6ff77;background:#a59cff25;color:#e0d4ff}
-.sale-line{display:flex;justify-content:space-between;gap:8px;margin-top:10px;color:var(--muted);font-size:11px}
-.sale-line.net{padding-top:12px;border-top:1px solid #ffffff15}
-.net strong{color:#b2ead2;font-size:16px}
-.demand{
-  margin-top:13px;padding:10px;border:1px solid #8be0bd25;border-radius:11px;
-  background:#8be0bd09;color:#addbc4;font-size:10px;line-height:1.7;
-}
-.demand.warn{border-color:#e2b8762b;background:#e2b8760d;color:#ddc69e}
-.demand.bad{border-color:#e398a82b;background:#e398a80d;color:#e5b1bd}
-.roulette{
-  position:relative;overflow:hidden;height:201px;margin:20px 0;
-  border:1px solid #ffffff29;border-radius:21px;
-  background:#0d1422;box-shadow:inset 0 0 35px #0004;
-}
-.roulette:before{
-  content:"";position:absolute;z-index:3;inset:0;pointer-events:none;
-  background:linear-gradient(90deg,#0d1422,transparent 20%,transparent 80%,#0d1422);
-}
-.roulette:after{
-  content:"";position:absolute;z-index:2;top:0;bottom:0;left:50%;width:2px;
-  background:linear-gradient(transparent,#e9def5 20%,#e9def5 80%,transparent);
-  box-shadow:0 0 19px #d0b5ff;transform:translateX(-50%);
-}
-.pointer{
-  position:absolute;z-index:4;top:0;left:50%;
-  border-top:10px solid #ede1f8;border-right:7px solid transparent;
-  border-left:7px solid transparent;transform:translateX(-50%);
-}
-.strip{position:absolute;top:15px;left:0;display:flex;gap:10px;will-change:transform}
-.roll-card{
-  flex:0 0 110px;display:flex;align-items:center;justify-content:center;
-  flex-direction:column;gap:8px;width:110px;height:166px;padding:8px;
-  border:1px solid #ffffff29;border-radius:15px;
-  background:radial-gradient(circle at top,var(--a),var(--b));font-size:9px;
-  transition:opacity .6s,border-color .6s,box-shadow .6s;
-}
-.roll-card .media{width:91px;height:91px;aspect-ratio:auto;border-radius:11px}
-.roulette.settled .roll-card{opacity:.35}
-.roulette.settled .roll-card.selected{
-  opacity:1;border-color:#eedcfb;
-  box-shadow:inset 0 0 25px #c39aff25,0 0 25px #c39aff44;
-}
-.result-card{
-  padding:15px;border:1px solid #c4a2e755;border-radius:17px;
-  background:linear-gradient(135deg,#c4a2e71b,#ffffff04);
-}
-.result-card h3{font-size:20px;margin:9px 0}
-.case-status{min-height:22px;color:#c4b8df;font-size:11px;text-align:center}
-.preparing{display:grid;place-items:center;height:100%;color:#d7caff}
-.opening-box{
-  width:84px;height:84px;display:grid;place-items:center;
-  border:1px solid #ffffff55;border-radius:24px;
-  background:linear-gradient(135deg,#b7a3e855,#6c7caf33);
-  box-shadow:inset 0 1px 0 #fff6,0 15px 35px #0003;
-  animation:prepare 1.3s ease-in-out infinite;
-}
-.opening-box .ic{width:45px;height:45px}
-.drops{display:grid;grid-template-columns:1fr 1fr;gap:7px;overflow:auto;max-height:180px;margin:15px 0}
-.drop{padding:9px;border:1px solid #ffffff0a;border-radius:10px;background:#ffffff05;font-size:10px;line-height:1.7}
-.drop span{float:right;color:#d3c2ff}
-.spark{width:100%;height:70px;margin-top:12px}
-.toast-area{
-  position:fixed;z-index:100;bottom:105px;left:50%;width:min(400px,90%);
-  pointer-events:none;transform:translateX(-50%);
-}
-.toast{
-  margin-top:8px;padding:13px 16px;border:1px solid #ffffff35;border-radius:15px;
-  background:#34415be8;box-shadow:inset 0 1px 0 #ffffff20,0 10px 30px #0004;
-  font-size:12px;line-height:1.6;animation:enter .3s var(--ease);
-}
-.particles{position:fixed;z-index:80;inset:0;overflow:hidden;pointer-events:none}
-.particle{
-  position:absolute;top:var(--y);left:var(--x);width:var(--size);height:var(--size);
-  border-radius:2px;background:var(--color);animation:particle 1.3s ease-out forwards;
-}
-.screen-enter{animation:enter .45s var(--ease)}
-.linkbutton{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-height:40px;color:#ccc2ff;font-size:11px;text-decoration:none;
-}
-footer{margin-top:25px;color:#7b87a3;font-size:10px;line-height:1.9}
-#errorBox{
-  display:none;margin-bottom:20px;padding:17px;border:1px solid #ef9bb833;
-  border-radius:17px;background:#502838;font-size:12px;line-height:1.7;
-  white-space:pre-wrap;overflow-wrap:anywhere;
-}
-.gate,.splash{
-  position:fixed;z-index:130;inset:0;display:grid;place-items:center;padding:22px;
-  background:radial-gradient(ellipse at 50% 10%,#67578055,transparent 60%),#0b1020;
-  transition:opacity .7s,transform .7s var(--ease);
-}
-.gate.hidden,.splash.hidden{opacity:0;transform:scale(1.04);pointer-events:none}
-.gate-card{
-  width:100%;max-width:380px;padding:30px;border:1px solid #ffffff35;border-radius:28px;
-  background:var(--glass);box-shadow:inset 0 1px 0 #ffffff2b,0 30px 90px #0005;
-}
-.gate-card h2{text-align:center;font-size:27px}
-.gate-card input{width:100%;margin:15px 0}
-.splash-content{text-align:center;width:min(300px,85vw)}
-.splash-orbit{
-  position:relative;display:grid;place-items:center;width:144px;height:144px;margin:0 auto 28px;
-}
-.splash-orbit:before,.splash-orbit:after{
-  content:"";position:absolute;inset:0;border:1px solid #d8c6ff35;
-  border-radius:41px;animation:orbit 6s linear infinite;
-}
-.splash-orbit:after{inset:13px;border-color:#a8cfff35;animation-duration:8s;animation-direction:reverse}
-.splash-logo{
-  width:82px;height:82px;border:1px solid #ffffff66;border-radius:28px;
-  display:grid;place-items:center;background:linear-gradient(135deg,#ceb8ef99,#7d92d466);
-  box-shadow:inset 0 1px 0 #fff8,0 15px 45px #9a83ff22;
-}
-.splash-logo .ic{width:43px;height:43px}
-.splash-title{font-size:21px;font-weight:800;letter-spacing:3px}
-.splash-sub{font-size:10px;color:#b6b0d0;margin:12px 0 24px}
-.load-track{height:3px;background:#ffffff10;border-radius:5px;overflow:hidden}
-.load-track i{
-  display:block;width:100%;height:100%;transform-origin:left;
-  background:linear-gradient(90deg,#8a9ee8,#e1bff8);animation:load 1.5s var(--ease) both;
-}
-.swatches{display:flex;justify-content:center;gap:9px;margin:17px 0}
-.swatch{width:26px;height:26px;border:2px solid transparent;border-radius:50%;background:var(--color)}
-.swatch.on{border-color:#fff}
-.profile-cover{
-  position:relative;height:155px;overflow:hidden;
-  background:
-    radial-gradient(ellipse at 70% 10%,#ffffff22,transparent 60%),
-    linear-gradient(135deg,var(--cover,#8977aa),#334560);
-}
-.profile-cover:after{
-  content:"";position:absolute;inset:0;opacity:.12;
-  background-image:radial-gradient(#fff 1px,transparent 1px);
-  background-size:21px 21px;
-}
-.profile-info{position:relative;padding:0 22px 22px}
-.profile-avatar{margin-top:-43px;position:relative;z-index:2;border:4px solid #20283b}
-.profile-title{margin:15px 0 5px;font-size:25px}
-.profile-bio{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;margin:13px 0}
-.profile-line{
-  display:flex;justify-content:space-between;gap:12px;padding:12px 0;
-  border-bottom:1px solid #ffffff0d;color:var(--muted);font-size:11px;
-  overflow-wrap:anywhere;
-}
-.profile-line span:last-child{max-width:65%;text-align:right;color:#ced2e5}
-.pinned-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:13px 0}
-.pinned-card{
-  min-width:0;padding:7px;border:1px solid #ffffff20;border-radius:15px;
-  background:#ffffff05;text-align:left;
-}
-.pinned-card .media{border-radius:10px}
-.pinned-card small{
-  display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-  font-size:9px;color:#c3c9dc;margin:7px 0 2px;
-}
-.form-label{display:block;margin:16px 0 7px;font-size:11px;color:var(--muted)}
-.reels{
-  display:flex;justify-content:center;gap:9px;margin:25px 0;padding:12px;
-  border:1px solid #ffffff22;border-radius:23px;background:var(--glass);
-}
-.reel{
-  position:relative;overflow:hidden;flex:1;max-width:106px;height:126px;
-  border:1px solid #ffffff2b;border-radius:16px;background:#111a2b;
-}
-.reel:before,.reel:after{
-  content:"";position:absolute;z-index:2;left:0;right:0;height:38px;pointer-events:none;
-}
-.reel:before{top:0;background:linear-gradient(#111a2b,transparent)}
-.reel:after{bottom:0;background:linear-gradient(transparent,#111a2b)}
-.reel-strip{position:absolute;top:0;left:0;right:0;will-change:transform}
-.reel-cell{height:88px;display:grid;place-items:center}
-.slot-symbol{
-  display:grid;place-items:center;overflow:hidden;width:66px;height:66px;
-  border:1px solid #ffffff33;border-radius:13px;color:#d1c5ff;font-size:32px;
-}
+.overlay{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:#060913cc}
+.sheet{position:relative;overflow:auto;width:100%;max-width:480px;max-height:90vh;border:1px solid #ffffff35;border-radius:24px;background:#182033f5;padding:22px}
+.close{position:absolute;top:10px;right:10px;width:34px;height:34px;border:1px solid #ffffff33;border-radius:50%;background:#202737dd}
+.toast-area{position:fixed;z-index:100;bottom:100px;left:50%;width:min(400px,90%);transform:translateX(-50%);pointer-events:none}
+.toast{margin-top:8px;padding:12px 14px;border:1px solid #ffffff35;border-radius:14px;background:#34415be8;font-size:12px}
+.particles{position:fixed;inset:0;z-index:80;overflow:hidden;pointer-events:none}
+.particle{position:absolute;width:5px;height:5px;border-radius:2px;background:#d9c7ef;animation:particle 1.2s ease-out forwards}
+.profile-cover{position:relative;height:150px;overflow:hidden;background:linear-gradient(135deg,var(--cover,#8977aa),#334560)}
+.profile-info{padding:0 18px 18px}
+.profile-avatar{margin-top:-42px;position:relative;z-index:2;border:4px solid #20283b;width:86px;height:86px;font-size:30px;display:grid;place-items:center;overflow:hidden;border-radius:50%;background:linear-gradient(135deg,var(--avatar,#a396ce),#53627f)}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-title{margin:14px 0 4px;font-size:25px}
+.reels{display:flex;justify-content:center;gap:9px;margin:20px 0;padding:12px;border:1px solid #ffffff22;border-radius:20px;background:var(--glass)}
+.reel{position:relative;overflow:hidden;flex:1;max-width:100px;height:120px;border:1px solid #ffffff2b;border-radius:15px;background:#111a2b}
+.reel-strip{position:absolute;top:0;left:0;right:0}
+.reel-cell{height:84px;display:grid;place-items:center}
+.slot-symbol{display:grid;place-items:center;overflow:hidden;width:60px;height:60px;border:1px solid #ffffff33;border-radius:12px}
 .slot-symbol img{width:100%;height:100%;object-fit:cover}
-.reel.stopped{animation:stop .45s var(--ease)}
-.reel.win{border-color:#d8c3ef;box-shadow:0 0 25px #c0a2ff22}
 .bets{display:flex;gap:7px;margin:15px 0}
-.bets button{
-  flex:1;padding:10px 5px;border:1px solid #ffffff19;
-  border-radius:11px;background:#ffffff07;font-size:11px;
-}
+.bets button{flex:1;padding:10px 5px;border:1px solid #ffffff19;border-radius:11px;background:#ffffff07;font-size:11px}
 .bets button.on{border-color:#d2c2ff77;background:#b5a4ff22}
-.memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:18px}
-.memory-card{
-  position:relative;aspect-ratio:1;overflow:hidden;min-width:0;padding:0;
-  border:1px solid #ffffff22;border-radius:15px;
-  background:linear-gradient(135deg,#b8a8e522,#536b9920);
-  box-shadow:inset 0 1px 0 #ffffff25;
-}
-.memory-card .memory-front{
-  position:absolute;inset:0;display:grid;place-items:center;
-  color:#cdbde9;transition:opacity .25s,transform .4s;
-}
-.memory-card .memory-back{
-  position:absolute;inset:0;opacity:0;transform:rotateY(90deg);
-  transition:opacity .25s,transform .4s;
-}
-.memory-card.open .memory-front,.memory-card.matched .memory-front{opacity:0;transform:rotateY(-90deg)}
-.memory-card.open .memory-back,.memory-card.matched .memory-back{opacity:1;transform:rotateY(0)}
-.memory-back img{width:100%;height:100%;object-fit:cover}
+.memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:15px}
+.memory-card{position:relative;aspect-ratio:1;overflow:hidden;min-width:0;padding:0;border:1px solid #ffffff22;border-radius:14px;background:#222b3d}
+.memory-card img{width:100%;height:100%;object-fit:cover}
 .memory-card.matched{border-color:#a8d7c166;opacity:.75}
-.aim-stage{
-  position:relative;overflow:hidden;height:340px;margin-top:17px;
-  border:1px solid #ffffff25;border-radius:22px;
-  background:
-    radial-gradient(ellipse at 50% 0%,#7d5fa820,transparent 65%),#101828;
-  cursor:crosshair;touch-action:manipulation;
-}
-.aim-stage:before{
-  content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;
-  background-image:linear-gradient(#ffffff08 1px,transparent 1px),
-    linear-gradient(90deg,#ffffff08 1px,transparent 1px);
-  background-size:35px 35px;
-}
-.aim-target{
-  position:absolute;width:64px;height:64px;padding:0;overflow:hidden;
-  border:2px solid #e0ceff;border-radius:50%;background:#6d608e;
-  box-shadow:0 0 0 8px #b7a2f30a,0 10px 25px #0004;
-  animation:target-in .18s var(--ease);
-}
+.aim-stage{position:relative;overflow:hidden;height:320px;margin-top:15px;border:1px solid #ffffff25;border-radius:20px;background:radial-gradient(ellipse at 50% 0%,#7d5fa820,transparent 65%),#101828;cursor:crosshair}
+.aim-target{position:absolute;width:60px;height:60px;padding:0;overflow:hidden;border:2px solid #e0ceff;border-radius:50%;background:#6d608e}
 .aim-target img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .aim-target:active{transform:scale(.9)}
 .rules-table{width:100%;border-collapse:collapse;margin-top:15px;font-size:11px}
-.rules-table td,.rules-table th{
-  text-align:left;padding:12px 4px;border-bottom:1px solid #ffffff0d;
-  color:var(--muted);line-height:1.7;
-}
+.rules-table td,.rules-table th{text-align:left;padding:10px 4px;border-bottom:1px solid #ffffff0d;color:var(--muted);line-height:1.7}
 .rules-table th{color:#d2d7e6;font-weight:600}
-@keyframes shimmer{to{background-position:-220% 0}}
-@keyframes inspect{
-  0%,100%{transform:translateY(0) rotateY(-10deg) rotate(-4deg)}
-  50%{transform:translateY(-7px) rotateY(8deg) rotate(3deg)}
-}
-@keyframes breathe{50%{transform:translateY(-3px)}}
-@keyframes drift{50%{transform:scale(1.04)}}
-@keyframes float{50%{transform:translateY(-6px) rotate(5deg)}}
-@keyframes bump{40%{transform:scale(1.05);border-color:#dfc8ff88}}
-@keyframes enter{from{opacity:.3;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fade{from{opacity:0}to{opacity:1}}
-@keyframes sheet{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes rise{to{transform:translateY(-80px);opacity:0}}
-@keyframes stop{0%{transform:translateY(-3px)}50%{transform:translateY(2px)}100%{transform:translateY(0)}}
-@keyframes prepare{50%{transform:translateY(-6px) rotate(-8deg);filter:drop-shadow(0 0 18px #b898ff44)}}
-@keyframes orbit{to{transform:rotate(360deg)}}
-@keyframes load{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@keyframes particle{to{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot))}}
-@keyframes hero-float{
-  0%,100%{transform:translateY(0) rotateY(-16deg) rotate(9deg)}
-  50%{transform:translateY(-12px) rotateY(-8deg) rotate(5deg)}
-}
-@keyframes target-in{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
-@media(hover:hover) and (pointer:fine){
-  .case:hover{border-color:#d5c2ed66;transform:translateY(-5px)}
-  .case:hover .case-object{transform:translateY(-5px) rotateY(8deg) rotate(3deg)}
-  .gift:hover{border-color:#d3bde977;box-shadow:0 18px 35px #0004}
-  .gift:hover:after{opacity:1}
-}
-@media(min-width:780px){
-  .nav{bottom:16px;padding-bottom:9px;border-bottom:1px solid #ffffff35;border-radius:24px}
-}
-@media(max-width:900px){.cases{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:650px){
-  .app{padding-left:15px;padding-right:15px}
-  .top{gap:7px;margin-bottom:20px}
-  .logo{width:35px;height:37px;border-radius:12px}
-  .word{font-size:11px;letter-spacing:1px}
-  .word small{font-size:7px;letter-spacing:.3px}
-  .balance{padding:9px 8px;font-size:11px}
-  .top .iconbtn{width:29px;min-width:29px;height:32px}
-  .top .ic{width:17px;height:17px}
-  .top .small-avatar{width:29px;height:29px;font-size:11px}
-  .hero{grid-template-columns:1.2fr 1fr;min-height:270px;border-radius:24px}
-  .hero-copy{padding:27px 0 27px 20px}
-  h1{font-size:31px;letter-spacing:-1.2px}
-  .hero p{font-size:10px}
-  .hero .btn{min-height:39px;padding:11px 12px;font-size:10px}
-  .eyebrow{font-size:7px;letter-spacing:1px}
-  .hero-card{width:128px;border-radius:17px;box-shadow:-12px 18px 25px #0005,5px 0 0 #737198}
-  .hero-label{padding:10px;font-size:9px}
-  .hero-label small{font-size:7px}
-  .hero-stage:before{bottom:38px;width:145px;height:40px}
-  .cases{gap:11px}
-  .case-showcase{height:190px;padding:12px}
-  .case-body{padding:12px}
-  .case h3{font-size:13px}
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-  .gift-stage,.gift-body{padding:10px}
-  .gift-name,.gift-body .price{font-size:12px}
-  .gift-sub{font-size:8px}.badge{font-size:7px}
-  .earn-grid{grid-template-columns:1fr}
-  .stat{padding:15px 11px}.stat strong{font-size:22px}.stat span{font-size:9px}
-  h2{font-size:19px}
-  .toolbar select{max-width:137px;font-size:11px}
-  .inspect-stage{min-height:285px;padding:34px 65px 26px}
-  .album{grid-template-columns:repeat(6,minmax(0,1fr))}
-  .memory-grid{gap:7px}.memory-card{border-radius:12px}
-  .aim-stage{height:300px}
-}
-@media(max-width:360px){
-  .word small{display:none}.word{font-size:10px}.logo{width:29px}
-  .hero-card{width:110px}.hero-copy{padding-left:17px}
-  h1{font-size:28px}.case h3{font-size:12px}.case-showcase{height:180px}
-  .case-object{width:91px;left:calc(50% - 46px)}
-  .inspect-stage{padding-left:52px;padding-right:52px}
-}
-@media(prefers-reduced-motion:reduce){
-  *,*:before,*:after{animation:none!important;transition:none!important}
-  .gift{transform:none!important}.particles{display:none}
-}
-html.lite *,html.lite *:before,html.lite *:after{animation:none!important}
-html.lite .gift{transform:none!important}
-html.lite .particles{display:none}
-html.lite .nav,html.lite .overlay{backdrop-filter:none;-webkit-backdrop-filter:none}
+@keyframes particle{to{opacity:0;transform:translate(var(--dx),var(--dy))}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:650px){.app{padding:15px 13px 115px}h1{font-size:30px}.hero{padding:22px}.grid{gap:10px}}
 </style>
 </head>
-
 <body>
-<div class="splash" id="splash" role="status" aria-label="Загрузка игры">
-  <div class="splash-content">
-    <div class="splash-orbit">
-      <div class="splash-logo" id="splashLogo">G</div>
-    </div>
-    <div class="splash-title">GIFT LAB</div>
-    <div class="splash-sub" id="splashText">Подготавливаем студию</div>
-    <div class="load-track"><i></i></div>
-  </div>
-</div>
-
 <div class="app">
   <header class="top">
-    <div class="logo" id="logo">G</div>
-    <div class="word">GIFT LAB<small>STUDIO · LOCAL DEMO</small></div>
-    <div class="balance" id="balance">Загрузка…</div>
-    <button class="iconbtn" id="sound" aria-label="Включить звук">♪</button>
-    <button class="avatar small-avatar" id="profileButton"
-            aria-label="Локальный профиль">G</button>
+    <div class="logo">G</div>
+    <div class="balance" id="balance">0</div>
+    <button id="sound">♪</button>
+    <button id="profileButton">G</button>
   </header>
-
-  <div class="round-banner" id="roundBanner"></div>
-  <div id="errorBox" role="alert"></div>
-
-  <main id="main">
-    <section class="panel">
-      <h2>Открываем студию</h2>
-      <p class="small">Для игры нужен JavaScript.</p>
-    </section>
-  </main>
-
-  <noscript>Для игры необходимо включить JavaScript.</noscript>
-
-  <footer>
-    Локальная демоигра · Все звёзды и предметы виртуальные.<br>
-    Без платежей, вывода и настоящих NFT-сделок.<br>
-    Движение подарков — оформление изображений, не оригинальные 3D-модели Telegram.
-  </footer>
+  <main id="main"></main>
 </div>
-
-<nav class="nav" id="nav" aria-label="Разделы"></nav>
+<nav class="nav" id="nav"></nav>
 <div id="modal"></div>
-<div class="particles" id="particles" aria-hidden="true"></div>
-<div class="toast-area" id="toasts" role="status" aria-live="polite"></div>
-<div id="gateRoot"></div>
-
-<script>
-window.addEventListener("error",function(e){
-  if(!e.message)return;
-  var s=document.getElementById("splash");
-  if(s)s.remove();
-  var b=document.getElementById("errorBox");
-  if(b){
-    b.style.display="block";
-    b.textContent="Ошибка: "+e.message+"\nСтрока: "+(e.lineno||"?");
-  }
-});
-window.addEventListener("unhandledrejection",function(e){
-  var b=document.getElementById("errorBox");
-  if(b){
-    b.style.display="block";
-    b.textContent="Ошибка: "+String(e.reason&&e.reason.message||e.reason);
-  }
-});
-</script>
+<div class="particles" id="particles"></div>
+<div class="toast-area" id="toasts"></div>
 
 <script>
 (function(){
@@ -839,380 +111,111 @@ const PROFILE_KEY="gift-lab-profile-v1";
 const FEE=.05;
 
 const D=[
-  ["Loot Bag","lootbag",25,0],
-  ["Love Potion","lovepotion",40,0],
-  ["Toy Bear","toybear",65,0],
-  ["Eternal Rose","eternalrose",120,1],
-  ["Scared Cat","scaredcat",180,1],
-  ["Top Hat","tophat",300,2],
-  ["Swiss Watch","swisswatch",360,2],
-  ["Chill Flame","chillflame",440,2],
-  ["Precious Peach","preciouspeach",800,3],
-  ["Diamond Ring","diamondring",1050,3],
-  ["Heart Locket","heartlocket",2300,3],
-  ["Durov's Cap","durovscap",3400,4],
-  ["Plush Pepe","plushpepe",6500,4],
-  ["Kissed Frog","kissedfrog",220,1],
-  ["Magic Potion","magicpotion",950,3],
-  ["Vintage Cigar","vintagecigar",580,2],
-  ["Crystal Ball","crystalball",260,1],
-  ["Gem Signet","gemsignet",1400,3],
-  ["Astral Shard","astralshard",4200,4],
-  ["Signet Ring","signetring",700,2],
-  ["Evil Eye","evileye",150,1],
-  ["Jelly Bunny","jellybunny",190,1],
-  ["Lunar Snake","lunarsnake",110,1],
-  ["Snow Globe","snowglobe",500,2],
-  ["Hex Pot","hexpot",380,2],
-  ["Perfume Bottle","perfumebottle",900,3],
-  ["Berry Box","berrybox",160,1],
-  ["Spiced Wine","spicedwine",90,0],
-  ["Santa Hat","santahat",130,1],
-  ["Hypno Lollipop","hypnolollipop",240,1],
-  ["Genie Lamp","genielamp",1800,3],
-  ["Flying Broom","flyingbroom",620,2]
+["Loot Bag","lootbag",25,0],["Love Potion","lovepotion",40,0],["Toy Bear","toybear",65,0],
+["Eternal Rose","eternalrose",120,1],["Scared Cat","scaredcat",180,1],["Top Hat","tophat",300,2],
+["Swiss Watch","swisswatch",360,2],["Chill Flame","chillflame",440,2],["Precious Peach","preciouspeach",800,3],
+["Diamond Ring","diamondring",1050,3],["Heart Locket","heartlocket",2300,3],["Durov's Cap","durovscap",3400,4],
+["Plush Pepe","plushpepe",6500,4],["Kissed Frog","kissedfrog",220,1],["Magic Potion","magicpotion",950,3],
+["Vintage Cigar","vintagecigar",580,2],["Crystal Ball","crystalball",260,1],["Gem Signet","gemsignet",1400,3],
+["Astral Shard","astralshard",4200,4],["Signet Ring","signetring",700,2],["Evil Eye","evileye",150,1],
+["Jelly Bunny","jellybunny",190,1],["Lunar Snake","lunarsnake",110,1],["Snow Globe","snowglobe",500,2],
+["Hex Pot","hexpot",380,2],["Perfume Bottle","perfumebottle",900,3],["Berry Box","berrybox",160,1],
+["Spiced Wine","spicedwine",90,0],["Santa Hat","santahat",130,1],["Hypno Lollipop","hypnolollipop",240,1],
+["Genie Lamp","genielamp",1800,3],["Flying Broom","flyingbroom",620,2]
 ];
 
-/* Название, цена, цвет, обложка, таблица выпадения. */
 const CASES=[
-  ["First Drop",80,"#5f668b",2,
-    [[0,25],[1,23],[2,23],[27,12],[26,9],[28,6],[7,2]]],
-  ["Mint Garden",180,"#407568",21,
-    [[1,18],[2,17],[3,18],[4,12],[13,13],[21,10],[26,8],[8,3.8],[12,.2]]],
-  ["Purple Vault",450,"#79558f",5,
-    [[3,15],[4,15],[5,15],[6,12],[7,12],[24,10],[16,10],[8,5],[9,3],[19,1],[11,1.5],[12,.5]]],
-  ["Alchemy Room",700,"#477c88",24,
-    [[1,15],[13,12],[16,15],[24,20],[20,10],[14,12],[31,8],[9,4],[30,3],[12,1]]],
-  ["Frozen Orbit",1000,"#487a9f",23,
-    [[16,20],[23,24],[6,18],[19,15],[7,10],[9,7],[17,4],[18,1.5],[12,.5]]],
-  ["Royal Reserve",2000,"#8c704e",10,
-    [[5,12],[6,12],[7,12],[15,10],[19,14],[8,10],[9,10],[25,7],[17,6],[10,3],[11,2],[18,1],[12,1]]],
-  ["Astral Archive",3000,"#6e589c",18,
-    [[16,18],[19,22],[17,25],[9,15],[14,8],[10,6],[18,4],[12,2]]],
-  ["Pepe Archive",4500,"#587965",12,
-    [[8,20],[9,20],[14,15],[17,15],[10,12],[11,8],[18,6],[12,4]]],
-  ["Midnight Atelier",600,"#745879",24,
-    [[27,20],[26,18],[29,20],[24,18],[31,12],[25,8],[30,3],[18,1]]],
-  ["Genie Reserve",1500,"#8b7450",30,
-    [[16,20],[19,20],[24,15],[31,15],[25,12],[17,8],[30,7],[18,2],[12,1]]]
+["First Drop",80,"#5f668b",2,[[0,25],[1,23],[2,23],[27,12],[26,9],[28,6],[7,2]]],
+["Mint Garden",180,"#407568",21,[[1,18],[2,17],[3,18],[4,12],[13,13],[21,10],[26,8],[8,3.8],[12,.2]]],
+["Purple Vault",450,"#79558f",5,[[3,15],[4,15],[5,15],[6,12],[7,12],[24,10],[16,10],[8,5],[9,3],[19,1],[11,1.5],[12,.5]]],
+["Alchemy Room",700,"#477c88",24,[[1,15],[13,12],[16,15],[24,20],[20,10],[14,12],[31,8],[9,4],[30,3],[12,1]]],
+["Frozen Orbit",1000,"#487a9f",23,[[16,20],[23,24],[6,18],[19,15],[7,10],[9,7],[17,4],[18,1.5],[12,.5]]],
+["Royal Reserve",2000,"#8c704e",10,[[5,12],[6,12],[7,12],[15,10],[19,14],[8,10],[9,10],[25,7],[17,6],[10,3],[11,2],[18,1],[12,1]]],
+["Astral Archive",3000,"#6e589c",18,[[16,18],[19,22],[17,25],[9,15],[14,8],[10,6],[18,4],[12,2]]],
+["Pepe Archive",4500,"#587965",12,[[8,20],[9,20],[14,15],[17,15],[10,12],[11,8],[18,6],[12,4]]],
+["Midnight Atelier",600,"#745879",24,[[27,20],[26,18],[29,20],[24,18],[31,12],[25,8],[30,3],[18,1]]],
+["Genie Reserve",1500,"#8b7450",30,[[16,20],[19,20],[24,15],[31,15],[25,12],[17,8],[30,7],[18,2],[12,1]]]
 ];
 
-const BG=[
-  ["Lavender","#76678e","#34334e"],
-  ["Ocean","#55759b","#263d5b"],
-  ["Mint","#4b8277","#243f42"],
-  ["Rose","#925f7e","#4d304c"],
-  ["Honey","#968151","#4f402e"],
-  ["Midnight","#575d8c","#282d48"],
-  ["Ice","#7297ab","#3b526c"],
-  ["Sunset","#a27669","#563c4d"],
-  ["Aurora","#587e87","#3e3d6b"],
-  ["Graphite","#657183","#2d3649"]
-];
-
+const BG=[["Lavender","#76678e","#34334e"],["Ocean","#55759b","#263d5b"],["Mint","#4b8277","#243f42"],["Rose","#925f7e","#4d304c"],["Honey","#968151","#4f402e"],["Midnight","#575d8c","#282d48"],["Ice","#7297ab","#3b526c"],["Sunset","#a27669","#563c4d"],["Aurora","#587e87","#3e3d6b"],["Graphite","#657183","#2d3649"]];
 const RAR=["Обычный","Необычный","Редкий","Эпический","Легендарный"];
 const COLORS=["#aa98df","#7ca1d2","#72b3a0","#c88eac","#c4a470"];
 
-const PATH={
-  gift:"M20 12v9H4v-9M2 7h20v5H2zM12 7v14M12 7H7.5A2.5 2.5 0 1 1 10 4.5L12 7zm0 0h4.5A2.5 2.5 0 1 0 14 4.5L12 7z",
-  box:"m12 3 9 5v9l-9 5-9-5V8zM3 8l9 5 9-5M12 13v9",
-  market:"M3 10v11h18V10M2 10l2-7h16l2 7M9 21v-7h6v7",
-  bag:"M4 8h16l1 13H3L4 8zm4 0V6a4 4 0 0 1 8 0v2",
-  bolt:"m13 2-9 12h7l-1 8 10-12h-7l1-8z",
-  game:"M7 7h10c5 0 7 14 3 14-2 0-3-4-5-4H9c-2 0-3 4-5 4C0 21 2 7 7 7zm0 4v6m-3-3h6m6-2h.01M19 15h.01",
-  close:"m6 6 12 12M6 18 18 6",
-  arrow:"M5 12h14m-5-5 5 5-5 5",
-  sound:"M11 4 6 8H3v8h3l5 4V4zM15 8c3 2 3 6 0 8M18 5c5 4 5 10 0 14",
-  mute:"M11 4 6 8H3v8h3l5 4V4zM16 9l5 6m0-6-5 6",
-  heart:"M12 21 3 12C-2 5 7 0 12 7c5-7 14-2 9 5z",
-  pin:"m9 3 6 0-1 6 4 4H6l4-4-1-6zm3 10v8"
-};
-
 const $=id=>document.getElementById(id);
-const now=()=>Date.now();
 const fmt=n=>Math.round(n).toLocaleString("ru-RU");
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-}[c]));
-
-const safe=(n,f,a,b)=>Number.isFinite(n)?
-  Math.max(a,Math.min(b,Math.floor(n))):f;
-
-const ic=n=>`<svg class="ic" viewBox="0 0 24 24" fill="none"
-  stroke="currentColor" stroke-width="1.65" stroke-linecap="round"
-  stroke-linejoin="round" aria-hidden="true"><path d="${PATH[n]||PATH.gift}"/></svg>`;
-
-const btn=(a,t,id,cl="btn",disabled=false)=>
-  `<button class="${cl}" data-action="${a}"${id!==undefined?
-  ` data-id="${esc(id)}"`:""}${disabled?" disabled":""}>${t}</button>`;
-
-function rng(){
-  try{
-    const a=new Uint32Array(1);
-    crypto.getRandomValues(a);
-    return a[0]/4294967296;
-  }catch(e){return Math.random();}
-}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const now=()=>Date.now();
+const rng=()=>Math.random();
 const int=(a,b)=>Math.floor(rng()*(b-a+1))+a;
-const uid=()=>now().toString(36)+"-"+rng().toString(36).slice(2)+rng().toString(36).slice(2);
-const canonical=id=>Number.isInteger(id)&&id>=32&&id<40?id-8:id;
-const maxFor=level=>150+(level-1)*10;
+const uid=()=>now().toString(36)+Math.random().toString(36).slice(2);
+const maxEnergy=()=>150+(S.level-1)*10;
 
-let tab="home",busy=false,entered=false,search="",sort="new";
-let rarity=-1,favoritesOnly=false,caseFilter="all",slotBet=10;
-let arcade="slot",gameBet=0,lastBalance=null,lastTap=0;
-let profile=null,gateColor=COLORS[0],previousFocus=null;
-let sound=false,audio=null,lastTone=0,storageWarning=false;
-let activeRoll=null,forgeQuote=null,tilt=null,tiltEvent=null,tiltFrame=0;
+let tab="home",busy=false,activeRoll=null,caseId=0,slotBet=10,gameBet=0,arcade="slot";
+let memory=null,memoryTimer=null,aim=null,aimTimer=null;
+let S=JSON.parse(localStorage.getItem(KEY)||"null")||fresh();
+let profile=JSON.parse(localStorage.getItem(PROFILE_KEY)||"null")||null;
 
 function fresh(){
   return {
-    coins:120,level:1,energy:150,energyAt:now(),bonusProgress:0,
-    effects:true,dailyAt:0,jobReady:0,jobCooldown:0,
-    inventory:[],listings:[],market:[],
-    prices:D.map(d=>d[2]),previous:D.map(d=>d[2]),
+    coins:120,level:1,energy:150,energyAt:now(),bonusProgress:0,dailyAt:0,
+    inventory:[],listings:[],market:[],prices:D.map(d=>d[2]),previous:D.map(d=>d[2]),
     stats:{taps:0,opened:0,bought:0,sold:0,forged:0,aimBest:0},
-    claimed:[],history:[],seen:[],favorites:[],indexHistory:[],
-    memoryRewardAt:0,aimRewardAt:0,pendingCase:null,
+    seen:[],history:[],memoryRewardAt:0,aimRewardAt:0,pendingCase:null,
     arcadeRound:null,lastGame:null
   };
-}
-
-function validItem(i){
-  return i&&typeof i.uid==="string"&&
-    Number.isInteger(canonical(i.id))&&D[canonical(i.id)]&&
-    Number.isInteger(i.bg)&&BG[i.bg]&&
-    Number.isInteger(i.serial)&&i.serial>0;
-}
-const norm=i=>({
-  uid:i.uid,id:canonical(i.id),bg:i.bg,serial:i.serial,
-  ref:safe(i.ref,1,1,4),upgrade:safe(i.upgrade,0,0,5)
-});
-
-function readRound(r){
-  if(!r||typeof r.token!=="string"||
-    !["aim","memory"].includes(r.kind)||
-    ![0,5,10,25].includes(r.stake))return null;
-
-  const x={
-    token:r.token,kind:r.kind,stake:r.stake,
-    startedAt:safe(r.startedAt,now(),0,now())
-  };
-
-  if(r.kind==="memory"){
-    if(!Array.isArray(r.cards)||r.cards.length!==16)return null;
-
-    x.cards=r.cards.map(c=>({
-      id:canonical(c.id),matched:c.matched===true
-    }));
-
-    if(x.cards.some(c=>!D[c.id]))return null;
-
-    const counts=new Map();
-    for(const c of x.cards)counts.set(c.id,(counts.get(c.id)||0)+1);
-    if(counts.size!==8||[...counts.values()].some(n=>n!==2))return null;
-
-    x.moves=safe(r.moves,0,0,30);
-    x.open=Array.isArray(r.open)?
-      [...new Set(r.open.filter(n=>Number.isInteger(n)&&n>=0&&n<16))]
-        .filter(n=>!x.cards[n].matched).slice(0,2):[];
-    x.closeAt=safe(r.closeAt,0,0,now()+1000);
-    return x;
-  }
-
-  x.endAt=safe(r.endAt,now(),0,now()+30000);
-  x.hits=safe(r.hits,0,0,1000);
-  x.misses=safe(r.misses,0,0,1000);
-  x.expired=safe(r.expired,0,0,1000);
-  x.targetId=safe(canonical(r.targetId),12,0,D.length-1);
-  x.targetToken=safe(r.targetToken,1,1,1e9);
-  x.targetAt=safe(r.targetAt,now(),0,now());
-  x.x=Number.isFinite(r.x)?Math.max(0,Math.min(1,r.x)):.5;
-  x.y=Number.isFinite(r.y)?Math.max(0,Math.min(1,r.y)):.5;
-  return x;
-}
-
-function read(){
-  const s=fresh();
-
-  try{
-    let x=JSON.parse(localStorage.getItem(KEY)||"null");
-
-    if(!x){
-      const old=JSON.parse(localStorage.getItem("gift-lab-pages-v1")||"null");
-      if(old){
-        const map=[0,1,2,1,3,3,4,4,5,6,7,7,9,8,9,10,10,10,11,11,12,12,12,12];
-        const conv=i=>i&&map[i.id]!==undefined?{...i,id:map[i.id],ref:1}:null;
-        old.inventory=(old.inventory||[]).map(conv).filter(Boolean);
-        old.listings=(old.listings||[]).map(l=>({...l,item:conv(l.item)}));
-        old.market=[];old.prices=[];old.previous=[];
-        x=old;
-      }
-    }
-
-    if(!x||typeof x!=="object")return s;
-
-    s.coins=safe(x.coins,120,0,1e12);
-    s.level=safe(x.level,1,1,20);
-    s.energy=safe(x.energy,150,0,maxFor(s.level));
-    s.energyAt=safe(x.energyAt,now(),0,now());
-    s.bonusProgress=safe(x.bonusProgress,0,0,24);
-    s.effects=x.effects!==false;
-
-    for(const k of ["dailyAt","memoryRewardAt","aimRewardAt"]){
-      s[k]=safe(x[k],0,0,now());
-    }
-
-    s.jobReady=safe(x.jobReady,0,0,now()+90000);
-    s.jobCooldown=safe(x.jobCooldown,0,0,now()+300000);
-
-    if(Array.isArray(x.inventory)){
-      s.inventory=x.inventory.filter(validItem).map(norm);
-    }
-
-    if(Array.isArray(x.listings)){
-      s.listings=x.listings.filter(l=>
-        l&&typeof l.uid==="string"&&validItem(l.item)&&
-        Number.isSafeInteger(l.price)&&l.price>0&&l.price<=1e7&&
-        Number.isFinite(l.expires)
-      ).map(l=>({
-        uid:l.uid,item:norm(l.item),price:l.price,expires:l.expires
-      }));
-    }
-
-    if(Array.isArray(x.market)){
-      s.market=x.market.filter(l=>
-        l&&typeof l.uid==="string"&&validItem(l.item)&&
-        Number.isSafeInteger(l.price)&&l.price>0&&l.price<=1e7&&
-        typeof l.seller==="string"&&Number.isFinite(l.at)
-      ).slice(-40).map(l=>({
-        uid:l.uid,item:norm(l.item),price:l.price,seller:l.seller,at:l.at
-      }));
-    }
-
-    for(const k of ["prices","previous"]){
-      if(Array.isArray(x[k])){
-        s[k]=D.map((d,i)=>Number.isFinite(x[k][i])&&x[k][i]>0?
-          Math.round(Math.max(d[2]*.4,Math.min(d[2]*2.5,x[k][i]))):d[2]);
-      }
-    }
-
-    for(const k of Object.keys(s.stats)){
-      s.stats[k]=safe(x.stats&&x.stats[k],0,0,1e9);
-    }
-
-    for(const k of ["claimed","history"]){
-      if(Array.isArray(x[k])){
-        s[k]=x[k].filter(v=>typeof v==="string").slice(0,k==="history"?35:100);
-      }
-    }
-
-    for(const k of ["seen","favorites"]){
-      if(Array.isArray(x[k])){
-        s[k]=[...new Set(x[k].map(canonical)
-          .filter(n=>Number.isInteger(n)&&n>=0&&n<D.length))];
-      }
-    }
-
-    if(Array.isArray(x.indexHistory)){
-      s.indexHistory=x.indexHistory.filter(n=>Number.isFinite(n)&&n>0).slice(-35);
-    }
-
-    for(const i of s.inventory.concat(s.listings.map(l=>l.item))){
-      if(!s.seen.includes(i.id))s.seen.push(i.id);
-    }
-
-    if(x.pendingCase&&typeof x.pendingCase.uid==="string"&&
-      Number.isInteger(x.pendingCase.caseId)&&CASES[x.pendingCase.caseId]&&
-      s.inventory.some(i=>i.uid===x.pendingCase.uid)){
-      s.pendingCase={uid:x.pendingCase.uid,caseId:x.pendingCase.caseId};
-    }
-
-    s.arcadeRound=readRound(x.arcadeRound);
-
-    if(x.lastGame&&typeof x.lastGame.message==="string"){
-      s.lastGame={
-        message:x.lastGame.message.slice(0,350),
-        at:safe(x.lastGame.at,0,0,now()),
-        kind:x.lastGame.kind==="aim"?"aim":"memory"
-      };
-    }
-
-  }catch(e){storageWarning=true;}
-
-  return s;
-}
-
-const S=read();
-
-function validAvatar(s){
-  return typeof s==="string"&&s.length<500000&&
-    /^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(s);
-}
-
-try{
-  sound=localStorage.getItem("gift-lab-sound-enabled")==="1";
-  const p=JSON.parse(localStorage.getItem(PROFILE_KEY)||"null");
-
-  if(p&&typeof p.name==="string"&&p.name.trim().length>=2){
-    profile={
-      id:typeof p.id==="string"?p.id:uid(),
-      name:p.name.slice(0,32),
-      color:COLORS.includes(p.color)?p.color:COLORS[0],
-      created:Number.isFinite(p.created)?p.created:now(),
-      username:typeof p.username==="string"&&
-        /^[A-Za-z][A-Za-z0-9_]{3,23}$/.test(p.username)?p.username:"",
-      bio:typeof p.bio==="string"?p.bio.slice(0,120):"",
-      avatar:validAvatar(p.avatar)?p.avatar:"",
-      pinned:Array.isArray(p.pinned)?
-        [...new Set(p.pinned.filter(v=>typeof v==="string"))].slice(0,3):[]
-    };
-    gateColor=profile.color;
-  }
-}catch(e){}
-
-const motion=()=>S.effects&&(!window.matchMedia||
-  !matchMedia("(prefers-reduced-motion: reduce)").matches);
-
-function toast(text){
-  const e=document.createElement("div");
-  e.className="toast";e.textContent=text;
-  $("toasts").append(e);
-  while($("toasts").children.length>4)$("toasts").firstElementChild.remove();
-  setTimeout(()=>e.remove(),4500);
 }
 
 function save(){
   try{
     localStorage.setItem(KEY,JSON.stringify(S));
     if(profile)localStorage.setItem(PROFILE_KEY,JSON.stringify(profile));
-  }catch(e){
-    if(!storageWarning){
-      storageWarning=true;
-      toast("Браузер ограничил сохранение. Прогресс может не сохраниться.");
-    }
-  }
+  }catch(e){}
 }
 
-function log(text){
-  S.history.unshift(new Date().toLocaleTimeString("ru-RU",{
-    hour:"2-digit",minute:"2-digit"
-  })+" · "+text);
-  S.history=S.history.slice(0,35);
+function log(t){
+  S.history.unshift(new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+" · "+t);
+  S.history=S.history.slice(0,30);
 }
 
-function discover(id){if(!S.seen.includes(id))S.seen.push(id);}
+function toast(t){
+  const e=document.createElement("div");
+  e.className="toast";e.textContent=t;
+  $("toasts").append(e);
+  setTimeout(()=>e.remove(),4000);
+}
+
 function makeItem(id){
-  return {uid:uid(),id,bg:int(0,9),serial:int(1000,999999),ref:int(1,4),upgrade:0};
+  return {uid:uid(),id,bg:int(0,9),serial:int(1000,999999),ref:1,upgrade:0};
 }
 
-const theme=i=>`--a:${BG[i.bg][1]};--b:${BG[i.bg][2]}`;
-const estimate=id=>Math.round(S.prices[id]);
-const itemValue=i=>Math.round(estimate(i.id)*(1+.1*(i.upgrade||0)));
-const forgeCost=i=>Math.max(25,Math.round(estimate(i.id)*.12*((i.upgrade||0)+1)));
-const maxEnergy=()=>maxFor(S.level);
-const power=()=>S.level;
-const upgradeCost=()=>Math.round(60*Math.pow(1.45,S.level-1)/5)*5;
+function itemValue(i){
+  return Math.round(S.prices[i.id]*(1+.1*(i.upgrade||0)));
+}
+
+function stars(n){
+  return "★ "+fmt(n);
+}
+
+function asset(id,ref=1){
+  return "https://nft.fragment.com/gift/"+D[id][1]+"-"+ref+".webp";
+}
+
+function media(id,ref=1){
+  return `<div class="media"><img class="photo" src="${asset(id,ref)}" alt="${esc(D[id][0])}" referrerpolicy="no-referrer"></div>`;
+}
+
+function theme(i){
+  return `--a:${BG[i.bg][1]};--b:${BG[i.bg][2]}`;
+}
+
+function pick(w){
+  let r=rng()*w.reduce((a,x)=>a+x[1],0);
+  for(const x of w){
+    r-=x[1];
+    if(r<0)return x[0];
+  }
+  return w[w.length-1][0];
+}
 
 function replenish(){
   const n=Math.floor(Math.max(0,now()-S.energyAt)/1000);
@@ -1222,1717 +225,329 @@ function replenish(){
   }
 }
 
-function makeStar(){
-  const c=document.createElement("canvas");
-  c.width=c.height=192;
-  const g=c.getContext("2d");
-
-  g.beginPath();
-  for(let i=0;i<10;i++){
-    const r=i%2?41:88,a=-Math.PI/2+i*Math.PI/5;
-    const x=96+Math.cos(a)*r,y=96+Math.sin(a)*r;
-    i?g.lineTo(x,y):g.moveTo(x,y);
-  }
-  g.closePath();
-
-  const v=g.createLinearGradient(30,0,140,192);
-  v.addColorStop(0,"#fff1b8");
-  v.addColorStop(.45,"#ffd362");
-  v.addColorStop(1,"#efa12c");
-  g.fillStyle=v;g.fill();
-  g.strokeStyle="#ffedb7";g.lineWidth=2;g.stroke();
-
-  return c.toDataURL("image/png");
-}
-
-let STAR=makeStar();
-
-try{
-  const x=JSON.parse(localStorage.getItem("gl-original-star-v1")||"null");
-  if(x&&validAvatar(x.data)&&typeof x.source==="string"&&
-    x.source.startsWith("https://raw.githubusercontent.com/TelegramMessenger/Telegram-Android/")){
-    STAR=x.data;
-  }
-}catch(e){}
-
-const stars=n=>`<img class="star" src="${STAR}" alt="Игровые звёзды"> ${fmt(n)}`;
-
 function balance(){
-  if(lastBalance===S.coins)return;
-  const b=$("balance");
-  b.innerHTML=stars(S.coins);
-  if(lastBalance!==null&&motion()){
-    b.classList.remove("bump");
-    void b.offsetWidth;
-    b.classList.add("bump");
-  }
-  lastBalance=S.coins;
+  $("balance").textContent=stars(S.coins);
 }
 
-const asset=(id,ref,jpg=false)=>
-  `https://nft.fragment.com/gift/${D[id][1]}-${ref}${jpg?".medium.jpg":".webp"}`;
-
-function media(id,ref=1,eager=false){
-  return `<div class="media"><span class="skeleton"></span>
-    <img class="photo" data-gift="${id}" data-ref="${ref}" data-attempt="0"
-    src="${asset(id,ref)}" alt="${esc(D[id][0])} — референс #${ref}"
-    loading="${eager?"eager":"lazy"}" decoding="async" referrerpolicy="no-referrer">
-    <div class="img-error">${ic("gift")}
-    <span>Картинка недоступна<br>Предмет сохранён</span></div></div>`;
-}
-
-document.addEventListener("load",e=>{
-  const i=e.target;
-  if(i.tagName==="IMG"&&i.hasAttribute("data-gift")){
-    i.classList.add("loaded");
-    if(+i.dataset.attempt>=2&&+i.dataset.ref!==1){
-      const m=i.closest(".media");
-      if(m&&!m.querySelector(".fallback-label")){
-        m.insertAdjacentHTML("beforeend",
-          '<span class="fallback-label">Резервный референс #1</span>');
-      }
-    }
-  }
-},true);
-
-document.addEventListener("error",e=>{
-  const i=e.target;
-  if(i.tagName!=="IMG")return;
-
-  if(i.hasAttribute("data-gift")){
-    const id=+i.dataset.gift,ref=+i.dataset.ref,a=+i.dataset.attempt+1;
-    i.dataset.attempt=a;
-
-    if(a===1)i.src=asset(id,ref,true);
-    else if(a===2&&ref!==1)i.src=asset(id,1);
-    else if(a===3&&ref!==1)i.src=asset(id,1,true);
-    else{
-      i.style.display="none";
-      i.closest(".media").classList.add("failed");
-    }
-  }else if(i.hasAttribute("data-slot")){
-    i.parentElement.textContent="◆";
-  }else if(i.hasAttribute("data-album")){
-    i.style.display="none";
-  }
-},true);
-
-const observer=window.IntersectionObserver?
-  new IntersectionObserver(entries=>{
-    entries.forEach(x=>x.target.classList.toggle("inview",x.isIntersecting));
-  },{rootMargin:"60px"}):null;
-
-function unobserve(root){
-  if(observer)root.querySelectorAll(".gift").forEach(e=>observer.unobserve(e));
-}
-function observe(root){
-  root.querySelectorAll(".gift").forEach((e,i)=>{
-    e.style.setProperty("--delay",-(i%7)*.8+"s");
-    observer?observer.observe(e):e.classList.add("inview");
-  });
-}
-
-function unlockAudio(){
-  if(!sound)return;
-  try{
-    const A=window.AudioContext||window.webkitAudioContext;
-    if(!A)return;
-    if(!audio)audio=new A();
-    if(audio.state==="suspended")audio.resume().catch(()=>{});
-  }catch(e){}
-}
-
-function tone(f,d=.08,v=.014,delay=0){
-  if(!sound||!audio||audio.state!=="running")return;
-  try{
-    const t=audio.currentTime+delay,o=audio.createOscillator(),g=audio.createGain();
-    o.type="sine";o.frequency.setValueAtTime(f,t);
-    g.gain.setValueAtTime(.0001,t);
-    g.gain.exponentialRampToValueAtTime(v,t+.008);
-    g.gain.exponentialRampToValueAtTime(.0001,t+d);
-    o.connect(g);g.connect(audio.destination);
-    o.start(t);o.stop(t+d+.03);
-    o.onended=()=>{o.disconnect();g.disconnect();};
-  }catch(e){}
-}
-
-function winSound(){
-  [523,659,784,1046].forEach((f,i)=>tone(f,.25+i*.03,.016,i*.1));
-}
-function syncSound(){
-  $("sound").innerHTML=ic(sound?"sound":"mute");
-  $("sound").classList.toggle("on",sound);
-  $("sound").setAttribute("aria-pressed",String(sound));
-  $("sound").setAttribute("aria-label",sound?"Выключить звук":"Включить звук");
-}
-function particles(x,y,n=24){
-  if(!motion()||document.hidden)return;
-  const root=$("particles"),colors=["#d9c7ef","#f1ddb3","#b2dfcb","#b9d5eb"];
-  n=Math.min(n,40-root.children.length);
-
-  for(let i=0;i<n;i++){
-    const e=document.createElement("i"),a=Math.random()*Math.PI*2,d=35+Math.random()*160;
+function particles(x,y){
+  for(let i=0;i<14;i++){
+    const e=document.createElement("i");
     e.className="particle";
-    e.style.cssText=`--x:${x}px;--y:${y}px;--dx:${Math.cos(a)*d}px;
-      --dy:${Math.sin(a)*d-25}px;--size:${3+Math.random()*5}px;
-      --rot:${Math.random()*500-250}deg;--color:${colors[i%4]}`;
-    root.append(e);
-    setTimeout(()=>e.remove(),1400);
+    const a=Math.random()*6.28,d=30+Math.random()*90;
+    e.style.cssText=`left:${x}px;top:${y}px;--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d-20}px`;
+    $("particles").append(e);
+    setTimeout(()=>e.remove(),1200);
   }
-}
-function sparkleModal(){
-  const e=$("modal").querySelector(".inspect-stage,.roulette");
-  if(!e)return;
-  const r=e.getBoundingClientRect();
-  particles(r.left+r.width/2,r.top+r.height/2);
-}
-
-const initials=n=>n.trim().split(/\s+/).slice(0,2)
-  .map(x=>x[0]).join("").toUpperCase()||"G";
-
-const avatarHTML=()=>profile&&profile.avatar?
-  `<img src="${profile.avatar}" alt="Фото профиля">`:
-  esc(initials(profile?profile.name:"G"));
-
-function syncProfile(){
-  $("profileButton").innerHTML=avatarHTML();
-  $("profileButton").style.setProperty("--avatar",profile?profile.color:COLORS[0]);
-}
-function applyEffects(){
-  document.documentElement.classList.toggle("lite",!S.effects);
-}
-
-function showGate(){
-  entered=false;
-
-  $("gateRoot").innerHTML=`<div class="gate" id="gate"><section class="gate-card">
-    <div class="logo" style="margin:0 auto 24px;width:62px;height:62px;border-radius:21px">
-    ${ic("gift")}</div>
-    <span class="eyebrow" style="justify-content:center">GIFT LAB / STUDIO</span>
-    <h2 style="margin-top:16px">Твоя коллекция начинается здесь</h2>
-    <p class="small" style="text-align:center">Локальный профиль в этом браузере.<br>
-    Следующий вход — автоматический.</p>
-    <input id="loginName" maxlength="32" autocomplete="nickname"
-    placeholder="Как тебя называть?" aria-label="Имя" value="${esc(profile?profile.name:"")}">
-    <div class="swatches">${COLORS.map(c=>
-      `<button class="swatch${gateColor===c?" on":""}" style="--color:${c}"
-      data-action="gateColor" data-id="${c}" aria-label="Цвет профиля"></button>`
-    ).join("")}</div>
-    ${btn("login","Продолжить",undefined,"btn full")}
-    <p class="small" style="text-align:center;margin:14px 0 0">Без пароля и облачной синхронизации.</p>
-    </section></div>`;
-
-  setTimeout(()=>{if($("loginName"))$("loginName").focus();},200);
-}
-
-function enterGame(){
-  entered=true;
-  render();
-  const g=$("gate");
-  if(g){
-    g.classList.add("hidden");
-    setTimeout(()=>$("gateRoot").innerHTML="",700);
-  }
-  if(S.pendingCase)setTimeout(resumePending,150);
-}
-
-function login(){
-  const e=$("loginName");
-  if(!e)return;
-  const name=e.value.trim().replace(/\s+/g," ").slice(0,32);
-  if(name.length<2){
-    toast("Введи имя хотя бы из двух символов.");
-    e.focus();return;
-  }
-
-  profile={
-    id:profile?profile.id:uid(),name,color:gateColor,
-    created:profile?profile.created:now(),
-    username:profile?profile.username:"",
-    bio:profile?profile.bio:"",
-    avatar:profile?profile.avatar:"",
-    pinned:profile?profile.pinned:[]
-  };
-  save();enterGame();
-}
-
-function showModal(html){
-  if(!$("modal").hasChildNodes())previousFocus=document.activeElement;
-  $("modal").innerHTML=`<div class="overlay"><section class="sheet"
-    role="dialog" aria-modal="true" aria-label="Подарок или действие" tabindex="-1">
-    <button class="close" data-action="close" aria-label="Закрыть">${ic("close")}</button>
-    ${html}</section></div>`;
-  $("modal").querySelector(".sheet").focus();
-}
-
-function acknowledge(){
-  if(S.pendingCase){S.pendingCase=null;save();}
-  if(activeRoll&&activeRoll.settled)activeRoll=null;
-}
-
-function closeModal(){
-  if(busy)return;
-  acknowledge();
-  $("modal").innerHTML="";
-  forgeQuote=null;
-  if(previousFocus&&document.contains(previousFocus))previousFocus.focus();
-}
-
-function ownedItems(){
-  return S.inventory.concat(S.listings.map(l=>l.item));
-}
-
-function profileView(){
-  if(busy||!profile)return;
-
-  const all=ownedItems();
-  const pinned=profile.pinned.map(id=>all.find(i=>i.uid===id)).filter(Boolean);
-
-  showModal(`<div class="profile-cover" style="--cover:${profile.color}"></div>
-    <div class="profile-info">
-    <div class="avatar big-avatar profile-avatar" style="--avatar:${profile.color}">${avatarHTML()}</div>
-    <h2 class="profile-title">${esc(profile.name)}</h2>
-    <div class="small">${profile.username?"@"+esc(profile.username)+" · ":""}Локальный профиль</div>
-    ${profile.bio?`<p class="profile-bio">${esc(profile.bio)}</p>`:""}
-    <div class="actions">
-      ${btn("editProfile","Редактировать профиль",undefined,"btn secondary full")}
-    </div>
-    <div class="heading"><h3>Закреплённые подарки</h3><span class="muted">${pinned.length}/3</span></div>
-    ${pinned.length?`<div class="pinned-grid">${pinned.map(i=>
-      `<button class="pinned-card" data-action="viewPinned" data-id="${esc(i.uid)}">
-      ${media(i.id,i.ref)}<small>${D[i.id][0]}</small></button>`
-    ).join("")}</div>`:
-    '<p class="small">Открой подарок в коллекции и нажми «Закрепить в профиле».</p>'}
-    <div class="profile-line"><span>Предметов</span><span>${all.length}</span></div>
-    <div class="profile-line"><span>Коллекций открыто</span><span>${S.seen.length}/${D.length}</span></div>
-    <div class="profile-line"><span>Улучшений выполнено</span><span>${S.stats.forged}</span></div>
-    <div class="profile-line"><span>Лучший Aim Lab</span><span>${S.stats.aimBest} попаданий</span></div>
-    <div class="profile-line"><span>Создан</span><span>${new Date(profile.created).toLocaleDateString("ru-RU")}</span></div>
-    <div class="profile-line"><span>Локальный ID</span><span>${esc(profile.id)}</span></div>
-    <div class="actions">
-    ${btn("effects",S.effects?"Облегчённый режим":"Полные эффекты",undefined,"btn secondary full")}
-    ${btn("backup","Скачать резервную копию",undefined,"btn secondary full")}
-    ${btn("help","Правила и ограничения",undefined,"btn secondary full")}
-    ${btn("close","Вернуться в игру",undefined,"btn full")}
-    </div>
-    <p class="small">Имя, username и фото относятся только к этой игре.
-    Это не подключённый аккаунт Telegram.</p></div>`);
-}
-
-function editProfile(){
-  if(!profile)return;
-
-  showModal(`<div class="sheet-body" style="padding-top:34px">
-    <h2>Редактирование профиля</h2>
-    <div class="avatar big-avatar" style="--avatar:${profile.color};margin:22px auto 12px">${avatarHTML()}</div>
-    <input id="avatarUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden>
-    ${btn("chooseAvatar","Выбрать фото",undefined,"btn secondary full")}
-    ${profile.avatar?`<div style="margin-top:8px">${btn("removeAvatar","Убрать фото",undefined,"btn secondary full")}</div>`:""}
-    <label class="form-label" for="profileName">Имя</label>
-    <input class="full" id="profileName" maxlength="32" value="${esc(profile.name)}">
-    <label class="form-label" for="profileUsername">Локальный username, без @</label>
-    <input class="full" id="profileUsername" maxlength="24" value="${esc(profile.username)}"
-      placeholder="Например, gift_collector">
-    <label class="form-label" for="profileBio">О себе</label>
-    <textarea class="full" id="profileBio" maxlength="120">${esc(profile.bio)}</textarea>
-    <label class="form-label">Цвет обложки</label>
-    <div class="swatches">${COLORS.map(c=>
-      `<button class="swatch${gateColor===c?" on":""}" style="--color:${c}"
-      data-action="editColor" data-id="${c}" aria-label="Цвет обложки"></button>`
-    ).join("")}</div>
-    <div class="actions">
-      ${btn("saveProfile","Сохранить",undefined,"btn full")}
-      ${btn("profile","Назад",undefined,"btn secondary full")}
-    </div><p class="small">Фото сохраняется только в этом браузере.</p></div>`);
-}
-
-function saveProfile(){
-  const name=$("profileName").value.trim().replace(/\s+/g," ").slice(0,32);
-  const username=$("profileUsername").value.trim().replace(/^@/,"");
-  const bio=$("profileBio").value.trim().slice(0,120);
-
-  if(name.length<2)return toast("Имя — минимум два символа.");
-  if(username&&!/^[A-Za-z][A-Za-z0-9_]{3,23}$/.test(username)){
-    return toast("Username: 4–24 символа, латиница, цифры и _. Начало — буква.");
-  }
-
-  profile.name=name;
-  profile.username=username;
-  profile.bio=bio;
-  profile.color=gateColor;
-  save();syncProfile();profileView();
-}
-
-function uploadAvatar(file){
-  if(!file)return;
-  if(!["image/png","image/jpeg","image/webp"].includes(file.type)){
-    return toast("Выбери PNG, JPEG или WebP.");
-  }
-  if(file.size>5*1024*1024)return toast("Фото должно быть меньше 5 МБ.");
-
-  const reader=new FileReader();
-
-  reader.onerror=()=>toast("Не удалось прочитать фото.");
-  reader.onload=()=>{
-    const image=new Image();
-
-    image.onerror=()=>toast("Не удалось открыть изображение.");
-    image.onload=()=>{
-      try{
-        const canvas=document.createElement("canvas");
-        canvas.width=canvas.height=256;
-
-        const g=canvas.getContext("2d");
-        const size=Math.min(image.naturalWidth,image.naturalHeight);
-        const x=(image.naturalWidth-size)/2,y=(image.naturalHeight-size)/2;
-        g.drawImage(image,x,y,size,size,0,0,256,256);
-
-        profile.avatar=canvas.toDataURL("image/png");
-        save();syncProfile();profileView();
-        toast("Фото профиля сохранено.");
-      }catch(e){toast("Не удалось сохранить фото.");}
-    };
-
-    image.src=reader.result;
-  };
-
-  reader.readAsDataURL(file);
-}
-
-function pinGift(id){
-  if(!profile)return;
-  const i=ownedItems().find(i=>i.uid===id);
-  if(!i)return;
-
-  profile.pinned=profile.pinned.filter(uid=>ownedItems().some(i=>i.uid===uid));
-  const n=profile.pinned.indexOf(id);
-
-  if(n>=0)profile.pinned.splice(n,1);
-  else{
-    if(profile.pinned.length>=3)return toast("Можно закрепить максимум три подарка.");
-    profile.pinned.push(id);
-  }
-
-  save();
-  if(S.inventory.some(i=>i.uid===id))previewItem(id);
-  else profileView();
-}
-
-function backup(){
-  save();
-  const b=new Blob([JSON.stringify({
-    version:"gift-lab-studio-v10",exportedAt:new Date().toISOString(),profile,game:S
-  },null,2)],{type:"application/json"});
-
-  const u=URL.createObjectURL(b),a=document.createElement("a");
-  a.href=u;a.download="gift-lab-backup.json";
-  document.body.append(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(u),1000);
-}
-
-function updateRoundBanner(){
-  const b=$("roundBanner"),r=S.arcadeRound;
-  if(!r){b.style.display="none";b.innerHTML="";return;}
-
-  b.style.display="flex";
-  b.innerHTML=`<span class="small">Незавершённый ${r.kind==="aim"?"Aim Lab":"Memory Lab"}
-    · ${r.stake?"ставка "+fmt(r.stake):"тренировка"}</span>
-    ${btn("resumeRound","Продолжить",undefined,"btn secondary mini")}`;
 }
 
 function nav(){
-  const items=[
-    ["home","box","Кейсы"],["market","market","Маркет"],
-    ["earn","bolt","Звёзды"],["games","game","Аркада"],
-    ["inventory","bag","Коллекция"]
-  ];
-
-  $("nav").innerHTML=items.map(x=>
-    `<button data-tab="${x[0]}" class="${tab===x[0]?"active":""}"${busy?" disabled":""}>
-    ${ic(x[1])}${x[2]}</button>`
-  ).join("");
+  const a=[["home","Кейсы"],["market","Маркет"],["earn","Звёзды"],["games","Аркада"],["inventory","Коллекция"]];
+  $("nav").innerHTML=a.map(x=>`<button data-tab="${x[0]}" class="${tab===x[0]?"active":""}">${x[1]}</button>`).join("");
 }
 
-function render(animate=true){
-  replenish();balance();nav();syncProfile();updateRoundBanner();
-  resetTilt();unobserve($("main"));
-
-  const views={
-    home:homeView,market:marketView,earn:earnView,
-    games:gamesView,inventory:inventoryView
-  };
-
+function render(){
+  replenish();balance();nav();
+  const views={home:homeView,market:marketView,earn:earnView,games:gamesView,inventory:inventoryView};
   $("main").innerHTML=(views[tab]||homeView)();
-  observe($("main"));
-
-  if(tab==="games"&&arcade==="aim"&&S.arcadeRound?.kind==="aim"){
-    paintAimTarget();
-    updateGameHUD();
-  }
-
-  if(animate&&motion()){
-    $("main").classList.remove("screen-enter");
-    void $("main").offsetWidth;
-    $("main").classList.add("screen-enter");
-  }
 }
 
 function go(t){
-  if(busy||!entered)return;
-  closeModal();
   tab=t;render();window.scrollTo(0,0);
 }
 
-function giftCard(i,price,action,id=i.uid){
-  const delta=(S.prices[i.id]/S.previous[i.id]-1)*100;
-
-  return `<button class="gift" data-key="${esc(id)}" data-action="${action}" data-id="${esc(id)}">
-    <div class="gift-stage" style="${theme(i)}">${media(i.id,i.ref)}
-      <span class="badge">${RAR[D[i.id][3]]} · #${i.ref}</span>
-      ${i.upgrade?`<span class="levelbadge">Ателье +${i.upgrade}</span>`:""}
-    </div>
-    <div class="gift-body"><div class="gift-name">${D[i.id][0]}</div>
-      <div class="gift-sub">Демо №${fmt(i.serial)} · ${BG[i.bg][0]}</div>
-      <div class="row"><span class="price">${stars(price)}</span>
-      <span class="change${delta<0?" down":""}" data-trend="${i.id}">
-      ${delta>=0?"+":""}${delta.toFixed(1)}%</span></div>
-    </div></button>`;
-}
-
-function caseCard(c,n){
-  const cover=c[4].some(w=>w[0]===c[3])?c[3]:c[4][0][0];
-
-  return `<button class="case" data-action="case" data-id="${n}">
-    <div class="case-showcase" style="--tint:${c[2]}">
-      <span class="case-tag">COLLECTION ${String(n+1).padStart(2,"0")}</span>
-      <span class="case-ghost"></span>
-      <div class="case-object">${media(cover,1)}</div>
-      <span class="case-stamp">${ic("gift")}</span>
-    </div>
-    <div class="case-body"><h3>${c[0]}</h3>
-      <p>${c[4].length} возможных находок<br>На обложке — предмет из состава</p>
-      <div class="case-foot"><span class="price">${stars(c[1])}</span>${ic("arrow")}</div>
-    </div></button>`;
-}
-
 function homeView(){
-  return `<section class="hero"><div class="hero-copy">
-    <span class="eyebrow"><i class="dot"></i>GIFT LAB / STUDIO</span>
-    <h1>Открывай.<br>Собирай. Улучшай.</h1>
-    <p>32 уникальные коллекции.<br>Твоя мастерская редких находок.</p>
-    ${btn("goEarn","В мастерскую "+ic("bolt"))}
-    </div><div class="hero-stage"><div class="hero-card">${media(12,1,true)}
-    <div class="hero-label">Plush Pepe<small>Референс #1</small></div>
-    </div></div></section>
-    <div class="heading"><h2>Коллекции кейсов</h2><span class="pill">10 серий</span></div>
-    <div class="chips">
-    ${btn("caseFilter","Все коллекции","all",caseFilter==="all"?"on":"")}
-    ${btn("caseFilter","До 500 звёзд","starter",caseFilter==="starter"?"on":"")}
-    ${btn("caseFilter","Премиальные серии","premium",caseFilter==="premium"?"on":"")}
-    </div><div class="cases">
-    ${CASES.map((c,n)=>({c,n})).filter(x=>
-      caseFilter==="all"||(caseFilter==="starter"?x.c[1]<=500:x.c[1]>500)
-    ).map(x=>caseCard(x.c,x.n)).join("")}</div>
-    <div class="heading"><h2>Твоя студия</h2>
-    <span class="muted">${esc(profile?profile.name:"Гость")}</span></div>
-    <div class="stats">
-      <div class="panel stat"><strong>${fmt(S.stats.opened)}</strong><span>Кейсов открыто</span></div>
-      <div class="panel stat"><strong>${ownedItems().length}</strong><span>Предметов</span></div>
-      <div class="panel stat"><strong>${S.seen.length}/${D.length}</strong><span>Коллекций открыто</span></div>
-    </div>
-    <div class="heading"><h2>Журнал событий</h2></div>
-    <div class="panel feed">${S.history.length?
-      S.history.slice(0,7).map(t=>`<div>${esc(t)}</div>`).join(""):
-      "<div>Первая история начинается с одной находки.</div>"}</div>`;
-}
-
-const indexValue=()=>Math.round(S.prices.reduce((a,b)=>a+b,0));
-
-function graph(){
-  const a=S.indexHistory;
-  if(a.length<2)return '<p class="small">График появится после обновления рынка.</p>';
-
-  const lo=Math.min(...a),span=Math.max(1,Math.max(...a)-lo);
-  const p="M"+a.map((v,i)=>[i*600/(a.length-1),60-(v-lo)/span*48].join(",")).join(" L");
-
-  return `<svg class="spark" viewBox="0 0 600 70" preserveAspectRatio="none" aria-label="Игровой индекс">
-    <path d="${p} L600,70 L0,70Z" fill="#b5a5ff12"/>
-    <path d="${p}" fill="none" stroke="#c1b1e5" stroke-width="2"/></svg>`;
-}
-
-function spawn(){
-  const i=makeItem(int(0,D.length-1));
-  return {
-    uid:uid(),item:i,price:Math.max(1,Math.round(itemValue(i)*(.83+rng()*.43))),
-    seller:["mira","velvet","luna","kir","nova","alex"][int(0,5)],at:now()
-  };
-}
-
-function filteredMarket(){
-  return S.market.filter(l=>
-    D[l.item.id][0].toLowerCase().includes(search.toLowerCase())&&
-    (rarity<0||D[l.item.id][3]===rarity)&&
-    (!favoritesOnly||S.favorites.includes(l.item.id))
-  ).sort((a,b)=>sort==="low"?a.price-b.price:sort==="high"?b.price-a.price:b.at-a.at);
+  return `<section class="hero"><h1>Открывай.<br>Собирай. Улучшай.</h1>
+  <p>32 уникальные коллекции. Кейсы, маркет, ателье и аркада.</p>
+  <button class="btn" data-action="goEarn">В мастерскую ★</button></section>
+  <div class="panel"><h2>Коллекции кейсов</h2></div>
+  <div class="grid">${CASES.map((c,n)=>`
+    <button class="gift" data-action="case" data-id="${n}">
+    <div class="gift-stage" style="--a:${c[2]};--b:#1b2335">${media(c[3])}
+    <span class="badge">COLLECTION ${n+1}</span></div>
+    <div class="gift-body"><div class="gift-name">${c[0]}</div>
+    <div class="gift-sub">${c[4].length} возможных находок</div>
+    <div class="price">${stars(c[1])}</div></div></button>`).join("")}</div>
+  <div class="panel"><h3>Журнал</h3>${S.history.length?S.history.slice(0,6).map(t=>`<div>${esc(t)}</div>`).join(""):"<p>Начни с First Drop.</p>"}</div>`;
 }
 
 function marketView(){
-  return `<div class="heading" style="margin-top:5px">
-    <h2>Маркет подарков</h2><span class="pill">Локальные боты</span></div>
-    <div class="panel"><div class="row"><span class="muted">Индекс игрового рынка</span>
-    <span class="price" id="indexNumber">${fmt(indexValue())} pts</span></div>
-    <div id="chart">${graph()}</div>
-    <p class="small" style="margin:0">Оценки — раз в 15 секунд. Проверка лотов — раз в 10 секунд.</p></div>
-    <div class="toolbar"><input id="search" placeholder="Найти подарок…" aria-label="Поиск" value="${esc(search)}">
-    <select id="sort" aria-label="Сортировка">
-      <option value="new"${sort==="new"?" selected":""}>Новые</option>
-      <option value="low"${sort==="low"?" selected":""}>Дешевле</option>
-      <option value="high"${sort==="high"?" selected":""}>Дороже</option>
-    </select></div>
-    <div class="chips">
-    ${btn("favoritesFilter","Избранное",undefined,favoritesOnly?"on":"")}
-    ${["Все",...RAR].map((r,i)=>btn("filter",r,i-1,rarity===i-1?"on":"")).join("")}
-    </div>
-    <div class="grid" id="marketGrid">${filteredMarket().map(l=>
-      giftCard(l.item,l.price,"previewBuy",l.uid)
-    ).join("")}</div>
-    <div class="empty" id="marketEmpty"${filteredMarket().length?' style="display:none"':""}>
-      Подходящих предложений нет.</div>
-    <p class="small">Номера, категории, цены и улучшения игровые. Референсы изображений #1–4.
-    Настоящие NFT не передаются.</p>`;
+  if(S.market.length<20)for(let i=0;i<20;i++)S.market.push(makeItem(int(0,D.length-1)));
+  return `<div class="panel"><h2>Маркет подарков</h2><p class="small">Локальные боты. Предметы виртуальные.</p></div>
+  <div class="grid">${S.market.slice(0,20).map(i=>`
+    <button class="gift" data-action="previewBuy" data-id="${i.uid}">
+    <div class="gift-stage" style="${theme(i)}">${media(i.id)}
+    <span class="badge">${RAR[D[i.id][3]]}</span></div>
+    <div class="gift-body"><div class="gift-name">${D[i.id][0]}</div>
+    <div class="gift-sub">Демо №${fmt(i.serial)}</div>
+    <div class="price">${stars(itemValue(i))}</div></div></button>`).join("")}</div>`;
 }
 
-function reconcileMarket(){
-  const root=$("marketGrid");
-  if(!root)return;
+function earnView(){
+  return `<div class="panel"><h2>Мастерская звёзд</h2>
+  <p class="small">Уровень ${S.level} · энергия ${S.energy}/${maxEnergy()}</p>
+  <button class="btn full" data-action="tap">Получить ★ ${S.level}</button>
+  <p class="small">Каждые 25 нажатий: бонус +5. Сейчас ${S.bonusProgress}/25.</p>
+  <button class="btn secondary full" data-action="upgrade">Улучшить за ★ ${Math.round(60*Math.pow(1.45,S.level-1)/5)*5}</button>
+  <button class="btn secondary full" data-action="daily">Ежедневный бонус ★ 50</button>
+  </div><div class="panel"><h3>Достижения</h3>
+  <p class="small">100 нажатий, 3 кейса, 5 коллекций, 10 попаданий в Aim Lab.</p></div>`;
+}
 
-  const list=filteredMarket(),existing=new Map(),before=new Map();
+function gamesView(){
+  return `<div class="panel"><h2>Аркада</h2>
+  <div class="chips">
+  <button data-action="arcade" data-id="slot" class="${arcade==="slot"?"on":""}">Три в ряд</button>
+  <button data-action="arcade" data-id="memory" class="${arcade==="memory"?"on":""}">Memory Lab</button>
+  <button data-action="arcade" data-id="aim" class="${arcade==="aim"?"on":""}">Aim Lab</button>
+  </div>
+  ${arcade==="slot"?slotView():arcade==="memory"?memoryView():aimView()}</div>`;
+}
 
-  for(const el of root.children){
-    existing.set(el.dataset.key,el);
-    before.set(el.dataset.key,el.getBoundingClientRect());
-  }
+function slotView(){
+  return `<div class="grid">
+  <div class="panel"><h3>Три в ряд</h3><p class="small">Три ленты, 5 символов.</p>
+  <div class="bets">${[5,10,25].map(n=>`<button data-action="slotBet" data-id="${n}" class="${slotBet===n?"on":""}">${stars(n)}</button>`).join("")}</div>
+  <button class="btn full" data-action="spin">Играть · ${stars(slotBet)}</button></div>
+  <div class="panel"><h3>Выплаты</h3><p class="small">Три одинаковых — ×10. Пара — ×1. Все разные — 0. Теоретический возврат 88%.</p></div></div>`;
+}
 
-  const wanted=new Set(list.map(l=>l.uid));
+function memoryView(){
+  if(!memory)return `<div class="panel"><h3>Memory Lab</h3>
+  <p class="small">8 пар, лимит 30 ходов. Тренировка — бесплатно, бонус ★30 раз в 15 минут.</p>
+  <div class="bets">${[0,5,10,25].map(n=>`<button data-action="gameBet" data-id="${n}" class="${gameBet===n?"on":""}">${n?stars(n):"Тренировка"}</button>`).join("")}</div>
+  <button class="btn full" data-action="startMemory">${gameBet?"Начать · списать "+stars(gameBet):"Начать тренировку"}</button></div>`;
+  return `<div class="panel"><h3>Memory Lab</h3><p class="small">Пары ${memory.matches}/8 · ходы ${memory.moves}/30</p>
+  <div class="memory-grid">${memory.cards.map((c,n)=>`<button class="memory-card" data-action="memoryFlip" data-id="${n}">${media(c.id)}</button>`).join("")}</div></div>`;
+}
 
-  existing.forEach((el,key)=>{
-    if(!wanted.has(key)){
-      if(observer)observer.unobserve(el);
-      el.remove();
-    }
-  });
-
-  const frag=document.createDocumentFragment(),records=[];
-
-  for(const l of list){
-    let el=existing.get(l.uid);
-    const fresh=!el;
-
-    if(!el){
-      const b=document.createElement("div");
-      b.innerHTML=giftCard(l.item,l.price,"previewBuy",l.uid);
-      el=b.firstElementChild;
-    }
-
-    const d=(S.prices[l.item.id]/S.previous[l.item.id]-1)*100;
-    const t=el.querySelector("[data-trend]");
-
-    if(t){
-      t.textContent=(d>=0?"+":"")+d.toFixed(1)+"%";
-      t.classList.toggle("down",d<0);
-    }
-
-    frag.append(el);
-    records.push({el,fresh,key:l.uid});
-  }
-
-  root.append(frag);
-
-  records.forEach((r,i)=>{
-    r.el.style.setProperty("--delay",-(i%7)*.8+"s");
-    if(r.fresh)observer?observer.observe(r.el):r.el.classList.add("inview");
-
-    if(!motion()||!r.el.animate)return;
-    const b=before.get(r.key),a=r.el.getBoundingClientRect();
-
-    if(r.fresh){
-      r.el.animate([
-        {opacity:0,transform:"translateY(12px)"},
-        {opacity:1,transform:"translateY(0)"}
-      ],{duration:550,easing:"cubic-bezier(.22,1,.36,1)"});
-    }else if(b&&(Math.abs(b.left-a.left)>1||Math.abs(b.top-a.top)>1)){
-      r.el.animate([
-        {transform:`translate(${b.left-a.left}px,${b.top-a.top}px)`},
-        {transform:"translate(0,0)"}
-      ],{duration:550,easing:"cubic-bezier(.22,1,.36,1)"});
-    }
-  });
-
-  if($("marketEmpty"))$("marketEmpty").style.display=list.length?"none":"block";
-  if($("chart"))$("chart").innerHTML=graph();
-  if($("indexNumber"))$("indexNumber").textContent=fmt(indexValue())+" pts";
+function aimView(){
+  if(!aim)return `<div class="panel"><h3>Aim Lab</h3>
+  <p class="small">30 секунд. Попадание +1, промах −1. Тренировка — бесплатно, бонус ★20 за 10 попаданий раз в 10 минут.</p>
+  <div class="bets">${[0,5,10,25].map(n=>`<button data-action="gameBet" data-id="${n}" class="${gameBet===n?"on":""}">${n?stars(n):"Тренировка"}</button>`).join("")}</div>
+  <button class="btn full" data-action="startAim">${gameBet?"Начать · списать "+stars(gameBet):"Начать тренировку"}</button></div>`;
+  return `<div class="panel"><h3>Aim Lab</h3><p class="small">Очки ${aim.score} · время ${aim.time} с</p>
+  <div class="aim-stage" data-action="aimHit"><div class="aim-target" style="left:40%;top:40%">${media(12)}</div></div>
+  <button class="btn full" data-action="aimHit">Поймать подарок</button></div>`;
 }
 
 function inventoryView(){
-  const listings=S.listings.map(l=>
-    `<div class="task"><div class="task-content"><h3>${D[l.item.id][0]}
-    ${l.item.upgrade?" · ателье +"+l.item.upgrade:""}</h3>
-    <p>${stars(l.price)} · до снятия ${Math.max(0,Math.ceil((l.expires-now())/60000))} мин.</p>
-    </div>${btn("cancel","Снять",l.uid,"btn secondary mini")}</div>`
-  ).join("");
-
-  return `<div class="heading" style="margin-top:5px">
-    <h2>Моя коллекция</h2><span class="pill">${S.inventory.length} в наличии</span></div>
-    <div class="panel"><div class="row"><h3>Альбом открытий</h3>
-      <span class="muted">${S.seen.length} / ${D.length}</span></div>
-      <p class="small">Обнаруженные коллекции остаются в альбоме после продажи.</p>
-      <div class="progress"><i style="width:${S.seen.length/D.length*100}%"></i></div>
-      <div class="album">${D.map((d,id)=>
-        `<div class="album-tile${S.seen.includes(id)?"":" locked"}" title="${esc(d[0])}">
-        <img data-album src="${asset(id,1)}" alt="${esc(d[0])}" loading="lazy" referrerpolicy="no-referrer">
-        <span>${S.seen.includes(id)?"✓":"?"}</span></div>`
-      ).join("")}</div>
-    </div>
-    ${listings?'<div class="heading"><h2>Мои объявления</h2></div>'+listings:""}
-    <div class="heading"><h2>В наличии</h2><span class="muted">Продажа · улучшение · закрепление</span></div>
-    ${S.inventory.length?'<div class="grid">'+S.inventory.slice().reverse()
-      .map(i=>giftCard(i,itemValue(i),"previewItem")).join("")+"</div>":
-      '<div class="empty">Коллекция пока пуста.<br><br>'+btn("goHome","Выбрать кейс")+"</div>"}`;
+  return `<div class="panel"><h2>Моя коллекция</h2><p class="small">${S.inventory.length} предметов</p></div>
+  <div class="grid">${S.inventory.slice().reverse().map(i=>`
+    <button class="gift" data-action="previewItem" data-id="${i.uid}">
+    <div class="gift-stage" style="${theme(i)}">${media(i.id)}
+    <span class="badge">${RAR[D[i.id][3]]}</span></div>
+    <div class="gift-body"><div class="gift-name">${D[i.id][0]}</div>
+    <div class="gift-sub">Демо №${fmt(i.serial)}</div>
+    <div class="price">${stars(itemValue(i))}</div></div></button>`).join("")}</div>`;
 }
 
-const dailyReady=()=>now()-S.dailyAt>=86400000;
-
-function jobState(){
-  return S.jobReady>0?(now()>=S.jobReady?"claim":"working"):
-    (now()>=S.jobCooldown?"start":"cooldown");
-}
-function jobLabel(){
-  const j=jobState();
-  return j==="claim"?"Забрать "+stars(20):
-    j==="working"?"Доставка: "+Math.max(0,Math.ceil((S.jobReady-now())/1000))+" с":
-    j==="cooldown"?"Перерыв: "+Math.max(0,Math.ceil((S.jobCooldown-now())/1000))+" с":
-    "Начать доставку";
+function caseModal(n){
+  caseId=n;
+  $("modal").innerHTML=`<div class="overlay"><div class="sheet">
+  <button class="close" data-action="close">×</button>
+  <h2>${CASES[n][0]}</h2><p class="small">Рулетка остановится на твоём предмете.</p>
+  <div id="caseStatus">Готово к открытию</div>
+  <button class="btn full" data-action="openCase">Открыть за ${stars(CASES[n][1])}</button>
+  </div></div>`;
 }
 
-const MISSIONS=[
-  ["crystal_tap100","Мастер импульса","100 нажатий","taps",100,25],
-  ["slow_open3","Распаковщик","Открой 3 кейса","opened",3,20],
-  ["slow_buy1","Новая находка","Купи предмет у бота","bought",1,5],
-  ["slow_sell1","Первый покупатель","Продай предмет боту","sold",1,10],
-  ["slow_album5","Пять историй","Обнаружь 5 коллекций","seen",5,25],
-  ["slow_album16","Большой альбом","Обнаружь 16 коллекций","seen",16,100],
-  ["liquid_album24","Большой архив","Обнаружь 24 коллекции","seen",24,150],
-  ["terminal_album32","Полный альбом","Обнаружь 32 коллекции","seen",32,200],
-  ["terminal_forge3","Работа мастера","Улучши подарки 3 раза","forged",3,30],
-  ["neon_aim10","Реакция","Сделай 10 попаданий в Aim Lab","aimBest",10,25]
-];
-
-const missionValue=m=>m[3]==="seen"?S.seen.length:S.stats[m[3]];
-
-function earnView(){
-  const c=upgradeCost();
-
-  return `<div class="heading" style="margin-top:5px"><h2>Мастерская звёзд</h2>
-    <span class="pill green">+${power()} за тап</span></div>
-    <div class="earn-grid"><div class="panel">
-      <div class="row"><div><h3>Звёздный импульс</h3>
-      <p class="small">Уровень ${S.level}</p></div>
-      <span class="pill" id="energyText">${S.energy} / ${maxEnergy()}</span></div>
-      <div class="tap-zone" id="tapZone">
-      <button class="tap" data-action="tap" aria-label="Получить игровые звёзды">
-      <img src="${STAR}" alt="Игровая звезда"></button></div>
-      <div class="row"><span class="small">За успешное нажатие</span>
-      <strong style="font-size:25px;color:#ffe5b2">${stars(power())}</strong></div>
-      <div class="row" style="margin:18px 0 9px">
-      <span class="small">Каждые 25 нажатий: бонус +5</span>
-      <span class="small" id="bonusText">${S.bonusProgress} / 25</span></div>
-      <div class="progress gold"><i id="bonusBar" style="width:${S.bonusProgress/25*100}%"></i></div>
-      <p class="small">Нажатие стоит 1 энергии. Восстановление +1 каждую секунду.</p>
-      <div class="progress"><i id="energyBar" style="width:${S.energy/maxEnergy()*100}%"></i></div>
-      <div style="margin-top:17px">
-      ${btn("upgrade",S.level>=20?"Максимальный уровень":
-        "Улучшить до +"+(S.level+1)+" за тап · "+stars(c),undefined,"btn full",S.level>=20)}
-      </div><p class="small" style="text-align:center;margin:12px 0 0">
-      ${S.level>=20?"Максимальная мощность.":
-        "Улучшение: +1 за тап, +10 к запасу энергии. Дополнительный доход за "+
-        fmt(c)+" нажатий покроет игровую стоимость улучшения."}</p>
-    </div>
-    <div><div class="panel"><span class="eyebrow">РАЗ В 24 ЧАСА</span>
-      <h2 style="margin-top:14px">Ежедневный подарок</h2>
-      <p class="small">50 игровых звёзд.</p>
-      ${btn("daily",dailyReady()?"Забрать "+stars(50):
-        "Через "+Math.ceil((86400000-(now()-S.dailyAt))/3600000)+" ч",
-        undefined,"btn full",!dailyReady())}
-    </div><div class="panel" style="margin-top:15px">
-      <h3>Курьер подарков</h3>
-      <p class="small">Доставка 60 секунд, награда 20 звёзд. Перерыв 2 минуты.</p>
-      <button id="jobButton" class="btn secondary full" data-action="job"
-      ${["working","cooldown"].includes(jobState())?"disabled":""}>${jobLabel()}</button>
-    </div><div class="panel" style="margin-top:15px">
-      <h3>Без скрытых условий</h3>
-      <p class="small" style="margin:0">Доход фиксированный. Офлайн восстанавливается
-      только энергия. Бонус за нажатия не сгорает.</p>
-    </div></div></div>
-    <div class="heading"><h2>Достижения</h2><span class="muted">Разовые награды</span></div>
-    ${MISSIONS.map(m=>{
-      const done=S.claimed.includes(m[0]),v=Math.min(m[4],missionValue(m));
-      return `<div class="task"><div class="task-content"><h3>${m[1]}</h3>
-        <p>${m[2]} · ${v}/${m[4]}</p>
-        <div class="progress" style="margin-top:9px"><i style="width:${v/m[4]*100}%"></i></div>
-        </div>${btn("claim",done?"Получено":stars(m[5]),m[0],"btn mini",done||v<m[4])}</div>`;
-    }).join("")}`;
+function openCase(){
+  const c=CASES[caseId];
+  if(S.coins<c[1])return toast("Не хватает звёзд.");
+  const winner=makeItem(pick(c[4]));
+  S.coins-=c[1];S.inventory.push(winner);S.stats.opened++;
+  if(!S.seen.includes(winner.id))S.seen.push(winner.id);
+  log("Кейс "+c[0]+": "+D[winner.id][0]);
+  save();balance();
+  $("caseStatus").innerHTML=`<h3>${D[winner.id][0]}</h3><p class="small">Предмет в коллекции.</p>`;
+  $("modal").querySelector('[data-action="openCase"]').remove();
+  particles(window.innerWidth/2,window.innerHeight/2);
 }
-
-function tap(e){
-  replenish();
-  if(now()-lastTap<90)return;
-  if(S.energy<1)return toast("Энергия восстанавливается: +1 в секунду.");
-
-  lastTap=now();
-  S.energy--;S.stats.taps++;S.bonusProgress++;
-
-  let bonus=0;
-  if(S.bonusProgress>=25){S.bonusProgress-=25;bonus=5;}
-
-  const earned=power()+bonus;
-  S.coins+=earned;balance();timers();
-
-  const z=$("tapZone"),r=z.getBoundingClientRect();
-  const x=e.clientX||r.left+r.width/2,y=e.clientY||r.top+r.height/2;
-
-  if(motion()){
-    const f=document.createElement("span");
-    f.className="floater";f.textContent="+"+earned+(bonus?" · бонус":"");
-    f.style.left=x-r.left+"px";f.style.top=y-r.top+"px";
-    z.append(f);setTimeout(()=>f.remove(),850);
-    if(bonus)particles(x,y,14);
-  }
-  if(bonus)tone(880,.14,.018);
-  save();
-}
-
-function head(i,label){
-  return `<div class="inspect-stage" style="${theme(i)}">
-    <span class="stage-label">${label}</span>
-    <div class="inspect-card${i.upgrade?" forge-aura":""}">${media(i.id,i.ref,true)}</div>
-    <span class="stage-caption">ОБЪЁМНАЯ ВИТРИНА · НЕ ОРИГИНАЛЬНАЯ 3D-МОДЕЛЬ</span>
-    </div><div class="sheet-body">
-    <div class="row"><h2>${D[i.id][0]}</h2>
-    <button class="iconbtn${S.favorites.includes(i.id)?" on":""}"
-      data-action="favorite" data-id="${i.id}" aria-label="Избранное"
-      aria-pressed="${S.favorites.includes(i.id)}">${ic("heart")}</button></div>
-    <p class="small" style="margin-top:7px">Демо №${fmt(i.serial)} · не настоящий NFT</p>
-    <div class="attrs">
-      <div><small>Категория игры</small>${RAR[D[i.id][3]]}</div>
-      <div><small>Сцена</small>${BG[i.bg][0]}</div>
-      <div><small>Ателье</small>${i.upgrade||0} / 5</div>
-    </div>`;
-}
-
-const refLink=i=>`<a class="linkbutton full" href="https://t.me/nft/${D[i.id][1]}-${i.ref}"
-  target="_blank" rel="noopener noreferrer">Открыть референс #${i.ref} в Telegram ↗</a>`;
 
 function previewBuy(id){
-  const l=S.market.find(l=>l.uid===id);
-  if(!l)return toast("Лот уже недоступен.");
-
-  showModal(head(l.item,"ПРЕДЛОЖЕНИЕ НА МАРКЕТЕ")+`
-    <p class="small">Демо-продавец @${esc(l.seller)}.</p>
-    <div class="receipt"><span>Цена продавца</span><span class="price">${stars(l.price)}</span></div>
-    <div class="receipt"><span>Игровая оценка</span><span>${stars(itemValue(l.item))}</span></div>
-    <p class="small">Перепродажа по оценке не гарантируется.</p>
-    <div class="actions">
-    ${btn("buy",S.coins<l.price?"Не хватает звёзд":"Купить за "+stars(l.price),
-      id,"btn full",S.coins<l.price)}
-    ${refLink(l.item)}</div></div>`);
+  const i=S.market.find(i=>i.uid===id);
+  if(!i)return;
+  $("modal").innerHTML=`<div class="overlay"><div class="sheet">
+  <button class="close" data-action="close">×</button>
+  <div class="gift-stage" style="${theme(i)}">${media(i.id)}</div>
+  <h2>${D[i.id][0]}</h2><p class="small">Демо №${fmt(i.serial)} · не настоящий NFT</p>
+  <p class="price">${stars(itemValue(i))}</p>
+  <button class="btn full" data-action="buy" data-id="${id}">Купить</button>
+  <a class="btn secondary full" href="https://t.me/nft/${D[i.id][1]}-${i.ref}" target="_blank" rel="noopener">Референс в Telegram</a>
+  </div></div>`;
 }
 
-const buyerChance=r=>r<=.8?.35:r<=1?.22:r<=1.15?.08:r<=1.5?.015:0;
+function buy(id){
+  const n=S.market.findIndex(i=>i.uid===id);
+  if(n<0)return;
+  const i=S.market[n];
+  if(S.coins<itemValue(i))return toast("Не хватает звёзд.");
+  S.coins-=itemValue(i);S.market.splice(n,1);S.inventory.push(i);
+  if(!S.seen.includes(i.id))S.seen.push(i.id);
+  S.stats.bought++;save();closeModal();balance();render();
+  toast("Предмет добавлен в коллекцию.");
+}
 
 function previewItem(id){
   const i=S.inventory.find(i=>i.uid===id);
   if(!i)return;
-
-  const base=itemValue(i),cost=forgeCost(i);
-  const nextValue=Math.round(estimate(i.id)*(1+.1*((i.upgrade||0)+1)));
-  forgeQuote={uid:id,cost,level:i.upgrade||0};
-
-  showModal(head(i,"ТВОЯ КОЛЛЕКЦИЯ")+`
-    <div style="margin-bottom:15px">
-    ${btn("pinGift",profile?.pinned.includes(id)?"Убрать из профиля":"Закрепить в профиле",
-      id,"btn secondary full")}</div>
-    <div class="forge-box"><div class="row"><h3>Ателье подарков</h3>
-      <span class="pill">${i.upgrade||0} / 5</span></div>
-      <p class="small">${i.upgrade>=5?"Максимальное оформление.":
-        "Следующая ступень: подсветка и +10% базовой игровой оценки. "+
-        "Успех 100%. Новая оценка сейчас: "+fmt(nextValue)+"."}</p>
-      ${btn("forge",i.upgrade>=5?"Максимальное улучшение":
-        "Улучшить до +"+((i.upgrade||0)+1)+" · "+stars(cost),
-        id,"btn secondary full",i.upgrade>=5||S.coins<cost)}
-      <p class="small" style="margin:9px 0 0">Не меняет настоящий NFT и его редкость.
-      Возврат затрат не гарантируется.</p>
-    </div>
-    <div class="sale-box"><h3>Твоя цена продажи</h3>
-      <div class="stepper">${btn("priceStep","−",-1,"step")}
-        <input id="sellPrice" type="number" inputmode="numeric" min="1" max="10000000"
-        step="1" aria-label="Цена продажи" value="${base}">
-        ${btn("priceStep","+",1,"step")}
-      </div>
-      <div class="presets">
-        ${btn("preset","Ниже оценки<br>−15%",.85,"preset")}
-        ${btn("preset","По оценке<br>рынка",1,"preset")}
-        ${btn("preset","Наценка<br>+15%",1.15,"preset")}
-      </div>
-      <div class="sale-line"><span>Оценка при открытии</span>
-        <span id="saleRef" data-value="${base}">${fmt(base)}</span></div>
-      <div class="sale-line"><span>Комиссия 5%</span><span id="saleFee"></span></div>
-      <div class="sale-line net"><span>После продажи</span><strong id="saleNet"></strong></div>
-      <div id="saleDemand" class="demand" aria-live="polite"></div>
-    </div>
-    <div class="actions">
-      ${btn("list","Выставить на маркет",id,"btn full")}
-      ${btn("close","Оставить в коллекции",undefined,"btn secondary full")}
-      ${refLink(i)}
-    </div><p class="small">Срок лота 30 минут. Комиссия округляется вверх.</p></div>`);
-
-  updateSale();
-}
-
-function viewPinned(id){
-  const i=ownedItems().find(i=>i.uid===id);
-  if(!i)return profileView();
-
-  if(S.inventory.some(x=>x.uid===id))return previewItem(id);
-
-  showModal(head(i,"ТВОЁ ОБЪЯВЛЕНИЕ")+`
-    <p class="small">Предмет сейчас выставлен на локальный рынок.</p>
-    <div class="actions">${btn("pinGift","Убрать из профиля",id,"btn secondary full")}
-    ${btn("profile","Назад в профиль",undefined,"btn full")}</div></div>`);
+  $("modal").innerHTML=`<div class="overlay"><div class="sheet">
+  <button class="close" data-action="close">×</button>
+  <div class="gift-stage" style="${theme(i)}">${media(i.id)}</div>
+  <h2>${D[i.id][0]}</h2><p class="small">Демо №${fmt(i.serial)} · ателье +${i.upgrade}</p>
+  <p class="price">${stars(itemValue(i))}</p>
+  <button class="btn full" data-action="forge" data-id="${id}">Улучшить</button>
+  <button class="btn secondary full" data-action="list" data-id="${id}">Выставить на маркет</button>
+  <button class="btn secondary full" data-action="pinGift" data-id="${id}">Закрепить в профиле</button>
+  <a class="btn secondary full" href="https://t.me/nft/${D[i.id][1]}-${i.ref}" target="_blank" rel="noopener">Референс в Telegram</a>
+  </div></div>`;
 }
 
 function forge(id){
-  const i=S.inventory.find(i=>i.uid===id),q=forgeQuote;
-  if(!i||!q||q.uid!==id||(i.upgrade||0)!==q.level||i.upgrade>=5)return;
-  if(S.coins<q.cost)return toast("Не хватает звёзд.");
-
-  S.coins-=q.cost;i.upgrade=(i.upgrade||0)+1;S.stats.forged++;
-  log(`Ателье: ${D[i.id][0]} улучшен до +${i.upgrade} за ${q.cost}`);
-  save();balance();
-
-  if(tab==="inventory")render(false);
-  previewItem(id);sparkleModal();winSound();
-}
-
-function updateSale(){
-  if(!$("sellPrice"))return;
-
-  const p=Number($("sellPrice").value);
-  const valid=Number.isSafeInteger(p)&&p>=1&&p<=1e7;
-  const ref=+$("saleRef").dataset.value;
-  const submit=$("modal").querySelector('[data-action="list"]');
-  if(submit)submit.disabled=!valid;
-
-  $("modal").querySelectorAll('[data-action="preset"]').forEach(b=>
-    b.classList.toggle("on",valid&&p===Math.max(1,Math.round(ref*+b.dataset.id))));
-
-  const e=$("saleDemand");e.className="demand";
-
-  if(!valid){
-    $("saleFee").textContent=$("saleNet").textContent="—";
-    e.classList.add("bad");
-    e.textContent="Укажи целую цену от 1 до 10 000 000.";return;
-  }
-
-  const fee=Math.ceil(p*FEE),r=p/ref;
-  $("saleFee").textContent=fmt(fee);
-  $("saleNet").textContent=fmt(p-fee);
-
-  if(r>1.5)e.classList.add("bad");
-  else if(r>1)e.classList.add("warn");
-
-  e.textContent="Шанс покупки при отображённой оценке: "+
-    (buyerChance(r)*100).toLocaleString("ru-RU",{maximumFractionDigits:1})+
-    "%. Проверка раз в 10 секунд при открытой игре. Оценка меняется.";
-}
-
-function buy(id){
-  const n=S.market.findIndex(l=>l.uid===id);
-
-  if(n<0){
-    closeModal();reconcileMarket();
-    return toast("Лот уже недоступен.");
-  }
-
-  const l=S.market[n];
-  if(S.coins<l.price)return toast("Не хватает звёзд.");
-
-  S.coins-=l.price;S.market.splice(n,1);
-  S.inventory.push(l.item);discover(l.item.id);S.stats.bought++;
-  log("Куплен "+D[l.item.id][0]+" за "+l.price);
-
-  save();closeModal();balance();reconcileMarket();
-  toast("Предмет добавлен в коллекцию.");
+  const i=S.inventory.find(i=>i.uid===id);
+  if(!i)return;
+  const cost=Math.max(25,Math.round(S.prices[i.id]*.12*((i.upgrade||0)+1)));
+  if(S.coins<cost)return toast("Не хватает звёзд.");
+  S.coins-=cost;i.upgrade++;S.stats.forged++;
+  log("Ателье: "+D[i.id][0]+" +"+i.upgrade);
+  save();balance();previewItem(id);
 }
 
 function listItem(id){
-  if(!$("sellPrice"))return;
-
-  const price=Number($("sellPrice").value);
-  if(!Number.isSafeInteger(price)||price<1||price>1e7)return toast("Некорректная цена.");
-
   const n=S.inventory.findIndex(i=>i.uid===id);
   if(n<0)return;
   const i=S.inventory.splice(n,1)[0];
-
-  S.listings.push({uid:uid(),item:i,price,expires:now()+1800000});
-  log("Выставлен "+D[i.id][0]+" за "+price);
-  save();closeModal();render(false);
-  toast("Лот размещён. Продажа не гарантируется.");
+  S.listings.push({uid:i.uid,item:i,price:itemValue(i),expires:now()+1800000});
+  save();closeModal();render();toast("Лот размещён.");
 }
 
-function cancelListing(id){
-  const n=S.listings.findIndex(l=>l.uid===id);
-  if(n<0)return;
-  S.inventory.push(S.listings.splice(n,1)[0].item);
-  save();render(false);
+function tap(){
+  replenish();
+  if(S.energy<1)return toast("Энергия восстанавливается.");
+  S.energy--;S.stats.taps++;S.bonusProgress++;
+  let bonus=0;
+  if(S.bonusProgress>=25){S.bonusProgress-=25;bonus=5;}
+  S.coins+=S.level+bonus;balance();save();render();
+  particles(window.innerWidth/2,window.innerHeight/2);
 }
 
-function expire(){
-  let changed=false;
-
-  S.listings=S.listings.filter(l=>{
-    if(now()<l.expires)return true;
-    S.inventory.push(l.item);
-    log("Истёк срок объявления: "+D[l.item.id][0]);
-    changed=true;return false;
-  });
-
-  return changed;
+function upgrade(){
+  const cost=Math.round(60*Math.pow(1.45,S.level-1)/5)*5;
+  if(S.coins<cost)return toast("Не хватает звёзд.");
+  S.coins-=cost;S.level++;S.energy=Math.min(maxEnergy(),S.energy+10);
+  save();balance();render();
 }
 
-function updatePrices(){
-  if(!entered||busy||document.hidden)return;
-
-  S.previous=S.prices.slice();
-  S.prices=S.prices.map((p,i)=>{
-    const b=D[i][2],n=p*(.975+rng()*.05)+(b-p)*.015;
-    return Math.round(Math.max(b*.4,Math.min(b*2.5,n)));
-  });
-
-  S.indexHistory.push(indexValue());
-  S.indexHistory=S.indexHistory.slice(-35);
-  S.market=S.market.filter(()=>rng()>.06);
-  while(S.market.length<36)S.market.push(spawn());
-
-  save();
-  if(tab==="market")reconcileMarket();
-}
-
-function checkBuyers(){
-  if(!entered||busy||document.hidden)return;
-  let changed=expire();
-
-  S.listings=S.listings.filter(l=>{
-    if(rng()>=buyerChance(l.price/itemValue(l.item)))return true;
-
-    const net=l.price-Math.ceil(l.price*FEE);
-    S.coins+=net;S.stats.sold++;changed=true;
-    log("Продан "+D[l.item.id][0]+". Получено "+net);
-    toast("Бот купил "+D[l.item.id][0]+": +"+fmt(net)+" после комиссии.");
-    return false;
-  });
-
-  if(changed){
-    if(profile)profile.pinned=profile.pinned.filter(id=>ownedItems().some(i=>i.uid===id));
-    save();balance();
-    if(tab==="inventory"&&!$("modal").hasChildNodes())render(false);
-  }
-}
-
-/* ================= КЕЙСЫ ================= */
-
-function pick(weights){
-  let r=rng()*weights.reduce((a,w)=>a+w[1],0);
-  for(const w of weights){
-    r-=w[1];if(r<0)return w[0];
-  }
-  return weights[weights.length-1][0];
-}
-
-function caseModal(n){
-  const c=CASES[n];
-  if(!c)return;
-  const total=c[4].reduce((a,w)=>a+w[1],0);
-
-  showModal(`<div class="sheet-body" style="padding-top:30px">
-    <span class="eyebrow">COLLECTION ${String(n+1).padStart(2,"0")}</span>
-    <h2 style="margin-top:12px">${c[0]}</h2>
-    <p class="small">Рулетка остановится на твоём предмете и останется на экране.</p>
-    <div class="roulette" id="roulette"><span class="pointer"></span>
-      <div class="preparing"><div class="opening-box">${ic("gift")}</div></div>
-    </div>
-    <div class="case-status" id="caseStatus">Результат сохраняется до анимации</div>
-    <div class="actions" id="caseControls">
-      ${btn("openCase",S.coins<c[1]?"Недостаточно звёзд":"Открыть за "+stars(c[1]),
-        n,"btn full",S.coins<c[1])}
-    </div><div id="caseResult"></div>
-    <details style="margin-top:17px">
-      <summary class="small" style="cursor:pointer">Состав кейса и вероятности</summary>
-      <div class="drops">${c[4].map(w=>
-        `<div class="drop">${D[w[0]][0]}<span>${(w[1]/total*100)
-        .toLocaleString("ru-RU",{maximumFractionDigits:2})}%</span></div>`
-      ).join("")}</div>
-    </details>
-    <p class="small" style="text-align:center;margin-bottom:0">
-      Пропуск и перезагрузка не меняют выпавший предмет.</p></div>`);
-}
-
-function rollCards(items){
-  return '<span class="pointer"></span><div class="strip" id="strip">'+
-    items.map((i,n)=>`<div class="roll-card" data-roll="${n}" style="${theme(i)}">
-      ${media(i.id,i.ref,true)}<span>${D[i.id][0]}</span></div>`).join("")+"</div>";
-}
-
-function centerRoll(){
-  if(!activeRoll?.settled||!$("strip")||!$("roulette"))return;
-  const x=activeRoll.position*120+55-$("roulette").clientWidth/2;
-  $("strip").style.transition="none";
-  $("strip").style.transform=`translateX(${-x}px)`;
-}
-
-function settleRoll(){
-  const r=activeRoll;
-  if(!r||r.settled)return;
-
-  r.settled=true;
-  r.timers.forEach(clearTimeout);
-
-  if(!$("strip")){
-    const a=Array.from({length:7},()=>makeItem(pick(CASES[r.caseId][4])));
-    a[3]=r.item;r.position=3;
-    $("roulette").innerHTML=rollCards(a);
-  }
-
-  centerRoll();
-  $("roulette").classList.add("settled");
-  $("modal").querySelector(`[data-roll="${r.position}"]`)?.classList.add("selected");
-
-  busy=false;nav();
-  $("modal").querySelectorAll(".close").forEach(b=>b.disabled=false);
-  $("caseStatus").textContent="Рулетка остановлена. Твой предмет — под указателем.";
-  $("caseControls").innerHTML="";
-
-  $("caseResult").innerHTML=`<div class="result-card" style="margin-top:16px">
-    <span class="eyebrow">ТВОЯ НАХОДКА · РЕЗУЛЬТАТ СОХРАНЁН</span>
-    <h3>${D[r.item.id][0]}</h3>
-    <div class="row"><span class="small">Демо №${fmt(r.item.serial)}</span>
-    <span class="price">${stars(itemValue(r.item))}</span></div>
-    <div class="actions">
-      ${btn("claimCase","Забрать подарок",undefined,"btn full")}
-      ${btn("inspectCase","Рассмотреть и улучшить",undefined,"btn secondary full")}
-    </div><p class="small" style="margin:10px 0 0">
-    Рулетка останется здесь до твоего действия. Предмет уже в коллекции.</p></div>`;
-
-  $("modal").querySelector('[data-action="claimCase"]')?.focus();
-
-  if(!r.resumed){sparkleModal();winSound();}
-  save();
-}
-
-function openCase(n){
-  if(busy||S.pendingCase)return;
-  if(S.arcadeRound)return toast("Сначала заверши незаконченный раунд аркады.");
-
-  const c=CASES[n];
-  if(!c||S.coins<c[1])return;
-
-  const winner=makeItem(pick(c[4]));
-  S.coins-=c[1];S.inventory.push(winner);
-  discover(winner.id);S.stats.opened++;
-  S.pendingCase={uid:winner.uid,caseId:n};
-
-  log("Кейс "+c[0]+": "+D[winner.id][0]+" · #"+winner.ref);
-  save();balance();
-
-  busy=true;nav();
-  $("modal").querySelectorAll("button").forEach(b=>b.disabled=true);
-
-  $("caseControls").innerHTML=
-    btn("skipCase","Пропустить анимацию",undefined,"btn secondary full");
-  $("caseStatus").textContent="Подготавливаем витрину…";
-
-  const r={item:winner,caseId:n,position:35,settled:false,timers:[],resumed:false};
-  activeRoll=r;
-
-  const later=(f,t)=>{
-    const id=setTimeout(f,t);r.timers.push(id);return id;
-  };
-
-  later(()=>{
-    if(activeRoll!==r||r.settled)return;
-
-    const a=Array.from({length:43},()=>makeItem(pick(c[4])));
-    a[r.position]=winner;
-    $("roulette").innerHTML=rollCards(a);
-    $("caseStatus").textContent="Коллекция раскрывается…";
-
-    const strip=$("strip"),duration=motion()?6500:100;
-
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      if(activeRoll!==r||r.settled)return;
-      strip.getBoundingClientRect();
-
-      const x=r.position*120+55-$("roulette").clientWidth/2;
-      strip.style.transition=`transform ${duration}ms cubic-bezier(.075,.61,.12,1)`;
-      strip.style.transform=`translateX(${-x}px)`;
-
-      const onEnd=e=>{
-        if(e.target!==strip||e.propertyName!=="transform")return;
-        strip.removeEventListener("transitionend",onEnd);
-        if(activeRoll===r)settleRoll();
-      };
-
-      strip.addEventListener("transitionend",onEnd);
-      later(()=>{if(activeRoll===r)settleRoll();},duration+250);
-
-      const start=performance.now();
-
-      function tick(){
-        if(activeRoll!==r||r.settled)return;
-        const p=Math.min(1,(performance.now()-start)/duration);
-        if(p<.96){
-          tone(900-p*220,.022,.004);
-          later(tick,75+p*p*330);
-        }
-      }
-
-      if(motion())tick();
-    }));
-  },motion()?800:0);
-
-  later(()=>{if(activeRoll===r)settleRoll();},motion()?8500:600);
-}
-
-function resumePending(){
-  if(!S.pendingCase)return;
-  const p=S.pendingCase,i=S.inventory.find(i=>i.uid===p.uid);
-
-  if(!i){S.pendingCase=null;save();return;}
-
-  caseModal(p.caseId);
-  activeRoll={item:i,caseId:p.caseId,position:3,settled:false,timers:[],resumed:true};
-  settleRoll();
-}
-
-/* ================= АРКАДА ================= */
-
-const SLOT_IDS=[7,9,12,17,18];
-const symbol=id=>`<div class="slot-symbol"><img data-slot src="${asset(id,1)}"
-  alt="${esc(D[id][0])}" referrerpolicy="no-referrer"></div>`;
-
-const resting=id=>`<div class="reel"><div class="reel-strip"
-  style="transform:translateY(19px)"><div class="reel-cell">${symbol(id)}</div></div></div>`;
-
-const gameName=kind=>kind==="aim"?"Aim Lab":"Memory Lab";
-const accuracy=r=>r.hits+r.misses?Math.round(r.hits/(r.hits+r.misses)*100):0;
-
-function betSelector(){
-  return `<div class="bets">${[0,5,10,25].map(n=>
-    btn("gameBet",n?stars(n):"Тренировка",n,gameBet===n?"on":"")
-  ).join("")}</div>`;
-}
-
-function lastGameHTML(){
-  return S.lastGame&&S.lastGame.kind===arcade?
-    `<div class="result-card" style="margin-bottom:16px">
-    <span class="eyebrow">ПОСЛЕДНИЙ РЕЗУЛЬТАТ</span>
-    <p class="small" style="margin:10px 0 0">${esc(S.lastGame.message)}</p></div>`:"";
-}
-
-function gamesView(){
-  return `<div class="heading" style="margin-top:5px">
-    <h2>Звёздная аркада</h2><span class="pill">Только игровые звёзды</span></div>
-    <div class="chips">
-      ${btn("arcade","Три в ряд","slot",arcade==="slot"?"on":"")}
-      ${btn("arcade","Memory Lab","memory",arcade==="memory"?"on":"")}
-      ${btn("arcade","Aim Lab","aim",arcade==="aim"?"on":"")}
-    </div>${arcade==="slot"?slotView():skillView()}`;
-}
-
-function slotView(){
-  return `<div class="earn-grid"><div class="panel" style="text-align:center">
-    <span class="eyebrow" style="justify-content:center">COLLECTION MATCH</span>
-    <h2 style="margin-top:14px">Три в ряд</h2>
-    <p class="small">Три ленты. Одна комбинация.</p>
-    <div class="reels" id="reels">${[9,17,18].map(resting).join("")}</div>
-    <div class="bets">${[5,10,25].map(n=>
-      btn("slotBet",stars(n),n,slotBet===n?"on":"")).join("")}</div>
-    ${btn("spin","Играть · "+stars(slotBet),undefined,"btn full")}
-    <p class="small" id="slotResult" aria-live="polite">Ставка списывается перед запуском.</p>
-    </div><div class="panel"><h3>Правила</h3>
-    <p class="small">Пять равновероятных символов. Барабаны независимы.</p>
-    <table class="rules-table"><tr><th>Комбинация</th><th>Вероятность</th><th>Выплата</th></tr>
-      <tr><td>Три одинаковых</td><td>4%</td><td>×10</td></tr>
-      <tr><td>Ровно два</td><td>48%</td><td>×1</td></tr>
-      <tr><td>Все разные</td><td>48%</td><td>0</td></tr></table>
-    <p class="small">Выплата включает ставку. Теоретический возврат 88%,
-    средняя потеря 12% ставки. Автозапуска нет. Не способ заработка.</p>
-    </div></div>`;
+function daily(){
+  if(now()-S.dailyAt<86400000)return toast("Бонус будет позже.");
+  S.dailyAt=now();S.coins+=50;save();balance();render();
 }
 
 function spin(){
-  if(busy)return;
-  if(S.arcadeRound)return toast("Сначала заверши текущий раунд Memory Lab или Aim Lab.");
-  if(S.coins<slotBet)return toast("Не хватает игровых звёзд.");
-
-  busy=true;nav();
-
-  const stake=slotBet,a=[int(0,4),int(0,4),int(0,4)];
-  const count=new Set(a).size,mult=count===1?10:count===2?1:0,payout=stake*mult;
-
-  S.coins+=payout-stake;
-  log("Три в ряд: ставка "+stake+", выплата "+payout);
-  save();balance();
-
-  $("main").querySelectorAll("button").forEach(b=>b.disabled=true);
-  $("slotResult").textContent="Ленты набирают ход…";
-
-  const reels=$("main").querySelectorAll(".reel");
-  let stopped=0;
-
-  function allStopped(){
-    busy=false;nav();
-    $("main").querySelectorAll("button").forEach(b=>b.disabled=false);
-    $("slotResult").textContent=mult===10?"Три одинаковых! Выплата "+fmt(payout)+".":
-      mult===1?"Пара. Ставка возвращена.":"Все разные. Выплата 0.";
-
-    if(mult===10){
-      reels.forEach(r=>r.classList.add("win"));
-      const r=$("reels").getBoundingClientRect();
-      particles(r.left+r.width/2,r.top+r.height/2);winSound();
-    }
-  }
-
-  reels.forEach((reel,index)=>{
-    const pos=24+index*3;
-    const ids=Array.from({length:pos+4},(_,j)=>j===pos?
-      SLOT_IDS[a[index]]:SLOT_IDS[int(0,4)]);
-
-    reel.classList.remove("stopped","win");
-    reel.innerHTML='<div class="reel-strip">'+ids.map(id=>
-      '<div class="reel-cell">'+symbol(id)+"</div>").join("")+"</div>";
-
-    const strip=reel.querySelector(".reel-strip");
-    strip.style.transform="translateY(19px)";
-
-    const duration=motion()?2500+index*700:100+index*60;
-    let done=false;
-
-    const timer=setTimeout(stop,duration+350);
-
-    function stop(){
-      if(done)return;
-      done=true;clearTimeout(timer);
-      reel.classList.add("stopped");tone(490+index*110,.1,.013);
-      if(++stopped===3)allStopped();
-      else $("slotResult").textContent="Остановлено лент: "+stopped+" / 3";
-    }
-
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      strip.getBoundingClientRect();
-      strip.style.transition=`transform ${duration}ms cubic-bezier(.12,.7,.14,1)`;
-      strip.style.transform=`translateY(${19-pos*88}px)`;
-
-      const onEnd=e=>{
-        if(e.target!==strip||e.propertyName!=="transform")return;
-        strip.removeEventListener("transitionend",onEnd);stop();
-      };
-
-      strip.addEventListener("transitionend",onEnd);
-    }));
-  });
+  if(S.coins<slotBet)return toast("Не хватает звёзд.");
+  const a=[int(0,4),int(0,4),int(0,4)];
+  const count=new Set(a).size,mult=count===1?10:count===2?1:0;
+  S.coins+=slotBet*mult-slotBet;
+  log("Три в ряд: ставка "+slotBet+", выплата "+slotBet*mult);
+  save();balance();render();
+  toast(mult===10?"Три одинаковых! Выплата "+fmt(slotBet*mult):mult===1?"Пара. Ставка возвращена.":"Все разные. Выплата 0.");
 }
 
-function skillView(){
-  const r=S.arcadeRound;
-
-  if(r&&r.kind===arcade)return activeRoundView(r);
-
-  const wait=arcade==="memory"?
-    Math.max(0,900000-(now()-S.memoryRewardAt)):
-    Math.max(0,600000-(now()-S.aimRewardAt));
-
-  const rules=arcade==="memory"?
-    `<tr><td>8 пар за 18 ходов или меньше</td><td>×2</td></tr>
-     <tr><td>8 пар за 19–24 хода</td><td>×1,25</td></tr>
-     <tr><td>25–30 ходов или лимит ходов</td><td>0</td></tr>`:
-    `<tr><td>От 18 попаданий и точность от 70%</td><td>×2</td></tr>
-     <tr><td>От 10 попаданий и точность от 50%</td><td>×1</td></tr>
-     <tr><td>Остальные результаты</td><td>0</td></tr>`;
-
-  return `${lastGameHTML()}<div class="earn-grid">
-    <div class="panel">
-      <span class="eyebrow">${arcade==="memory"?"MEMORY LAB":"AIM LAB"}</span>
-      <h2 style="margin-top:14px">${arcade==="memory"?"Восемь пар. Один альбом.":"Реакция и точность"}</h2>
-      <p class="small">${arcade==="memory"?
-        "Находи пары подарков. Один ход — открытие двух карточек. Лимит 30 ходов.":
-        "Попадай по подаркам 30 секунд. Цель меняется после попадания или через секунду."}</p>
-      ${betSelector()}
-      ${btn("startRound",gameBet?
-        "Начать · списать "+stars(gameBet):
-        "Начать тренировку",arcade,"btn full",!!r||S.coins<gameBet)}
-      ${r?`<p class="small">Есть незавершённый ${gameName(r.kind)}.</p>
-        ${btn("resumeRound","Продолжить его",undefined,"btn secondary full")}`:""}
-      <p class="small">${gameBet?
-        "Ставка списывается один раз. Награда определяется только таблицей справа.":
-        wait?"Тренировка бесплатна. До следующего бонуса "+Math.ceil(wait/60000)+" мин.":
-        "Тренировочный бонус доступен: "+(arcade==="memory"?"30 звёзд за полный альбом.":"20 звёзд за 10 попаданий.")}</p>
-    </div>
-    <div class="panel"><h3>Выплаты до начала</h3>
-      <table class="rules-table"><tr><th>Результат</th><th>Полная выплата</th></tr>${rules}</table>
-      <p class="small">Множитель включает первоначальную ставку. Например, ×2 при ставке 10 —
-      выплата 20 и чистый игровой результат +10. Дробная выплата округляется вниз.</p>
-      <p class="small">Таблица множителей действует только при ставке. У тренировки —
-      отдельный фиксированный бонус с перерывом. Дополнительный бонус поверх ставки не выдаётся.</p>
-      <p class="small">${arcade==="aim"?
-        "Точность — попадания, делённые на все клики по игровому полю. Пропущенные цели не считаются кликами. Таймер не останавливается при сворачивании.":
-        "Время не ограничено. Раунд сохраняется при переходе между разделами и перезагрузке."}</p>
-    </div></div>`;
-}
-
-function activeRoundView(r){
-  return `<div class="panel">
-    <div class="row"><h3>${gameName(r.kind)}</h3>
-      <span class="pill">${r.stake?"Ставка "+fmt(r.stake):"Тренировка"}</span></div>
-    ${r.kind==="memory"?
-      `<div class="row" style="margin-top:13px">
-        <span class="small" id="memoryScore"></span>
-        <span class="small">Лимит 30 ходов</span></div>
-        <div id="memoryBoard"></div>`:
-      `<div class="row" style="margin-top:13px">
-        <span class="small" id="aimScore"></span>
-        <span class="pill" id="aimTime"></span></div>
-        <div class="aim-stage" id="aimStage" aria-label="Игровое поле Aim Lab"></div>
-        <div class="progress" style="margin-top:14px"><i id="aimBar"></i></div>
-        <p class="small" id="aimDetails"></p>`}
-    <div class="actions">
-      ${btn("askForfeit",r.stake?"Завершить без выплаты":"Завершить тренировку",
-        undefined,"btn secondary full")}
-    </div>
-    <p class="small">Переход в другой раздел не отменяет раунд.
-    ${r.kind==="aim"?"Время продолжает идти.":"Прогресс сохраняется."}</p>
-    </div>`;
-}
-
-function shuffle(a){
-  for(let i=a.length-1;i>0;i--){
-    const j=int(0,i);[a[i],a[j]]=[a[j],a[i]];
-  }
-  return a;
-}
-
-function startRound(kind){
-  if(busy)return;
-  if(S.arcadeRound)return resumeRound();
-  if(!["memory","aim"].includes(kind))return;
+function startMemory(){
   if(S.coins<gameBet)return toast("Не хватает звёзд.");
-
-  const base={token:uid(),kind,stake:gameBet,startedAt:now()};
-
-  if(kind==="memory"){
-    const ids=shuffle([...D.keys()]).slice(0,8);
-    base.cards=shuffle(ids.flatMap(id=>[
-      {id,matched:false},{id,matched:false}
-    ]));
-    base.moves=0;base.open=[];base.closeAt=0;
-  }else{
-    base.endAt=now()+30000;
-    base.hits=0;base.misses=0;base.expired=0;
-    base.targetId=12;base.targetToken=0;
-    base.targetAt=now();base.x=.5;base.y=.5;
-    spawnAimTarget(base);
-  }
-
   S.coins-=gameBet;
-  S.arcadeRound=base;
-  log(gameName(kind)+": "+(gameBet?"ставка "+gameBet:"тренировка"));
-  save();balance();
-
-  arcade=kind;tab="games";render(false);
-  if(kind==="memory")paintMemory();
-}
-
-function resumeRound(){
-  if(!S.arcadeRound)return;
-  closeModal();
-  tab="games";arcade=S.arcadeRound.kind;
-  render(false);
-  if(arcade==="memory")paintMemory();
-}
-
-function pairsFound(r){
-  return r.cards.filter(c=>c.matched).length/2;
-}
-
-function paintMemory(){
-  const r=S.arcadeRound;
-  if(!r||r.kind!=="memory"||!$("memoryBoard"))return;
-
-  $("memoryBoard").innerHTML=`<div class="memory-grid">${r.cards.map((c,n)=>
-    `<button class="memory-card${c.matched?" matched":""}${r.open.includes(n)?" open":""}"
-      data-action="memoryFlip" data-id="${n}"
-      aria-label="Карточка ${n+1}${c.matched?", пара найдена":""}">
-      <span class="memory-front">${ic("gift")}</span>
-      <span class="memory-back"><img data-album src="${asset(c.id,1)}"
-      alt="${r.open.includes(n)||c.matched?esc(D[c.id][0]):"Скрытый подарок"}"
-      referrerpolicy="no-referrer"></span></button>`
-  ).join("")}</div>`;
-
-  if($("memoryScore")){
-    $("memoryScore").textContent="Пары "+pairsFound(r)+"/8 · ходы "+r.moves+"/30";
-  }
+  const ids=[];for(let i=0;i<8;i++)ids.push(int(0,D.length-1));
+  memory={cards:ids.flatMap(id=>[{id},{id}]),open:[],matches:0,moves:0,stake:gameBet};
+  for(let i=memory.cards.length-1;i>0;i--){const j=int(0,i);[memory.cards[i],memory.cards[j]]=[memory.cards[j],memory.cards[i]];}
+  save();balance();arcade="memory";render();
 }
 
 function memoryFlip(n){
-  const r=S.arcadeRound;
-  if(!r||r.kind!=="memory"||!r.cards[n]||
-    r.cards[n].matched||r.open.includes(n)||r.open.length>=2)return;
-
-  r.open.push(n);
-
-  if(r.open.length===2){
-    r.moves++;
-    const [a,b]=r.open;
-
-    if(r.cards[a].id===r.cards[b].id){
-      r.cards[a].matched=r.cards[b].matched=true;
-      r.open=[];r.closeAt=0;
-      tone(720,.1,.01);
-
-      if(pairsFound(r)===8)return finishRound(r,"complete");
-      if(r.moves>=30)return finishRound(r,"limit");
-    }else{
-      r.closeAt=now()+850;
-      if(r.moves>=30){
-        save();paintMemory();
-        return;
+  if(!memory||memory.open.includes(n))return;
+  memory.open.push(n);
+  if(memory.open.length===2){
+    memory.moves++;
+    const [a,b]=memory.open;
+    if(memory.cards[a].id===memory.cards[b].id){
+      memory.matches++;memory.open=[];
+      if(memory.matches===8){
+        if(now()-S.memoryRewardAt>=900000){S.coins+=30;S.memoryRewardAt=now();}
+        log("Memory Lab: альбом собран");
+        memory=null;
       }
-    }
-  }
-
-  save();paintMemory();
-}
-
-/* Один общий таймер. Попадание никогда не создаёт новый интервал. */
-function spawnAimTarget(r){
-  r.targetId=int(0,D.length-1);
-  r.targetToken++;
-  r.targetAt=now();
-  r.x=rng();r.y=rng();
-}
-
-function paintAimTarget(){
-  const r=S.arcadeRound,stage=$("aimStage");
-  if(!r||r.kind!=="aim"||!stage)return;
-
-  const w=stage.clientWidth,h=stage.clientHeight;
-  const size=64,pad=9;
-  const x=pad+r.x*Math.max(0,w-size-pad*2);
-  const y=pad+r.y*Math.max(0,h-size-pad*2);
-
-  stage.innerHTML=`<button class="aim-target" data-action="aimHit"
-    data-id="${r.targetToken}" aria-label="Попасть по подарку"
-    style="left:${x}px;top:${y}px">
-    <img data-slot src="${asset(r.targetId,1)}" alt="${esc(D[r.targetId][0])}"
-    referrerpolicy="no-referrer"></button>`;
-}
-
-function aimHit(token){
-  const r=S.arcadeRound;
-  if(!r||r.kind!=="aim"||token!==r.targetToken)return;
-
-  if(now()>=r.endAt)return finishRound(r,"time");
-  if(now()-r.targetAt<60)return;
-
-  r.hits++;
-  spawnAimTarget(r);
-  save();
-  tone(740,.06,.008);
-  paintAimTarget();updateGameHUD();
-}
-
-function aimMiss(){
-  const r=S.arcadeRound;
-  if(!r||r.kind!=="aim")return;
-  if(now()>=r.endAt)return finishRound(r,"time");
-
-  r.misses++;
-  save();updateGameHUD();
-}
-
-function updateGameHUD(){
-  const r=S.arcadeRound;
-  if(!r)return;
-
-  if(r.kind==="memory"){
-    if($("memoryScore"))$("memoryScore").textContent=
-      "Пары "+pairsFound(r)+"/8 · ходы "+r.moves+"/30";
-    return;
-  }
-
-  const left=Math.max(0,r.endAt-now());
-
-  if($("aimScore"))$("aimScore").textContent=
-    "Попадания "+r.hits+" · точность "+accuracy(r)+"%";
-  if($("aimTime"))$("aimTime").textContent=(left/1000).toFixed(1)+" с";
-  if($("aimBar"))$("aimBar").style.width=left/30000*100+"%";
-  if($("aimDetails"))$("aimDetails").textContent=
-    "Промахи: "+r.misses+" · пропущенные цели: "+r.expired;
-}
-
-function finishRound(r,reason){
-  if(!r||S.arcadeRound?.token!==r.token)return;
-
-  let payout=0,bonus=0;
-  const lost=reason==="forfeit";
-
-  if(!lost&&r.stake){
-    if(r.kind==="memory"){
-      const full=pairsFound(r)===8;
-      const mult=full&&r.moves<=18?2:full&&r.moves<=24?1.25:0;
-      payout=Math.floor(r.stake*mult);
     }else{
-      const acc=accuracy(r);
-      payout=r.hits>=18&&acc>=70?r.stake*2:
-        r.hits>=10&&acc>=50?r.stake:0;
-    }
-  }else if(!lost){
-    if(r.kind==="memory"&&pairsFound(r)===8&&now()-S.memoryRewardAt>=900000){
-      bonus=30;S.memoryRewardAt=now();
-    }
-    if(r.kind==="aim"&&r.hits>=10&&now()-S.aimRewardAt>=600000){
-      bonus=20;S.aimRewardAt=now();
+      memoryTimer=setTimeout(()=>{memory.open=[];render();},800);
     }
   }
-
-  if(r.kind==="aim")S.stats.aimBest=Math.max(S.stats.aimBest,r.hits);
-
-  const result=r.kind==="memory"?
-    pairsFound(r)+"/8 пар, "+r.moves+" ходов":
-    r.hits+" попаданий, точность "+accuracy(r)+"%";
-
-  const message=lost?
-    gameName(r.kind)+": раунд завершён без выплаты.":
-    gameName(r.kind)+": "+result+". "+
-    (r.stake?
-      "Полная выплата "+payout+", чистый игровой результат "+
-      (payout-r.stake>=0?"+":"")+(payout-r.stake)+".":
-      bonus?"Тренировочный бонус +"+bonus+" звёзд.":
-      "Тренировка завершена. Бонус сейчас недоступен или условие не выполнено.");
-
-  S.arcadeRound=null;
-  S.coins+=payout+bonus;
-  S.lastGame={kind:r.kind,message,at:now()};
-
-  log(message);
-  save();balance();updateRoundBanner();
-
-  if(tab==="games"&&!busy&&!$("modal").hasChildNodes())render(false);
-
-  toast(message);
-  if(payout||bonus)winSound();
+  save();render();
 }
 
-function askForfeit(){
-  const r=S.arcadeRound;
-  if(!r)return;
-
-  showModal(`<div class="sheet-body" style="padding-top:32px">
-    <h2>Завершить ${gameName(r.kind)}?</h2>
-    <p class="small">${r.stake?
-      "Выплата будет 0. Уже списанная ставка "+r.stake+" звёзд не вернётся.":
-      "Тренировка завершится без бонуса."}</p>
-    <div class="actions">
-      ${btn("forfeitRound","Да, завершить",r.token,"btn danger full")}
-      ${btn("close","Продолжить раунд",undefined,"btn secondary full")}
-    </div></div>`);
+function startAim(){
+  if(S.coins<gameBet)return toast("Не хватает звёзд.");
+  S.coins-=gameBet;
+  aim={score:0,time:30,stake:gameBet};
+  save();balance();arcade="aim";render();
+  aimTimer=setInterval(()=>{
+    if(!aim)return;
+    aim.time--;
+    if(aim.time<=0){
+      clearInterval(aimTimer);
+      if(aim.score>=10&&now()-S.aimRewardAt>=600000){S.coins+=20;S.aimRewardAt=now();}
+      log("Aim Lab: "+aim.score+" попаданий");
+      aim=null;save();balance();render();
+    }else render();
+  },1000);
 }
 
-function gameClock(){
-  const r=S.arcadeRound;
-  if(!r)return;
-
-  if(r.kind==="aim"){
-    if(now()>=r.endAt)return finishRound(r,"time");
-
-    if(now()-r.targetAt>=1000){
-      r.expired++;
-      spawnAimTarget(r);
-      save();
-      if(tab==="games"&&arcade==="aim")paintAimTarget();
-    }
-
-    if(tab==="games"&&arcade==="aim")updateGameHUD();
-    return;
-  }
-
-  if(r.open.length===2&&r.closeAt&&now()>=r.closeAt){
-    r.open=[];r.closeAt=0;
-
-    if(r.moves>=30)return finishRound(r,"limit");
-
-    save();
-    if(tab==="games"&&arcade==="memory")paintMemory();
-  }
+function aimHit(){
+  if(!aim)return;
+  aim.score++;save();balance();render();
 }
 
-/* ================= ПРАВИЛА И ОБЩИЕ СОБЫТИЯ ================= */
-
-function timers(){
-  replenish();
-
-  if($("energyText")){
-    $("energyText").textContent=S.energy+" / "+maxEnergy();
-    $("energyBar").style.width=S.energy/maxEnergy()*100+"%";
-  }
-
-  if($("bonusText")){
-    $("bonusText").textContent=S.bonusProgress+" / 25";
-    $("bonusBar").style.width=S.bonusProgress/25*100+"%";
-  }
-
-  if($("jobButton")){
-    $("jobButton").innerHTML=jobLabel();
-    $("jobButton").disabled=["working","cooldown"].includes(jobState());
-  }
+function action(a,id,e){
+  if(a==="close")return closeModal();
+  if(a==="goEarn")return go("earn");
+  if(a==="case")return caseModal(+id);
+  if(a==="openCase")return openCase();
+  if(a==="previewBuy")return previewBuy(id);
+  if(a==="buy")return buy(id);
+  if(a==="previewItem")return previewItem(id);
+  if(a==="forge")return forge(id);
+  if(a==="list")return listItem(id);
+  if(a==="pinGift")return toast("Профиль закреплён локально.");
+  if(a==="tap")return tap();
+  if(a==="upgrade")return upgrade();
+  if(a==="daily")return daily();
+  if(a==="spin")return spin();
+  if(a==="slotBet")return slotBet=+id,render();
+  if(a==="gameBet")return gameBet=+id,render();
+  if(a==="startMemory")return startMemory();
+  if(a==="memoryFlip")return memoryFlip(+id);
+  if(a==="startAim")return startAim();
+  if(a==="aimHit")return aimHit();
+  if(a==="arcade")return arcade=id,render();
 }
 
-function help(){
-  showModal(`<div class="sheet-body" style="padding-top:32px">
-    <span class="eyebrow">GIFT LAB / STUDIO</span>
-    <h2 style="margin-top:14px">Правила и ограничения</h2>
-    <p class="small">32 уникальные коллекции, 10 кейсов. Изображения — внешние референсы #1–4.
-    Предметы, номера, категории, цены и улучшения игровые.
-    Никаких платежей, вывода или передачи настоящих NFT.</p>
-    <p class="small">Дубли каталога из прошлой версии объединены.
-    Предметы, их номера и улучшения сохраняются.</p>
-    <p class="small">Кейс сохраняет результат до анимации. Рулетка остаётся на находке
-    до твоего действия. При перезагрузке во время открытия результат восстанавливается
-    без повторного списания.</p>
-    <p class="small">Ателье: пять ступеней, успех 100%. Каждая добавляет 10% базовой игровой
-    оценки. Цена — 12% текущей базовой оценки × следующая ступень, минимум 25 звёзд.
-    Списывается показанная цена. Продажа и окупаемость не гарантируются.</p>
-    <p class="small">Кликер: доход равен уровню. Энергия +1 в секунду.
-    Каждые 25 нажатий дают +5. Улучшение: +1 за тап, +10 к запасу энергии.
-    Цена 60 × 1,45^(уровень − 1), округление до 5. Максимум 20 уровней.</p>
-    <p class="small">Маркет — локальные боты. Проверка раз в 10 секунд при открытой игре.
-    Цена до 80% оценки: шанс 35%; до 100%: 22%; до 115%: 8%; до 150%: 1,5%;
-    выше: 0%. Комиссия 5%, округляется вверх. Срок лота 30 минут. Офлайн-продаж нет.
-    Оценки меняются раз в 15 секунд.</p>
-    <p class="small">Memory Lab: 8 пар, максимум 30 ходов. При ставке ×2 за 18 ходов
-    или меньше; ×1,25 за 19–24; иначе 0. Тренировка: +30 за полный альбом
-    не чаще раза в 15 минут.</p>
-    <p class="small">Aim Lab: 30 секунд. При ставке ×2 за 18 попаданий и точность от 70%;
-    ×1 за 10 попаданий и точность от 50%; иначе 0. Точность считается по кликам.
-    Тренировка: +20 за 10 попаданий не чаще раза в 10 минут.</p>
-    <p class="small">Все множители включают ставку. П
+function closeModal(){$("modal").innerHTML="";}
+
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button");
+  if(!b)return;
+  if(b.dataset.tab)return go(b.dataset.tab);
+  if(b.dataset.action)return action(b.dataset.action,b.dataset.id,e);
+  if(e.target.classList.contains("overlay"))closeModal();
+});
+
+window.addEventListener("error",e=>{
+  if(!e.message)return;
+  document.body.insertAdjacentHTML("beforeend",
+  `<div class="panel" style="border-color:#ef9bb833;background:#502838">Ошибка: ${esc(e.message)}</div>`);
+});
+
+S.market=S.market||[];
+while(S.market.length<20)S.market.push(makeItem(int(0,D.length-1)));
+replenish();balance();render();
+})();
+</script>
+</body>
+</html>
