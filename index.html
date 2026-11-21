@@ -4,1625 +4,264 @@
 <meta charset="UTF-8">
 <meta name="viewport"
       content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0c101a">
-<title>Gift Lab — Studio</title>
+<meta name="theme-color" content="#0d111c">
+<title>Gift Lab — Collection Studio</title>
 
 <style>
 :root {
   color-scheme: dark;
-  --bg: #0c101a;
-  --panel: #171e2d;
-  --panel2: #222b3e;
-  --text: #f4f6ff;
-  --muted: #929eb7;
-  --accent: #aaa3ff;
-  --green: #9be1c4;
-  --line: #ffffff0d;
-  --ease: cubic-bezier(.22,1,.36,1);
-}
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-body {
-  margin: 0;
-  color: var(--text);
-  background:
-    radial-gradient(ellipse at 12% 0%,#6760bb17,transparent 45%),
-    radial-gradient(ellipse at 100% 35%,#3d74a909,transparent 40%),
-    var(--bg);
-  font: 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-}
-button,input,select {
-  font: inherit;
-}
-button {
-  color: inherit;
-  border: 0;
-  cursor: pointer;
-  touch-action: manipulation;
-  transition:
-    transform .2s,
-    background .2s,
-    filter .2s,
-    border-color .2s;
-}
-button:disabled {
-  opacity: .4;
-  cursor: not-allowed;
-}
-button:active:not(:disabled) {
-  transform: scale(.96);
-}
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-a:focus-visible {
-  outline: 2px solid #c7b8ff;
-  outline-offset: 3px;
-}
-a {
-  color: #c2bcff;
-}
-.app {
-  max-width: 1120px;
-  margin: auto;
-  padding:
-    calc(22px + env(safe-area-inset-top,0px))
-    24px
-    calc(120px + env(safe-area-inset-bottom,0px));
-}
-.top {
-  display: flex;
-  gap: 11px;
-  align-items: center;
-  margin-bottom: 25px;
-}
-.logo {
-  width: 43px;
-  height: 43px;
-  border-radius: 15px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(135deg,#bfb2ff,#747bdd);
-  box-shadow:
-    inset 0 1px 1px #ffffff66,
-    0 9px 25px #8873ff22;
-}
-.word {
-  font-size: 14px;
-  font-weight: 850;
-  letter-spacing: 2.4px;
-}
-.word small {
-  display: block;
-  margin-top: 5px;
-  color: var(--muted);
-  font-size: 8px;
-  font-weight: 500;
-  letter-spacing: 1.3px;
-}
-.balance {
-  margin-left: auto;
-  padding: 11px 14px;
-  border: 1px solid #ffffff10;
-  border-radius: 14px;
-  background: #222b3e;
-  font-weight: 750;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-.balance.bump {
-  animation: bump .4s var(--ease);
-}
-.star {
-  width: 19px;
-  height: 19px;
-  object-fit: contain;
-  vertical-align: -4px;
-}
-.ic {
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-  vertical-align: middle;
-}
-.iconbtn {
-  display: inline-grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-  background: var(--panel);
-}
-.iconbtn.on {
-  color: #d6c9ff;
-  background: #aca1ff18;
-}
-h1 {
-  margin: 17px 0;
-  font-size: 46px;
-  line-height: 1.04;
-  letter-spacing: -2px;
-}
-h2 {
-  margin: 0;
-  font-size: 22px;
-  letter-spacing: -.5px;
-}
-h3 {
-  margin: 0;
-  font-size: 15px;
-}
-p {
-  color: var(--muted);
-  line-height: 1.75;
-}
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 9px;
-  font-weight: 750;
-  letter-spacing: 1.8px;
-  color: #c9bcff;
-}
-.live-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #a7e8cf;
-  box-shadow: 0 0 12px #a7e8cf55;
-}
-.muted {
-  color: var(--muted);
-  font-size: 12px;
-}
-.small {
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.75;
-}
-.row,.heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-.heading {
-  margin: 28px 0 17px;
-}
-.pill {
-  display: inline-block;
-  padding: 6px 10px;
-  border: 1px solid #b5a8ff22;
-  border-radius: 20px;
-  background: #b5a8ff0e;
-  color: #c9bdff;
-  font-size: 10px;
-  white-space: nowrap;
-}
-.btn {
-  position: relative;
-  overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 46px;
-  padding: 13px 18px;
-  border: 1px solid #ffffff0b;
-  border-radius: 14px;
-  background: linear-gradient(115deg,#a39af2,#777edd);
-  box-shadow:
-    inset 0 1px 0 #ffffff33,
-    0 7px 20px #7a72d51b;
-  font-size: 13px;
-  font-weight: 750;
-}
-.btn.secondary {
-  background: #ffffff06;
-  border-color: #ffffff12;
-  box-shadow: inset 0 1px 0 #ffffff05;
-}
-.btn.mini {
-  min-height: 34px;
-  padding: 8px 11px;
-  border-radius: 10px;
-  font-size: 11px;
-}
-.full {
-  width: 100%;
-}
-.hero {
-  position: relative;
-  isolation: isolate;
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  min-height: 315px;
-  overflow: hidden;
-  border: 1px solid #ffffff12;
-  border-radius: 30px;
-  background:
-    radial-gradient(ellipse at 80% 5%,#7b6aab44,transparent 65%),
-    linear-gradient(115deg,#252c45,#182032);
-  box-shadow:
-    inset 0 1px 0 #ffffff0c,
-    0 30px 60px #00000022;
-}
-.hero-copy {
-  position: relative;
-  z-index: 2;
-  padding: 38px;
-}
-.hero p {
-  margin: 0 0 23px;
-  font-size: 12px;
-}
-.hero-stage {
-  position: relative;
-  display: grid;
-  place-items: center;
-  min-width: 0;
-  perspective: 900px;
-}
-.hero-stage::before {
-  content: "";
-  position: absolute;
-  bottom: 23px;
-  width: 230px;
-  height: 60px;
-  border: 1px solid #c2b6ff17;
-  border-radius: 50%;
-  background: #a79aff12;
-  transform: rotateX(60deg);
-  box-shadow: 0 0 50px #b09aff14;
-}
-.hero-card {
-  width: 205px;
-  overflow: hidden;
-  border: 1px solid #ffffff27;
-  border-radius: 24px;
-  background: #2d354a;
-  box-shadow:
-    -20px 25px 45px #00000055,
-    7px 0 0 #585b7d,
-    8px 0 0 #9b98c74d;
-  animation: hero-float 6s ease-in-out infinite;
-}
-.hero-card .media {
-  height: 205px;
-  border-radius: 0;
-}
-.hero-label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 14px;
-  font-size: 11px;
-}
-.hero-label small {
-  color: #bfc1d8;
-}
-.side-glint {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  padding: 6px 10px;
-  border: 1px solid #ffffff0c;
-  border-radius: 20px;
-  background: #ffffff06;
-  color: #b5b6da;
-  font-size: 10px;
-  transform: rotate(-8deg);
-}
-.hero-note {
-  position: absolute;
-  right: 10px;
-  bottom: 30px;
-  color: #b5bdd4;
-  font-size: 9px;
-  letter-spacing: 1px;
-}
-.cases {
-  display: grid;
-  grid-template-columns: repeat(3,minmax(0,1fr));
-  gap: 15px;
-}
-.case {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  min-width: 0;
-  padding: 17px;
-  border: 1px solid #ffffff0c;
-  border-radius: 24px;
-  background:
-    radial-gradient(ellipse at 50% 0%,var(--tint),transparent 75%),
-    var(--panel);
-  box-shadow:
-    inset 0 1px 0 #ffffff0a,
-    0 15px 30px #00000022;
-  text-align: left;
-  transition:
-    transform .45s var(--ease),
-    border-color .3s,
-    box-shadow .3s;
-}
-.case .eyebrow {
-  min-height: 21px;
-  font-size: 8px;
-  letter-spacing: .7px;
-}
-.case-stage {
-  position: relative;
-  display: grid;
-  place-items: center;
-  height: 155px;
-  perspective: 700px;
-}
-.case-box {
-  position: relative;
-  width: 110px;
-  height: 110px;
-  transform-style: preserve-3d;
-  transform: rotateX(-12deg) rotateY(-22deg) rotateZ(-7deg);
-  transition: transform .65s var(--ease);
-}
-.cube-front {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  border: 1px solid #ffffff33;
-  border-radius: 17px;
-  background: linear-gradient(140deg,var(--cube),#333e5e);
-  transform: translateZ(22px);
-  box-shadow:
-    inset 0 1px 0 #ffffff33,
-    0 20px 25px #00000033;
-}
-.cube-front::after {
-  content: "";
-  position: absolute;
-  inset: -100%;
-  background: linear-gradient(
-    110deg,transparent 44%,#ffffff22 50%,transparent 56%
-  );
-  transform: translateX(-45%);
-  transition: transform 1s;
-}
-.cube-right {
-  position: absolute;
-  inset: 0;
-  width: 44px;
-  border: 1px solid #ffffff20;
-  border-radius: 14px;
-  background: #333f5c;
-  transform-origin: left;
-  transform: rotateY(90deg) translateZ(88px) translateX(-22px);
-}
-.cube-top {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 110px;
-  height: 44px;
-  border: 1px solid #ffffff25;
-  border-radius: 13px;
-  background: linear-gradient(var(--cube),#7888b8);
-  transform-origin: top;
-  transform: rotateX(90deg) translateZ(22px);
-}
-.cube-front .ic {
-  width: 47px;
-  height: 47px;
-  color: #f3edff;
-  stroke-width: 1;
-  filter: drop-shadow(0 6px 5px #00000033);
-}
-.cube-strip {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 46px;
-  width: 17px;
-  background: #ffffff10;
-}
-.case-number {
-  position: absolute;
-  right: 5px;
-  bottom: 8px;
-  color: #ffffff55;
-  font-size: 9px;
-  letter-spacing: 1px;
-}
-.case h3 {
-  margin: 6px 0 8px;
-  font-size: 17px;
-}
-.case p {
-  min-height: 36px;
-  margin: 0 0 15px;
-  font-size: 11px;
-}
-.case-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 13px;
-  border-top: 1px solid #ffffff0c;
-}
-.price {
-  font-weight: 750;
-  white-space: nowrap;
-}
-.case-foot .ic {
-  width: 18px;
-  opacity: .6;
-}
-.panel {
-  padding: 21px;
-  border: 1px solid var(--line);
-  border-radius: 23px;
-  background: var(--panel);
-  box-shadow: inset 0 1px 0 #ffffff05;
-}
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 11px;
-}
-.stat strong {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 26px;
-}
-.stat span {
-  color: var(--muted);
-  font-size: 10px;
-}
-.nav {
-  position: fixed;
-  z-index: 30;
-  bottom: 0;
-  left: 50%;
-  display: flex;
-  gap: 4px;
-  width: min(680px,100%);
-  padding: 9px 8px calc(9px + env(safe-area-inset-bottom,0px));
-  border: 1px solid #ffffff10;
-  border-bottom: 0;
-  border-radius: 24px 24px 0 0;
-  background: #181e2ced;
-  backdrop-filter: blur(25px);
-  box-shadow: 0 -10px 40px #00000033;
-  transform: translateX(-50%);
-}
-.nav button {
-  position: relative;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 6px;
-  padding: 10px 2px 8px;
-  border-radius: 14px;
-  background: transparent;
-  color: #7e8aa5;
-  font-size: 10px;
-}
-.nav button.active {
-  background: #a5a1ff10;
-  color: #c5beff;
-}
-.nav button.active::before {
-  content: "";
-  position: absolute;
-  top: 3px;
-  width: 17px;
-  height: 2px;
-  border-radius: 5px;
-  background: #cfc3ff;
-  box-shadow: 0 0 12px #b3a0ff66;
-}
-.toolbar {
-  display: flex;
-  gap: 9px;
-  margin: 17px 0 12px;
-}
-input,select {
-  min-width: 0;
-  padding: 12px;
-  border: 1px solid #ffffff10;
-  border-radius: 13px;
-  background: #222b3d;
-  color: var(--text);
-}
-.toolbar input {
-  flex: 1;
-}
-.toolbar select {
-  max-width: 165px;
-}
-.chips {
-  display: flex;
-  gap: 7px;
-  overflow: auto;
-  padding-bottom: 13px;
-}
-.chips button {
-  padding: 9px 12px;
-  border: 1px solid #ffffff08;
-  border-radius: 11px;
-  background: #ffffff04;
-  color: var(--muted);
-  font-size: 11px;
-  white-space: nowrap;
-}
-.chips button.on {
-  border-color: #a6a1ff44;
-  background: #a6a1ff12;
-  color: #d0c7ff;
-}
-.grid {
-  display: grid;
-  grid-template-columns: repeat(4,minmax(0,1fr));
-  gap: 13px;
-}
-.gift {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  min-width: 0;
-  padding: 0;
-  border: 1px solid #ffffff0b;
-  border-radius: 22px;
-  background: var(--panel);
-  box-shadow: 0 12px 25px #00000022;
-  text-align: left;
-  transform:
-    perspective(900px)
-    rotateX(var(--rx,0deg))
-    rotateY(var(--ry,0deg));
-  transition:
-    transform .35s var(--ease),
-    border-color .35s,
-    box-shadow .35s;
-}
-.gift::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    circle at var(--mx,50%) var(--my,20%),
-    #ffffff17,transparent 65%
-  );
-  opacity: 0;
-  transition: opacity .3s;
-}
-.gift-stage {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  padding: 13px;
-  background: radial-gradient(
-    ellipse at 40% 10%,var(--a),var(--b)
-  );
-}
-.gift-stage::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: radial-gradient(
-    #ffffff25 1px,transparent 1px
-  );
-  background-size: 17px 17px;
-  opacity: .25;
-}
-.media {
-  position: relative;
-  isolation: isolate;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  width: 100%;
-  aspect-ratio: 1;
-  border: 1px solid #ffffff12;
-  border-radius: 15px;
-  background: #171d2b;
-  box-shadow: 0 12px 15px #00000033;
-}
-.photo {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: transform .65s var(--ease),opacity .3s;
-}
-.photo.loaded {
-  opacity: 1;
-}
-.skeleton {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  background: linear-gradient(
-    110deg,#212a3c 20%,#333d55 45%,#212a3c 70%
-  );
-  background-size: 220% 100%;
-  animation: shimmer 1.7s ease-in-out infinite;
-}
-.media.failed .skeleton {
-  display: none;
-}
-.img-error {
-  position: absolute;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 9px;
-  padding: 14px;
-  color: #a4abc1;
-  font-size: 10px;
-  line-height: 1.6;
-  text-align: center;
-}
-.media.failed .img-error {
-  display: flex;
-}
-.img-error .ic {
-  width: 29px;
-  height: 29px;
-  opacity: .5;
-}
-.badge {
-  position: absolute;
-  z-index: 3;
-  top: 8px;
-  left: 8px;
-  padding: 4px 6px;
-  border: 1px solid #ffffff10;
-  border-radius: 6px;
-  background: #00000055;
-  backdrop-filter: blur(6px);
-  color: #fff;
-  font-size: 8px;
-}
-.gift-body {
-  padding: 12px;
-}
-.gift-name {
-  overflow: hidden;
-  margin-bottom: 5px;
-  font-size: 13px;
-  font-weight: 700;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.gift-sub {
-  margin-bottom: 10px;
-  color: #818da7;
-  font-size: 9px;
-}
-.gift-body .price {
-  font-size: 13px;
-}
-.change {
-  color: var(--green);
-  font-size: 9px;
-}
-.change.down {
-  color: #e69cae;
-}
-.favorite-mark {
-  position: absolute;
-  z-index: 4;
-  top: 9px;
-  right: 9px;
-  color: #ffd4a3;
-  font-size: 15px;
-  filter: drop-shadow(0 1px 4px #000);
-}
-.empty {
-  padding: 48px 20px;
-  border: 1px dashed #ffffff18;
-  border-radius: 24px;
-  color: var(--muted);
-  line-height: 1.9;
-  text-align: center;
-}
-.earn-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
-.tap-zone {
-  position: relative;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  height: 270px;
-}
-.tap {
-  display: grid;
-  place-items: center;
-  width: 190px;
-  height: 190px;
-  border: 1px solid #ffd78017;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,#ffcc571b,transparent 70%
-  );
-  box-shadow: 0 0 0 24px #ffd78004;
-}
-.tap img {
-  width: 137px;
-  height: 137px;
-  pointer-events: none;
-  filter: drop-shadow(0 13px 22px #ffce4d33);
-  animation: tapfloat 5s ease-in-out infinite;
-}
-.tap:active:not(:disabled) {
-  filter: brightness(1.13);
-  transform: scale(.91);
-}
-.floater {
-  position: absolute;
-  pointer-events: none;
-  color: #ffe2a1;
-  font-size: 25px;
-  font-weight: 800;
-  animation: rise .8s ease-out forwards;
-}
-.progress {
-  overflow: hidden;
-  height: 5px;
-  border-radius: 6px;
-  background: #ffffff09;
-}
-.progress i {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg,#8397ff,#c2a8ff);
-}
-.task {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 11px;
-  padding: 15px;
-  border: 1px solid var(--line);
-  border-radius: 17px;
-  background: var(--panel);
-}
-.task-content {
-  flex: 1;
-  min-width: 0;
-}
-.task h3 {
-  margin: 0 0 5px;
-  font-size: 13px;
-}
-.task p {
-  margin: 0;
-  font-size: 11px;
-}
-.feed div {
-  padding: 10px 0;
-  border-bottom: 1px solid #ffffff08;
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.7;
-}
-.album {
-  display: grid;
-  grid-template-columns: repeat(7,minmax(0,1fr));
-  gap: 8px;
-  margin-top: 15px;
-}
-.album-tile {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 1;
-  border: 1px solid #ffffff0c;
-  border-radius: 13px;
-  background: #222b3d;
-}
-.album-tile img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.album-tile.locked {
-  opacity: .2;
-  filter: grayscale(1);
-}
-.album-tile span {
-  position: absolute;
-  right: 4px;
-  bottom: 3px;
-  padding: 2px 4px;
-  border-radius: 4px;
-  background: #00000088;
-  font-size: 9px;
-}
-.reels {
-  display: flex;
-  justify-content: center;
-  gap: 9px;
-  margin: 25px 0;
-}
-.reel {
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  width: 100px;
-  height: 115px;
-  border: 1px solid #ffffff12;
-  border-radius: 18px;
-  background: linear-gradient(#202b40,#373554,#202b40);
-  box-shadow:
-    inset 0 13px 18px #00000033,
-    inset 0 -13px 18px #00000033;
-}
-.slot-symbol {
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  width: 65px;
-  height: 65px;
-  border-radius: 13px;
-  color: #d1c5ff;
-  font-size: 32px;
-}
-.slot-symbol img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.reel.spinning .slot-symbol {
-  filter: blur(2px);
-  animation: slot .14s linear infinite;
-}
-.reel.stopped {
-  animation: stop .4s var(--ease);
-}
-.bets {
-  display: flex;
-  gap: 7px;
-  margin-bottom: 13px;
-}
-.bets button {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid transparent;
-  border-radius: 11px;
-  background: #ffffff06;
-}
-.bets button.on {
-  border-color: #aea4ff66;
-  background: #a6a1ff15;
-}
-.overlay {
-  position: fixed;
-  z-index: 50;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 17px;
-  background: #060913d4;
-  backdrop-filter: blur(16px);
-  animation: fade .2s ease both;
-}
-.sheet {
-  position: relative;
-  overflow: auto;
-  overscroll-behavior: contain;
-  width: 100%;
-  max-width: 475px;
-  max-height: 91vh;
-  max-height: 91dvh;
-  border: 1px solid #ffffff16;
-  border-radius: 29px;
-  background: #192131;
-  box-shadow:
-    inset 0 1px 0 #ffffff0c,
-    0 35px 110px #00000099;
-  animation: sheet .5s var(--ease) both;
-}
-.sheet.winner {
-  border-color: #c2b3ff55;
-}
-.close {
-  position: absolute;
-  z-index: 5;
-  top: 12px;
-  right: 12px;
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border: 1px solid #ffffff18;
-  border-radius: 50%;
-  background: #00000055;
-  backdrop-filter: blur(9px);
-}
-.sheet-body {
-  padding: 22px;
-}
-.inspect-stage {
-  position: relative;
-  isolation: isolate;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  min-height: 310px;
-  padding: 36px 62px 26px;
-  background: radial-gradient(
-    ellipse at 35% 0%,var(--a),var(--b)
-  );
-  perspective: 1000px;
-}
-.inspect-stage::before {
-  content: "";
-  position: absolute;
-  bottom: 14px;
-  width: 220px;
-  height: 50px;
-  border-radius: 50%;
-  background: #00000044;
-  filter: blur(16px);
-}
-.inspect-card {
-  width: 100%;
-  border-radius: 20px;
-  box-shadow: 9px 0 0 #ffffff12,0 20px 30px #00000055;
-  animation: inspect-float 6s ease-in-out infinite;
-}
-.inspect-card .media {
-  border-radius: 20px;
-  box-shadow: none;
-}
-.stage-label {
-  position: absolute;
-  z-index: 2;
-  top: 16px;
-  left: 17px;
-  padding: 6px 8px;
-  border-radius: 8px;
-  background: #00000022;
-  color: #ffffffaa;
-  font-size: 9px;
-  letter-spacing: 1px;
-}
-.stage-caption {
-  position: absolute;
-  bottom: 9px;
-  color: #ffffff88;
-  font-size: 8px;
-  letter-spacing: .4px;
-}
-.attrs {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 7px;
-  margin: 18px 0;
-}
-.attrs div {
-  padding: 10px 7px;
-  border: 1px solid #ffffff08;
-  border-radius: 11px;
-  background: #ffffff04;
-  font-size: 10px;
-}
-.attrs small {
-  display: block;
-  margin-bottom: 5px;
-  color: var(--muted);
-  font-size: 9px;
-}
-.bubble {
-  margin: 15px 0;
-  padding: 14px;
-  border: 1px solid #ffffff15;
-  border-radius: 18px 18px 18px 4px;
-  background: #ffffff09;
-  color: #d7d9ef;
-  font-size: 12px;
-  line-height: 1.7;
-}
-.receipt {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin: 14px 0;
-  padding-top: 13px;
-  border-top: 1px solid #ffffff0d;
-  color: var(--muted);
-  font-size: 12px;
-}
-.actions {
-  display: grid;
-  gap: 10px;
-  margin-top: 17px;
-}
-.sale-box {
-  padding: 14px;
-  border: 1px solid #ffffff0d;
-  border-radius: 17px;
-  background: #ffffff03;
-}
-.stepper {
-  display: grid;
-  grid-template-columns: 39px minmax(0,1fr) 39px;
-  align-items: center;
-  gap: 7px;
-  margin: 12px 0;
-}
-.stepper input {
-  width: 100%;
-  padding: 12px 5px;
-  border-color: #aaa1ff25;
-  background: #111927;
-  font-size: 22px;
-  font-weight: 750;
-  text-align: center;
-  appearance: textfield;
-  -moz-appearance: textfield;
-}
-.stepper input::-webkit-inner-spin-button,
-.stepper input::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-.step {
-  height: 43px;
-  border: 1px solid #a59cff22;
-  border-radius: 12px;
-  background: #a59cff15;
-  color: #d9cfff;
-  font-size: 23px;
-}
-.presets {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 14px;
-}
-.preset {
-  flex: 1;
-  padding: 9px 4px;
-  border: 1px solid #ffffff09;
-  border-radius: 10px;
-  background: #ffffff05;
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.6;
-}
-.preset.on {
-  border-color: #b7aaff55;
-  background: #a59cff14;
-  color: #d8ccff;
-}
-.sale-line {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: 10px;
-  color: var(--muted);
-  font-size: 11px;
-}
-.sale-line.net {
-  padding-top: 12px;
-  border-top: 1px solid #ffffff0a;
-}
-.net strong {
-  color: #a6e2c7;
-  font-size: 16px;
-}
-.demand {
-  margin-top: 13px;
-  padding: 10px;
-  border: 1px solid #8be0bd14;
-  border-radius: 11px;
-  background: #8be0bd08;
-  color: #a3d4bc;
-  font-size: 10px;
-  line-height: 1.7;
-}
-.demand.warn {
-  border-color: #e2b87619;
-  background: #e2b87608;
-  color: #d8bf92;
-}
-.demand.bad {
-  border-color: #e398a819;
-  background: #e398a808;
-  color: #dfa7b4;
-}
-.roulette {
-  position: relative;
-  overflow: hidden;
-  height: 173px;
-  margin: 20px 0;
-  border: 1px solid #ffffff0d;
-  border-radius: 20px;
-  background: #0f1624;
-}
-.roulette::before {
-  content: "";
-  position: absolute;
-  z-index: 3;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    90deg,#0f1624,transparent 18%,transparent 82%,#0f1624
-  );
-}
-.roulette::after {
-  content: "";
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 2px;
-  background: linear-gradient(
-    transparent,#eee5ff 20%,#eee5ff 80%,transparent
-  );
-  box-shadow: 0 0 15px #c7a9ff;
-  transform: translateX(-50%);
-}
-.pointer {
-  position: absolute;
-  z-index: 4;
-  top: 0;
-  left: 50%;
-  border-top: 10px solid #eee4ff;
-  border-right: 7px solid transparent;
-  border-left: 7px solid transparent;
-  transform: translateX(-50%);
-}
-.strip {
-  position: absolute;
-  top: 10px;
-  left: 0;
-  display: flex;
-  gap: 10px;
-  will-change: transform;
-}
-.roll-card {
-  flex: 0 0 110px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 8px;
-  width: 110px;
-  height: 149px;
-  padding: 8px;
-  border: 1px solid #ffffff14;
-  border-radius: 15px;
-  background: radial-gradient(circle at top,var(--a),var(--b));
-  font-size: 9px;
-}
-.roll-card .media {
-  width: 91px;
-  height: 91px;
-  aspect-ratio: auto;
-  border-radius: 10px;
-}
-.drops {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 7px;
-  overflow: auto;
-  max-height: 205px;
-  margin: 15px 0;
-}
-.drop {
-  padding: 9px;
-  border-radius: 10px;
-  background: #ffffff04;
-  font-size: 10px;
-  line-height: 1.7;
-}
-.drop span {
-  float: right;
-  color: #c9b8ff;
-}
-.spark {
-  width: 100%;
-  height: 70px;
-  margin-top: 12px;
-}
-.toast-area {
-  position: fixed;
-  z-index: 100;
-  bottom: 105px;
-  left: 50%;
-  width: min(400px,90%);
-  pointer-events: none;
-  transform: translateX(-50%);
-}
-.toast {
-  margin-top: 8px;
-  padding: 13px 16px;
-  border: 1px solid #ffffff16;
-  border-radius: 15px;
-  background: #303c52f0;
-  backdrop-filter: blur(18px);
-  box-shadow: 0 10px 30px #00000044;
-  font-size: 12px;
-  line-height: 1.6;
-  animation: enter .3s var(--ease);
-}
-.particles {
-  position: fixed;
-  z-index: 80;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-.particle {
-  position: absolute;
-  top: var(--y);
-  left: var(--x);
-  width: var(--size);
-  height: var(--size);
-  border-radius: 2px;
-  background: var(--color);
-  animation: particle 1.3s ease-out forwards;
-}
-.screen-enter {
-  animation: enter .4s var(--ease);
-}
-.linkbutton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 40px;
-  color: #bebcff;
-  font-size: 11px;
-  text-decoration: none;
-}
-footer {
-  margin-top: 25px;
-  color: #72809a;
-  font-size: 10px;
-  line-height: 1.9;
-}
-#errorBox {
-  display: none;
-  margin-bottom: 20px;
-  padding: 17px;
-  border: 1px solid #ef9bb833;
-  border-radius: 17px;
-  background: #502838;
-  font-size: 12px;
-  line-height: 1.7;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-@keyframes shimmer {
-  to { background-position: -220% 0; }
-}
-@keyframes hero-float {
-  0%,100% {
-    transform: translateY(0) rotateY(-16deg) rotateZ(9deg);
-  }
-  50% {
-    transform: translateY(-12px) rotateY(-8deg) rotateZ(5deg);
-  }
-}
-@keyframes inspect-float {
-  0%,100% {
-    transform: translateY(0) rotateY(-10deg) rotateZ(-4deg);
-  }
-  50% {
-    transform: translateY(-7px) rotateY(8deg) rotateZ(3deg);
-  }
-}
-@keyframes tapfloat {
-  50% { transform: translateY(-6px) rotate(5deg); }
-}
-@keyframes bump {
-  40% { transform: scale(1.06); border-color: #b7a9ff66; }
-}
-@keyframes enter {
-  from { opacity: .3; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes fade {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes sheet {
-  from { opacity: 0; transform: translateY(24px) scale(.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-@keyframes rise {
-  to { transform: translateY(-95px); opacity: 0; }
-}
-@keyframes slot {
-  from { transform: translateY(-80px); }
-  to { transform: translateY(80px); }
-}
-@keyframes stop {
-  0% { transform: translateY(-4px); }
-  50% { transform: translateY(3px); }
-  100% { transform: translateY(0); }
-}
-@keyframes particle {
-  from { opacity: 1; transform: translate(0,0) rotate(0); }
-  to {
-    opacity: 0;
-    transform:
-      translate(var(--dx),var(--dy))
-      rotate(var(--rot));
-  }
-}
-@media (hover:hover) and (pointer:fine) {
-  .case:hover {
-    border-color: #b7acff44;
-    box-shadow: 0 25px 40px #00000033;
-    transform: translateY(-6px);
-  }
-  .case:hover .case-box {
-    transform:
-      translateY(-7px)
-      rotateX(-17deg)
-      rotateY(10deg)
-      rotateZ(4deg);
-  }
-  .case:hover .cube-front::after {
-    transform: translateX(45%);
-  }
-  .gift:hover {
-    border-color: #b6a9ff55;
-    box-shadow: 0 20px 35px #00000044;
-  }
-  .gift:hover::after {
-    opacity: 1;
-  }
-  .gift:hover .photo {
-    transform: scale(1.035);
-  }
-}
-@media (min-width:780px) {
-  .nav {
-    bottom: 16px;
-    padding-bottom: 9px;
-    border-bottom: 1px solid #ffffff10;
-    border-radius: 24px;
-  }
-}
-@media (max-width:650px) {
-  .app {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-  .top {
-    gap: 7px;
-    margin-bottom: 20px;
-  }
-  .logo {
-    width: 35px;
-    height: 37px;
-    border-radius: 12px;
-  }
-  .word {
-    font-size: 11px;
-    letter-spacing: 1.3px;
-  }
-  .word small {
-    font-size: 7px;
-    letter-spacing: .4px;
-  }
-  .balance {
-    padding: 9px 8px;
-    font-size: 11px;
-  }
-  .top .iconbtn {
-    width: 29px;
-    min-width: 29px;
-    height: 32px;
-  }
-  .top .ic {
-    width: 17px;
-    height: 17px;
-  }
-  .hero {
-    grid-template-columns: 1.15fr 1fr;
-    min-height: 270px;
-    border-radius: 24px;
-  }
-  .hero-copy {
-    padding: 27px 0 27px 21px;
-  }
-  h1 {
-    font-size: 32px;
-    letter-spacing: -1.2px;
-  }
-  .hero p {
-    font-size: 10px;
-  }
-  .hero .btn {
-    min-height: 39px;
-    padding: 11px 12px;
-    font-size: 10px;
-  }
-  .eyebrow {
-    font-size: 7px;
-    letter-spacing: 1px;
-  }
-  .hero-card {
-    width: 130px;
-    border-radius: 17px;
-    box-shadow:
-      -12px 18px 25px #00000055,
-      5px 0 0 #585b7d;
-  }
-  .hero-card .media {
-    height: 130px;
-  }
-  .hero-label {
-    padding: 10px;
-    font-size: 9px;
-  }
-  .hero-label small {
-    font-size: 7px;
-  }
-  .hero-stage::before {
-    bottom: 38px;
-    width: 145px;
-    height: 40px;
-  }
-  .side-glint {
-    top: 26px;
-    left: 0;
-    font-size: 7px;
-  }
-  .hero-note {
-    right: 7px;
-    bottom: 29px;
-    font-size: 6px;
-  }
-  .cases {
-    grid-template-columns: repeat(2,minmax(0,1fr));
-    gap: 11px;
-  }
-  .case {
-    padding: 13px;
-  }
-  .case-stage {
-    height: 143px;
-  }
-  .case-box {
-    width: 95px;
-    height: 95px;
-  }
-  .cube-top {
-    width: 95px;
-  }
-  .cube-right {
-    transform: rotateY(90deg) translateZ(73px) translateX(-22px);
-  }
-  .cube-strip {
-    left: 39px;
-  }
-  .case h3 {
-    font-size: 14px;
-  }
-  .case p {
-    min-height: 35px;
-    font-size: 10px;
-  }
-  .case .price {
-    font-size: 13px;
-  }
-  .grid {
-    grid-template-columns: repeat(2,minmax(0,1fr));
-    gap: 11px;
-  }
-  .gift-stage,.gift-body {
-    padding: 11px;
-  }
-  .gift-name,.gift-body .price {
-    font-size: 12px;
-  }
-  .gift-sub {
-    font-size: 8px;
-  }
-  .badge {
-    top: 6px;
-    left: 6px;
-    padding: 4px;
-    font-size: 7px;
-  }
-  .earn-grid {
-    grid-template-columns: 1fr;
-  }
-  .stat {
-    padding: 15px 11px;
-  }
-  .stat strong {
-    font-size: 23px;
-  }
-  .stat span {
-    font-size: 9px;
-  }
-  h2 {
-    font-size: 19px;
-  }
-  .toolbar select {
-    max-width: 138px;
-    font-size: 11px;
-  }
-  .inspect-stage {
-    min-height: 290px;
-    padding: 34px 64px 26px;
-  }
-  .album {
-    grid-template-columns: repeat(5,minmax(0,1fr));
-  }
-}
-@media (max-width:360px) {
-  .word small {
-    display: none;
-  }
-  .word {
-    font-size: 10px;
-  }
-  .logo {
-    width: 29px;
-  }
-  h1 {
-    font-size: 28px;
-  }
-  .hero-card {
-    width: 111px;
-  }
-  .hero-card .media {
-    height: 111px;
-  }
-  .hero-copy {
-    padding-left: 17px;
-  }
-  .case {
-    padding: 11px;
-  }
-  .case h3 {
-    font-size: 12px;
-  }
-  .inspect-stage {
-    padding-left: 52px;
-    padding-right: 52px;
-  }
-}
-@media (prefers-reduced-motion:reduce) {
-  *,*::before,*::after {
-    animation: none !important;
-    transition: none !important;
-  }
-  .gift {
-    transform: none !important;
-  }
-  .particles {
-    display: none;
-  }
-  .hero-card {
-    transform: rotate(-5deg);
-  }
-}
+  --bg:#0d111c;
+  --panel:#171f2f;
+  --panel2:#232d42;
+  --text:#f4f5ff;
+  --muted:#929eb7;
+  --accent:#b1a5ff;
+  --green:#a0dfc5;
+  --line:#ffffff0d;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;color:var(--text);background:radial-gradient(ellipse at 10% 0,#7562b918,transparent 45%),var(--bg);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}
+button{color:inherit;border:0;cursor:pointer;touch-action:manipulation;transition:transform .2s,background .2s,filter .2s}
+button:disabled{opacity:.4;cursor:not-allowed}
+button:active:not(:disabled){transform:scale(.96)}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #c8baff;outline-offset:3px}
+a{color:#c5bbff}
+.app{max-width:1100px;margin:auto;padding:calc(22px + env(safe-area-inset-top,0px)) 24px calc(125px + env(safe-area-inset-bottom,0px))}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:25px}
+.logo{width:43px;height:43px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#c6b4ff,#737cda);box-shadow:inset 0 1px 1px #fff6,0 10px 30px #8873ff22}
+.word{font-size:14px;font-weight:850;letter-spacing:2px}
+.word small{display:block;margin-top:5px;font-size:8px;color:var(--muted);font-weight:500;letter-spacing:1px}
+.balance{margin-left:auto;padding:11px 14px;border:1px solid #ffffff10;background:#232c40;border-radius:14px;font-weight:750;white-space:nowrap;font-variant-numeric:tabular-nums}
+.balance.bump{animation:bump .4s var(--ease)}
+.star{width:19px;height:19px;object-fit:contain;vertical-align:-4px}
+.ic{width:22px;height:22px;vertical-align:middle;flex-shrink:0}
+.iconbtn{width:36px;height:36px;border-radius:12px;background:var(--panel);display:inline-grid;place-items:center}
+.iconbtn.on{color:#dacbff;background:#ada0ff18}
+.avatar{display:grid;place-items:center;border-radius:50%;background:linear-gradient(140deg,var(--avatar,#aa98df),#4c5c83);font-weight:750;color:white}
+.avatar.small-avatar{width:35px;height:35px;font-size:13px}
+.avatar.large-avatar{width:86px;height:86px;font-size:32px;margin:auto;box-shadow:0 15px 35px #0003,inset 0 1px 0 #fff3}
+h1{font-size:44px;line-height:1.06;letter-spacing:-1.8px;margin:17px 0}
+h2{font-size:22px;letter-spacing:-.5px;margin:0}
+h3{font-size:15px;margin:0}
+p{color:var(--muted);line-height:1.75}
+.eyebrow{display:flex;align-items:center;gap:7px;color:#c4b7ff;font-size:9px;font-weight:750;letter-spacing:1.5px}
+.live-dot{width:5px;height:5px;border-radius:50%;background:#a5e8cc;box-shadow:0 0 12px #a5e8cc55}
+.row,.heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.heading{margin:27px 0 16px}
+.muted{color:var(--muted);font-size:12px}
+.small{color:var(--muted);font-size:11px;line-height:1.75}
+.pill{display:inline-block;white-space:nowrap;padding:6px 10px;border-radius:20px;border:1px solid #b5a8ff22;background:#b5a8ff0e;color:#c9bdff;font-size:10px}
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:13px 18px;border:1px solid #ffffff0c;border-radius:14px;background:linear-gradient(115deg,#a79af1,#777edc);box-shadow:inset 0 1px 0 #fff3,0 7px 20px #7a72d51b;font-size:13px;font-weight:750}
+.btn.secondary{background:#ffffff06;border-color:#ffffff12;box-shadow:inset 0 1px 0 #ffffff05}
+.btn.mini{min-height:34px;padding:8px 11px;border-radius:10px;font-size:11px}
+.full{width:100%}
+.hero{position:relative;isolation:isolate;display:grid;grid-template-columns:1.2fr 1fr;min-height:310px;overflow:hidden;border:1px solid #ffffff12;border-radius:30px;background:radial-gradient(ellipse at 80% 5%,#7b6aab44,transparent 65%),linear-gradient(115deg,#252c45,#182032);box-shadow:inset 0 1px 0 #ffffff0c,0 30px 60px #0002}
+.hero-copy{position:relative;z-index:2;padding:37px}
+.hero p{font-size:12px;margin:0 0 23px}
+.hero-stage{position:relative;display:grid;place-items:center;perspective:900px;min-width:0}
+.hero-stage:before{content:"";position:absolute;bottom:27px;width:220px;height:55px;border:1px solid #c2b6ff17;border-radius:50%;background:#a79aff12;transform:rotateX(60deg);box-shadow:0 0 50px #b09aff14}
+.hero-card{width:202px;overflow:hidden;border:1px solid #fff3;border-radius:23px;background:#2d354a;box-shadow:-20px 25px 45px #0005,7px 0 0 #585b7d;animation:hero-float 7s ease-in-out infinite}
+.hero-label{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;font-size:11px}
+.hero-label small{font-size:8px;color:#bfc1d8}
+.side-note{position:absolute;right:14px;bottom:24px;font-size:8px;color:#b1b9d0;letter-spacing:1px}
+.cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.case{position:relative;isolation:isolate;overflow:hidden;min-width:0;padding:17px;text-align:left;border:1px solid #ffffff0c;border-radius:24px;background:radial-gradient(ellipse at 50% 0,var(--tint),transparent 75%),var(--panel);box-shadow:inset 0 1px 0 #ffffff0a,0 15px 30px #0002;transition:transform .45s var(--ease),border-color .3s}
+.case .eyebrow{font-size:8px;letter-spacing:.6px;min-height:21px}
+.case-stage{position:relative;display:grid;place-items:center;height:150px;perspective:700px}
+.case-box{position:relative;width:106px;height:106px;transform-style:preserve-3d;transform:rotateX(-12deg) rotateY(-22deg) rotateZ(-7deg);transition:transform .7s var(--ease)}
+.cube-front{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;border:1px solid #fff3;border-radius:17px;background:linear-gradient(140deg,var(--cube),#333e5e);transform:translateZ(21px);box-shadow:inset 0 1px 0 #fff3,0 20px 25px #0003}
+.cube-front:after{content:"";position:absolute;inset:-100%;background:linear-gradient(110deg,transparent 44%,#fff2 50%,transparent 56%);transform:translateX(-45%);transition:transform 1s}
+.cube-right{position:absolute;inset:0;width:42px;border:1px solid #fff2;border-radius:13px;background:#333f5c;transform-origin:left;transform:rotateY(90deg) translateZ(85px) translateX(-21px)}
+.cube-top{position:absolute;top:0;left:0;width:106px;height:42px;border:1px solid #fff3;border-radius:13px;background:linear-gradient(var(--cube),#7888b8);transform-origin:top;transform:rotateX(90deg) translateZ(21px)}
+.cube-front .ic{width:46px;height:46px;color:#f2edff;stroke-width:1;filter:drop-shadow(0 6px 5px #0003)}
+.cube-strip{position:absolute;top:0;bottom:0;left:44px;width:17px;background:#ffffff10}
+.case h3{font-size:17px;margin:6px 0 8px}
+.case p{font-size:11px;min-height:37px;margin:0 0 15px}
+.case-foot{display:flex;align-items:center;justify-content:space-between;padding-top:13px;border-top:1px solid #ffffff0c}
+.price{font-weight:750;white-space:nowrap}
+.panel{padding:21px;border:1px solid var(--line);border-radius:23px;background:var(--panel);box-shadow:inset 0 1px 0 #ffffff05}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.stat strong{display:block;font-size:25px;margin-bottom:6px}
+.stat span{font-size:10px;color:var(--muted)}
+.nav{position:fixed;z-index:30;left:50%;bottom:0;transform:translateX(-50%);display:flex;gap:4px;width:min(690px,100%);padding:9px 8px calc(9px + env(safe-area-inset-bottom,0px));border:1px solid #ffffff10;border-bottom:0;border-radius:24px 24px 0 0;background:#181e2ced;backdrop-filter:blur(25px);box-shadow:0 -10px 40px #0003}
+.nav button{position:relative;flex:1;display:flex;align-items:center;flex-direction:column;gap:6px;padding:10px 2px 8px;border-radius:14px;background:transparent;color:#7e8aa5;font-size:10px}
+.nav button.active{background:#a5a1ff10;color:#c5beff}
+.nav button.active:before{content:"";position:absolute;top:3px;width:17px;height:2px;border-radius:5px;background:#cfc3ff;box-shadow:0 0 12px #b3a0ff66}
+.toolbar{display:flex;gap:9px;margin:17px 0 12px}
+input,select{min-width:0;padding:12px;border:1px solid #ffffff10;border-radius:13px;background:#222b3d;color:var(--text)}
+.toolbar input{flex:1}
+.toolbar select{max-width:165px}
+.chips{display:flex;gap:7px;overflow:auto;padding-bottom:13px}
+.chips button{padding:9px 12px;border:1px solid #ffffff08;border-radius:11px;background:#ffffff04;color:var(--muted);font-size:11px;white-space:nowrap}
+.chips button.on{border-color:#a6a1ff44;background:#a6a1ff12;color:#d0c7ff}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.gift{position:relative;isolation:isolate;overflow:hidden;min-width:0;padding:0;text-align:left;border:1px solid #ffffff0b;border-radius:22px;background:var(--panel);box-shadow:0 12px 25px #0002;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .35s var(--ease),border-color .35s,box-shadow .35s}
+.gift:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at var(--mx,50%) var(--my,20%),#ffffff17,transparent 65%);opacity:0;transition:opacity .3s}
+.gift-stage{position:relative;isolation:isolate;overflow:hidden;padding:12px;background:radial-gradient(ellipse at 40% 10%,var(--a),var(--b))}
+.gift-stage:before{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(#ffffff25 1px,transparent 1px);background-size:17px 17px;opacity:.25}
+.media{position:relative;isolation:isolate;display:grid;place-items:center;overflow:hidden;width:100%;aspect-ratio:1;border:1px solid #ffffff12;border-radius:15px;background:#171d2b;box-shadow:0 12px 15px #0003}
+.photo{display:block;width:100%;height:100%;object-fit:cover;opacity:0;transition:transform .65s var(--ease),opacity .35s}
+.photo.loaded{opacity:1}
+.skeleton{position:absolute;z-index:-1;inset:0;background:linear-gradient(110deg,#212a3c 20%,#333d55 45%,#212a3c 70%);background-size:220% 100%;animation:shimmer 1.7s ease-in-out infinite}
+.media.failed .skeleton{display:none}
+.img-error{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:8px;padding:12px;text-align:center;color:#a4abc1;font-size:10px;line-height:1.6}
+.media.failed .img-error{display:flex}
+.fallback-label{position:absolute;bottom:4px;left:4px;right:4px;background:#111b;backdrop-filter:blur(6px);border-radius:5px;padding:3px;font-size:7px;color:#d2d4e0;text-align:center}
+.badge{position:absolute;z-index:3;top:7px;left:7px;padding:4px 6px;border:1px solid #ffffff10;border-radius:6px;background:#0005;backdrop-filter:blur(6px);color:#fff;font-size:8px}
+.gift-body{padding:12px}
+.gift-name{overflow:hidden;margin-bottom:5px;font-size:13px;font-weight:700;text-overflow:ellipsis;white-space:nowrap}
+.gift-sub{margin-bottom:9px;color:#818da7;font-size:9px}
+.gift-body .price{font-size:13px}
+.change{font-size:9px;color:var(--green)}
+.change.down{color:#e69cae}
+.empty{padding:48px 20px;border:1px dashed #ffffff18;border-radius:24px;text-align:center;color:var(--muted);line-height:1.9}
+.earn-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.tap-zone{position:relative;display:grid;place-items:center;overflow:hidden;height:260px}
+.tap{display:grid;place-items:center;width:180px;height:180px;border:1px solid #ffd78017;border-radius:50%;background:radial-gradient(circle,#ffcc571b,transparent 70%);box-shadow:0 0 0 23px #ffd78004}
+.tap img{width:130px;height:130px;pointer-events:none;filter:drop-shadow(0 13px 22px #ffce4d33);animation:tapfloat 5s ease-in-out infinite}
+.tap:active:not(:disabled){filter:brightness(1.1);transform:scale(.92)}
+.floater{position:absolute;color:#e7ddff;font-size:21px;font-weight:750;pointer-events:none;animation:rise .8s ease-out forwards}
+.progress{overflow:hidden;height:6px;border-radius:6px;background:#ffffff09}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,#8397ff,#c2a8ff);transition:width .22s var(--ease)}
+.progress.gold i{background:linear-gradient(90deg,#e5b965,#ffe0a0)}
+.task{display:flex;align-items:center;gap:12px;margin-top:11px;padding:15px;border:1px solid var(--line);border-radius:17px;background:var(--panel)}
+.task-content{flex:1;min-width:0}
+.task h3{font-size:13px;margin:0 0 5px}
+.task p{font-size:11px;margin:0}
+.feed div{padding:10px 0;border-bottom:1px solid #ffffff08;color:var(--muted);font-size:11px;line-height:1.7}
+.album{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:15px}
+.album-tile{position:relative;overflow:hidden;aspect-ratio:1;border:1px solid #ffffff0c;border-radius:12px;background:#222b3d}
+.album-tile img{width:100%;height:100%;object-fit:cover}
+.album-tile.locked{opacity:.2;filter:grayscale(1)}
+.album-tile span{position:absolute;right:3px;bottom:3px;padding:2px 4px;border-radius:4px;background:#0008;font-size:9px}
+.overlay{position:fixed;z-index:50;inset:0;display:grid;place-items:center;padding:17px;background:#060913d4;backdrop-filter:blur(16px);animation:fade .25s ease both}
+.sheet{position:relative;overflow:auto;overscroll-behavior:contain;width:100%;max-width:475px;max-height:91vh;max-height:91dvh;border:1px solid #ffffff16;border-radius:29px;background:#192131;box-shadow:inset 0 1px 0 #ffffff0c,0 35px 110px #0009;animation:sheet .5s var(--ease) both}
+.sheet.winner{border-color:#c2b3ff55}
+.close{position:absolute;z-index:5;top:12px;right:12px;display:grid;place-items:center;width:34px;height:34px;border:1px solid #ffffff18;border-radius:50%;background:#0005;backdrop-filter:blur(9px)}
+.sheet-body{padding:22px}
+.inspect-stage{position:relative;isolation:isolate;display:grid;place-items:center;overflow:hidden;min-height:310px;padding:36px 62px 26px;background:radial-gradient(ellipse at 35% 0,var(--a),var(--b));perspective:1000px}
+.inspect-stage:before{content:"";position:absolute;bottom:14px;width:220px;height:50px;border-radius:50%;background:#0004;filter:blur(16px)}
+.inspect-card{width:100%;border-radius:20px;box-shadow:8px 0 0 #ffffff12,0 20px 30px #0005;animation:inspect-float 7s ease-in-out infinite}
+.inspect-card .media{border-radius:20px;box-shadow:none}
+.stage-label{position:absolute;z-index:2;top:16px;left:17px;padding:6px 8px;border-radius:8px;background:#0002;color:#fffa;font-size:9px;letter-spacing:1px}
+.stage-caption{position:absolute;bottom:9px;color:#fff8;font-size:8px;letter-spacing:.4px}
+.attrs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:18px 0}
+.attrs div{padding:10px 7px;border:1px solid #ffffff08;border-radius:11px;background:#ffffff04;font-size:10px}
+.attrs small{display:block;margin-bottom:5px;color:var(--muted);font-size:9px}
+.bubble{margin:15px 0;padding:14px;border:1px solid #ffffff15;border-radius:18px 18px 18px 4px;background:#ffffff09;color:#d7d9ef;font-size:12px;line-height:1.7}
+.receipt{display:flex;justify-content:space-between;gap:10px;margin:14px 0;padding-top:13px;border-top:1px solid #ffffff0d;color:var(--muted);font-size:12px}
+.actions{display:grid;gap:10px;margin-top:17px}
+.sale-box{padding:14px;border:1px solid #ffffff0d;border-radius:17px;background:#ffffff03}
+.stepper{display:grid;grid-template-columns:39px minmax(0,1fr) 39px;align-items:center;gap:7px;margin:12px 0}
+.stepper input{width:100%;padding:12px 5px;border-color:#aaa1ff25;background:#111927;font-size:22px;font-weight:750;text-align:center;appearance:textfield;-moz-appearance:textfield}
+.stepper input::-webkit-inner-spin-button,.stepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.step{height:43px;border:1px solid #a59cff22;border-radius:12px;background:#a59cff15;color:#d9cfff;font-size:23px}
+.presets{display:flex;gap:6px;margin-bottom:14px}
+.preset{flex:1;padding:9px 4px;border:1px solid #ffffff09;border-radius:10px;background:#ffffff05;color:var(--muted);font-size:10px;line-height:1.6}
+.preset.on{border-color:#b7aaff55;background:#a59cff14;color:#d8ccff}
+.sale-line{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;color:var(--muted);font-size:11px}
+.sale-line.net{padding-top:12px;border-top:1px solid #ffffff0a}
+.net strong{color:#a6e2c7;font-size:16px}
+.demand{margin-top:13px;padding:10px;border:1px solid #8be0bd14;border-radius:11px;background:#8be0bd08;color:#a3d4bc;font-size:10px;line-height:1.7}
+.demand.warn{border-color:#e2b87619;background:#e2b87608;color:#d8bf92}
+.demand.bad{border-color:#e398a819;background:#e398a808;color:#dfa7b4}
+.roulette{position:relative;overflow:hidden;height:186px;margin:20px 0;border:1px solid #ffffff0d;border-radius:20px;background:#0f1624}
+.roulette:before{content:"";position:absolute;z-index:3;inset:0;pointer-events:none;background:linear-gradient(90deg,#0f1624,transparent 18%,transparent 82%,#0f1624)}
+.roulette:after{content:"";position:absolute;z-index:2;top:0;bottom:0;left:50%;width:2px;background:linear-gradient(transparent,#eee5ff 20%,#eee5ff 80%,transparent);box-shadow:0 0 16px #c7a9ff;transform:translateX(-50%)}
+.pointer{position:absolute;z-index:4;top:0;left:50%;border-top:10px solid #eee4ff;border-right:7px solid transparent;border-left:7px solid transparent;transform:translateX(-50%)}
+.strip{position:absolute;top:12px;left:0;display:flex;gap:10px;will-change:transform}
+.roll-card{flex:0 0 110px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;width:110px;height:158px;padding:8px;border:1px solid #ffffff14;border-radius:15px;background:radial-gradient(circle at top,var(--a),var(--b));font-size:9px}
+.roll-card .media{width:91px;height:91px;aspect-ratio:auto;border-radius:10px}
+.roll-card.selected{border-color:#e4caff;box-shadow:inset 0 0 20px #c39aff20,0 0 18px #c39aff33}
+.preparing{display:grid;place-items:center;height:100%;color:#cbbfff}
+.preparing .ic{width:57px;height:57px;animation:prepare 1s ease-in-out infinite}
+.case-status{text-align:center;font-size:11px;color:#b4a8d6;min-height:20px}
+.drops{display:grid;grid-template-columns:1fr 1fr;gap:7px;overflow:auto;max-height:200px;margin:15px 0}
+.drop{padding:9px;border-radius:10px;background:#ffffff04;font-size:10px;line-height:1.7}
+.drop span{float:right;color:#c9b8ff}
+.spark{width:100%;height:70px;margin-top:12px}
+.toast-area{position:fixed;z-index:100;bottom:105px;left:50%;width:min(400px,90%);pointer-events:none;transform:translateX(-50%)}
+.toast{margin-top:8px;padding:13px 16px;border:1px solid #ffffff16;border-radius:15px;background:#303c52f0;backdrop-filter:blur(18px);box-shadow:0 10px 30px #0004;font-size:12px;line-height:1.6;animation:enter .3s var(--ease)}
+.particles{position:fixed;z-index:80;inset:0;overflow:hidden;pointer-events:none}
+.particle{position:absolute;top:var(--y);left:var(--x);width:var(--size);height:var(--size);border-radius:2px;background:var(--color);animation:particle 1.3s ease-out forwards}
+.screen-enter{animation:enter .4s var(--ease)}
+.linkbutton{display:inline-flex;align-items:center;justify-content:center;min-height:40px;color:#bebcff;font-size:11px;text-decoration:none}
+footer{margin-top:25px;color:#72809a;font-size:10px;line-height:1.9}
+#errorBox{display:none;margin-bottom:20px;padding:17px;border:1px solid #ef9bb833;border-radius:17px;background:#502838;font-size:12px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+.gate{position:fixed;z-index:120;inset:0;display:grid;place-items:center;padding:22px;background:radial-gradient(ellipse at 50% 10%,#4e426f55,transparent 60%),#0d111c;transition:opacity .55s,transform .55s var(--ease)}
+.gate.hidden{opacity:0;transform:scale(1.035);pointer-events:none}
+.gate-card{width:100%;max-width:380px;padding:30px;border:1px solid #ffffff12;border-radius:29px;background:#1a2234cc;box-shadow:0 30px 90px #0005;animation:sheet .7s var(--ease)}
+.gate-mark{width:66px;height:66px;display:grid;place-items:center;margin:0 auto 24px;border-radius:23px;background:linear-gradient(140deg,#c0a7f3,#687aca);box-shadow:0 15px 35px #8a6fff22,inset 0 1px 1px #fff6}
+.gate-mark .ic{width:37px;height:37px}
+.gate-card h2{text-align:center;font-size:29px}
+.gate-card input{width:100%;margin:15px 0}
+.profile-line{padding:12px 0;border-bottom:1px solid #ffffff08;display:flex;justify-content:space-between;gap:12px;font-size:11px;color:var(--muted);overflow-wrap:anywhere}
+.profile-line span:last-child{max-width:65%;text-align:right;color:#ced2e5}
+.swatches{display:flex;justify-content:center;gap:9px;margin:17px 0}
+.swatch{width:26px;height:26px;border-radius:50%;background:var(--color);border:2px solid transparent}
+.swatch.on{border-color:#fff}
+.reels{display:flex;justify-content:center;gap:9px;margin:25px 0}
+.reel{display:grid;place-items:center;overflow:hidden;width:100px;height:115px;border:1px solid #ffffff12;border-radius:18px;background:linear-gradient(#202b40,#373554,#202b40);box-shadow:inset 0 13px 18px #0003,inset 0 -13px 18px #0003}
+.slot-symbol{display:grid;place-items:center;overflow:hidden;width:65px;height:65px;border-radius:13px;color:#d1c5ff;font-size:32px}
+.slot-symbol img{width:100%;height:100%;object-fit:cover}
+.reel.spinning .slot-symbol{filter:blur(2px);animation:slot .14s linear infinite}
+.reel.stopped{animation:stop .4s var(--ease)}
+.bets{display:flex;gap:7px;margin-bottom:13px}
+.bets button{flex:1;padding:10px;border:1px solid transparent;border-radius:11px;background:#ffffff06}
+.bets button.on{border-color:#aea4ff66;background:#a6a1ff15}
+@keyframes shimmer{to{background-position:-220% 0}}
+@keyframes hero-float{0%,100%{transform:translateY(0) rotateY(-16deg) rotateZ(9deg)}50%{transform:translateY(-12px) rotateY(-8deg) rotateZ(5deg)}}
+@keyframes inspect-float{0%,100%{transform:translateY(0) rotateY(-10deg) rotateZ(-4deg)}50%{transform:translateY(-7px) rotateY(8deg) rotateZ(3deg)}}
+@keyframes tapfloat{50%{transform:translateY(-6px) rotate(5deg)}}
+@keyframes bump{40%{transform:scale(1.06);border-color:#b7a9ff66}}
+@keyframes enter{from{opacity:.3;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes sheet{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes rise{to{transform:translateY(-85px);opacity:0}}
+@keyframes slot{from{transform:translateY(-80px)}to{transform:translateY(80px)}}
+@keyframes stop{0%{transform:translateY(-4px)}50%{transform:translateY(3px)}100%{transform:translateY(0)}}
+@keyframes prepare{50%{transform:translateY(-5px) rotate(-8deg);filter:drop-shadow(0 0 15px #b898ff55)}}
+@keyframes particle{from{opacity:1;transform:translate(0,0) rotate(0)}to{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot))}}
+@media(hover:hover) and (pointer:fine){
+.case:hover{border-color:#b7acff44;transform:translateY(-5px)}
+.case:hover .case-box{transform:translateY(-7px) rotateX(-17deg) rotateY(10deg) rotateZ(4deg)}
+.case:hover .cube-front:after{transform:translateX(45%)}
+.gift:hover{border-color:#b6a9ff55;box-shadow:0 20px 35px #0004}
+.gift:hover:after{opacity:1}
+.gift:hover .photo{transform:scale(1.03)}
+}
+@media(min-width:780px){.nav{bottom:16px;padding-bottom:9px;border-bottom:1px solid #ffffff10;border-radius:24px}}
+@media(max-width:650px){
+.app{padding-left:15px;padding-right:15px}
+.top{gap:7px;margin-bottom:20px}
+.logo{width:35px;height:37px;border-radius:12px}
+.word{font-size:11px;letter-spacing:1px}.word small{font-size:7px;letter-spacing:.3px}
+.balance{padding:9px 8px;font-size:11px}
+.top .iconbtn{width:29px;min-width:29px;height:32px}.top .ic{width:17px;height:17px}
+.top .small-avatar{width:29px;height:29px;font-size:11px}
+.hero{grid-template-columns:1.15fr 1fr;min-height:270px;border-radius:24px}
+.hero-copy{padding:27px 0 27px 21px}
+h1{font-size:31px;letter-spacing:-1.2px}
+.hero p{font-size:10px}.hero .btn{min-height:39px;padding:11px 12px;font-size:10px}
+.eyebrow{font-size:7px;letter-spacing:1px}
+.hero-card{width:128px;border-radius:17px;box-shadow:-12px 18px 25px #0005,5px 0 0 #585b7d}
+.hero-label{padding:10px;font-size:9px}.hero-label small{font-size:7px}
+.hero-stage:before{bottom:38px;width:145px;height:40px}
+.side-note{right:7px;bottom:29px;font-size:6px}
+.cases{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.case{padding:13px}.case-stage{height:140px}.case h3{font-size:14px}.case p{font-size:10px}.case .price{font-size:13px}
+.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.gift-stage,.gift-body{padding:10px}.gift-name,.gift-body .price{font-size:12px}.gift-sub{font-size:8px}.badge{font-size:7px}
+.earn-grid{grid-template-columns:1fr}
+.stat{padding:15px 11px}.stat strong{font-size:22px}.stat span{font-size:9px}
+h2{font-size:19px}.toolbar select{max-width:137px;font-size:11px}
+.inspect-stage{min-height:290px;padding:34px 64px 26px}
+.album{grid-template-columns:repeat(5,minmax(0,1fr))}
+}
+@media(max-width:360px){.word small{display:none}.word{font-size:10px}.logo{width:29px}h1{font-size:27px}.hero-card{width:110px}.hero-copy{padding-left:17px}.case{padding:11px}.case h3{font-size:12px}.inspect-stage{padding-left:52px;padding-right:52px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.gift{transform:none!important}.particles{display:none}.hero-card{transform:rotate(-5deg)}}
 </style>
 </head>
 
@@ -1632,107 +271,86 @@ footer {
     <div class="logo" id="logo">G</div>
     <div class="word">
       GIFT LAB
-      <small>STUDIO EDITION · DEMO</small>
+      <small>COLLECTION STUDIO · DEMO</small>
     </div>
     <div class="balance" id="balance">Загрузка…</div>
-    <button class="iconbtn" id="sound"
-            aria-label="Включить звук">♪</button>
-    <button class="iconbtn" id="help"
-            aria-label="Об игре">?</button>
+    <button class="iconbtn" id="sound" aria-label="Включить звук">♪</button>
+    <button class="avatar small-avatar" id="profileButton"
+            aria-label="Локальный профиль">G</button>
   </header>
 
   <div id="errorBox" role="alert"></div>
 
   <main id="main">
     <section class="panel">
-      <h2>Открываем студию подарков</h2>
-      <p class="small">
-        Если загрузка не заканчивается, открой опубликованный
-        сайт в браузере, а не предпросмотр HTML.
-      </p>
+      <h2>Открываем студию</h2>
+      <p class="small">Если экран не меняется, открой опубликованный сайт в браузере.</p>
     </section>
   </main>
 
-  <noscript>
-    Для игры необходимо включить JavaScript.
-  </noscript>
+  <noscript>Для игры необходимо включить JavaScript.</noscript>
 
   <footer>
-    Локальная демоигра · Баланс и предметы виртуальные.<br>
-    Рынок с ботами. Без платежей и вывода.<br>
-    Изображения подарков не означают владение настоящими NFT.
+    Локальная демоигра · Предметы и баланс виртуальные.<br>
+    Изображения реальных подарков не передают владение NFT.<br>
+    Без платежей, вывода и настоящих сделок. Для картинок нужен интернет.
   </footer>
 </div>
 
 <nav id="nav" class="nav" aria-label="Разделы"></nav>
 <div id="modal"></div>
 <div id="particles" class="particles" aria-hidden="true"></div>
-<div id="toasts" class="toast-area"
-     role="status" aria-live="polite"></div>
+<div id="toasts" class="toast-area" role="status" aria-live="polite"></div>
+<div id="gateRoot"></div>
 
 <script>
-window.addEventListener("error", function (e) {
-  var box = document.getElementById("errorBox");
-  if (!box || !e.message) return;
-
-  box.style.display = "block";
-  box.textContent =
-    "Ошибка игры:\n" + e.message +
-    "\nСтрока: " + (e.lineno || "?") +
-    "\nСделай скриншот этого сообщения.";
+window.addEventListener("error",function(e){
+  if(!e.message)return;
+  var b=document.getElementById("errorBox");
+  if(b){
+    b.style.display="block";
+    b.textContent="Ошибка игры:\n"+e.message+"\nСтрока: "+(e.lineno||"?");
+  }
 });
-
-window.addEventListener("unhandledrejection", function (e) {
-  var box = document.getElementById("errorBox");
-  if (!box) return;
-
-  box.style.display = "block";
-  box.textContent =
-    "Ошибка:\n" +
-    String(e.reason && e.reason.message || e.reason);
+window.addEventListener("unhandledrejection",function(e){
+  var b=document.getElementById("errorBox");
+  if(b){
+    b.style.display="block";
+    b.textContent="Ошибка:\n"+String(e.reason&&e.reason.message||e.reason);
+  }
 });
 </script>
 
 <script>
-(function () {
+(function(){
 "use strict";
 
-/* ---------------- НАСТРОЙКИ ---------------- */
+/* ---------- НАСТРОЙКИ ---------- */
 
-var KEY = "gift-lab-studio-v1";
-var OLD_KEY = "gift-lab-pages-v1";
+var KEY="gift-lab-studio-v1";
+var PROFILE_KEY="gift-lab-profile-v1";
+var OLD_KEY="gift-lab-pages-v1";
+var ENERGY_MAX=150;
+var ENERGY_INTERVAL=2000;
+var CHARGE_TARGET=8;
+var BUYER_INTERVAL=10000;
+var PRICE_INTERVAL=15000;
+var LISTING_TIME=1800000;
+var FEE=.05;
 
-var ENERGY_INTERVAL = 2000;
-var BUYER_INTERVAL = 10000;
-var PRICE_INTERVAL = 15000;
-var LISTING_LIFETIME = 30 * 60 * 1000;
-var COMMISSION = .05;
+var $=function(id){return document.getElementById(id);};
+var tab="home",busy=false,entered=false;
+var search="",sort="new",rarity=-1,favoritesOnly=false;
+var bet=10,lastBalance=null,previousFocus=null,saleRef=0;
+var soundEnabled=false,audio=null,lastTone=0;
+var particleCount=0,storageWarning=false,lastTapAt=0;
+var tiltCard=null,tiltFrame=0,tiltEvent=null;
+var gateColor="#aa98df";
+var profile=null;
 
-var $ = function (id) {
-  return document.getElementById(id);
-};
+var COLORS=["#aa98df","#7ca1d2","#72b3a0","#c88eac","#c4a470"];
 
-var tab = "home";
-var busy = false;
-var bet = 50;
-var search = "";
-var sort = "new";
-var rarityFilter = -1;
-var onlyFavorites = false;
-var lastBalance = null;
-var previousFocus = null;
-var saleReference = 0;
-var soundEnabled = false;
-var audio = null;
-var lastTone = 0;
-var particleCount = 0;
-var storageWarning = false;
-var migrated = false;
-var tiltCard = null;
-var tiltFrame = 0;
-var tiltEvent = null;
-
-var BACKGROUNDS = [
+var BG=[
   ["Lavender","#76678e","#34334e"],
   ["Ocean","#55759b","#263d5b"],
   ["Mint","#4b8277","#243f42"],
@@ -1745,19 +363,14 @@ var BACKGROUNDS = [
   ["Graphite","#657183","#2d3649"]
 ];
 
-var RARITIES = [
-  "Обычный",
-  "Необычный",
-  "Редкий",
-  "Эпический",
-  "Легендарный"
-];
+var RAR=["Обычный","Необычный","Редкий","Эпический","Легендарный"];
 
 /*
-  Название, Fragment slug, базовая игровая оценка,
-  игровая категория редкости.
+  Первые 13 ID не меняются: совместимость с прежним сохранением.
+  Последнее поле — доступный диапазон игровых референсов изображений.
+  Если конкретный референс недоступен, показывается №1 с пометкой.
 */
-var GIFTS = [
+var D=[
   ["Loot Bag","lootbag",25,0],
   ["Love Potion","lovepotion",40,0],
   ["Toy Bear","toybear",65,0],
@@ -1770,2451 +383,1765 @@ var GIFTS = [
   ["Diamond Ring","diamondring",1050,3],
   ["Heart Locket","heartlocket",2300,3],
   ["Durov's Cap","durovscap",3400,4],
-  ["Plush Pepe","plushpepe",6500,4]
+  ["Plush Pepe","plushpepe",6500,4],
+  ["Kissed Frog","kissedfrog",220,1],
+  ["Magic Potion","magicpotion",950,3],
+  ["Vintage Cigar","vintagecigar",580,2]
 ];
 
-var CASES = [
-  {
-    name: "First Drop",
-    tag: "ПЕРВАЯ КОЛЛЕКЦИЯ",
-    price: 80,
-    tint: "#4f547f",
-    cube: "#777bb1",
-    description: "Начни собирать свою витрину",
-    weights: [
-      [0,30],[1,27],[2,23],[3,12],[4,6],[7,2]
-    ]
-  },
-  {
-    name: "Mint Garden",
-    tag: "СВЕЖАЯ СЕРИЯ",
-    price: 180,
-    tint: "#2a5b52",
-    cube: "#6b9f8f",
-    description: "Цветы, мягкий свет и редкости",
-    weights: [
-      [1,22],[2,20],[3,28],[4,18],
-      [5,6],[8,5.8],[12,.2]
-    ]
-  },
-  {
-    name: "Purple Vault",
-    tag: "РЕДКИЙ АРХИВ",
-    price: 450,
-    tint: "#51436d",
-    cube: "#9983bc",
-    description: "Подарки с особым характером",
-    weights: [
-      [3,23],[4,22],[5,18],[6,15],[7,12],
-      [8,5],[9,3],[11,1.5],[12,.5]
-    ]
-  },
-  {
-    name: "Frozen Orbit",
-    tag: "ХОЛОДНАЯ ОРБИТА",
-    price: 900,
-    tint: "#315775",
-    cube: "#709bbc",
-    description: "Изысканные модели в новой сцене",
-    weights: [
-      [4,23],[5,20],[6,20],[7,17],
-      [8,10],[9,7],[10,2],[12,1]
-    ]
-  },
-  {
-    name: "Royal Reserve",
-    tag: "ВЫСШАЯ ЛИГА",
-    price: 2000,
-    tint: "#6b5438",
-    cube: "#baa16b",
-    description: "Эпические и легендарные подарки",
-    weights: [
-      [5,24],[6,20],[7,20],[8,15],
-      [9,10],[10,6],[11,3.5],[12,1.5]
-    ]
-  },
-  {
-    name: "Pepe Archive",
-    tag: "ЛЕГЕНДАРНЫЙ АРХИВ",
-    price: 4500,
-    tint: "#415d52",
-    cube: "#88aa8f",
-    description: "Только эпические и легендарные",
-    weights: [
-      [8,35],[9,30],[10,20],[11,11],[12,4]
-    ]
-  }
+var CASES=[
+  {n:"First Drop",tag:"ПЕРВАЯ КОЛЛЕКЦИЯ",p:80,tint:"#4f547f",cube:"#777bb1",d:"Маленькое начало большой коллекции",w:[[0,30],[1,27],[2,23],[3,12],[4,6],[7,2]]},
+  {n:"Mint Garden",tag:"СВЕЖАЯ СЕРИЯ",p:180,tint:"#2a5b52",cube:"#6b9f8f",d:"Цветы, лягушки и мягкий свет",w:[[1,20],[2,18],[3,25],[4,15],[13,14],[5,4],[8,3.8],[12,.2]]},
+  {n:"Purple Vault",tag:"РЕДКИЙ АРХИВ",p:450,tint:"#51436d",cube:"#9983bc",d:"Новые варианты знакомых подарков",w:[[3,20],[4,20],[5,16],[6,14],[7,12],[15,8],[8,5],[9,3],[11,1.5],[12,.5]]},
+  {n:"Alchemy Room",tag:"АЛХИМИЧЕСКАЯ СЕРИЯ",p:700,tint:"#3d5862",cube:"#78a5ad",d:"Зелья и коллекционные находки",w:[[1,18],[13,22],[7,20],[15,15],[14,15],[8,5],[9,3],[10,1.5],[12,.5]]},
+  {n:"Royal Reserve",tag:"ВЫСШАЯ ЛИГА",p:2000,tint:"#6b5438",cube:"#baa16b",d:"Эпические и легендарные модели",w:[[5,18],[6,18],[7,18],[15,10],[8,12],[9,10],[14,6],[10,4],[11,2.5],[12,1.5]]},
+  {n:"Pepe Archive",tag:"ЛЕГЕНДАРНЫЙ АРХИВ",p:4500,tint:"#415d52",cube:"#88aa8f",d:"Только эпические и легендарные",w:[[8,28],[9,26],[14,15],[10,16],[11,11],[12,4]]}
 ];
 
-var ICONS = {
-  gift: "M20 12v9H4v-9M2 7h20v5H2zM12 7v14M12 7H7.5A2.5 2.5 0 1 1 10 4.5L12 7zm0 0h4.5A2.5 2.5 0 1 0 14 4.5L12 7z",
-  box: "m12 3 9 5v9l-9 5-9-5V8zM3 8l9 5 9-5M12 13v9",
-  market: "M3 10v11h18V10M2 10l2-7h16l2 7M2 10c0 3 5 3 5 0 0 3 5 3 5 0 0 3 5 3 5 0 0 3 5 3 5 0M9 21v-7h6v7",
-  bag: "M4 8h16l1 13H3L4 8zm4 0V6a4 4 0 0 1 8 0v2",
-  bolt: "m13 2-9 12h7l-1 8 10-12h-7l1-8z",
-  game: "M7 7h10c5 0 7 14 3 14-2 0-3-4-5-4H9c-2 0-3 4-5 4C0 21 2 7 7 7zm0 4v6m-3-3h6m6-2h.01M19 15h.01",
-  info: "M12 11v6m0-10h.01M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0",
-  close: "m6 6 12 12M6 18 18 6",
-  arrow: "M5 12h14m-5-5 5 5-5 5",
-  sound: "M11 4 6 8H3v8h3l5 4V4zM15 8c3 2 3 6 0 8M18 5c5 4 5 10 0 14",
-  mute: "M11 4 6 8H3v8h3l5 4V4zM16 9l5 6m0-6-5 6",
-  heart: "M12 21 3 12C-2 5 7 0 12 7c5-7 14-2 9 5z"
+var P={
+  gift:"M20 12v9H4v-9M2 7h20v5H2zM12 7v14M12 7H7.5A2.5 2.5 0 1 1 10 4.5L12 7zm0 0h4.5A2.5 2.5 0 1 0 14 4.5L12 7z",
+  box:"m12 3 9 5v9l-9 5-9-5V8zM3 8l9 5 9-5M12 13v9",
+  market:"M3 10v11h18V10M2 10l2-7h16l2 7M2 10c0 3 5 3 5 0 0 3 5 3 5 0 0 3 5 3 5 0 0 3 5 3 5 0M9 21v-7h6v7",
+  bag:"M4 8h16l1 13H3L4 8zm4 0V6a4 4 0 0 1 8 0v2",
+  bolt:"m13 2-9 12h7l-1 8 10-12h-7l1-8z",
+  game:"M7 7h10c5 0 7 14 3 14-2 0-3-4-5-4H9c-2 0-3 4-5 4C0 21 2 7 7 7zm0 4v6m-3-3h6m6-2h.01M19 15h.01",
+  close:"m6 6 12 12M6 18 18 6",
+  arrow:"M5 12h14m-5-5 5 5-5 5",
+  sound:"M11 4 6 8H3v8h3l5 4V4zM15 8c3 2 3 6 0 8M18 5c5 4 5 10 0 14",
+  mute:"M11 4 6 8H3v8h3l5 4V4zM16 9l5 6m0-6-5 6",
+  heart:"M12 21 3 12C-2 5 7 0 12 7c5-7 14-2 9 5z"
 };
 
-/* ---------------- УТИЛИТЫ ---------------- */
-
-function now() {
-  return Date.now();
-}
-
-function fmt(n) {
-  return Math.round(n).toLocaleString("ru-RU");
-}
-
-function esc(text) {
-  return String(text).replace(/[&<>"']/g,function (c) {
-    return {
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#39;"
-    }[c];
+function now(){return Date.now();}
+function fmt(n){return Math.round(n).toLocaleString("ru-RU");}
+function esc(s){
+  return String(s).replace(/[&<>"']/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
   });
 }
-
-function motionAllowed() {
-  return !window.matchMedia ||
-    !window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+function motion(){
+  return !window.matchMedia||
+    !matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
-
-function random() {
-  try {
-    if (window.crypto && window.crypto.getRandomValues) {
-      var a = new Uint32Array(1);
-      window.crypto.getRandomValues(a);
-      return a[0] / 4294967296;
+function rng(){
+  try{
+    if(window.crypto&&crypto.getRandomValues){
+      var a=new Uint32Array(1);
+      crypto.getRandomValues(a);
+      return a[0]/4294967296;
     }
-  } catch (e) {}
+  }catch(e){}
   return Math.random();
 }
-
-function integer(min,max) {
-  return Math.floor(random() * (max-min+1)) + min;
+function int(a,b){return Math.floor(rng()*(b-a+1))+a;}
+function uid(){
+  return now().toString(36)+"-"+rng().toString(36).slice(2)+rng().toString(36).slice(2);
+}
+function safe(n,f,min,max){
+  return Number.isFinite(n)?Math.max(min,Math.min(max,Math.floor(n))):f;
+}
+function validPrice(n){
+  return Number.isSafeInteger(n)&&n>=1&&n<=10000000;
+}
+function ic(n){
+  return '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+(P[n]||P.gift)+'"/></svg>';
+}
+function btn(a,t,id,cl,disabled){
+  return '<button class="'+(cl||"btn")+'" data-action="'+a+'"'+
+    (id!==undefined?' data-id="'+esc(id)+'"':"")+
+    (disabled?" disabled":"")+">"+t+"</button>";
 }
 
-function uid() {
-  return now().toString(36) + "-" +
-    random().toString(36).slice(2) +
-    random().toString(36).slice(2);
-}
+/* ---------- PNG-ЗВЕЗДА ---------- */
 
-function safeNumber(n,fallback,min,max) {
-  return Number.isFinite(n) ?
-    Math.max(min,Math.min(max,Math.floor(n))) :
-    fallback;
-}
-
-function validPrice(n) {
-  return Number.isSafeInteger(n) &&
-    n >= 1 && n <= 10000000;
-}
-
-function icon(name) {
-  return '<svg class="ic" viewBox="0 0 24 24" ' +
-    'fill="none" stroke="currentColor" ' +
-    'stroke-width="1.65" stroke-linecap="round" ' +
-    'stroke-linejoin="round" aria-hidden="true">' +
-    '<path d="' + (ICONS[name] || ICONS.gift) +
-    '"/></svg>';
-}
-
-function button(action,text,id,classes,disabled) {
-  return '<button class="' + (classes || "btn") +
-    '" data-action="' + action + '"' +
-    (id !== undefined ?
-      ' data-id="' + esc(id) + '"' : "") +
-    (disabled ? " disabled" : "") +
-    ">" + text + "</button>";
-}
-
-/* PNG-звезда, не эмодзи. */
-function createStarPNG() {
-  var canvas = document.createElement("canvas");
-  canvas.width = 192;
-  canvas.height = 192;
-
-  var c = canvas.getContext("2d");
-  if (!c) throw new Error("Canvas недоступен.");
+function fallbackStar(){
+  var canvas=document.createElement("canvas");
+  canvas.width=192;canvas.height=192;
+  var c=canvas.getContext("2d");
+  if(!c)throw new Error("Canvas недоступен.");
 
   c.beginPath();
-
-  for (var i=0;i<10;i++) {
-    var radius = i % 2 === 0 ? 88 : 41;
-    var angle = -Math.PI/2 + i*Math.PI/5;
-    var x = 96 + Math.cos(angle)*radius;
-    var y = 96 + Math.sin(angle)*radius;
-
-    if (i === 0) c.moveTo(x,y);
-    else c.lineTo(x,y);
+  for(var i=0;i<10;i++){
+    var r=i%2===0?88:41,a=-Math.PI/2+i*Math.PI/5;
+    var x=96+Math.cos(a)*r,y=96+Math.sin(a)*r;
+    if(i===0)c.moveTo(x,y);else c.lineTo(x,y);
   }
-
   c.closePath();
-
-  var gradient = c.createLinearGradient(30,0,140,192);
-  gradient.addColorStop(0,"#fff1b8");
-  gradient.addColorStop(.45,"#ffd362");
-  gradient.addColorStop(1,"#efa12c");
-
-  c.fillStyle = gradient;
-  c.fill();
-  c.lineWidth = 2;
-  c.strokeStyle = "#ffedb7";
-  c.stroke();
-
-  c.beginPath();
-  c.moveTo(96,8);
-  c.lineTo(96,95);
-  c.lineTo(12,68);
-  c.lineTo(71,61);
-  c.closePath();
-  c.fillStyle = "#fff0b2";
-  c.fill();
-
+  var g=c.createLinearGradient(30,0,140,192);
+  g.addColorStop(0,"#fff1b8");
+  g.addColorStop(.45,"#ffd362");
+  g.addColorStop(1,"#efa12c");
+  c.fillStyle=g;c.fill();
+  c.strokeStyle="#ffedb7";c.lineWidth=2;c.stroke();
   return canvas.toDataURL("image/png");
 }
 
-var STAR = createStarPNG();
+var STAR=fallbackStar();
+var starInfo={
+  original:false,
+  text:"Резервный PNG. Оригинальный ресурс ещё не загружен.",
+  source:""
+};
 
-function stars(n) {
-  return '<img class="star" src="' + STAR +
-    '" alt="Игровые звёзды"> ' + fmt(n);
+try{
+  var cachedStar=JSON.parse(localStorage.getItem("gl-original-star-v1")||"null");
+  if(cachedStar&&
+     typeof cachedStar.data==="string"&&
+     cachedStar.data.indexOf("data:image/png;base64,")===0&&
+     typeof cachedStar.source==="string"&&
+     cachedStar.source.indexOf("https://raw.githubusercontent.com/TelegramMessenger/Telegram-Android/")===0){
+    STAR=cachedStar.data;
+    starInfo={
+      original:true,
+      text:cachedStar.text||"Оригинальный ресурс Telegram, PNG.",
+      source:cachedStar.source
+    };
+  }
+}catch(e){}
+
+function stars(n){
+  return '<img class="star" data-star src="'+STAR+'" alt="Игровые звёзды"> '+fmt(n);
+}
+
+function refreshStarImages(){
+  Array.prototype.forEach.call(
+    document.querySelectorAll("[data-star]"),
+    function(i){i.src=STAR;}
+  );
+  if($("starStatus"))$("starStatus").textContent=starInfo.text;
 }
 
 /*
-  Публичные изображения референса #1.
-  При недоступности WebP пробуем JPEG.
+  Ресурс ищется в официальном репозитории, а не подставляется
+  непроверенный адрес сторонней картинки.
 */
-function assetURL(id,stage) {
-  var slug = GIFTS[id][1] + "-1";
-
-  return stage === 0 ?
-    "https://nft.fragment.com/gift/" + slug + ".webp" :
-    "https://nft.fragment.com/gift/" + slug + ".medium.jpg";
+async function fetchLimited(url,type){
+  var controller=window.AbortController?new AbortController():null;
+  var timer=controller?setTimeout(function(){controller.abort();},18000):null;
+  try{
+    var response=await fetch(url,controller?{signal:controller.signal}:{});
+    if(!response.ok)throw new Error("HTTP "+response.status);
+    return type==="json"?await response.json():
+      type==="blob"?await response.blob():await response.text();
+  }finally{clearTimeout(timer);}
 }
 
-function media(id,eager) {
-  return '<div class="media">' +
-    '<span class="skeleton"></span>' +
-    '<img class="photo" data-gift="' + id +
-    '" data-stage="0" src="' + assetURL(id,0) +
-    '" alt="' + esc(GIFTS[id][0]) +
-    ' — публичный референс №1" ' +
-    (eager ?
-      'loading="eager" fetchpriority="high"' :
-      'loading="lazy"') +
-    ' decoding="async" referrerpolicy="no-referrer">' +
-    '<div class="img-error">' + icon("gift") +
-    "<span>Картинка недоступна<br>Предмет сохранён</span>" +
-    "</div></div>";
+function androidColor(s){
+  if(!s||s[0]!=="#")throw new Error("Неподдерживаемый цвет ресурса.");
+  var h=s.slice(1);
+  if(h.length===8){
+    return "rgba("+parseInt(h.slice(2,4),16)+","+
+      parseInt(h.slice(4,6),16)+","+
+      parseInt(h.slice(6,8),16)+","+
+      (parseInt(h.slice(0,2),16)/255)+")";
+  }
+  return s;
 }
 
-document.addEventListener("load",function (event) {
-  var img = event.target;
-
-  if (img.tagName === "IMG" &&
-      img.hasAttribute("data-gift")) {
-    img.classList.add("loaded");
-  }
-},true);
-
-document.addEventListener("error",function (event) {
-  var img = event.target;
-
-  if (img.tagName !== "IMG") return;
-
-  if (img.hasAttribute("data-gift")) {
-    var stage = Number(img.dataset.stage) + 1;
-
-    if (stage <= 1) {
-      img.dataset.stage = String(stage);
-      img.src = assetURL(Number(img.dataset.gift),stage);
-    } else {
-      img.style.display = "none";
-
-      var container = img.closest(".media");
-      if (container) container.classList.add("failed");
-    }
-
-    return;
-  }
-
-  if (img.hasAttribute("data-slot-image")) {
-    img.style.display = "none";
-    img.parentElement.textContent = "◆";
-  }
-
-  if (img.hasAttribute("data-album-image")) {
-    img.style.display = "none";
-  }
-},true);
-
-/* ---------------- СОХРАНЕНИЕ ---------------- */
-
-function freshState() {
-  return {
-    coins: 1200,
-    level: 1,
-    energy: 250,
-    energyAt: now(),
-    dailyAt: 0,
-    jobReady: 0,
-    jobCooldown: 0,
-    inventory: [],
-    listings: [],
-    market: [],
-    prices: GIFTS.map(function (g) { return g[2]; }),
-    previous: GIFTS.map(function (g) { return g[2]; }),
-    stats: { taps:0, opened:0, bought:0, sold:0 },
-    claimed: [],
-    history: [],
-    seen: [],
-    favorites: [],
-    indexHistory: []
-  };
+function androidAttr(node,name,fallback){
+  return node.getAttributeNS(
+    "http://schemas.android.com/apk/res/android",name
+  )||node.getAttribute("android:"+name)||fallback;
 }
 
-function validItem(item) {
-  return item &&
-    typeof item.uid === "string" &&
-    Number.isInteger(item.id) &&
-    item.id >= 0 && item.id < GIFTS.length &&
-    Number.isInteger(item.bg) &&
-    item.bg >= 0 && item.bg < BACKGROUNDS.length &&
-    Number.isInteger(item.serial) &&
-    item.serial > 0;
-}
+/* Оригинальный Android VectorDrawable превращается в PNG. */
+function vectorToPNG(xml){
+  if(!window.Path2D)throw new Error("Path2D недоступен.");
+  var doc=new DOMParser().parseFromString(xml,"application/xml");
+  if(doc.querySelector("parsererror"))throw new Error("Ошибка XML.");
+  var root=doc.documentElement;
+  if(root.localName!=="vector")throw new Error("Это не VectorDrawable.");
 
-function migrateOldState(old) {
-  var state = freshState();
+  var w=Number(androidAttr(root,"viewportWidth","24"));
+  var h=Number(androidAttr(root,"viewportHeight","24"));
+  if(!(w>0&&h>0))throw new Error("Нет размера вектора.");
 
-  var map = [
-    0,1,2,1,3,3,4,4,5,6,7,7,
-    9,8,9,10,10,10,11,11,12,12,12,12
-  ];
+  var canvas=document.createElement("canvas");
+  canvas.width=256;canvas.height=256;
+  var ctx=canvas.getContext("2d");
+  ctx.scale(256/w,256/h);
 
-  function convert(item) {
-    if (!item || !Number.isInteger(item.id) ||
-        map[item.id] === undefined) {
-      return null;
-    }
+  function paint(parent){
+    Array.prototype.forEach.call(parent.children,function(node){
+      if(node.localName==="group"){
+        ctx.save();
+        var px=Number(androidAttr(node,"pivotX","0"));
+        var py=Number(androidAttr(node,"pivotY","0"));
+        ctx.translate(
+          Number(androidAttr(node,"translateX","0"))+px,
+          Number(androidAttr(node,"translateY","0"))+py
+        );
+        ctx.rotate(Number(androidAttr(node,"rotation","0"))*Math.PI/180);
+        ctx.scale(
+          Number(androidAttr(node,"scaleX","1")),
+          Number(androidAttr(node,"scaleY","1"))
+        );
+        ctx.translate(-px,-py);
+        paint(node);ctx.restore();
+      }else if(node.localName==="path"){
+        var data=androidAttr(node,"pathData","");
+        if(!data)return;
+        var path=new Path2D(data);
+        var fill=androidAttr(node,"fillColor","");
+        var gradient=node.getElementsByTagName("gradient")[0];
 
-    return {
-      uid: item.uid,
-      id: map[item.id],
-      bg: safeNumber(item.bg,0,0,7),
-      serial: safeNumber(item.serial,1,1,9999999)
-    };
-  }
+        ctx.save();
 
-  [
-    "coins","level","energy","energyAt",
-    "dailyAt","jobReady","jobCooldown"
-  ].forEach(function (key) {
-    if (Number.isFinite(old[key])) state[key] = old[key];
-  });
+        if(gradient){
+          var x1=Number(androidAttr(gradient,"startX","0"));
+          var y1=Number(androidAttr(gradient,"startY","0"));
+          var x2=Number(androidAttr(gradient,"endX",String(w)));
+          var y2=Number(androidAttr(gradient,"endY",String(h)));
+          var kind=androidAttr(gradient,"type","linear");
+          if(kind!=="linear")throw new Error("Сложный градиент.");
+          var g=ctx.createLinearGradient(x1,y1,x2,y2);
+          var items=gradient.getElementsByTagName("item");
+          if(items.length){
+            Array.prototype.forEach.call(items,function(item){
+              g.addColorStop(
+                Number(androidAttr(item,"offset","0")),
+                androidColor(androidAttr(item,"color",""))
+              );
+            });
+          }else{
+            g.addColorStop(0,androidColor(androidAttr(gradient,"startColor","")));
+            var mid=androidAttr(gradient,"centerColor","");
+            if(mid)g.addColorStop(.5,androidColor(mid));
+            g.addColorStop(1,androidColor(androidAttr(gradient,"endColor","")));
+          }
+          ctx.fillStyle=g;
+        }else{
+          if(!fill){ctx.restore();return;}
+          ctx.fillStyle=androidColor(fill);
+        }
 
-  if (old.stats) state.stats = old.stats;
-  if (Array.isArray(old.claimed)) state.claimed = old.claimed;
-  if (Array.isArray(old.history)) state.history = old.history;
-
-  if (Array.isArray(old.inventory)) {
-    state.inventory = old.inventory.map(convert).filter(Boolean);
-  }
-
-  if (Array.isArray(old.listings)) {
-    state.listings = old.listings.map(function (listing) {
-      if (!listing) return null;
-
-      return {
-        uid: listing.uid,
-        item: convert(listing.item),
-        price: listing.price,
-        expires: listing.expires
-      };
-    }).filter(function (listing) {
-      return listing && listing.item;
+        ctx.globalAlpha=Number(androidAttr(node,"fillAlpha","1"));
+        ctx.fill(
+          path,
+          androidAttr(node,"fillType","") === "evenOdd"?
+            "evenodd":"nonzero"
+        );
+        ctx.restore();
+      }else if(node.localName==="clip-path"){
+        throw new Error("Сложный вектор: clip-path.");
+      }
     });
   }
 
-  state.history.unshift(
-    "Обновление Studio: старые рисунки сопоставлены коллекциям подарков."
-  );
-
-  return state;
+  paint(root);
+  return canvas.toDataURL("image/png");
 }
 
-function readState() {
-  var state = freshState();
+function imageBlobToPNG(blob){
+  return new Promise(function(resolve,reject){
+    var objectURL=URL.createObjectURL(blob);
+    var image=new Image();
 
-  try {
-    var raw = localStorage.getItem(KEY);
-    var saved = raw ? JSON.parse(raw) : null;
+    image.onload=function(){
+      try{
+        var c=document.createElement("canvas");
+        c.width=Math.min(512,image.naturalWidth||256);
+        c.height=Math.min(512,image.naturalHeight||256);
+        c.getContext("2d").drawImage(image,0,0,c.width,c.height);
+        resolve(c.toDataURL("image/png"));
+      }catch(e){reject(e);}
+      finally{URL.revokeObjectURL(objectURL);}
+    };
 
-    if (!saved) {
-      var old = JSON.parse(
-        localStorage.getItem(OLD_KEY) || "null"
-      );
+    image.onerror=function(){
+      URL.revokeObjectURL(objectURL);
+      reject(new Error("Не удалось прочитать изображение."));
+    };
 
-      if (old && typeof old === "object") {
-        saved = migrateOldState(old);
-        migrated = true;
+    image.src=objectURL;
+  });
+}
+
+async function loadOriginalStar(force){
+  if(starInfo.original&&!force)return;
+  starInfo.text="Ищем оригинальный ресурс Telegram…";
+  refreshStarImages();
+
+  try{
+    var repo="TelegramMessenger/Telegram-Android";
+    var tree=await fetchLimited(
+      "https://api.github.com/repos/"+repo+
+      "/git/trees/master?recursive=1","json"
+    );
+
+    var files=(tree.tree||[]).filter(function(f){
+      return f.type==="blob"&&
+        /\/star_small_inner\.(png|webp|xml)$/i.test(f.path);
+    });
+
+    files.sort(function(a,b){
+      function score(p){
+        return (/\.png$/i.test(p)?100:/\.webp$/i.test(p)?80:10)+
+          (/xxxhdpi/.test(p)?5:/xxhdpi/.test(p)?4:/xhdpi/.test(p)?3:0);
+      }
+      return score(b.path)-score(a.path);
+    });
+
+    if(!files.length)throw new Error("Ресурс не найден.");
+
+    var lastError;
+    for(var i=0;i<Math.min(files.length,8);i++){
+      try{
+        var source="https://raw.githubusercontent.com/"+repo+
+          "/"+(tree.sha||"master")+"/"+files[i].path;
+        var isXML=/\.xml$/i.test(files[i].path);
+        var data=isXML?
+          vectorToPNG(await fetchLimited(source,"text")):
+          await imageBlobToPNG(await fetchLimited(source,"blob"));
+
+        STAR=data;
+        starInfo={
+          original:true,
+          source:source,
+          text:isXML?
+            "Оригинальный векторный ресурс Telegram, преобразован в PNG.":
+            "Оригинальный ресурс из Telegram Android, сохранён в PNG."
+        };
+
+        try{
+          localStorage.setItem("gl-original-star-v1",JSON.stringify({
+            data:STAR,source:source,text:starInfo.text
+          }));
+        }catch(e){}
+
+        refreshStarImages();
+        return;
+      }catch(e){lastError=e;}
+    }
+    throw lastError||new Error("Ресурс недоступен.");
+  }catch(e){
+    if(!starInfo.original){
+      starInfo.text=
+        "Резервный PNG: оригинальный ресурс не загрузился. "+
+        "Возможны ограничения сети или GitHub API.";
+    }
+    refreshStarImages();
+  }
+}
+
+/* ---------- ИЗОБРАЖЕНИЯ ПОДАРКОВ ---------- */
+
+function assetURL(id,ref,jpeg){
+  return "https://nft.fragment.com/gift/"+
+    D[id][1]+"-"+ref+(jpeg?".medium.jpg":".webp");
+}
+function media(id,ref,eager){
+  ref=ref||1;
+  return '<div class="media"><span class="skeleton"></span>'+
+    '<img class="photo" data-gift="'+id+'" data-ref="'+ref+
+    '" data-attempt="0" src="'+assetURL(id,ref,false)+
+    '" alt="'+esc(D[id][0])+' — референс #'+ref+'" '+
+    (eager?'loading="eager"':'loading="lazy"')+
+    ' decoding="async" referrerpolicy="no-referrer">'+
+    '<div class="img-error">'+ic("gift")+
+    '<span>Изображение недоступно<br>Предмет сохранён</span></div></div>';
+}
+
+document.addEventListener("load",function(e){
+  var img=e.target;
+  if(img.tagName==="IMG"&&img.hasAttribute("data-gift")){
+    img.classList.add("loaded");
+    if(Number(img.dataset.attempt)>=2&&Number(img.dataset.ref)!==1){
+      var m=img.closest(".media");
+      if(m&&!m.querySelector(".fallback-label")){
+        var label=document.createElement("span");
+        label.className="fallback-label";
+        label.textContent="Резервное изображение: референс #1";
+        m.appendChild(label);
       }
     }
+  }
+},true);
 
-    if (!saved || typeof saved !== "object") return state;
+document.addEventListener("error",function(e){
+  var img=e.target;
+  if(img.tagName!=="IMG")return;
 
-    state.coins = safeNumber(saved.coins,1200,0,1e12);
-    state.level = safeNumber(saved.level,1,1,20);
-    state.energy = safeNumber(saved.energy,250,0,250);
-    state.energyAt = safeNumber(saved.energyAt,now(),0,now());
-    state.dailyAt = safeNumber(saved.dailyAt,0,0,now());
+  if(img.hasAttribute("data-gift")){
+    var id=Number(img.dataset.gift);
+    var ref=Number(img.dataset.ref);
+    var attempt=Number(img.dataset.attempt)+1;
+    img.dataset.attempt=String(attempt);
 
-    state.jobReady = safeNumber(
-      saved.jobReady,0,0,now()+60000
-    );
-
-    state.jobCooldown = safeNumber(
-      saved.jobCooldown,0,0,now()+180000
-    );
-
-    if (Array.isArray(saved.inventory)) {
-      state.inventory = saved.inventory.filter(validItem);
+    if(attempt===1)img.src=assetURL(id,ref,true);
+    else if(attempt===2&&ref!==1)img.src=assetURL(id,1,false);
+    else if(attempt===3&&ref!==1)img.src=assetURL(id,1,true);
+    else{
+      img.style.display="none";
+      var m=img.closest(".media");
+      if(m)m.classList.add("failed");
     }
+  }else if(img.hasAttribute("data-slot")){
+    img.style.display="none";
+    img.parentElement.textContent="◆";
+  }else if(img.hasAttribute("data-album")){
+    img.style.display="none";
+  }
+},true);
 
-    if (Array.isArray(saved.listings)) {
-      state.listings = saved.listings.filter(function (listing) {
-        return listing &&
-          typeof listing.uid === "string" &&
-          validItem(listing.item) &&
-          validPrice(listing.price) &&
-          Number.isFinite(listing.expires);
+/* ---------- СОСТОЯНИЕ ---------- */
+
+function fresh(){
+  return {
+    coins:120,level:1,energy:ENERGY_MAX,energyAt:now(),
+    charge:0,dailyAt:0,jobReady:0,jobCooldown:0,
+    inventory:[],listings:[],market:[],
+    prices:D.map(function(d){return d[2];}),
+    previous:D.map(function(d){return d[2];}),
+    stats:{taps:0,opened:0,bought:0,sold:0},
+    claimed:[],history:[],seen:[],favorites:[],indexHistory:[]
+  };
+}
+
+function validItem(i){
+  return i&&typeof i.uid==="string"&&
+    Number.isInteger(i.id)&&i.id>=0&&i.id<D.length&&
+    Number.isInteger(i.bg)&&i.bg>=0&&i.bg<BG.length&&
+    Number.isInteger(i.serial)&&i.serial>0;
+}
+
+function normalizeItem(i){
+  return {
+    uid:i.uid,id:i.id,bg:i.bg,serial:i.serial,
+    ref:safe(i.ref,1,1,4)
+  };
+}
+
+function migrateVeryOld(x){
+  var map=[0,1,2,1,3,3,4,4,5,6,7,7,9,8,9,10,10,10,11,11,12,12,12,12];
+  function convert(i){
+    if(!i||!Number.isInteger(i.id)||map[i.id]===undefined)return null;
+    return {
+      uid:i.uid,id:map[i.id],bg:safe(i.bg,0,0,7),
+      serial:safe(i.serial,1,1,9999999),ref:1
+    };
+  }
+  var y=Object.assign({},x);
+  y.inventory=Array.isArray(x.inventory)?
+    x.inventory.map(convert).filter(Boolean):[];
+  y.listings=Array.isArray(x.listings)?
+    x.listings.map(function(l){
+      return l?{
+        uid:l.uid,item:convert(l.item),price:l.price,expires:l.expires
+      }:null;
+    }).filter(function(l){return l&&l.item;}):[];
+  y.market=[];
+  y.prices=[];y.previous=[];
+  return y;
+}
+
+function read(){
+  var s=fresh();
+  try{
+    var raw=localStorage.getItem(KEY);
+    var x=raw?JSON.parse(raw):null;
+    if(!x){
+      var old=JSON.parse(localStorage.getItem(OLD_KEY)||"null");
+      if(old&&typeof old==="object")x=migrateVeryOld(old);
+    }
+    if(!x||typeof x!=="object")return s;
+
+    s.coins=safe(x.coins,120,0,1e12);
+    s.level=safe(x.level,1,1,20);
+    s.energy=safe(x.energy,ENERGY_MAX,0,ENERGY_MAX);
+    s.energyAt=safe(x.energyAt,now(),0,now());
+    s.charge=Number.isFinite(x.charge)?
+      Math.max(0,Math.min(CHARGE_TARGET-.001,x.charge)):0;
+    s.dailyAt=safe(x.dailyAt,0,0,now());
+    s.jobReady=safe(x.jobReady,0,0,now()+90000);
+    s.jobCooldown=safe(x.jobCooldown,0,0,now()+300000);
+
+    if(Array.isArray(x.inventory)){
+      s.inventory=x.inventory.filter(validItem).map(normalizeItem);
+    }
+    if(Array.isArray(x.listings)){
+      s.listings=x.listings.filter(function(l){
+        return l&&typeof l.uid==="string"&&validItem(l.item)&&
+          validPrice(l.price)&&Number.isFinite(l.expires);
+      }).map(function(l){
+        return {
+          uid:l.uid,item:normalizeItem(l.item),
+          price:l.price,expires:l.expires
+        };
       });
     }
-
-    if (Array.isArray(saved.market)) {
-      state.market = saved.market.filter(function (listing) {
-        return listing &&
-          typeof listing.uid === "string" &&
-          validItem(listing.item) &&
-          validPrice(listing.price) &&
-          typeof listing.seller === "string" &&
-          Number.isFinite(listing.at);
+    if(Array.isArray(x.market)){
+      s.market=x.market.filter(function(l){
+        return l&&typeof l.uid==="string"&&validItem(l.item)&&
+          validPrice(l.price)&&typeof l.seller==="string"&&
+          Number.isFinite(l.at);
+      }).map(function(l){
+        return {
+          uid:l.uid,item:normalizeItem(l.item),
+          price:l.price,seller:l.seller,at:l.at
+        };
       }).slice(-40);
     }
 
-    ["prices","previous"].forEach(function (key) {
-      if (
-        Array.isArray(saved[key]) &&
-        saved[key].length === GIFTS.length &&
-        saved[key].every(function (p) {
-          return Number.isFinite(p) && p > 0;
-        })
-      ) {
-        state[key] = saved[key].map(function (p,i) {
-          return Math.round(
-            Math.max(
-              GIFTS[i][2]*.4,
-              Math.min(GIFTS[i][2]*2.5,p)
-            )
-          );
+    ["prices","previous"].forEach(function(k){
+      if(Array.isArray(x[k])){
+        s[k]=D.map(function(d,i){
+          var p=x[k][i];
+          return Number.isFinite(p)&&p>0?
+            Math.round(Math.max(d[2]*.4,Math.min(d[2]*2.5,p))):d[2];
         });
       }
     });
 
-    if (saved.stats && typeof saved.stats === "object") {
-      Object.keys(state.stats).forEach(function (key) {
-        state.stats[key] = safeNumber(
-          saved.stats[key],0,0,1e9
-        );
+    if(x.stats&&typeof x.stats==="object"){
+      Object.keys(s.stats).forEach(function(k){
+        s.stats[k]=safe(x.stats[k],0,0,1e9);
       });
     }
 
-    ["claimed","history"].forEach(function (key) {
-      if (Array.isArray(saved[key])) {
-        state[key] = saved[key].filter(function (value) {
-          return typeof value === "string";
-        }).slice(0,key === "history" ? 35 : 100);
+    ["claimed","history"].forEach(function(k){
+      if(Array.isArray(x[k])){
+        s[k]=x[k].filter(function(v){return typeof v==="string";})
+          .slice(0,k==="history"?35:100);
       }
     });
 
-    ["seen","favorites"].forEach(function (key) {
-      if (Array.isArray(saved[key])) {
-        state[key] = Array.from(new Set(
-          saved[key].filter(function (n) {
-            return Number.isInteger(n) &&
-              n >= 0 && n < GIFTS.length;
-          })
-        ));
+    ["seen","favorites"].forEach(function(k){
+      if(Array.isArray(x[k])){
+        s[k]=Array.from(new Set(x[k].filter(function(n){
+          return Number.isInteger(n)&&n>=0&&n<D.length;
+        })));
       }
     });
 
-    if (Array.isArray(saved.indexHistory)) {
-      state.indexHistory = saved.indexHistory.filter(function (n) {
-        return Number.isFinite(n) && n > 0;
+    if(Array.isArray(x.indexHistory)){
+      s.indexHistory=x.indexHistory.filter(function(n){
+        return Number.isFinite(n)&&n>0;
       }).slice(-35);
     }
 
-    state.inventory.concat(
-      state.listings.map(function (l) { return l.item; })
-    ).forEach(function (item) {
-      if (state.seen.indexOf(item.id) < 0) {
-        state.seen.push(item.id);
-      }
-    });
+    s.inventory.concat(s.listings.map(function(l){return l.item;}))
+      .forEach(function(i){
+        if(s.seen.indexOf(i.id)<0)s.seen.push(i.id);
+      });
+  }catch(e){storageWarning=true;}
 
-  } catch (e) {
-    storageWarning = true;
+  return s;
+}
+
+var S=read();
+
+try{
+  soundEnabled=localStorage.getItem("gift-lab-sound-enabled")==="1";
+  var storedProfile=JSON.parse(localStorage.getItem(PROFILE_KEY)||"null");
+  if(storedProfile&&typeof storedProfile.name==="string"){
+    profile={
+      id:typeof storedProfile.id==="string"?storedProfile.id:uid(),
+      name:storedProfile.name.slice(0,24),
+      color:COLORS.indexOf(storedProfile.color)>=0?
+        storedProfile.color:COLORS[0],
+      created:Number.isFinite(storedProfile.created)?
+        storedProfile.created:now()
+    };
+    gateColor=profile.color;
   }
+}catch(e){}
 
-  return state;
+function toast(text){
+  var e=document.createElement("div");
+  e.className="toast";e.textContent=text;
+  $("toasts").appendChild(e);
+  setTimeout(function(){e.remove();},4500);
 }
-
-var S = readState();
-
-try {
-  soundEnabled =
-    localStorage.getItem("gift-lab-sound-enabled") === "1";
-} catch (e) {}
-
-function toast(text) {
-  var element = document.createElement("div");
-  element.className = "toast";
-  element.textContent = text;
-
-  $("toasts").appendChild(element);
-
-  setTimeout(function () {
-    element.remove();
-  },4600);
-}
-
-function save() {
-  try {
+function save(){
+  try{
     localStorage.setItem(KEY,JSON.stringify(S));
-  } catch (e) {
-    if (!storageWarning) {
-      storageWarning = true;
-      toast(
-        "Браузер ограничил сохранение. " +
-        "Прогресс может не сохраниться после закрытия."
-      );
+    if(profile)localStorage.setItem(PROFILE_KEY,JSON.stringify(profile));
+  }catch(e){
+    if(!storageWarning){
+      storageWarning=true;
+      toast("Браузер ограничил сохранение. Прогресс может не сохраниться.");
     }
   }
 }
-
-function log(text) {
-  var time = new Date().toLocaleTimeString("ru-RU",{
-    hour:"2-digit",
-    minute:"2-digit"
-  });
-
-  S.history.unshift(time + " · " + text);
-  S.history = S.history.slice(0,35);
+function log(t){
+  S.history.unshift(
+    new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+
+    " · "+t
+  );
+  S.history=S.history.slice(0,35);
 }
-
-function discover(id) {
-  if (S.seen.indexOf(id) < 0) S.seen.push(id);
+function discover(id){
+  if(S.seen.indexOf(id)<0)S.seen.push(id);
 }
-
-function makeItem(id) {
+function makeItem(id){
   return {
-    uid: uid(),
-    id: id,
-    bg: integer(0,BACKGROUNDS.length-1),
-    serial: integer(1000,999999)
+    uid:uid(),id:id,bg:int(0,BG.length-1),
+    serial:int(1000,999999),ref:int(1,4)
   };
 }
-
-function theme(item) {
-  return "--a:" + BACKGROUNDS[item.bg][1] +
-    ";--b:" + BACKGROUNDS[item.bg][2];
+function theme(i){return "--a:"+BG[i.bg][1]+";--b:"+BG[i.bg][2];}
+function estimate(id){return Math.round(S.prices[id]);}
+function indexValue(){
+  return Math.round(S.prices.reduce(function(a,b){return a+b;},0));
 }
-
-function estimate(id) {
-  return Math.round(S.prices[id]);
-}
-
-function indexValue() {
-  return Math.round(
-    S.prices.reduce(function (sum,p) { return sum+p; },0)
-  );
-}
-
-function spawnListing() {
-  var id = integer(0,GIFTS.length-1);
-  var names = ["mira","velvet","luna","kir","nova","alex"];
-
+function spawn(){
+  var id=int(0,D.length-1);
+  var names=["mira","velvet","luna","kir","nova","alex"];
   return {
-    uid: uid(),
-    item: makeItem(id),
-    price: Math.max(
-      1,
-      Math.round(estimate(id)*(.83+random()*.43))
-    ),
-    seller: names[integer(0,names.length-1)],
-    at: now()
+    uid:uid(),item:makeItem(id),
+    price:Math.max(1,Math.round(estimate(id)*(.83+rng()*.43))),
+    seller:names[int(0,names.length-1)],at:now()
   };
 }
-
-function replenishEnergy() {
-  var units = Math.floor(
-    Math.max(0,now()-S.energyAt) / ENERGY_INTERVAL
-  );
-
-  if (units > 0) {
-    S.energy = Math.min(250,S.energy+units);
-    S.energyAt += units*ENERGY_INTERVAL;
+function replenish(){
+  var n=Math.floor(Math.max(0,now()-S.energyAt)/ENERGY_INTERVAL);
+  if(n>0){
+    S.energy=Math.min(ENERGY_MAX,S.energy+n);
+    S.energyAt+=n*ENERGY_INTERVAL;
   }
 }
-
-function updateBalance() {
-  var changed =
-    lastBalance !== null && lastBalance !== S.coins;
-
-  $("balance").innerHTML = stars(S.coins);
-
-  if (changed && motionAllowed()) {
+function balance(){
+  var changed=lastBalance!==null&&lastBalance!==S.coins;
+  $("balance").innerHTML=stars(S.coins);
+  if(changed&&motion()){
     $("balance").classList.remove("bump");
     void $("balance").offsetWidth;
     $("balance").classList.add("bump");
   }
-
-  lastBalance = S.coins;
+  lastBalance=S.coins;
 }
 
-/* ---------------- ЗВУК И ЭФФЕКТЫ ---------------- */
+/* ---------- ПРОФИЛЬ И ВХОД ---------- */
 
-function unlockAudio() {
-  if (!soundEnabled) return;
+function initials(name){
+  return name.trim().split(/\s+/).slice(0,2).map(function(p){
+    return p.charAt(0);
+  }).join("").toUpperCase()||"G";
+}
+function syncProfile(){
+  $("profileButton").textContent=initials(profile?profile.name:"G");
+  $("profileButton").style.setProperty(
+    "--avatar",profile?profile.color:COLORS[0]
+  );
+}
+function showGate(){
+  entered=false;
+  var name=profile?profile.name:"";
+  $("gateRoot").innerHTML=
+    '<div class="gate" id="gate"><section class="gate-card">'+
+    '<div class="gate-mark">'+ic("gift")+'</div>'+
+    '<span class="eyebrow" style="justify-content:center">GIFT LAB / COLLECTION STUDIO</span>'+
+    '<h2 style="margin-top:14px">'+(profile?"С возвращением":"Твоя новая коллекция")+'</h2>'+
+    '<p class="small" style="text-align:center">Локальный профиль в этом браузере.<br>Без пароля, сервера и синхронизации.</p>'+
+    '<input id="loginName" maxlength="24" autocomplete="nickname" placeholder="Как тебя называть?" aria-label="Имя локального профиля" value="'+esc(name)+'">'+
+    '<div class="swatches">'+COLORS.map(function(c){
+      return '<button class="swatch '+(c===gateColor?"on":"")+'" style="--color:'+c+'" data-action="gateColor" data-id="'+c+'" aria-label="Цвет профиля"></button>';
+    }).join("")+'</div>'+
+    btn("login",profile?"Войти в студию":"Создать локальный профиль",undefined,"btn full")+
+    '<p class="small" style="text-align:center;margin-bottom:0">Существующий игровой прогресс сохранится.</p>'+
+    '</section></div>';
+  setTimeout(function(){
+    if($("loginName"))$("loginName").focus();
+  },150);
+}
+function login(){
+  var input=$("loginName");
+  if(!input)return;
+  var name=input.value.trim().replace(/\s+/g," ").slice(0,24);
+  if(name.length<2){
+    toast("Введи имя хотя бы из двух символов.");
+    input.focus();return;
+  }
 
-  try {
-    var AudioConstructor =
-      window.AudioContext || window.webkitAudioContext;
+  profile={
+    id:profile?profile.id:uid(),
+    name:name,color:gateColor,
+    created:profile?profile.created:now()
+  };
 
-    if (!AudioConstructor) return;
+  save();syncProfile();render();
+  entered=true;
+  var gate=$("gate");
+  if(gate)gate.classList.add("hidden");
+  setTimeout(function(){$("gateRoot").innerHTML="";},600);
+  loadOriginalStar(false);
+}
+function profileView(){
+  if(busy)return;
+  showModal(
+    '<div class="sheet-body" style="padding-top:34px">'+
+    '<div class="avatar large-avatar" style="--avatar:'+profile.color+'">'+esc(initials(profile.name))+'</div>'+
+    '<h2 style="text-align:center;margin-top:18px">'+esc(profile.name)+'</h2>'+
+    '<p class="small" style="text-align:center">Локальный профиль · не Telegram-авторизация</p>'+
+    '<div class="profile-line"><span>ID</span><span>'+esc(profile.id)+'</span></div>'+
+    '<div class="profile-line"><span>Создан</span><span>'+new Date(profile.created).toLocaleDateString("ru-RU")+'</span></div>'+
+    '<div class="profile-line"><span>Коллекций найдено</span><span>'+S.seen.length+' / '+D.length+'</span></div>'+
+    '<div class="profile-line"><span>Источник звезды</span><span id="starStatus">'+esc(starInfo.text)+'</span></div>'+
+    (starInfo.source?'<a class="linkbutton full" target="_blank" rel="noopener noreferrer" href="'+esc(starInfo.source)+'">Открыть исходный ресурс звезды ↗</a>':"")+
+    '<div class="actions">'+
+    btn("reloadStar","Повторить загрузку оригинальной звезды",undefined,"btn secondary full")+
+    btn("rename","Изменить имя / выйти на экран входа",undefined,"btn secondary full")+
+    btn("help","Правила и ограничения",undefined,"btn secondary full")+
+    btn("close","Вернуться в игру",undefined,"btn full")+
+    '</div></div>'
+  );
+}
 
-    if (!audio) audio = new AudioConstructor();
+/* ---------- ЗВУК И ЭФФЕКТЫ ---------- */
 
-    if (audio.state === "suspended") {
-      var promise = audio.resume();
-      if (promise && promise.catch) {
-        promise.catch(function () {});
-      }
+function unlockAudio(){
+  if(!soundEnabled)return;
+  try{
+    var A=window.AudioContext||window.webkitAudioContext;
+    if(!A)return;
+    if(!audio)audio=new A();
+    if(audio.state==="suspended"){
+      var p=audio.resume();
+      if(p&&p.catch)p.catch(function(){});
     }
-  } catch (e) {}
+  }catch(e){}
 }
-
-function tone(frequency,duration,volume,delay) {
-  if (!soundEnabled || !audio ||
-      audio.state !== "running") return;
-
-  try {
-    var start = audio.currentTime + (delay || 0);
-    var oscillator = audio.createOscillator();
-    var gain = audio.createGain();
-
-    oscillator.type = "sine";
-    oscillator.frequency.setValueAtTime(frequency,start);
-
-    gain.gain.setValueAtTime(.0001,start);
-    gain.gain.exponentialRampToValueAtTime(
-      volume || .02,start+.008
-    );
-    gain.gain.exponentialRampToValueAtTime(
-      .0001,start+duration
-    );
-
-    oscillator.connect(gain);
-    gain.connect(audio.destination);
-
-    oscillator.start(start);
-    oscillator.stop(start+duration+.03);
-
-    oscillator.onended = function () {
-      oscillator.disconnect();
-      gain.disconnect();
-    };
-  } catch (e) {}
+function tone(f,d,v,delay){
+  if(!soundEnabled||!audio||audio.state!=="running")return;
+  try{
+    var t=audio.currentTime+(delay||0);
+    var o=audio.createOscillator(),g=audio.createGain();
+    o.type="sine";o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(.0001,t);
+    g.gain.exponentialRampToValueAtTime(v||.02,t+.008);
+    g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    o.connect(g);g.connect(audio.destination);
+    o.start(t);o.stop(t+d+.03);
+    o.onended=function(){o.disconnect();g.disconnect();};
+  }catch(e){}
 }
-
-function clickSound() {
-  if (now()-lastTone < 75) return;
-  lastTone = now();
-  tone(650,.05,.012);
+function clickSound(){
+  if(now()-lastTone<75)return;
+  lastTone=now();tone(620,.05,.01);
 }
-
-function winSound() {
-  tone(523,.22,.025,0);
-  tone(659,.25,.022,.09);
-  tone(784,.3,.02,.18);
-  tone(1046,.4,.016,.28);
+function winSound(){
+  tone(523,.22,.024,0);tone(659,.25,.021,.1);
+  tone(784,.3,.019,.2);tone(1046,.4,.015,.3);
 }
-
-function syncSoundButton() {
-  $("sound").innerHTML = icon(
-    soundEnabled ? "sound" : "mute"
-  );
-
+function syncSound(){
+  $("sound").innerHTML=ic(soundEnabled?"sound":"mute");
   $("sound").classList.toggle("on",soundEnabled);
-
-  $("sound").setAttribute(
-    "aria-pressed",String(soundEnabled)
-  );
-
-  $("sound").setAttribute(
-    "aria-label",
-    soundEnabled ? "Выключить звук" : "Включить звук"
-  );
+  $("sound").setAttribute("aria-pressed",String(soundEnabled));
 }
+function particles(x,y,n,big){
+  if(!motion()||document.hidden)return;
+  n=Math.min(n,40-particleCount);
+  var colors=["#cfc1ff","#ffe0ab","#a7e8ce","#b2d6ff"];
 
-function particles(x,y,count,big) {
-  if (!motionAllowed() || document.hidden) return;
+  for(var i=0;i<n;i++){
+    var e=document.createElement("i");
+    var a=Math.random()*Math.PI*2;
+    var d=big?90+Math.random()*150:20+Math.random()*40;
+    e.className="particle";
+    e.style.setProperty("--x",x+"px");
+    e.style.setProperty("--y",y+"px");
+    e.style.setProperty("--dx",Math.cos(a)*d+"px");
+    e.style.setProperty("--dy",(Math.sin(a)*d-(big?30:0))+"px");
+    e.style.setProperty("--size",(big?4+Math.random()*5:3+Math.random()*3)+"px");
+    e.style.setProperty("--rot",(Math.random()*500-250)+"deg");
+    e.style.setProperty("--color",colors[i%4]);
+    $("particles").appendChild(e);particleCount++;
 
-  count = Math.min(count,40-particleCount);
-
-  var colors = [
-    "#cfc1ff","#ffe0ab","#a7e8ce","#b2d6ff"
-  ];
-
-  for (var i=0;i<count;i++) {
-    var element = document.createElement("i");
-    var angle = Math.random()*Math.PI*2;
-    var distance = big ?
-      90+Math.random()*150 :
-      20+Math.random()*45;
-
-    element.className = "particle";
-    element.style.setProperty("--x",x+"px");
-    element.style.setProperty("--y",y+"px");
-    element.style.setProperty(
-      "--dx",Math.cos(angle)*distance+"px"
-    );
-    element.style.setProperty(
-      "--dy",
-      (Math.sin(angle)*distance-(big ? 30 : 0))+"px"
-    );
-    element.style.setProperty(
-      "--size",
-      (big ? 4+Math.random()*5 : 3+Math.random()*3)+"px"
-    );
-    element.style.setProperty(
-      "--rot",(Math.random()*500-250)+"deg"
-    );
-    element.style.setProperty("--color",colors[i%4]);
-
-    $("particles").appendChild(element);
-    particleCount++;
-
-    (function (particle) {
-      setTimeout(function () {
-        particle.remove();
-        particleCount = Math.max(0,particleCount-1);
+    (function(p){
+      setTimeout(function(){
+        p.remove();particleCount=Math.max(0,particleCount-1);
       },1450);
-    })(element);
+    })(e);
   }
 }
 
-/* ---------------- РЕНДЕР ---------------- */
+/* ---------- ИНТЕРФЕЙС ---------- */
 
-function giftCard(item,price,action,id) {
-  var gift = GIFTS[item.id];
-  var delta =
-    (S.prices[item.id]/S.previous[item.id]-1)*100;
-
-  return '<button class="gift" data-action="' + action +
-    '" data-id="' + esc(id || item.uid) + '">' +
-    '<div class="gift-stage" style="' + theme(item) + '">' +
-    media(item.id,false) +
-    '<span class="badge">' + RARITIES[gift[3]] + "</span>" +
-    (S.favorites.indexOf(item.id) >= 0 ?
-      '<span class="favorite-mark">♡</span>' : "") +
-    '</div><div class="gift-body">' +
-    '<div class="gift-name">' + gift[0] + "</div>" +
-    '<div class="gift-sub">Демо №' + fmt(item.serial) +
-    " · сцена " + BACKGROUNDS[item.bg][0] + "</div>" +
-    '<div class="row"><span class="price">' +
-    stars(price) + "</span>" +
-    '<span class="change ' + (delta < 0 ? "down" : "") +
-    '">' + (delta >= 0 ? "+" : "") +
-    delta.toFixed(1) + "%</span></div></div></button>";
+function card(i,price,action,id){
+  var delta=(S.prices[i.id]/S.previous[i.id]-1)*100;
+  return '<button class="gift" data-key="'+esc(id||i.uid)+'" data-action="'+action+'" data-id="'+esc(id||i.uid)+'">'+
+    '<div class="gift-stage" style="'+theme(i)+'">'+media(i.id,i.ref,false)+
+    '<span class="badge">'+RAR[D[i.id][3]]+' · вариант '+i.ref+'</span></div>'+
+    '<div class="gift-body"><div class="gift-name">'+D[i.id][0]+'</div>'+
+    '<div class="gift-sub">Демо №'+fmt(i.serial)+' · '+BG[i.bg][0]+'</div>'+
+    '<div class="row"><span class="price">'+stars(price)+'</span>'+
+    '<span class="change '+(delta<0?"down":"")+'" data-trend="'+i.id+'">'+
+    (delta>=0?"+":"")+delta.toFixed(1)+'%</span></div></div></button>';
 }
-
-function renderNav() {
-  var sections = [
-    ["home","box","Кейсы"],
-    ["market","market","Маркет"],
-    ["earn","bolt","Звёзды"],
-    ["games","game","Аркада"],
+function nav(){
+  var ns=[
+    ["home","box","Кейсы"],["market","market","Маркет"],
+    ["earn","bolt","Звёзды"],["games","game","Аркада"],
     ["inventory","bag","Коллекция"]
   ];
-
-  $("nav").innerHTML = sections.map(function (section) {
-    return '<button data-tab="' + section[0] +
-      '" class="' + (tab === section[0] ? "active" : "") +
-      '"' + (busy ? " disabled" : "") + ">" +
-      icon(section[1]) + section[2] + "</button>";
+  $("nav").innerHTML=ns.map(function(s){
+    return '<button data-tab="'+s[0]+'" class="'+(tab===s[0]?"active":"")+'"'+
+      (busy?" disabled":"")+'>'+ic(s[1])+s[2]+'</button>';
   }).join("");
 }
-
-function render(animate) {
-  replenishEnergy();
-  updateBalance();
-  renderNav();
-
-  var views = {
-    home: homeView,
-    market: marketView,
-    earn: earnView,
-    games: gamesView,
-    inventory: inventoryView
+function render(animate){
+  replenish();balance();nav();syncProfile();
+  var views={
+    home:homeView,market:marketView,earn:earnView,
+    games:gamesView,inventory:inventoryView
   };
-
-  $("main").innerHTML = (views[tab] || homeView)();
-
-  if (animate !== false && motionAllowed()) {
+  $("main").innerHTML=(views[tab]||homeView)();
+  if(animate!==false&&motion()){
     $("main").classList.remove("screen-enter");
     void $("main").offsetWidth;
     $("main").classList.add("screen-enter");
   }
 }
-
-function go(next) {
-  if (busy) return;
-  closeModal();
-  tab = next;
-  render();
-  window.scrollTo(0,0);
+function go(next){
+  if(busy||!entered)return;
+  closeModal();tab=next;render();window.scrollTo(0,0);
+}
+function cube(c){
+  return '<div class="case-stage"><div class="case-box" style="--cube:'+c.cube+'">'+
+    '<div class="cube-right"></div><div class="cube-top"></div>'+
+    '<div class="cube-front"><span class="cube-strip"></span>'+ic("gift")+'</div>'+
+    '</div></div>';
+}
+function homeView(){
+  return '<section class="hero"><div class="hero-copy">'+
+    '<span class="eyebrow"><i class="live-dot"></i>COLLECT YOUR MOMENT</span>'+
+    '<h1>Коллекция.<br>С историей.</h1>'+
+    '<p>Больше вариантов. Медленнее ритм.<br>Каждая находка — отдельный момент.</p>'+
+    btn("case","Открыть коллекцию "+ic("arrow"),0)+
+    '</div><div class="hero-stage"><div class="hero-card">'+media(12,1,true)+
+    '<div class="hero-label">Plush Pepe<small>Референс #1</small></div></div>'+
+    '<span class="side-note">COLLECTION STUDIO / VOL. 04</span></div></section>'+
+    '<div class="heading"><h2>Коллекции кейсов</h2><span class="pill">6 серий</span></div>'+
+    '<div class="cases">'+CASES.map(function(c,i){
+      return '<button class="case" style="--tint:'+c.tint+'" data-action="case" data-id="'+i+'">'+
+        '<span class="eyebrow">'+c.tag+'</span>'+cube(c)+
+        '<h3>'+c.n+'</h3><p>'+c.d+'</p><div class="case-foot">'+
+        '<span class="price">'+stars(c.p)+'</span>'+ic("arrow")+'</div></button>';
+    }).join("")+'</div>'+
+    '<div class="heading"><h2>Твоя студия</h2><span class="muted">'+esc(profile?profile.name:"Гость")+'</span></div>'+
+    '<div class="stats"><div class="panel stat"><strong>'+fmt(S.stats.opened)+'</strong><span>Кейсов открыто</span></div>'+
+    '<div class="panel stat"><strong>'+(S.inventory.length+S.listings.length)+'</strong><span>Предметов в коллекции</span></div>'+
+    '<div class="panel stat"><strong>'+S.seen.length+'/'+D.length+'</strong><span>Коллекций обнаружено</span></div></div>'+
+    '<div class="heading"><h2>Журнал событий</h2></div><div class="panel feed">'+
+    (S.history.length?S.history.slice(0,7).map(function(t){
+      return '<div>'+esc(t)+'</div>';
+    }).join(""):'<div>Первая история начинается с одной находки.</div>')+'</div>';
 }
 
-function cube(c,index) {
-  return '<div class="case-stage">' +
-    '<div class="case-box" style="--cube:' + c.cube + '">' +
-    '<div class="cube-right"></div>' +
-    '<div class="cube-top"></div>' +
-    '<div class="cube-front">' +
-    '<span class="cube-strip"></span>' + icon("gift") +
-    "</div></div>" +
-    '<span class="case-number">SERIES / 0' +
-    (index+1) + "</span></div>";
-}
-
-function homeView() {
-  return '<section class="hero"><div class="hero-copy">' +
-    '<span class="eyebrow"><i class="live-dot"></i>' +
-    "COLLECT YOUR MOMENT</span>" +
-    "<h1>Подарки.<br>С характером.</h1>" +
-    "<p>Твоя студия коллекций.<br>" +
-    "Новые сцены. Игровые находки.</p>" +
-    button("case","Открыть коллекцию "+icon("arrow"),0) +
-    '</div><div class="hero-stage">' +
-    '<span class="side-glint">STUDIO / VOL. 03</span>' +
-    '<div class="hero-card">' + media(12,true) +
-    '<div class="hero-label">Plush Pepe' +
-    "<small>Референс #1</small></div></div>" +
-    '<span class="hero-note">DEMO COLLECTIBLE EXPERIENCE</span>' +
-    "</div></section>" +
-
-    '<div class="heading"><h2>Коллекции кейсов</h2>' +
-    '<span class="pill">6 серий</span></div>' +
-
-    '<div class="cases">' +
-    CASES.map(function (c,i) {
-      return '<button class="case" style="--tint:' + c.tint +
-        '" data-action="case" data-id="' + i + '">' +
-        '<span class="eyebrow">' + c.tag + "</span>" +
-        cube(c,i) + "<h3>" + c.name + "</h3>" +
-        "<p>" + c.description + "</p>" +
-        '<div class="case-foot"><span class="price">' +
-        stars(c.price) + "</span>" + icon("arrow") +
-        "</div></button>";
-    }).join("") + "</div>" +
-
-    '<div class="heading"><h2>Твоя студия</h2>' +
-    '<span class="muted">Уровень ' + S.level + "</span></div>" +
-
-    '<div class="stats">' +
-    '<div class="panel stat"><strong>' +
-    fmt(S.stats.opened) + "</strong>" +
-    "<span>Кейсов открыто</span></div>" +
-    '<div class="panel stat"><strong>' +
-    (S.inventory.length+S.listings.length) +
-    "</strong><span>Предметов в коллекции</span></div>" +
-    '<div class="panel stat"><strong>' +
-    S.seen.length + "/" + GIFTS.length +
-    "</strong><span>Коллекций обнаружено</span></div></div>" +
-
-    '<div class="heading"><h2>Журнал событий</h2></div>' +
-    '<div class="panel feed">' +
-    (S.history.length ?
-      S.history.slice(0,7).map(function (text) {
-        return "<div>" + esc(text) + "</div>";
-      }).join("") :
-      "<div>Первая находка ждёт тебя. Все результаты игровые.</div>") +
-    "</div>";
-}
-
-function graph() {
-  var values = S.indexHistory;
-
-  if (values.length < 2) {
-    return '<p class="small" style="margin-bottom:0">' +
-      "График появится после первого обновления рынка.</p>";
-  }
-
-  var min = Math.min.apply(null,values);
-  var max = Math.max.apply(null,values);
-  var span = Math.max(1,max-min);
-
-  var points = values.map(function (value,index) {
-    return [
-      index*600/(values.length-1),
-      60-(value-min)/span*48
-    ];
+function filteredMarket(){
+  var list=S.market.filter(function(l){
+    return D[l.item.id][0].toLowerCase().indexOf(search.toLowerCase())!==-1&&
+      (rarity<0||D[l.item.id][3]===rarity)&&
+      (!favoritesOnly||S.favorites.indexOf(l.item.id)>=0);
   });
-
-  var path = "M" + points.map(function (p) {
-    return p.join(",");
+  list.sort(function(a,b){
+    return sort==="low"?a.price-b.price:
+      sort==="high"?b.price-a.price:b.at-a.at;
+  });
+  return list;
+}
+function marketCards(){
+  return filteredMarket().map(function(l){
+    return card(l.item,l.price,"previewBuy",l.uid);
+  }).join("");
+}
+function graph(){
+  var a=S.indexHistory;
+  if(a.length<2)return '<p class="small">График появится после обновления рынка.</p>';
+  var lo=Math.min.apply(null,a),hi=Math.max.apply(null,a);
+  var span=Math.max(1,hi-lo);
+  var p="M"+a.map(function(v,i){
+    return [i*600/(a.length-1),60-(v-lo)/span*48].join(",");
   }).join(" L");
-
-  return '<svg class="spark" viewBox="0 0 600 70" ' +
-    'preserveAspectRatio="none" ' +
-    'aria-label="История игрового индекса">' +
-    '<path d="' + path +
-    ' L600,70 L0,70Z" fill="#a6a1ff12"/>' +
-    '<path d="' + path +
-    '" fill="none" stroke="#aba8ff" stroke-width="2"/>' +
-    "</svg>";
+  return '<svg class="spark" viewBox="0 0 600 70" preserveAspectRatio="none" aria-label="Игровой индекс">'+
+    '<path d="'+p+' L600,70 L0,70Z" fill="#a6a1ff12"/>'+
+    '<path d="'+p+'" fill="none" stroke="#aba8ff" stroke-width="2"/></svg>';
+}
+function marketView(){
+  return '<div class="heading" style="margin-top:5px"><h2>Маркет подарков</h2>'+
+    '<span class="pill">Локальные боты</span></div>'+
+    '<div class="panel"><div class="row"><span class="muted">Индекс игрового рынка</span>'+
+    '<span class="price" id="indexNumber">'+fmt(indexValue())+' pts</span></div>'+
+    '<div id="chart">'+graph()+'</div>'+
+    '<p class="small" style="margin-bottom:0">Оценки — раз в 15 секунд. Проверка твоих лотов — раз в 10 секунд.</p></div>'+
+    '<div class="toolbar"><input id="search" placeholder="Найти подарок…" aria-label="Поиск" value="'+esc(search)+'">'+
+    '<select id="sort" aria-label="Сортировка"><option value="new"'+(sort==="new"?" selected":"")+'>Новые</option>'+
+    '<option value="low"'+(sort==="low"?" selected":"")+'>Дешевле</option>'+
+    '<option value="high"'+(sort==="high"?" selected":"")+'>Дороже</option></select></div>'+
+    '<div class="chips">'+btn("favoritesFilter","Избранное",undefined,favoritesOnly?"on":"")+
+    ["Все"].concat(RAR).map(function(r,i){
+      return btn("filter",r,i-1,rarity===i-1?"on":"");
+    }).join("")+'</div>'+
+    '<div class="grid" id="marketGrid">'+marketCards()+'</div>'+
+    '<div class="empty" id="marketEmpty"'+(filteredMarket().length?' style="display:none"':"")+'>Подходящих предложений нет.</div>'+
+    '<p class="small">Варианты используют публичные референсы #1–4. Их доступность зависит от внешнего источника. '+
+    'При замене картинки на резервную это помечается отдельно. Демо-покупки не передают настоящие NFT.</p>';
 }
 
-function marketGrid() {
-  var list = S.market.filter(function (listing) {
-    var gift = GIFTS[listing.item.id];
+/* Обновляем рынок по ключам: без замены всего экрана. */
+function reconcileMarket(){
+  var root=$("marketGrid");
+  if(!root)return;
+  var list=filteredMarket(),existing=new Map(),before=new Map();
 
-    return gift[0].toLowerCase()
-      .indexOf(search.toLowerCase()) !== -1 &&
-      (rarityFilter < 0 || gift[3] === rarityFilter) &&
-      (!onlyFavorites ||
-        S.favorites.indexOf(listing.item.id) >= 0);
+  Array.prototype.forEach.call(root.children,function(el){
+    existing.set(el.dataset.key,el);
+    before.set(el.dataset.key,el.getBoundingClientRect());
   });
 
-  list.sort(function (a,b) {
-    if (sort === "low") return a.price-b.price;
-    if (sort === "high") return b.price-a.price;
-    return b.at-a.at;
+  var wanted=new Set(list.map(function(l){return l.uid;}));
+  existing.forEach(function(el,key){
+    if(!wanted.has(key))el.remove();
   });
 
-  return list.length ?
-    '<div class="grid">' +
-    list.map(function (listing) {
-      return giftCard(
-        listing.item,listing.price,"previewBuy",listing.uid
-      );
-    }).join("") + "</div>" :
-    '<div class="empty">Подходящих предложений пока нет.</div>';
+  list.forEach(function(l){
+    var el=existing.get(l.uid);
+    var isNew=!el;
+
+    if(!el){
+      var box=document.createElement("div");
+      box.innerHTML=card(l.item,l.price,"previewBuy",l.uid);
+      el=box.firstElementChild;
+    }
+
+    root.appendChild(el);
+
+    var trend=el.querySelector("[data-trend]");
+    var delta=(S.prices[l.item.id]/S.previous[l.item.id]-1)*100;
+    if(trend){
+      trend.textContent=(delta>=0?"+":"")+delta.toFixed(1)+"%";
+      trend.classList.toggle("down",delta<0);
+    }
+
+    if(motion()&&el.animate){
+      var old=before.get(l.uid);
+      var rect=el.getBoundingClientRect();
+
+      if(isNew){
+        el.animate(
+          [{opacity:0,transform:"translateY(12px) scale(.98)"},
+           {opacity:1,transform:"translateY(0) scale(1)"}],
+          {duration:450,easing:"cubic-bezier(.22,1,.36,1)"}
+        );
+      }else if(old){
+        var dx=old.left-rect.left,dy=old.top-rect.top;
+        if(Math.abs(dx)>1||Math.abs(dy)>1){
+          el.animate(
+            [{transform:"translate("+dx+"px,"+dy+"px)"},
+             {transform:"translate(0,0)"}],
+            {duration:450,easing:"cubic-bezier(.22,1,.36,1)"}
+          );
+        }
+      }
+    }
+  });
+
+  if($("marketEmpty"))$("marketEmpty").style.display=list.length?"none":"block";
+  if($("indexNumber"))$("indexNumber").textContent=fmt(indexValue())+" pts";
+  if($("chart"))$("chart").innerHTML=graph();
 }
 
-function marketView() {
-  return '<div class="heading" style="margin-top:5px">' +
-    "<h2>Маркет подарков</h2>" +
-    '<span class="pill">Локальные боты</span></div>' +
+function inventoryView(){
+  var listings=S.listings.map(function(l){
+    var ratio=l.price/estimate(l.item.id);
+    var label=ratio>1.5?"Выше спроса ботов":
+      ratio>1.1?"Выше текущей оценки":"Конкурентная цена";
 
-    '<div class="panel"><div class="row">' +
-    '<span class="muted">Индекс игрового рынка</span>' +
-    '<span class="price">' + fmt(indexValue()) +
-    ' <span class="muted">pts</span></span></div>' +
-    graph() +
-    '<p class="small" style="margin-bottom:0">' +
-    "Оценки обновляются раз в 15 секунд. " +
-    "Боты проверяют твои лоты каждые 10 секунд.</p></div>" +
-
-    '<div class="toolbar">' +
-    '<input id="search" aria-label="Поиск" ' +
-    'placeholder="Найти подарок…" value="' + esc(search) + '">' +
-    '<select id="sort" aria-label="Сортировка">' +
-    '<option value="new"' +
-    (sort === "new" ? " selected" : "") + ">Новые</option>" +
-    '<option value="low"' +
-    (sort === "low" ? " selected" : "") + ">Дешевле</option>" +
-    '<option value="high"' +
-    (sort === "high" ? " selected" : "") + ">Дороже</option>" +
-    "</select></div>" +
-
-    '<div class="chips">' +
-    button(
-      "favoritesFilter","Избранное",
-      undefined,onlyFavorites ? "on" : ""
-    ) +
-    ["Все"].concat(RARITIES).map(function (name,index) {
-      return button(
-        "filter",name,index-1,
-        rarityFilter === index-1 ? "on" : ""
-      );
-    }).join("") +
-    '</div><div id="marketGrid">' +
-    marketGrid() + "</div>" +
-
-    '<p class="small">' +
-    "Изображения — публичный референс №1 каждой коллекции. " +
-    "Номера демо-предметов не являются номерами настоящих NFT. " +
-    "Покупка здесь не меняет владельца оригинала.</p>";
-}
-
-function inventoryView() {
-  var listings = S.listings.map(function (listing) {
-    var ratio = listing.price/estimate(listing.item.id);
-    var label = ratio > 1.5 ?
-      "Слишком высокая цена для ботов" :
-      ratio > 1.1 ? "Выше текущей оценки" :
-      "Конкурентная цена";
-
-    return '<div class="task"><div class="task-content">' +
-      "<h3>" + GIFTS[listing.item.id][0] + "</h3>" +
-      "<p>" + stars(listing.price) + " · " + label + "</p>" +
-      "<p>Осталось " +
-      Math.max(0,Math.ceil((listing.expires-now())/60000)) +
-      " мин.</p></div>" +
-      button("cancel","Снять",listing.uid,"btn secondary mini") +
-      "</div>";
+    return '<div class="task"><div class="task-content"><h3>'+D[l.item.id][0]+
+      '</h3><p>'+stars(l.price)+' · '+label+'</p>'+
+      '<p>До снятия '+Math.max(0,Math.ceil((l.expires-now())/60000))+' мин.</p></div>'+
+      btn("cancel","Снять",l.uid,"btn secondary mini")+'</div>';
   }).join("");
 
-  return '<div class="heading" style="margin-top:5px">' +
-    "<h2>Моя коллекция</h2>" +
-    '<span class="pill">' + S.inventory.length +
-    " в наличии</span></div>" +
-
-    '<div class="panel"><div class="row">' +
-    "<h3>Альбом открытий</h3>" +
-    '<span class="muted">' + S.seen.length +
-    " / " + GIFTS.length + "</span></div>" +
-    '<p class="small">' +
-    "Найди каждую коллекцию хотя бы один раз. " +
-    "Открытия сохраняются даже после продажи.</p>" +
-    '<div class="progress"><i style="width:' +
-    S.seen.length/GIFTS.length*100 + '%"></i></div>' +
-
-    '<div class="album">' +
-    GIFTS.map(function (gift,id) {
-      var seen = S.seen.indexOf(id) >= 0;
-
-      return '<div class="album-tile ' +
-        (seen ? "" : "locked") + '" title="' +
-        esc(gift[0]) + '">' +
-        '<img data-album-image src="' + assetURL(id,0) +
-        '" alt="' + esc(gift[0]) +
-        '" loading="lazy" referrerpolicy="no-referrer">' +
-        "<span>" + (seen ? "✓" : "?") + "</span></div>";
-    }).join("") +
-    "</div></div>" +
-
-    (listings ?
-      '<div class="heading"><h2>Мои объявления</h2>' +
-      '<span class="pill">Проверка каждые 10 с</span></div>' +
-      listings : "") +
-
-    '<div class="heading"><h2>Подарки в наличии</h2></div>' +
-    (S.inventory.length ?
-      '<div class="grid">' +
-      S.inventory.slice().reverse().map(function (item) {
-        return giftCard(item,estimate(item.id),"previewItem");
-      }).join("") + "</div>" :
-      '<div class="empty">Здесь появятся твои находки.<br><br>' +
-      button("goHome","Выбрать кейс") + "</div>") +
-
-    '<p class="small">' +
-    "Нажми на подарок, чтобы поставить свою цену. " +
-    "Случайная сцена — игровое оформление, " +
-    "а не атрибут настоящего NFT.</p>";
+  return '<div class="heading" style="margin-top:5px"><h2>Моя коллекция</h2>'+
+    '<span class="pill">'+S.inventory.length+' в наличии</span></div>'+
+    '<div class="panel"><div class="row"><h3>Альбом открытий</h3>'+
+    '<span class="muted">'+S.seen.length+' / '+D.length+'</span></div>'+
+    '<p class="small">Открой все коллекции. Обнаружение сохраняется после продажи предмета.</p>'+
+    '<div class="progress"><i style="width:'+S.seen.length/D.length*100+'%"></i></div>'+
+    '<div class="album">'+D.map(function(d,id){
+      var seen=S.seen.indexOf(id)>=0;
+      return '<div class="album-tile '+(seen?"":"locked")+'" title="'+esc(d[0])+'">'+
+        '<img data-album src="'+assetURL(id,1,false)+'" alt="'+esc(d[0])+'" loading="lazy" referrerpolicy="no-referrer">'+
+        '<span>'+(seen?"✓":"?")+'</span></div>';
+    }).join("")+'</div></div>'+
+    (listings?'<div class="heading"><h2>Мои объявления</h2><span class="pill">Проверка каждые 10 с</span></div>'+listings:"")+
+    '<div class="heading"><h2>В наличии</h2></div>'+
+    (S.inventory.length?'<div class="grid">'+S.inventory.slice().reverse().map(function(i){
+      return card(i,estimate(i.id),"previewItem");
+    }).join("")+'</div>':'<div class="empty">Коллекция пока пуста.<br><br>'+btn("goHome","Выбрать кейс")+'</div>')+
+    '<p class="small">Нажми на предмет, чтобы выставить свою цену. Сцена — игровое оформление, а не атрибут реального NFT.</p>';
 }
 
-/* ---------------- ЗАДАНИЯ ---------------- */
+/* ---------- НОВЫЙ КЛИКЕР ---------- */
 
-var MISSIONS = [
-  {
-    id:"tap100",title:"Первый импульс",
-    description:"Сделай 100 нажатий",
-    key:"taps",goal:100,reward:150
-  },
-  {
-    id:"open3",title:"Распаковщик",
-    description:"Открой 3 кейса",
-    key:"opened",goal:3,reward:250
-  },
-  {
-    id:"buy1",title:"Новая находка",
-    description:"Купи подарок у бота",
-    key:"bought",goal:1,reward:100
-  },
-  {
-    id:"sell1",title:"Первый покупатель",
-    description:"Продай подарок боту",
-    key:"sold",goal:1,reward:150
-  },
-  {
-    id:"open10",title:"Коллекционер",
-    description:"Открой 10 кейсов",
-    key:"opened",goal:10,reward:600
-  },
-  {
-    id:"album5",title:"Пять разных историй",
-    description:"Обнаружь 5 коллекций",
-    key:"seen",goal:5,reward:350
-  },
-  {
-    id:"album13",title:"Полный альбом",
-    description:"Обнаружь все 13 коллекций",
-    key:"seen",goal:13,reward:1500
-  }
-];
-
-function missionValue(mission) {
-  return mission.key === "seen" ?
-    S.seen.length : S.stats[mission.key];
+function tapPower(){return 1+(S.level-1)*.1;}
+function upgradeCost(){return 250*S.level*S.level;}
+function dailyReady(){return now()-S.dailyAt>=86400000;}
+function jobState(){
+  if(S.jobReady>0)return now()>=S.jobReady?"claim":"working";
+  return now()>=S.jobCooldown?"start":"cooldown";
 }
-
-function dailyReady() {
-  return now()-S.dailyAt >= 86400000;
-}
-
-function jobState() {
-  if (S.jobReady > 0) {
-    return now() >= S.jobReady ? "claim" : "working";
-  }
-
-  return now() >= S.jobCooldown ? "start" : "cooldown";
-}
-
-function jobLabel() {
-  var state = jobState();
-
-  if (state === "claim") return "Забрать " + stars(120);
-
-  if (state === "working") {
-    return "Доставка: " +
-      Math.max(0,Math.ceil((S.jobReady-now())/1000)) + " с";
-  }
-
-  if (state === "cooldown") {
-    return "Перерыв: " +
-      Math.max(0,Math.ceil((S.jobCooldown-now())/1000)) + " с";
-  }
-
+function jobLabel(){
+  var j=jobState();
+  if(j==="claim")return "Забрать "+stars(10);
+  if(j==="working")return "Доставка: "+Math.max(0,Math.ceil((S.jobReady-now())/1000))+" с";
+  if(j==="cooldown")return "Перерыв: "+Math.max(0,Math.ceil((S.jobCooldown-now())/1000))+" с";
   return "Начать доставку";
 }
 
-function earnView() {
-  return '<div class="heading" style="margin-top:5px">' +
-    "<h2>Игровые звёзды</h2>" +
-    '<span class="pill">Без вложений</span></div>' +
+var MISSIONS=[
+  {id:"slow_tap100",title:"Терпеливый импульс",desc:"Сделай 100 нажатий",key:"taps",goal:100,reward:10},
+  {id:"slow_open3",title:"Распаковщик",desc:"Открой 3 кейса",key:"opened",goal:3,reward:20},
+  {id:"slow_buy1",title:"Новая находка",desc:"Купи предмет у бота",key:"bought",goal:1,reward:5},
+  {id:"slow_sell1",title:"Первый покупатель",desc:"Продай предмет боту",key:"sold",goal:1,reward:10},
+  {id:"slow_album5",title:"Пять историй",desc:"Обнаружь 5 коллекций",key:"seen",goal:5,reward:25},
+  {id:"slow_album16",title:"Полный альбом",desc:"Обнаружь 16 коллекций",key:"seen",goal:16,reward:100}
+];
+function missionValue(m){return m.key==="seen"?S.seen.length:S.stats[m.key];}
 
-    '<div class="earn-grid"><div class="panel">' +
-    '<div class="row"><div><h3>Звёздный импульс</h3>' +
-    '<p class="small">+' + S.level + " за нажатие</p></div>" +
-    '<span class="pill" id="energyText">' +
-    S.energy + " / 250</span></div>" +
-
-    '<div class="tap-zone" id="tapZone">' +
-    '<button class="tap" data-action="tap" ' +
-    'aria-label="Получить игровые звёзды">' +
-    '<img src="' + STAR + '" alt="Золотая PNG-звезда">' +
-    "</button></div>" +
-
-    '<div class="progress"><i id="energyBar" style="width:' +
-    S.energy/2.5 + '%"></i></div>' +
-    '<p class="small">Энергия: +1 каждые 2 секунды.</p>' +
-
-    button(
-      "upgrade",
-      S.level >= 20 ? "Максимальный уровень" :
-        "Улучшить до +" + (S.level+1) +
-        " · " + stars(S.level*150),
-      undefined,"btn secondary full",S.level >= 20
-    ) +
-
-    '</div><div><div class="panel">' +
-    '<span class="eyebrow">КАЖДЫЕ 24 ЧАСА</span>' +
-    '<h2 style="margin-top:14px">Ежедневный подарок</h2>' +
-    '<p class="small">400 игровых звёзд без случайных условий.</p>' +
-
-    button(
-      "daily",
-      dailyReady() ? "Забрать " + stars(400) :
-        "Через " +
-        Math.ceil((86400000-(now()-S.dailyAt))/3600000) +
-        " ч",
-      undefined,"btn full",!dailyReady()
-    ) +
-
-    '</div><div class="panel" style="margin-top:15px">' +
-    "<h3>Курьер подарков</h3>" +
-    '<p class="small">Доставка занимает 60 секунд и приносит ' +
-    "120 звёзд. После получения — перерыв 3 минуты.</p>" +
-    '<button id="jobButton" class="btn secondary full" ' +
-    'data-action="job"' +
-    (["working","cooldown"].indexOf(jobState()) >= 0 ?
-      " disabled" : "") +
-    ">" + jobLabel() + "</button></div></div></div>" +
-
-    '<div class="heading"><h2>Достижения</h2>' +
-    '<span class="muted">Разовые награды</span></div>' +
-
-    MISSIONS.map(function (mission) {
-      var done = S.claimed.indexOf(mission.id) >= 0;
-      var value = Math.min(
-        mission.goal,missionValue(mission)
-      );
-
-      return '<div class="task"><div class="task-content">' +
-        "<h3>" + mission.title + "</h3>" +
-        "<p>" + mission.description + " · " +
-        value + "/" + mission.goal + "</p>" +
-        '<div class="progress" style="margin-top:9px">' +
-        '<i style="width:' + value/mission.goal*100 +
-        '%"></i></div></div>' +
-        button(
-          "claim",done ? "Получено" : stars(mission.reward),
-          mission.id,"btn mini",done || value < mission.goal
-        ) +
-        "</div>";
+function earnView(){
+  return '<div class="heading" style="margin-top:5px"><h2>Мастерская звёзд</h2><span class="pill">Новый баланс</span></div>'+
+    '<div class="earn-grid"><div class="panel"><div class="row"><div><h3>Звёздный импульс</h3>'+
+    '<p class="small">Мощность '+tapPower().toFixed(1)+' за нажатие</p></div>'+
+    '<span class="pill" id="energyText">'+S.energy+' / '+ENERGY_MAX+'</span></div>'+
+    '<div class="tap-zone" id="tapZone"><button class="tap" data-action="tap" aria-label="Накопить импульс">'+
+    '<img data-star src="'+STAR+'" alt="PNG-звезда"></button></div>'+
+    '<div class="row" style="margin-bottom:9px"><span class="small">До следующей звезды</span>'+
+    '<span class="small" id="chargeText">'+S.charge.toFixed(1)+' / '+CHARGE_TARGET+'</span></div>'+
+    '<div class="progress gold"><i id="chargeBar" style="width:'+S.charge/CHARGE_TARGET*100+'%"></i></div>'+
+    '<p class="small">На первом уровне 8 нажатий дают 1 звезду. Энергия: +1 за 2 секунды. '+
+    'Потраченное нажатие стоит 1 энергии.</p>'+
+    '<div class="progress"><i id="energyBar" style="width:'+S.energy/ENERGY_MAX*100+'%"></i></div>'+
+    '<div style="margin-top:17px">'+btn("upgrade",S.level>=20?"Максимальный уровень":
+      "Мощность +0,1 · "+stars(upgradeCost()),undefined,"btn secondary full",S.level>=20)+'</div></div>'+
+    '<div><div class="panel"><span class="eyebrow">РАЗ В 24 ЧАСА</span>'+
+    '<h2 style="margin-top:14px">Ежедневный подарок</h2>'+
+    '<p class="small">Небольшая фиксированная награда — 25 игровых звёзд.</p>'+
+    btn("daily",dailyReady()?"Забрать "+stars(25):
+      "Через "+Math.ceil((86400000-(now()-S.dailyAt))/3600000)+" ч",
+      undefined,"btn full",!dailyReady())+
+    '</div><div class="panel" style="margin-top:15px"><h3>Курьер подарков</h3>'+
+    '<p class="small">Доставка — 90 секунд, награда — 10 звёзд. После получения перерыв 5 минут.</p>'+
+    '<button id="jobButton" class="btn secondary full" data-action="job"'+
+    (["working","cooldown"].indexOf(jobState())>=0?" disabled":"")+'>'+jobLabel()+'</button></div></div></div>'+
+    '<div class="heading"><h2>Достижения</h2><span class="muted">Разовые награды</span></div>'+
+    MISSIONS.map(function(m){
+      var done=S.claimed.indexOf(m.id)>=0,v=Math.min(m.goal,missionValue(m));
+      return '<div class="task"><div class="task-content"><h3>'+m.title+'</h3>'+
+        '<p>'+m.desc+' · '+v+'/'+m.goal+'</p><div class="progress" style="margin-top:9px">'+
+        '<i style="width:'+v/m.goal*100+'%"></i></div></div>'+
+        btn("claim",done?"Получено":stars(m.reward),m.id,"btn mini",done||v<m.goal)+'</div>';
     }).join("");
 }
 
-/* ---------------- АРКАДА ---------------- */
+function tap(e){
+  replenish();
+  if(now()-lastTapAt<90)return;
+  if(S.energy<1)return toast("Энергия восстанавливается: +1 за 2 секунды.");
+  lastTapAt=now();
 
-function slotSymbol(id) {
-  return '<div class="slot-symbol">' +
-    '<img data-slot-image src="' + assetURL(id,0) +
-    '" alt="' + esc(GIFTS[id][0]) +
-    '" referrerpolicy="no-referrer"></div>';
-}
+  S.energy--;
+  S.stats.taps++;
+  S.charge+=tapPower();
 
-function gamesView() {
-  return '<div class="heading" style="margin-top:5px">' +
-    "<h2>Звёздная аркада</h2>" +
-    '<span class="pill">Демобаланс</span></div>' +
-
-    '<div class="earn-grid">' +
-    '<div class="panel" style="text-align:center">' +
-    '<span class="eyebrow" style="justify-content:center">' +
-    "GIFT MATCH</span>" +
-    '<h2 style="margin-top:14px">Три в ряд</h2>' +
-    '<p class="small">Совмести одинаковые подарки</p>' +
-
-    '<div class="reels">' +
-    [9,10,12].map(function (id) {
-      return '<div class="reel">' +
-        slotSymbol(id) + "</div>";
-    }).join("") + "</div>" +
-
-    '<div class="bets">' +
-    [25,50,100].map(function (n) {
-      return button("bet",stars(n),n,n === bet ? "on" : "");
-    }).join("") + "</div>" +
-
-    button("spin","Играть · "+stars(bet),undefined,"btn full") +
-
-    '<p class="small" id="slotResult" aria-live="polite">' +
-    "Ставка списывается до запуска.</p></div>" +
-
-    '<div class="panel"><h3>Прозрачные правила</h3>' +
-    '<p class="small">Каждый барабан независимо выбирает один ' +
-    "из 5 символов с вероятностью 20%.</p>" +
-
-    '<div class="task"><div class="task-content">' +
-    "<h3>Три одинаковых</h3><p>Вероятность 4%</p>" +
-    '</div><span class="pill">×10</span></div>' +
-
-    '<div class="task"><div class="task-content">' +
-    "<h3>Ровно два одинаковых</h3><p>Вероятность 48%</p>" +
-    '</div><span class="pill">×1</span></div>' +
-
-    '<div class="task"><div class="task-content">' +
-    "<h3>Все разные</h3><p>Вероятность 48%</p>" +
-    '</div><span class="pill">×0</span></div>' +
-
-    '<p class="small">Множитель — полная выплата с учётом ставки. ' +
-    "Теоретический возврат — 88%, средняя потеря — 12% ставки. " +
-    "Это развлечение на виртуальный баланс, не способ заработка.</p>" +
-    "</div></div>";
-}
-
-/* ---------------- ОКНА ---------------- */
-
-function showModal(html,winner) {
-  if (!$("modal").hasChildNodes()) {
-    previousFocus = document.activeElement;
+  var earned=Math.floor((S.charge+.000001)/CHARGE_TARGET);
+  if(earned>0){
+    S.charge=Math.max(0,S.charge-earned*CHARGE_TARGET);
+    S.coins+=earned;
+    balance();
   }
 
-  $("modal").innerHTML =
-    '<div class="overlay"><section class="sheet ' +
-    (winner ? "winner" : "") +
-    '" role="dialog" aria-modal="true" ' +
-    'aria-label="Подарок или действие" tabindex="-1">' +
-    '<button class="close" data-action="close" ' +
-    'aria-label="Закрыть">' + icon("close") + "</button>" +
-    html + "</section></div>";
+  timers();
+  var zone=$("tapZone"),r=zone.getBoundingClientRect();
+  var x=e.clientX||r.left+r.width/2,y=e.clientY||r.top+r.height/2;
 
+  if(motion()){
+    var f=document.createElement("span");
+    f.className="floater";
+    f.textContent=earned>0?"+"+earned+" звезда":"+"+tapPower().toFixed(1);
+    f.style.left=x-r.left+"px";
+    f.style.top=y-r.top+"px";
+    zone.appendChild(f);
+    setTimeout(function(){f.remove();},850);
+    if(earned>0)particles(x,y,10,false);
+  }
+
+  if(earned>0)tone(880,.12,.018);
+  save();
+}
+
+/* ---------- ОКНА ---------- */
+
+function showModal(html,winner){
+  if(!$("modal").hasChildNodes())previousFocus=document.activeElement;
+  $("modal").innerHTML='<div class="overlay"><section class="sheet '+(winner?"winner":"")+
+    '" role="dialog" aria-modal="true" aria-label="Подарок или действие" tabindex="-1">'+
+    '<button class="close" data-action="close" aria-label="Закрыть">'+ic("close")+'</button>'+
+    html+'</section></div>';
   $("modal").querySelector(".sheet").focus();
 }
-
-function closeModal() {
-  if (busy) return;
-
-  $("modal").innerHTML = "";
-
-  if (previousFocus && document.contains(previousFocus)) {
-    previousFocus.focus();
-  }
+function closeModal(){
+  if(busy)return;
+  $("modal").innerHTML="";
+  if(previousFocus&&document.contains(previousFocus))previousFocus.focus();
 }
-
-function itemHeader(item,label) {
-  var favorite = S.favorites.indexOf(item.id) >= 0;
-
-  return '<div class="inspect-stage" style="' +
-    theme(item) + '">' +
-    '<span class="stage-label">' + label + "</span>" +
-    '<div class="inspect-card">' + media(item.id,true) +
-    "</div>" +
-    '<span class="stage-caption">ИГРОВАЯ СЦЕНА · ' +
-    BACKGROUNDS[item.bg][0].toUpperCase() +
-    "</span></div>" +
-
-    '<div class="sheet-body"><div class="row">' +
-    "<h2>" + GIFTS[item.id][0] + "</h2>" +
-    '<button class="iconbtn ' + (favorite ? "on" : "") +
-    '" data-action="favorite" data-id="' + item.id +
-    '" aria-label="Переключить избранное" aria-pressed="' +
-    favorite + '">' + icon("heart") + "</button></div>" +
-
-    '<p class="small" style="margin-top:7px">' +
-    "Демо-предмет №" + fmt(item.serial) +
-    " · Не настоящий NFT</p>" +
-
-    '<div class="attrs">' +
-    "<div><small>Игровая категория</small>" +
-    RARITIES[GIFTS[item.id][3]] + "</div>" +
-    "<div><small>Игровая сцена</small>" +
-    BACKGROUNDS[item.bg][0] + "</div>" +
-    "<div><small>Изображение</small>Референс #1</div></div>";
+function head(i,label){
+  var favorite=S.favorites.indexOf(i.id)>=0;
+  return '<div class="inspect-stage" style="'+theme(i)+'">'+
+    '<span class="stage-label">'+label+'</span><div class="inspect-card">'+media(i.id,i.ref,true)+'</div>'+
+    '<span class="stage-caption">ИГРОВАЯ СЦЕНА · '+BG[i.bg][0].toUpperCase()+'</span></div>'+
+    '<div class="sheet-body"><div class="row"><h2>'+D[i.id][0]+'</h2>'+
+    '<button class="iconbtn '+(favorite?"on":"")+'" data-action="favorite" data-id="'+i.id+
+    '" aria-label="В избранное" aria-pressed="'+favorite+'">'+ic("heart")+'</button></div>'+
+    '<p class="small" style="margin-top:7px">Демо №'+fmt(i.serial)+' · не настоящий NFT</p>'+
+    '<div class="attrs"><div><small>Игровая категория</small>'+RAR[D[i.id][3]]+'</div>'+
+    '<div><small>Сцена</small>'+BG[i.bg][0]+'</div>'+
+    '<div><small>Референс картинки</small>#'+i.ref+'</div></div>';
 }
-
-function referenceLink(id) {
-  return '<a class="linkbutton full" href="https://t.me/nft/' +
-    GIFTS[id][1] + '-1" target="_blank" ' +
-    'rel="noopener noreferrer">' +
-    "Посмотреть оригинальный референс в Telegram ↗</a>";
+function refLink(i){
+  return '<a class="linkbutton full" href="https://t.me/nft/'+D[i.id][1]+'-'+i.ref+
+    '" target="_blank" rel="noopener noreferrer">Посмотреть указанный референс в Telegram ↗</a>';
 }
+function previewBuy(id){
+  var l=S.market.find(function(v){return v.uid===id;});
+  if(!l)return toast("Лот уже недоступен.");
+  var diff=(l.price/estimate(l.item.id)-1)*100;
 
-function previewBuy(id) {
-  var listing = S.market.find(function (l) {
-    return l.uid === id;
-  });
-
-  if (!listing) return toast("Этот лот уже недоступен.");
-
-  var difference =
-    (listing.price/estimate(listing.item.id)-1)*100;
-
-  showModal(
-    itemHeader(listing.item,"ПРЕДЛОЖЕНИЕ НА МАРКЕТЕ") +
-
-    '<div class="bubble">Демо-продавец @' +
-    esc(listing.seller) +
-    "<br>После покупки предмет появится в твоей коллекции.</div>" +
-
-    '<div class="receipt"><span>Цена продавца</span>' +
-    '<span class="price">' + stars(listing.price) +
-    "</span></div>" +
-
-    '<div class="receipt"><span>Оценка игрового рынка</span>' +
-    "<span>" + stars(estimate(listing.item.id)) +
-    "</span></div>" +
-
-    '<div class="demand ' + (difference > 15 ? "warn" : "") +
-    '">' +
-    (difference >= 0 ?
-      "На " + difference.toFixed(1) + "% выше" :
-      "На " + Math.abs(difference).toFixed(1) + "% ниже") +
-    " текущей оценки. Будущая продажа не гарантируется.</div>" +
-
-    '<div class="actions">' +
-    button(
-      "buy",
-      S.coins < listing.price ?
-        "Не хватает звёзд" :
-        "Купить за " + stars(listing.price),
-      id,"btn full",S.coins < listing.price
-    ) +
-    referenceLink(listing.item.id) +
-    "</div></div>"
-  );
+  showModal(head(l.item,"ПРЕДЛОЖЕНИЕ НА МАРКЕТЕ")+
+    '<div class="bubble">Демо-продавец @'+esc(l.seller)+
+    '<br>После покупки предмет появится в твоей коллекции.</div>'+
+    '<div class="receipt"><span>Цена продавца</span><span class="price">'+stars(l.price)+'</span></div>'+
+    '<div class="receipt"><span>Оценка игрового рынка</span><span>'+stars(estimate(l.item.id))+'</span></div>'+
+    '<div class="demand '+(diff>15?"warn":"")+'">'+
+    (diff>=0?"На "+diff.toFixed(1)+"% выше":"На "+Math.abs(diff).toFixed(1)+"% ниже")+
+    ' текущей оценки. Перепродажа не гарантируется.</div>'+
+    '<div class="actions">'+btn("buy",S.coins<l.price?"Не хватает звёзд":
+      "Купить за "+stars(l.price),id,"btn full",S.coins<l.price)+refLink(l.item)+'</div></div>');
 }
-
-/* ---------------- ПРОДАЖА ПО СВОЕЙ ЦЕНЕ ---------------- */
-
-function buyerChance(ratio) {
-  if (ratio <= .8) return .35;
-  if (ratio <= 1) return .22;
-  if (ratio <= 1.15) return .08;
-  if (ratio <= 1.5) return .015;
+function buyerChance(r){
+  if(r<=.8)return .35;
+  if(r<=1)return .22;
+  if(r<=1.15)return .08;
+  if(r<=1.5)return .015;
   return 0;
 }
+function previewItem(id){
+  var i=S.inventory.find(function(v){return v.uid===id;});
+  if(!i)return;
+  saleRef=estimate(i.id);
 
-function previewItem(id) {
-  var item = S.inventory.find(function (i) {
-    return i.uid === id;
-  });
-
-  if (!item) return;
-
-  saleReference = estimate(item.id);
-
-  showModal(
-    itemHeader(item,"ТВОЯ ДЕМО-КОЛЛЕКЦИЯ") +
-
-    '<div class="sale-box">' +
-    '<h3 style="font-size:13px">Твоя цена продажи</h3>' +
-    '<div class="stepper">' +
-    button("priceStep","−",-1,"step") +
-    '<input id="sellPrice" aria-label="Цена в игровых звёздах" ' +
-    'type="number" inputmode="numeric" min="1" max="10000000" ' +
-    'step="1" value="' + saleReference + '">' +
-    button("priceStep","+",1,"step") +
-    "</div>" +
-
-    '<div class="presets">' +
-    button("preset","Ниже оценки<br>−15%",.85,"preset") +
-    button("preset","По оценке<br>рынка",1,"preset") +
-    button("preset","Своя наценка<br>+15%",1.15,"preset") +
-    "</div>" +
-
-    '<div class="sale-line"><span>Оценка при открытии</span>' +
-    "<span>" + fmt(saleReference) + "</span></div>" +
-
-    '<div class="sale-line"><span>Комиссия 5%</span>' +
-    '<span id="saleFee"></span></div>' +
-
-    '<div class="sale-line net">' +
-    "<span>Получишь после продажи</span>" +
-    '<strong id="saleNet"></strong></div>' +
-
-    '<div class="demand" id="saleDemand" aria-live="polite"></div>' +
-    "</div>" +
-
-    '<div class="actions">' +
-    button("list","Выставить на маркет",id,"btn full") +
-    button(
-      "close","Оставить в коллекции",
-      undefined,"btn secondary full"
-    ) +
-    referenceLink(item.id) +
-    "</div>" +
-
-    '<p class="small">Проверка покупателей каждые 10 секунд. ' +
-    "Лот действует 30 минут. Комиссия округляется вверх. " +
-    "Гарантии продажи нет.</p></div>"
-  );
-
+  showModal(head(i,"ТВОЯ КОЛЛЕКЦИЯ")+
+    '<div class="sale-box"><h3 style="font-size:13px">Твоя цена продажи</h3>'+
+    '<div class="stepper">'+btn("priceStep","−",-1,"step")+
+    '<input id="sellPrice" type="number" inputmode="numeric" min="1" max="10000000" step="1" aria-label="Цена продажи" value="'+saleRef+'">'+
+    btn("priceStep","+",1,"step")+'</div><div class="presets">'+
+    btn("preset","Ниже оценки<br>−15%",.85,"preset")+
+    btn("preset","По оценке<br>рынка",1,"preset")+
+    btn("preset","Своя наценка<br>+15%",1.15,"preset")+'</div>'+
+    '<div class="sale-line"><span>Оценка при открытии</span><span>'+fmt(saleRef)+'</span></div>'+
+    '<div class="sale-line"><span>Комиссия 5%</span><span id="saleFee"></span></div>'+
+    '<div class="sale-line net"><span>Получишь после продажи</span><strong id="saleNet"></strong></div>'+
+    '<div id="saleDemand" class="demand" aria-live="polite"></div></div>'+
+    '<div class="actions">'+btn("list","Выставить на маркет",id,"btn full")+
+    btn("close","Оставить в коллекции",undefined,"btn secondary full")+refLink(i)+'</div>'+
+    '<p class="small">Комиссия округляется вверх. Срок лота 30 минут. Продажа не гарантируется.</p></div>');
   updateSale();
 }
-
-function updateSale() {
-  var input = $("sellPrice");
-  if (!input) return;
-
-  var price = Number(input.value);
-  var valid = validPrice(price);
-  var submit = $("modal").querySelector('[data-action="list"]');
-
-  if (submit) submit.disabled = !valid;
+function updateSale(){
+  if(!$("sellPrice"))return;
+  var price=Number($("sellPrice").value),valid=validPrice(price);
+  var submit=$("modal").querySelector('[data-action="list"]');
+  if(submit)submit.disabled=!valid;
 
   Array.prototype.forEach.call(
-    $("modal").querySelectorAll('[data-action="preset"]'),
-    function (b) {
-      b.classList.toggle(
-        "on",
-        valid &&
-        price === Math.max(
-          1,Math.round(saleReference*Number(b.dataset.id))
-        )
-      );
+    $("modal").querySelectorAll('[data-action="preset"]'),function(b){
+      b.classList.toggle("on",valid&&price===Math.max(1,Math.round(saleRef*Number(b.dataset.id))));
     }
   );
 
-  var demand = $("saleDemand");
-  demand.className = "demand";
-
-  if (!valid) {
-    $("saleFee").textContent = "—";
-    $("saleNet").textContent = "—";
-    demand.classList.add("bad");
-    demand.textContent =
-      "Укажи целую цену от 1 до 10 000 000.";
+  var e=$("saleDemand");e.className="demand";
+  if(!valid){
+    $("saleFee").textContent="—";$("saleNet").textContent="—";
+    e.classList.add("bad");
+    e.textContent="Укажи целую цену от 1 до 10 000 000.";
     return;
   }
 
-  var fee = Math.ceil(price*COMMISSION);
-  $("saleFee").textContent = fmt(fee);
-  $("saleNet").textContent = fmt(price-fee);
+  var fee=Math.ceil(price*FEE);
+  $("saleFee").textContent=fmt(fee);
+  $("saleNet").textContent=fmt(price-fee);
+  var ratio=price/saleRef;
+  if(ratio>1.5)e.classList.add("bad");
+  else if(ratio>1)e.classList.add("warn");
 
-  var ratio = price/saleReference;
-  var chance = buyerChance(ratio);
-  var text;
-
-  if (ratio <= .8) {
-    text = "Низкая цена относительно оценки.";
-  } else if (ratio <= 1) {
-    text = "Конкурентная цена.";
-  } else if (ratio <= 1.15) {
-    demand.classList.add("warn");
-    text = "Небольшая наценка.";
-  } else if (ratio <= 1.5) {
-    demand.classList.add("warn");
-    text = "Высокая наценка, покупателей будет меньше.";
-  } else {
-    demand.classList.add("bad");
-    text = "Цена слишком высокая для текущего спроса ботов.";
-  }
-
-  demand.textContent =
-    text + " Шанс покупки за проверку: " +
-    (chance*100).toLocaleString("ru-RU",{
-      maximumFractionDigits:1
-    }) +
-    "%. Проверка каждые 10 секунд при открытой игре. " +
-    "Оценка меняется со временем; продажа не гарантируется.";
+  e.textContent="Шанс покупки за проверку: "+
+    (buyerChance(ratio)*100).toLocaleString("ru-RU",{maximumFractionDigits:1})+
+    "%. Проверка каждые 10 секунд при открытой игре. "+
+    "Оценка меняется со временем; гарантии продажи нет.";
 }
 
-/* ---------------- КЕЙСЫ ---------------- */
+/* ---------- ОТКРЫТИЕ КЕЙСА ---------- */
 
-function previewCase(index) {
-  var c = CASES[index];
-  if (!c) return;
+function previewCase(n){
+  var c=CASES[n];if(!c)return;
+  var total=c.w.reduce(function(a,w){return a+w[1];},0);
 
-  var sum = c.weights.reduce(function (a,w) {
-    return a+w[1];
-  },0);
-
-  showModal(
-    '<div class="sheet-body" style="padding-top:30px">' +
-    '<span class="eyebrow">' + c.tag + "</span>" +
-    '<h2 style="margin-top:12px">' + c.name + "</h2>" +
-    '<p class="small">Один игровой подарок и случайная сцена. ' +
-    "Все шансы ниже.</p>" +
-
-    '<div class="roulette" id="roulette">' +
-    '<span class="pointer"></span>' +
-    '<div style="height:100%;display:grid;place-items:center;' +
-    'color:#beb7ed">' + icon("gift") + "</div></div>" +
-
-    '<div class="row"><span class="muted">Содержимое</span>' +
-    '<span class="muted">Вероятность</span></div>' +
-
-    '<div class="drops">' +
-    c.weights.map(function (w) {
-      return '<div class="drop">' + GIFTS[w[0]][0] +
-        "<span>" +
-        (w[1]/sum*100).toLocaleString("ru-RU",{
-          maximumFractionDigits:2
-        }) +
-        "%</span></div>";
-    }).join("") +
-    "</div>" +
-
-    button(
-      "openCase",
-      S.coins < c.price ?
-        "Недостаточно звёзд" :
-        "Открыть за " + stars(c.price),
-      index,"btn full",S.coins < c.price
-    ) +
-
-    '<p class="small" style="text-align:center">' +
-    "Результат сохраняется сразу. Игровая сцена не меняет " +
-    "атрибуты оригинального NFT.</p></div>"
-  );
+  showModal('<div class="sheet-body" style="padding-top:30px">'+
+    '<span class="eyebrow">'+c.tag+'</span><h2 style="margin-top:12px">'+c.n+'</h2>'+
+    '<p class="small">Один предмет, вариант изображения и случайная игровая сцена.</p>'+
+    '<div class="roulette" id="roulette"><span class="pointer"></span>'+
+    '<div class="preparing">'+ic("gift")+'</div></div>'+
+    '<div id="caseStatus" class="case-status">Подготовка · Прокрутка · Находка</div>'+
+    '<div class="drops">'+c.w.map(function(w){
+      return '<div class="drop">'+D[w[0]][0]+'<span>'+
+        (w[1]/total*100).toLocaleString("ru-RU",{maximumFractionDigits:2})+'%</span></div>';
+    }).join("")+'</div>'+
+    btn("openCase",S.coins<c.p?"Недостаточно звёзд":"Открыть за "+stars(c.p),
+      n,"btn full",S.coins<c.p)+
+    '<p class="small" style="text-align:center">Результат сохраняется до анимации. Все шансы указаны выше.</p></div>');
 }
-
-function pick(weights) {
-  var total = weights.reduce(function (sum,w) {
-    return sum+w[1];
-  },0);
-
-  var r = random()*total;
-
-  for (var i=0;i<weights.length;i++) {
-    r -= weights[i][1];
-    if (r < 0) return weights[i][0];
+function pick(weights){
+  var total=weights.reduce(function(a,w){return a+w[1];},0);
+  var r=rng()*total;
+  for(var i=0;i<weights.length;i++){
+    r-=weights[i][1];
+    if(r<0)return weights[i][0];
   }
-
   return weights[weights.length-1][0];
 }
+function openCase(n){
+  if(busy)return;
+  var c=CASES[n];
+  if(!c||S.coins<c.p)return;
 
-function openCase(index) {
-  if (busy) return;
-
-  var c = CASES[index];
-  if (!c || S.coins < c.price) return;
-
-  busy = true;
-  renderNav();
-
-  var winner = makeItem(pick(c.weights));
-
-  S.coins -= c.price;
-  S.inventory.push(winner);
-  discover(winner.id);
+  busy=true;nav();
+  var winner=makeItem(pick(c.w));
+  S.coins-=c.p;
+  S.inventory.push(winner);discover(winner.id);
   S.stats.opened++;
-
-  log("Кейс " + c.name + ": " + GIFTS[winner.id][0]);
-  save();
-  updateBalance();
+  log("Кейс "+c.n+": "+D[winner.id][0]+" · вариант "+winner.ref);
+  save();balance();
 
   Array.prototype.forEach.call(
     $("modal").querySelectorAll("button"),
-    function (b) { b.disabled = true; }
+    function(b){b.disabled=true;}
   );
 
-  var winningPosition = 28;
-  var items = [];
+  var reduced=!motion();
+  var prepareMs=reduced?0:850;
+  var spinMs=reduced?100:6400;
+  var holdMs=reduced?0:650;
+  var position=34;
+  var ended=false,tickTimer=null,fallback=null;
 
-  for (var j=0;j<35;j++) {
-    items.push(
-      j === winningPosition ?
-        winner : makeItem(pick(c.weights))
-    );
+  $("caseStatus").textContent="Готовим коллекцию…";
+  $("roulette").innerHTML=
+    '<span class="pointer"></span><div class="preparing">'+ic("gift")+'</div>';
+
+  var items=[];
+  for(var j=0;j<42;j++){
+    items.push(j===position?winner:makeItem(pick(c.w)));
   }
 
-  $("roulette").innerHTML =
-    '<span class="pointer"></span>' +
-    '<div class="strip" id="strip">' +
-    items.map(function (item) {
-      return '<div class="roll-card" style="' +
-        theme(item) + '">' +
-        media(item.id,true) +
-        "<span>" + GIFTS[item.id][0] + "</span></div>";
-    }).join("") +
-    "</div>";
+  function finish(){
+    if(ended)return;
+    ended=true;
+    clearTimeout(tickTimer);clearTimeout(fallback);
+    busy=false;render(false);
 
-  var duration = motionAllowed() ? 4400 : 100;
-  var ended = false;
-  var tickTimer = null;
-  var fallback = null;
-  var startedAt = 0;
+    showModal(head(winner,"НОВАЯ НАХОДКА")+
+      '<p class="small">Предмет уже сохранён в твоей коллекции.</p>'+
+      '<div class="receipt"><span>Игровая оценка</span><span class="price">'+stars(estimate(winner.id))+'</span></div>'+
+      '<div class="actions">'+btn("close","Забрать",undefined,"btn full")+
+      btn("case","Открыть ещё",n,"btn secondary full")+'</div></div>',true);
 
-  function finish() {
-    if (ended) return;
-    ended = true;
-
-    clearTimeout(tickTimer);
-    clearTimeout(fallback);
-
-    busy = false;
-    render(false);
-
-    showModal(
-      itemHeader(winner,"НОВАЯ НАХОДКА") +
-      '<p class="small">Демо-предмет уже сохранён в коллекции.</p>' +
-      '<div class="receipt"><span>Игровая оценка</span>' +
-      '<span class="price">' +
-      stars(estimate(winner.id)) + "</span></div>" +
-      '<div class="actions">' +
-      button("close","Забрать",undefined,"btn full") +
-      button("case","Открыть ещё",index,"btn secondary full") +
-      "</div></div>",
-      true
-    );
-
-    setTimeout(function () {
-      var stage = $("modal").querySelector(".inspect-stage");
-      if (!stage) return;
-
-      var r = stage.getBoundingClientRect();
-      particles(
-        r.left+r.width/2,
-        r.top+r.height/2,
-        28,
-        true
-      );
+    setTimeout(function(){
+      var stage=$("modal").querySelector(".inspect-stage");
+      if(!stage)return;
+      var r=stage.getBoundingClientRect();
+      particles(r.left+r.width/2,r.top+r.height/2,28,true);
       winSound();
-    },160);
+    },180);
   }
 
-  function tick() {
-    if (ended || !motionAllowed()) return;
+  fallback=setTimeout(finish,prepareMs+spinMs+holdMs+1300);
 
-    var progress = Math.min(
-      1,(performance.now()-startedAt)/duration
-    );
+  setTimeout(function(){
+    if(ended)return;
+    var track=$("roulette");
+    if(!track)return finish();
 
-    tone(900-progress*250,.025,.005);
+    track.innerHTML='<span class="pointer"></span><div class="strip" id="strip">'+
+      items.map(function(i,j){
+        return '<div class="roll-card" style="'+theme(i)+'" data-roll="'+j+'">'+
+          media(i.id,i.ref,true)+'<span>'+D[i.id][0]+'</span></div>';
+      }).join("")+'</div>';
 
-    if (progress < .94) {
-      tickTimer = setTimeout(
-        tick,55+progress*progress*250
-      );
+    $("caseStatus").textContent="Коллекция раскрывается…";
+
+    var strip=$("strip"),start=0,settled=false;
+
+    function settle(){
+      if(settled||ended)return;
+      settled=true;
+      clearTimeout(tickTimer);
+      var card=$("modal").querySelector('[data-roll="'+position+'"]');
+      if(card)card.classList.add("selected");
+      if($("caseStatus"))$("caseStatus").textContent="Твоя находка";
+      tone(720,.16,.015);
+      setTimeout(finish,holdMs);
     }
-  }
 
-  fallback = setTimeout(finish,duration+700);
+    function tick(){
+      if(ended||settled||reduced)return;
+      var p=Math.min(1,(performance.now()-start)/spinMs);
+      tone(950-p*300,.022,.004);
+      if(p<.96)tickTimer=setTimeout(tick,65+p*p*300);
+    }
 
-  requestAnimationFrame(function () {
-    requestAnimationFrame(function () {
-      var strip = $("strip");
-      var track = $("roulette");
-
-      if (!strip || !track) return finish();
-
-      var offset =
-        winningPosition*120 + 55 - track.clientWidth/2;
-
-      strip.getBoundingClientRect();
-      startedAt = performance.now();
-
-      strip.style.transition =
-        "transform " + duration +
-        "ms cubic-bezier(.12,.72,.13,1)";
-
-      strip.style.transform =
-        "translateX(" + (-offset) + "px)";
-
-      strip.addEventListener(
-        "transitionend",finish,{once:true}
-      );
-
-      tick();
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        if(ended)return;
+        strip.getBoundingClientRect();
+        var offset=position*120+55-track.clientWidth/2;
+        start=performance.now();
+        strip.style.transition=
+          "transform "+spinMs+"ms cubic-bezier(.08,.62,.10,1)";
+        strip.style.transform="translateX("+(-offset)+"px)";
+        strip.addEventListener("transitionend",settle,{once:true});
+        setTimeout(settle,spinMs+150);
+        tick();
+      });
     });
-  });
+  },prepareMs);
 }
 
-/* ---------------- ИГРОВЫЕ ДЕЙСТВИЯ ---------------- */
+/* ---------- МАРКЕТ ---------- */
 
-function spin() {
-  if (busy) return;
-  if (S.coins < bet) {
-    return toast("Не хватает игровых звёзд.");
+function buy(id){
+  var index=S.market.findIndex(function(l){return l.uid===id;});
+  if(index<0){
+    closeModal();reconcileMarket();
+    return toast("Этот лот уже недоступен.");
   }
+  var l=S.market[index];
+  if(S.coins<l.price)return toast("Не хватает звёзд.");
 
-  busy = true;
-  renderNav();
-
-  var currentBet = bet;
-  var result = [
-    integer(0,4),integer(0,4),integer(0,4)
-  ];
-  var different = new Set(result).size;
-  var multiplier =
-    different === 1 ? 10 : different === 2 ? 1 : 0;
-  var payout = currentBet*multiplier;
-
-  S.coins -= currentBet;
-  S.coins += payout;
-
-  log(
-    "Gift Match: ставка " + currentBet +
-    ", выплата " + payout
-  );
-
-  save();
-  updateBalance();
-
-  Array.prototype.forEach.call(
-    $("main").querySelectorAll("button"),
-    function (b) { b.disabled = true; }
-  );
-
-  $("slotResult").textContent = "Останавливаем барабаны…";
-
-  var symbols = [1,7,9,10,12];
-  var reels = document.querySelectorAll(".reel");
-
-  Array.prototype.forEach.call(reels,function (reel,index) {
-    reel.classList.add("spinning");
-
-    setTimeout(function () {
-      reel.classList.remove("spinning");
-      reel.classList.add("stopped");
-      reel.innerHTML = slotSymbol(symbols[result[index]]);
-
-      tone(430+index*100,.07,.012);
-
-      if (index !== 2) return;
-
-      busy = false;
-      renderNav();
-
-      Array.prototype.forEach.call(
-        $("main").querySelectorAll("button"),
-        function (b) { b.disabled = false; }
-      );
-
-      $("slotResult").textContent =
-        multiplier === 10 ?
-          "Три одинаковых! Выплата " + fmt(payout) +
-          ", чистая прибыль " + fmt(payout-currentBet) + "." :
-        multiplier === 1 ?
-          "Пара! Ставка возвращена." :
-          "Все разные. Выплата 0. " +
-          "Звёзды можно получить в заданиях.";
-
-      if (multiplier === 10) {
-        var r = $("slotResult").getBoundingClientRect();
-
-        particles(
-          r.left+r.width/2,
-          Math.max(60,r.top-70),
-          24,true
-        );
-
-        winSound();
-      }
-    },motionAllowed() ? 700+index*550 : 100+index*60);
-  });
-}
-
-function tap(event) {
-  replenishEnergy();
-
-  if (S.energy < 1) {
-    return toast("Энергия восстанавливается: +1 за 2 секунды.");
-  }
-
-  S.energy--;
-  S.coins += S.level;
-  S.stats.taps++;
-
-  updateBalance();
-  updateTimers();
-
-  var zone = $("tapZone");
-  var rect = zone.getBoundingClientRect();
-  var x = event.clientX || rect.left+rect.width/2;
-  var y = event.clientY || rect.top+rect.height/2;
-
-  if (motionAllowed()) {
-    var floater = document.createElement("span");
-    floater.className = "floater";
-    floater.textContent = "+" + S.level;
-    floater.style.left = x-rect.left+"px";
-    floater.style.top = y-rect.top+"px";
-
-    zone.appendChild(floater);
-
-    setTimeout(function () {
-      floater.remove();
-    },850);
-
-    particles(x,y,4,false);
-  }
-
-  save();
-}
-
-function buy(id) {
-  var index = S.market.findIndex(function (listing) {
-    return listing.uid === id;
-  });
-
-  if (index < 0) {
-    closeModal();
-    render(false);
-    return toast("Этот лот уже куплен другим ботом.");
-  }
-
-  var listing = S.market[index];
-
-  if (S.coins < listing.price) {
-    return toast("Не хватает звёзд.");
-  }
-
-  S.coins -= listing.price;
+  S.coins-=l.price;
   S.market.splice(index,1);
-  S.inventory.push(listing.item);
-
-  discover(listing.item.id);
+  S.inventory.push(l.item);discover(l.item.id);
   S.stats.bought++;
-
-  log(
-    "Куплен " + GIFTS[listing.item.id][0] +
-    " за " + listing.price
-  );
-
-  save();
-  closeModal();
-  render(false);
-
-  toast("Демо-предмет добавлен в коллекцию.");
+  log("Куплен "+D[l.item.id][0]+" за "+l.price);
+  save();closeModal();balance();reconcileMarket();
+  toast("Предмет добавлен в коллекцию.");
 }
+function listItem(id){
+  if(!$("sellPrice"))return;
+  var price=Number($("sellPrice").value);
+  if(!validPrice(price))return toast("Укажи допустимую целую цену.");
 
-function listItem(id) {
-  if (!$("sellPrice")) return;
+  var index=S.inventory.findIndex(function(i){return i.uid===id;});
+  if(index<0)return;
 
-  var price = Number($("sellPrice").value);
-
-  if (!validPrice(price)) {
-    return toast("Укажи целую цену от 1 до 10 000 000.");
-  }
-
-  var index = S.inventory.findIndex(function (item) {
-    return item.uid === id;
-  });
-
-  if (index < 0) return;
-
-  var item = S.inventory.splice(index,1)[0];
-
+  var item=S.inventory.splice(index,1)[0];
   S.listings.push({
-    uid: uid(),
-    item: item,
-    price: price,
-    expires: now()+LISTING_LIFETIME
+    uid:uid(),item:item,price:price,expires:now()+LISTING_TIME
   });
-
-  log("Выставлен " + GIFTS[item.id][0] + " за " + price);
-
-  save();
-  closeModal();
-  render(false);
-
-  toast(
-    price > estimate(item.id)*1.5 ?
-      "Лот размещён. При текущей оценке боты не примут эту цену." :
-      "Лот размещён. Покупатели проверяют рынок каждые 10 секунд."
-  );
+  log("Выставлен "+D[item.id][0]+" за "+price);
+  save();closeModal();render(false);
+  toast(price>estimate(item.id)*1.5?
+    "Лот размещён, но текущий спрос не поддерживает такую цену.":
+    "Лот размещён. Боты проверяют рынок каждые 10 секунд.");
 }
-
-function cancelListing(id) {
-  var index = S.listings.findIndex(function (listing) {
-    return listing.uid === id;
-  });
-
-  if (index < 0) return;
-
+function cancelListing(id){
+  var index=S.listings.findIndex(function(l){return l.uid===id;});
+  if(index<0)return;
   S.inventory.push(S.listings.splice(index,1)[0].item);
-
-  save();
-  render(false);
-
-  toast("Объявление снято. Предмет возвращён.");
+  save();render(false);toast("Предмет возвращён в коллекцию.");
 }
-
-function expireListings() {
-  var changed = false;
-
-  S.listings = S.listings.filter(function (listing) {
-    if (now() < listing.expires) return true;
-
-    S.inventory.push(listing.item);
-    log(
-      "Истёк срок объявления: " +
-      GIFTS[listing.item.id][0]
-    );
-
-    changed = true;
-    return false;
+function expire(){
+  var changed=false;
+  S.listings=S.listings.filter(function(l){
+    if(now()<l.expires)return true;
+    S.inventory.push(l.item);
+    log("Истёк срок объявления: "+D[l.item.id][0]);
+    changed=true;return false;
   });
-
   return changed;
 }
+function updatePrices(){
+  if(!entered||busy||document.hidden)return;
 
-function refreshMarketView() {
-  var typing = document.activeElement &&
-    /INPUT|SELECT/.test(document.activeElement.tagName);
-
-  if (
-    !$("modal").hasChildNodes() &&
-    !typing &&
-    (tab === "market" || tab === "inventory")
-  ) {
-    render(false);
-  }
-}
-
-/* Оценки и предложения ботов — отдельный таймер. */
-function updateMarketPrices() {
-  if (busy || document.hidden) return;
-
-  S.previous = S.prices.slice();
-
-  S.prices = S.prices.map(function (price,index) {
-    var base = GIFTS[index][2];
-    var next =
-      price*(.97+random()*.06) +
-      (base-price)*.015;
-
-    return Math.round(
-      Math.max(base*.4,Math.min(base*2.5,next))
-    );
+  S.previous=S.prices.slice();
+  S.prices=S.prices.map(function(p,i){
+    var base=D[i][2];
+    var next=p*(.975+rng()*.05)+(base-p)*.015;
+    return Math.round(Math.max(base*.4,Math.min(base*2.5,next)));
   });
-
   S.indexHistory.push(indexValue());
-  S.indexHistory = S.indexHistory.slice(-35);
-
-  S.market = S.market.filter(function () {
-    return random() > .09;
-  });
-
-  while (S.market.length < 32) {
-    S.market.push(spawnListing());
-  }
+  S.indexHistory=S.indexHistory.slice(-35);
+  S.market=S.market.filter(function(){return rng()>.06;});
+  while(S.market.length<32)S.market.push(spawn());
 
   save();
-  refreshMarketView();
+  if(tab==="market")reconcileMarket();
 }
+function checkBuyers(){
+  if(!entered||busy||document.hidden)return;
+  var changed=expire();
 
-/* Покупатели проверяют пользовательские лоты раз в 10 секунд. */
-function checkBuyers() {
-  if (busy || document.hidden) return;
+  S.listings=S.listings.filter(function(l){
+    var chance=buyerChance(l.price/estimate(l.item.id));
+    if(rng()>=chance)return true;
 
-  var changed = expireListings();
-
-  S.listings = S.listings.filter(function (listing) {
-    var ratio =
-      listing.price/estimate(listing.item.id);
-    var chance = buyerChance(ratio);
-
-    if (random() >= chance) return true;
-
-    var commission = Math.ceil(
-      listing.price*COMMISSION
-    );
-    var net = listing.price-commission;
-
-    S.coins += net;
-    S.stats.sold++;
-    changed = true;
-
-    log(
-      "Продан " + GIFTS[listing.item.id][0] +
-      ". Получено " + net
-    );
-
-    toast(
-      "Бот купил " + GIFTS[listing.item.id][0] +
-      ": +" + fmt(net) + " после комиссии."
-    );
-
+    var net=l.price-Math.ceil(l.price*FEE);
+    S.coins+=net;S.stats.sold++;changed=true;
+    log("Продан "+D[l.item.id][0]+". Получено "+net);
+    toast("Бот купил "+D[l.item.id][0]+": +"+fmt(net)+" после комиссии.");
     return false;
   });
 
-  if (changed) {
-    save();
-    updateBalance();
-    refreshMarketView();
+  if(changed){
+    save();balance();
+    if(tab==="inventory"&&!$("modal").hasChildNodes())render(false);
   }
 }
 
-function updateTimers() {
-  replenishEnergy();
+/* ---------- АРКАДА ---------- */
 
-  if ($("energyText")) {
-    $("energyText").textContent = S.energy + " / 250";
-    $("energyBar").style.width = S.energy/2.5+"%";
-  }
-
-  if ($("jobButton")) {
-    $("jobButton").innerHTML = jobLabel();
-    $("jobButton").disabled =
-      ["working","cooldown"].indexOf(jobState()) >= 0;
-  }
+function slotSymbol(id){
+  return '<div class="slot-symbol"><img data-slot src="'+assetURL(id,1,false)+
+    '" alt="'+esc(D[id][0])+'" referrerpolicy="no-referrer"></div>';
 }
+function gamesView(){
+  return '<div class="heading" style="margin-top:5px"><h2>Звёздная аркада</h2><span class="pill">Демобаланс</span></div>'+
+    '<div class="earn-grid"><div class="panel" style="text-align:center">'+
+    '<span class="eyebrow" style="justify-content:center">GIFT MATCH</span>'+
+    '<h2 style="margin-top:14px">Три в ряд</h2>'+
+    '<p class="small">Развлечение, а не способ накопления звёзд</p>'+
+    '<div class="reels">'+[9,10,12].map(function(id){
+      return '<div class="reel">'+slotSymbol(id)+'</div>';
+    }).join("")+'</div><div class="bets">'+[5,10,25].map(function(n){
+      return btn("bet",stars(n),n,n===bet?"on":"");
+    }).join("")+'</div>'+btn("spin","Играть · "+stars(bet),undefined,"btn full")+
+    '<p class="small" id="slotResult" aria-live="polite">Ставка списывается перед запуском.</p></div>'+
+    '<div class="panel"><h3>Прозрачные правила</h3>'+
+    '<p class="small">Три независимых барабана, по 5 равновероятных символов.</p>'+
+    '<div class="task"><div class="task-content"><h3>Три одинаковых</h3><p>Вероятность 4%</p></div><span class="pill">×10</span></div>'+
+    '<div class="task"><div class="task-content"><h3>Ровно два одинаковых</h3><p>Вероятность 48%</p></div><span class="pill">×1</span></div>'+
+    '<div class="task"><div class="task-content"><h3>Все разные</h3><p>Вероятность 48%</p></div><span class="pill">×0</span></div>'+
+    '<p class="small">Множитель — полная выплата с учётом ставки. Теоретический возврат 88%, средняя потеря 12% ставки. '+
+    'Платежей, вывода и денежного обмена нет.</p></div></div>';
+}
+function spin(){
+  if(busy)return;
+  if(S.coins<bet)return toast("Не хватает игровых звёзд.");
 
-function showHelp() {
-  showModal(
-    '<div class="sheet-body" style="padding-top:30px">' +
-    '<span class="eyebrow">GIFT LAB / STUDIO</span>' +
-    '<h2 style="margin-top:14px">Твоя студия подарков</h2>' +
+  busy=true;nav();
+  var current=bet;
+  var result=[int(0,4),int(0,4),int(0,4)];
+  var distinct=new Set(result).size;
+  var m=distinct===1?10:distinct===2?1:0;
+  var payout=current*m;
 
-    '<p class="small">13 коллекций, 6 кейсов, ' +
-    "10 случайных игровых сцен, альбом, избранное и задания.</p>" +
+  S.coins-=current;S.coins+=payout;
+  log("Gift Match: ставка "+current+", выплата "+payout);
+  save();balance();
 
-    '<p class="small">Изображения показывают публичный референс №1 ' +
-    "коллекции. Покупка в игре не передаёт настоящий NFT. " +
-    "Номера предметов и категории редкости игровые.</p>" +
+  Array.prototype.forEach.call(
+    $("main").querySelectorAll("button"),function(b){b.disabled=true;}
+  );
+  $("slotResult").textContent="Останавливаем барабаны…";
 
-    '<p class="small">Случайный фон — внешняя игровая сцена. ' +
-    "Фон внутри исходного изображения не изменяется. " +
-    "Объём выполнен средствами CSS: это не настоящие " +
-    "трёхмерные модели подарков.</p>" +
+  var symbols=[1,7,9,10,12];
+  Array.prototype.forEach.call(
+    document.querySelectorAll(".reel"),function(reel,i){
+      reel.classList.add("spinning");
 
-    '<p class="small">Энергия: +1 каждые 2 секунды. ' +
-    "PNG-звезда стилизованная, не официальный ассет. " +
-    "Изображения подарков требуют интернета.</p>" +
+      setTimeout(function(){
+        reel.classList.remove("spinning");
+        reel.classList.add("stopped");
+        reel.innerHTML=slotSymbol(symbols[result[i]]);
+        tone(430+i*100,.07,.012);
 
-    '<p class="small">Покупатели проверяют лоты каждые 10 секунд ' +
-    "при открытой игре. Шанс за проверку: до 80% оценки — 35%; " +
-    "до 100% — 22%; до 115% — 8%; до 150% — 1,5%; " +
-    "выше — 0%. Комиссия 5%, срок лота 30 минут. " +
-    "Продаж без открытой игры нет.</p>" +
+        if(i!==2)return;
+        busy=false;nav();
+        Array.prototype.forEach.call(
+          $("main").querySelectorAll("button"),function(b){b.disabled=false;}
+        );
 
-    '<p class="small">Оценки меняются раз в 15 секунд, ' +
-    "в пределах 40–250% базовой игровой стоимости. " +
-    "Это не настоящие цены Telegram.</p>" +
+        $("slotResult").textContent=m===10?
+          "Три одинаковых! Выплата "+fmt(payout)+", прибыль "+fmt(payout-current)+".":
+          m===1?"Пара! Ставка возвращена.":
+          "Все разные. Выплата 0. Бесплатные награды доступны в мастерской.";
 
-    '<p class="small">Нет платежей, вывода и денежных сделок. ' +
-    "Прогресс хранится в браузере и доступен для изменения " +
-    "пользователем. Не открывай игру одновременно в нескольких " +
-    "вкладках: синхронизации между ними нет.</p>" +
-
-    button("close","Понятно",undefined,"btn full") +
-    "</div>"
+        if(m===10){
+          var r=$("slotResult").getBoundingClientRect();
+          particles(r.left+r.width/2,Math.max(60,r.top-70),24,true);
+          winSound();
+        }
+      },motion()?800+i*650:100+i*60);
+    }
   );
 }
 
-/* ---------------- ОБРАБОТКА ДЕЙСТВИЙ ---------------- */
+/* ---------- ПРАВИЛА И ТАЙМЕРЫ ---------- */
 
-function action(name,id,event) {
-  if (busy) return;
+function timers(){
+  replenish();
 
-  switch (name) {
-    case "close":
-      closeModal();
-      break;
+  if($("energyText")){
+    $("energyText").textContent=S.energy+" / "+ENERGY_MAX;
+    $("energyBar").style.width=S.energy/ENERGY_MAX*100+"%";
+  }
+  if($("chargeText")){
+    $("chargeText").textContent=S.charge.toFixed(1)+" / "+CHARGE_TARGET;
+    $("chargeBar").style.width=S.charge/CHARGE_TARGET*100+"%";
+  }
+  if($("jobButton")){
+    $("jobButton").innerHTML=jobLabel();
+    $("jobButton").disabled=["working","cooldown"].indexOf(jobState())>=0;
+  }
+}
 
-    case "goHome":
-      go("home");
-      break;
+function help(){
+  showModal('<div class="sheet-body" style="padding-top:30px">'+
+    '<span class="eyebrow">GIFT LAB / COLLECTION STUDIO</span>'+
+    '<h2 style="margin-top:14px">Правила студии</h2>'+
+    '<p class="small">16 коллекций, варианты публичных референсов #1–4 и 10 случайных игровых сцен. '+
+    'Внешние картинки могут быть недоступны. Замена изображения на референс #1 помечается отдельно.</p>'+
+    '<p class="small">Предметы, номера, игровые категории и баланс не являются настоящими NFT или Telegram Stars. '+
+    'Покупка здесь не передаёт владение оригиналом. Случайная сцена не меняет фон внутри фотографии.</p>'+
+    '<p class="small">Кликер: 8 единиц импульса дают 1 звезду. Энергия +1 раз в 2 секунды. '+
+    'Каждый уровень добавляет 0,1 мощности. Цена улучшения: 250 × квадрат текущего уровня. '+
+    'Старый накопленный баланс не уменьшается.</p>'+
+    '<p class="small">Маркет — локальные боты. Проверка каждые 10 секунд: '+
+    'цена до 80% оценки — шанс 35%; до 100% — 22%; до 115% — 8%; до 150% — 1,5%; выше — 0%. '+
+    'Комиссия 5%, срок лота 30 минут. Продажи возможны только при открытой игре. '+
+    'Цены игровых оценок меняются раз в 15 секунд в пределах 40–250% базовой оценки.</p>'+
+    '<p class="small">Профиль хранится в браузере, не защищён паролем и не является авторизацией Telegram. '+
+    'Данные доступны для изменения пользователем. Не открывай игру одновременно в нескольких вкладках.</p>'+
+    '<p class="small">Подарки — плоские изображения с эффектами перспективы. Кейсы используют CSS-объём, '+
+    'а не полноценные трёхмерные модели.</p>'+
+    '<p class="small">Источник звезды: '+esc(starInfo.text)+'</p>'+
+    btn("close","Понятно",undefined,"btn full")+'</div>');
+}
 
-    case "case":
-      previewCase(Number(id));
-      break;
+/* ---------- ДЕЙСТВИЯ ---------- */
 
-    case "openCase":
-      openCase(Number(id));
-      break;
+function action(name,id,event){
+  if(name==="login"){login();return;}
+  if(name==="gateColor"){
+    if(COLORS.indexOf(id)<0)return;
+    gateColor=id;
+    Array.prototype.forEach.call(
+      document.querySelectorAll('[data-action="gateColor"]'),function(b){
+        b.classList.toggle("on",b.dataset.id===id);
+      }
+    );
+    return;
+  }
 
-    case "previewBuy":
-      previewBuy(id);
-      break;
+  if(!entered||busy)return;
 
-    case "previewItem":
-      previewItem(id);
-      break;
-
-    case "buy":
-      buy(id);
-      break;
-
-    case "list":
-      listItem(id);
-      break;
-
-    case "cancel":
-      cancelListing(id);
-      break;
-
-    case "tap":
-      tap(event);
+  switch(name){
+    case "close":closeModal();break;
+    case "goHome":go("home");break;
+    case "case":previewCase(Number(id));break;
+    case "openCase":openCase(Number(id));break;
+    case "previewBuy":previewBuy(id);break;
+    case "previewItem":previewItem(id);break;
+    case "buy":buy(id);break;
+    case "list":listItem(id);break;
+    case "cancel":cancelListing(id);break;
+    case "tap":tap(event);break;
+    case "help":help();break;
+    case "rename":closeModal();showGate();break;
+    case "reloadStar":
+      loadOriginalStar(true);
+      toast("Проверяем оригинальный ресурс Telegram.");
       break;
 
     case "filter":
-      rarityFilter = Number(id);
+      rarity=Number(id);
       render(false);
       break;
 
     case "favoritesFilter":
-      onlyFavorites = !onlyFavorites;
+      favoritesOnly=!favoritesOnly;
       render(false);
       break;
 
     case "favorite":
-      var giftId = Number(id);
-      if (!GIFTS[giftId]) return;
-
-      var favoriteIndex = S.favorites.indexOf(giftId);
-
-      if (favoriteIndex < 0) S.favorites.push(giftId);
-      else S.favorites.splice(favoriteIndex,1);
-
+      var giftId=Number(id);
+      if(!D[giftId])return;
+      var index=S.favorites.indexOf(giftId);
+      if(index<0)S.favorites.push(giftId);
+      else S.favorites.splice(index,1);
       save();
 
-      var favoriteButton = $("modal").querySelector(
-        '[data-action="favorite"]'
-      );
-
-      if (favoriteButton) {
-        var selected = S.favorites.indexOf(giftId) >= 0;
+      var favoriteButton=$("modal").querySelector('[data-action="favorite"]');
+      if(favoriteButton){
+        var selected=S.favorites.indexOf(giftId)>=0;
         favoriteButton.classList.toggle("on",selected);
-        favoriteButton.setAttribute(
-          "aria-pressed",String(selected)
-        );
+        favoriteButton.setAttribute("aria-pressed",String(selected));
       }
-
-      toast(
-        favoriteIndex < 0 ?
-          "Коллекция добавлена в избранное." :
-          "Коллекция убрана из избранного."
-      );
+      toast(index<0?"Коллекция добавлена в избранное.":"Коллекция убрана из избранного.");
       break;
 
     case "preset":
-      if (!$("sellPrice")) return;
-
-      $("sellPrice").value = Math.max(
-        1,Math.round(saleReference*Number(id))
-      );
-
+      if(!$("sellPrice"))return;
+      $("sellPrice").value=Math.max(1,Math.round(saleRef*Number(id)));
       updateSale();
       break;
 
     case "priceStep":
-      if (!$("sellPrice")) return;
-
-      var price = Number($("sellPrice").value);
-      if (!Number.isFinite(price)) price = saleReference;
-
-      var step =
-        price >= 10000 ? 1000 :
-        price >= 1000 ? 100 :
-        price >= 100 ? 10 : 1;
-
-      $("sellPrice").value = Math.max(
-        1,
-        Math.min(
-          10000000,
-          Math.round(price+Number(id)*step)
-        )
-      );
-
+      if(!$("sellPrice"))return;
+      var p=Number($("sellPrice").value);
+      if(!Number.isFinite(p))p=saleRef;
+      var step=p>=10000?1000:p>=1000?100:p>=100?10:1;
+      $("sellPrice").value=Math.max(1,Math.min(10000000,Math.round(p+Number(id)*step)));
       updateSale();
       break;
 
     case "upgrade":
-      if (S.level >= 20) return;
-
-      if (S.coins < S.level*150) {
-        return toast("Не хватает звёзд.");
-      }
-
-      S.coins -= S.level*150;
-      S.level++;
-
-      save();
-      render(false);
-      toast("Сила импульса увеличена.");
+      if(S.level>=20)return;
+      if(S.coins<upgradeCost())return toast("Не хватает звёзд.");
+      S.coins-=upgradeCost();S.level++;
+      log("Мощность кликера повышена до "+tapPower().toFixed(1));
+      save();render(false);
+      toast("Мощность импульса увеличена.");
       break;
 
     case "daily":
-      if (!dailyReady()) return;
-
-      S.dailyAt = now();
-      S.coins += 400;
-      log("Ежедневная награда +400");
-
-      save();
-      render(false);
-
-      toast("+400 игровых звёзд.");
-      winSound();
+      if(!dailyReady())return;
+      S.dailyAt=now();S.coins+=25;
+      log("Ежедневная награда +25");
+      save();render(false);toast("+25 игровых звёзд.");winSound();
       break;
 
     case "job":
-      var state = jobState();
-
-      if (state === "start") {
-        S.jobReady = now()+60000;
+      var state=jobState();
+      if(state==="start"){
+        S.jobReady=now()+90000;
         toast("Курьер отправился в путь.");
-      } else if (state === "claim") {
-        S.coins += 120;
-        S.jobReady = 0;
-        S.jobCooldown = now()+180000;
-        log("Доставка завершена +120");
-        toast("+120 игровых звёзд.");
+      }else if(state==="claim"){
+        S.coins+=10;S.jobReady=0;S.jobCooldown=now()+300000;
+        log("Доставка завершена +10");
+        toast("+10 игровых звёзд.");
       }
-
-      save();
-      render(false);
+      save();render(false);
       break;
 
     case "claim":
-      var mission = MISSIONS.find(function (m) {
-        return m.id === id;
-      });
-
-      if (
-        !mission ||
-        S.claimed.indexOf(id) >= 0 ||
-        missionValue(mission) < mission.goal
-      ) return;
-
-      S.claimed.push(id);
-      S.coins += mission.reward;
-
-      log(
-        "Достижение " + mission.title +
-        ": +" + mission.reward
-      );
-
-      save();
-      render(false);
-
-      toast("Награда получена: +" + mission.reward);
-      winSound();
+      var m=MISSIONS.find(function(v){return v.id===id;});
+      if(!m||S.claimed.indexOf(id)>=0||missionValue(m)<m.goal)return;
+      S.claimed.push(id);S.coins+=m.reward;
+      log("Достижение "+m.title+": +"+m.reward);
+      save();render(false);toast("Награда получена: +"+m.reward);winSound();
       break;
 
     case "bet":
-      if ([25,50,100].indexOf(Number(id)) < 0) return;
-      bet = Number(id);
-      render(false);
+      if([5,10,25].indexOf(Number(id))<0)return;
+      bet=Number(id);render(false);
       break;
 
-    case "spin":
-      spin();
-      break;
+    case "spin":spin();break;
   }
 }
 
-/* ---------------- СОБЫТИЯ ---------------- */
+/* ---------- СОБЫТИЯ ---------- */
 
-document.addEventListener(
-  "pointerdown",unlockAudio,{passive:true}
-);
-document.addEventListener(
-  "keydown",unlockAudio,{passive:true}
-);
+document.addEventListener("pointerdown",unlockAudio,{passive:true});
+document.addEventListener("keydown",unlockAudio,{passive:true});
 
-document.addEventListener("click",function (event) {
-  var b = event.target.closest("button");
-
-  if (b && !b.disabled) {
-    if (b.dataset.tab) {
-      if (!busy) clickSound();
-      go(b.dataset.tab);
-      return;
+document.addEventListener("click",function(e){
+  var b=e.target.closest("button");
+  if(b&&!b.disabled){
+    if(b.dataset.tab){
+      if(!busy&&entered)clickSound();
+      go(b.dataset.tab);return;
     }
-
-    if (b.dataset.action) {
-      if (!busy) clickSound();
-      action(b.dataset.action,b.dataset.id,event);
+    if(b.dataset.action){
+      if(!busy)clickSound();
+      action(b.dataset.action,b.dataset.id,e);
       return;
     }
   }
+  if(e.target.classList.contains("overlay"))closeModal();
+});
 
-  if (event.target.classList.contains("overlay")) {
-    closeModal();
+document.addEventListener("input",function(e){
+  if(e.target.id==="sellPrice")updateSale();
+  if(e.target.id==="search"){
+    search=e.target.value;
+    reconcileMarket();
   }
 });
 
-document.addEventListener("input",function (event) {
-  if (event.target.id === "sellPrice") {
-    updateSale();
-  }
-
-  if (event.target.id === "search") {
-    search = event.target.value;
-
-    if ($("marketGrid")) {
-      $("marketGrid").innerHTML = marketGrid();
-    }
+document.addEventListener("change",function(e){
+  if(e.target.id==="sort"){
+    sort=e.target.value;
+    reconcileMarket();
   }
 });
 
-document.addEventListener("change",function (event) {
-  if (event.target.id === "sort") {
-    sort = event.target.value;
-
-    if ($("marketGrid")) {
-      $("marketGrid").innerHTML = marketGrid();
-    }
-  }
-});
-
-document.addEventListener("keydown",function (event) {
-  if (!$("modal").hasChildNodes()) return;
-
-  if (event.key === "Escape") {
-    event.preventDefault();
-    closeModal();
+document.addEventListener("keydown",function(e){
+  if($("loginName")&&e.key==="Enter"){
+    e.preventDefault();login();return;
   }
 
-  if (event.key === "Tab") {
-    var elements = Array.prototype.slice.call(
+  if(!$("modal").hasChildNodes())return;
+
+  if(e.key==="Escape"){
+    e.preventDefault();closeModal();
+  }
+
+  if(e.key==="Tab"){
+    var list=Array.prototype.slice.call(
       $("modal").querySelectorAll(
-        "button:not(:disabled)," +
-        "input:not(:disabled)," +
-        "select:not(:disabled),a[href]"
+        "button:not(:disabled),input:not(:disabled),select:not(:disabled),a[href]"
       )
     );
 
-    if (!elements.length) {
-      event.preventDefault();
-      return;
-    }
+    if(!list.length){e.preventDefault();return;}
 
-    var first = elements[0];
-    var last = elements[elements.length-1];
-    var focused = document.activeElement;
+    var f=list[0],l=list[list.length-1],focused=document.activeElement;
 
-    if (
-      event.shiftKey &&
-      (focused === first || elements.indexOf(focused) < 0)
-    ) {
-      event.preventDefault();
-      last.focus();
-    } else if (
-      !event.shiftKey &&
-      (focused === last || elements.indexOf(focused) < 0)
-    ) {
-      event.preventDefault();
-      first.focus();
+    if(e.shiftKey&&(focused===f||list.indexOf(focused)<0)){
+      e.preventDefault();l.focus();
+    }else if(!e.shiftKey&&(focused===l||list.indexOf(focused)<0)){
+      e.preventDefault();f.focus();
     }
   }
 });
 
-/* 3D-наклон карточки только для мыши. */
-function resetTilt() {
-  if (!tiltCard) return;
-
-  ["--rx","--ry","--mx","--my"].forEach(function (property) {
-    tiltCard.style.removeProperty(property);
+function resetTilt(){
+  if(!tiltCard)return;
+  ["--rx","--ry","--mx","--my"].forEach(function(p){
+    tiltCard.style.removeProperty(p);
   });
-
-  tiltCard = null;
+  tiltCard=null;
 }
 
-document.addEventListener("pointermove",function (event) {
-  if (
-    !motionAllowed() ||
-    !window.matchMedia ||
-    !window.matchMedia(
-      "(hover:hover) and (pointer:fine)"
-    ).matches
-  ) return;
+document.addEventListener("pointermove",function(e){
+  if(!motion()||!window.matchMedia||
+     !matchMedia("(hover:hover) and (pointer:fine)").matches)return;
 
-  var card = event.target.closest(".gift");
+  var card=e.target.closest(".gift");
+  if(tiltCard&&tiltCard!==card)resetTilt();
+  tiltCard=card;tiltEvent=e;
+  if(!card||tiltFrame)return;
 
-  if (tiltCard && tiltCard !== card) resetTilt();
+  tiltFrame=requestAnimationFrame(function(){
+    tiltFrame=0;
+    if(!tiltCard||!document.contains(tiltCard))return;
 
-  tiltCard = card;
-  tiltEvent = event;
-
-  if (!card || tiltFrame) return;
-
-  tiltFrame = requestAnimationFrame(function () {
-    tiltFrame = 0;
-
-    if (!tiltCard || !document.contains(tiltCard)) return;
-
-    var rect = tiltCard.getBoundingClientRect();
-
-    var x = Math.max(
-      0,Math.min(1,(tiltEvent.clientX-rect.left)/rect.width)
-    );
-    var y = Math.max(
-      0,Math.min(1,(tiltEvent.clientY-rect.top)/rect.height)
-    );
+    var r=tiltCard.getBoundingClientRect();
+    var x=Math.max(0,Math.min(1,(tiltEvent.clientX-r.left)/r.width));
+    var y=Math.max(0,Math.min(1,(tiltEvent.clientY-r.top)/r.height));
 
     tiltCard.style.setProperty("--rx",((.5-y)*8)+"deg");
     tiltCard.style.setProperty("--ry",((x-.5)*9)+"deg");
@@ -4223,93 +2150,59 @@ document.addEventListener("pointermove",function (event) {
   });
 },{passive:true});
 
-document.addEventListener("pointerout",function (event) {
-  if (
-    tiltCard &&
-    (!event.relatedTarget ||
-      !tiltCard.contains(event.relatedTarget))
-  ) {
+document.addEventListener("pointerout",function(e){
+  if(tiltCard&&(!e.relatedTarget||!tiltCard.contains(e.relatedTarget))){
     resetTilt();
   }
 },{passive:true});
 
 window.addEventListener("blur",resetTilt);
 
-$("logo").innerHTML = icon("gift");
-$("help").innerHTML = icon("info");
+$("logo").innerHTML=ic("gift");
 
-$("help").addEventListener("click",function () {
-  if (!busy) showHelp();
+$("profileButton").addEventListener("click",function(){
+  if(entered&&!busy)profileView();
 });
 
-$("sound").addEventListener("click",function () {
-  soundEnabled = !soundEnabled;
-
-  try {
-    localStorage.setItem(
-      "gift-lab-sound-enabled",
-      soundEnabled ? "1" : "0"
-    );
-  } catch (e) {}
-
-  syncSoundButton();
-  unlockAudio();
-
-  if (soundEnabled) {
-    setTimeout(function () {
-      tone(660,.12,.023);
-    },50);
-  }
+$("sound").addEventListener("click",function(){
+  soundEnabled=!soundEnabled;
+  try{
+    localStorage.setItem("gift-lab-sound-enabled",soundEnabled?"1":"0");
+  }catch(e){}
+  syncSound();unlockAudio();
+  if(soundEnabled)setTimeout(function(){tone(660,.12,.022);},50);
 });
 
 window.addEventListener("pagehide",save);
 
-document.addEventListener("visibilitychange",function () {
-  if (!document.hidden) {
-    replenishEnergy();
-    expireListings();
+document.addEventListener("visibilitychange",function(){
+  if(!document.hidden){
+    replenish();
+    var changed=expire();
     save();
-
-    if (!busy && !$("modal").hasChildNodes()) {
-      render(false);
+    if(entered&&!busy&&!$("modal").hasChildNodes()){
+      if(tab==="market")reconcileMarket();
+      else if(changed&&tab==="inventory")render(false);
+      else timers();
     }
   }
 });
 
-/* ---------------- ЗАПУСК ---------------- */
+/* ---------- ЗАПУСК ---------- */
 
-expireListings();
+expire();
+while(S.market.length<32)S.market.push(spawn());
+if(!S.indexHistory.length)S.indexHistory.push(indexValue());
 
-while (S.market.length < 32) {
-  S.market.push(spawnListing());
-}
+replenish();syncSound();save();render(false);showGate();
 
-if (!S.indexHistory.length) {
-  S.indexHistory.push(indexValue());
-}
-
-replenishEnergy();
-syncSoundButton();
-save();
-render();
-
-setInterval(updateTimers,1000);
-setInterval(updateMarketPrices,PRICE_INTERVAL);
+setInterval(timers,1000);
+setInterval(updatePrices,PRICE_INTERVAL);
 setInterval(checkBuyers,BUYER_INTERVAL);
 setInterval(save,10000);
 
-if (migrated) {
-  toast(
-    "Прогресс перенесён. Старые модели сопоставлены коллекциям. " +
-    "Исходное сохранение не удалено."
-  );
-}
-
-if (storageWarning) {
-  toast(
-    "Браузер ограничивает сохранение. " +
-    "Открой сайт в обычной вкладке."
-  );
+if(storageWarning){
+  toast("Есть ограничения сохранения. Открой сайт в обычной вкладке.");
 }
 
 })();
