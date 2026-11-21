@@ -85,13 +85,14 @@ button img{pointer-events:none}
   margin-left:auto;white-space:nowrap;
   font-weight:750;font-variant-numeric:tabular-nums;
   border:1px solid #ffffff22;border-radius:14px;
-  padding:11px 14px;background:var(--glass);
+  padding:10px 14px;background:var(--glass);
   box-shadow:inset 0 1px 0 #ffffff25;
 }
 .balance.bump{animation:bump .35s var(--ease)}
 .star{
-  width:18px;height:18px;
+  width:19px;height:19px;
   vertical-align:-3px;object-fit:contain;
+  filter:drop-shadow(0 2px 6px #ffbe2e55);
 }
 .ic{
   width:21px;height:21px;
@@ -377,7 +378,6 @@ input,select{
 }
 .gift.rare-bg{border-color:#b7a2f345}
 .gift.mythic-bg{border-color:#f3d28466;box-shadow:inset 0 1px 0 #ffe9ad33,0 12px 28px #f3d28412}
-/* Особая подача аномалий в сетке */
 .gift.has-anomaly{
   border-color:#ff77e988;
   box-shadow:inset 0 0 18px #ff77e918,0 12px 30px #ff77e91a;
@@ -560,8 +560,8 @@ input,select{
   box-shadow:inset 0 1px 0 #fff8,0 18px 45px #0002;
 }
 .tap img{
-  width:130px;height:130px;
-  filter:drop-shadow(0 13px 22px #ffce4d33);
+  width:132px;height:132px;
+  filter:drop-shadow(0 14px 26px #ffbe2e44);
   animation:float 5s ease-in-out infinite;
 }
 .tap:active:not(:disabled){transform:scale(.92)}
@@ -643,7 +643,6 @@ input,select{
   background:#202737cc;
 }
 .sheet-body{padding:22px}
-/* Объёмная 3D-витрина с поддержкой аномалий */
 .inspect-stage{
   position:relative;isolation:isolate;
   display:grid;place-items:center;overflow:hidden;
@@ -2059,33 +2058,83 @@ function replenish(){
   }
 }
 
+/* Объёмная звезда в стиле Telegram (с 3D-гранями и глянцевым бликом) */
 function makeStar(){
   var c=document.createElement("canvas");
-  c.width=c.height=192;
+  c.width=c.height=256;
   var g=c.getContext("2d");
 
-  g.beginPath();
+  var cx=128,cy=132,outerR=108,innerR=49;
 
-  for(var i=0;i<10;i++){
-    var r=i%2?41:88;
-    var a=-Math.PI/2+i*Math.PI/5;
-    var x=96+Math.cos(a)*r;
-    var y=96+Math.sin(a)*r;
-
-    if(i)g.lineTo(x,y);
-    else g.moveTo(x,y);
+  function starPath(ctx,rOut,rIn,rot){
+    ctx.beginPath();
+    for(var i=0;i<10;i++){
+      var r=i%2?rIn:rOut;
+      var a=(rot||-Math.PI/2)+i*Math.PI/5;
+      var x=cx+Math.cos(a)*r;
+      var y=cy+Math.sin(a)*r;
+      if(i===0)ctx.moveTo(x,y);
+      else ctx.lineTo(x,y);
+    }
+    ctx.closePath();
   }
 
-  g.closePath();
+  /* Мягкое свечение под звездой */
+  var glow=g.createRadialGradient(cx,cy+8,16,cx,cy+8,122);
+  glow.addColorStop(0,"rgba(255,196,54,0.35)");
+  glow.addColorStop(1,"rgba(255,196,54,0)");
+  g.fillStyle=glow;
+  g.beginPath();
+  g.arc(cx,cy+8,122,0,Math.PI*2);
+  g.fill();
 
-  var v=g.createLinearGradient(30,0,140,192);
-  v.addColorStop(0,"#fff1b8");
-  v.addColorStop(.45,"#ffd362");
-  v.addColorStop(1,"#efa12c");
+  /* Объёмный нижний слой (3D-толщина в стиле Telegram) */
+  g.save();
+  g.translate(0,7);
+  starPath(g,outerR,innerR);
+  g.fillStyle="#c96e08";
+  g.fill();
+  g.restore();
 
-  g.fillStyle=v;g.fill();
-  g.strokeStyle="#ffedb7";
-  g.lineWidth=2;g.stroke();
+  /* Основной золотисто-оранжевый градиент звезды */
+  starPath(g,outerR,innerR);
+  var bodyGrad=g.createLinearGradient(cx-60,cy-100,cx+65,cy+105);
+  bodyGrad.addColorStop(0,"#fff29c");
+  bodyGrad.addColorStop(.32,"#ffd238");
+  bodyGrad.addColorStop(.72,"#ff9f14");
+  bodyGrad.addColorStop(1,"#eb7607");
+  g.fillStyle=bodyGrad;
+  g.fill();
+
+  /* Внутренние объёмные лучи (граненость как у стикера Telegram) */
+  g.save();
+  starPath(g,outerR,innerR);
+  g.clip();
+
+  var facetGrad=g.createLinearGradient(cx-80,cy-90,cx+90,cy+90);
+  facetGrad.addColorStop(0,"rgba(255,255,255,0.42)");
+  facetGrad.addColorStop(.45,"rgba(255,255,255,0.04)");
+  facetGrad.addColorStop(1,"rgba(166,68,0,0.22)");
+  g.fillStyle=facetGrad;
+  g.fillRect(0,0,256,256);
+
+  /* Глянцевый верхний блик */
+  var shineGrad=g.createLinearGradient(cx,cy-105,cx,cy+15);
+  shineGrad.addColorStop(0,"rgba(255,255,255,0.65)");
+  shineGrad.addColorStop(.55,"rgba(255,255,255,0.12)");
+  shineGrad.addColorStop(1,"rgba(255,255,255,0)");
+  g.fillStyle=shineGrad;
+  g.beginPath();
+  g.ellipse(cx,cy-42,68,36,0,0,Math.PI*2);
+  g.fill();
+
+  g.restore();
+
+  /* Тонкий светлый контур по краю */
+  starPath(g,outerR-1,innerR-1);
+  g.strokeStyle="rgba(255,248,196,0.75)";
+  g.lineWidth=2.5;
+  g.stroke();
 
   return c.toDataURL("image/png");
 }
@@ -2094,7 +2143,7 @@ var STAR=makeStar();
 
 var stars=function(n){
   return '<img class="star" src="'+STAR+
-    '" alt="Игровые звёзды"> '+fmt(n);
+    '" alt="Telegram звёзды"> '+fmt(n);
 };
 
 function balance(){
@@ -3149,8 +3198,8 @@ function earnView(){
     '<div class="tap-zone" id="tapZone">'+
     '<span class="tap-rings"></span>'+
     '<button class="tap" data-action="tap" '+
-    'aria-label="Получить игровые звёзды">'+
-    '<img src="'+STAR+'" alt="PNG-звезда">'+
+    'aria-label="Получить Telegram звёзды">'+
+    '<img src="'+STAR+'" alt="Telegram звезда">'+
     '</button></div>'+
 
     '<div class="income-box"><div class="row">'+
@@ -3182,7 +3231,7 @@ function earnView(){
     '<div><div class="panel">'+
     '<span class="eyebrow">РАЗ В 24 ЧАСА</span>'+
     '<h2 style="margin-top:14px">Ежедневный подарок</h2>'+
-    '<p class="small">Фиксированная награда — 50 игровых звёзд.</p>'+
+    '<p class="small">Фиксированная награда — 50 звёзд Telegram.</p>'+
     btn("daily",dailyReady()?
       "Забрать "+stars(50):
       "Через "+Math.ceil(
@@ -4132,7 +4181,7 @@ function spin(){
   if(busy)return;
 
   if(S.coins<bet){
-    return toast("Не хватает игровых звёзд.");
+    return toast("Не хватает звёзд Telegram.");
   }
 
   busy=true;
@@ -4398,7 +4447,7 @@ function memoryFlip(n){
         S.coins+=30;
         S.memoryRewardAt=now();
         m.message=
-          "Альбом собран! Получено 30 игровых звёзд.";
+          "Альбом собран! Получено 30 звёзд Telegram.";
 
         log(
           "Memory Lab: альбом собран, +30"
@@ -4927,7 +4976,7 @@ function action(a,id,e){
         haptic(20);
 
         log("Доставка завершена +20");
-        toast("+20 игровых звёзд.");
+        toast("+20 звёзд Telegram.");
       }
 
       save();
@@ -5311,4 +5360,3 @@ if(storageWarning){
 </script>
 </body>
 </html>
-
