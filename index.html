@@ -15,6 +15,7 @@
   --muted:#8d99b5;
   --accent:#c8b6ff;
   --green:#a3e2c7;
+  --gold:#f4d38a;
   --ease:cubic-bezier(.2,1,.3,1);
   --glass:linear-gradient(135deg,#ffffff0d,#ffffff03);
 }
@@ -32,6 +33,7 @@ body{
     var(--bg);
   background-attachment:fixed;
   font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  overscroll-behavior-y:none;
 }
 button,input,select{font:inherit}
 button{
@@ -58,12 +60,12 @@ button img{pointer-events:none}
 .app{
   max-width:1140px;margin:auto;
   padding:
-    calc(22px + env(safe-area-inset-top,0px))
+    calc(18px + env(safe-area-inset-top,0px))
     24px
-    calc(120px + env(safe-area-inset-bottom,0px));
+    calc(118px + env(safe-area-inset-bottom,0px));
 }
 .top{
-  display:flex;align-items:center;gap:10px;margin-bottom:25px;
+  display:flex;align-items:center;gap:10px;margin-bottom:24px;
 }
 .logo{
   display:grid;place-items:center;
@@ -96,29 +98,30 @@ button img{pointer-events:none}
 }
 .iconbtn{
   display:inline-grid;place-items:center;
-  width:35px;height:35px;
+  width:36px;height:36px;
   border:1px solid #ffffff20;border-radius:12px;
   background:var(--glass);
 }
-.iconbtn.on{color:#e0cffc;background:#b7a2f322}
+.iconbtn.on{color:#e0cffc;background:#b7a2f322;border-color:#c9b6ff44}
 .avatar{
   display:grid;place-items:center;
   border:1px solid #ffffff44;border-radius:50%;
   background:linear-gradient(135deg,var(--avatar,#a396ce),#53627f);
   font-weight:700;
 }
-.avatar.small-avatar{width:34px;height:34px;font-size:12px}
+.avatar.small-avatar{width:36px;height:36px;font-size:12px}
 .avatar.big-avatar{
-  width:82px;height:82px;
-  margin:auto;font-size:29px;
+  width:84px;height:84px;
+  margin:auto;font-size:30px;
+  box-shadow:0 12px 30px #0004,inset 0 1px 0 #fff6;
 }
 .row,.heading{
   display:flex;align-items:center;
   justify-content:space-between;gap:12px;
 }
-.heading{margin:27px 0 16px}
+.heading{margin:26px 0 15px}
 .small{
-  color:var(--muted);font-size:11px;line-height:1.8;
+  color:var(--muted);font-size:11px;line-height:1.75;
 }
 .muted{color:var(--muted);font-size:12px}
 .eyebrow{
@@ -128,7 +131,7 @@ button img{pointer-events:none}
 }
 .dot{
   width:5px;height:5px;border-radius:50%;
-  background:#a6d9c6;box-shadow:0 0 10px #a6d9c633;
+  background:#a6d9c6;box-shadow:0 0 10px #a6d9c666;
 }
 .pill{
   display:inline-block;padding:6px 9px;white-space:nowrap;
@@ -138,11 +141,18 @@ button img{pointer-events:none}
 .pill.green{
   color:#b6e3d1;border-color:#b6e3d125;background:#b6e3d109;
 }
+.pill.gold{
+  color:#f5dca2;border-color:#f5dca235;background:#f5dca210;
+}
+.panel{
+  padding:17px;border:1px solid #ffffff1c;border-radius:22px;
+  background:var(--glass);box-shadow:inset 0 1px 0 #ffffff18;
+}
 .btn{
   position:relative;overflow:hidden;
   display:inline-flex;align-items:center;
   justify-content:center;gap:8px;
-  min-height:45px;padding:13px 17px;
+  min-height:46px;padding:13px 17px;
   border:1px solid #ffffff3b;border-radius:14px;
   background:linear-gradient(125deg,#baa7dc,#8194c7);
   box-shadow:inset 0 1px 0 #ffffff77,0 7px 22px #8d78cc13;
@@ -157,7 +167,7 @@ button img{pointer-events:none}
   box-shadow:inset 0 1px 0 #ffffff15;
 }
 .btn.mini{
-  min-height:33px;padding:8px 11px;
+  min-height:34px;padding:8px 11px;
   border-radius:10px;font-size:10px;
 }
 .full{width:100%}
@@ -333,7 +343,9 @@ input,select{
 .toolbar select{max-width:165px}
 .chips{
   display:flex;gap:7px;overflow:auto;padding-bottom:13px;
+  scrollbar-width:none;
 }
+.chips::-webkit-scrollbar{display:none}
 .chips button{
   padding:9px 12px;border:1px solid #ffffff17;
   border-radius:11px;background:#ffffff06;
@@ -352,22 +364,30 @@ input,select{
   border:1px solid #ffffff22;border-radius:22px;
   background:var(--glass);
   box-shadow:inset 0 1px 0 #ffffff20,0 12px 25px #0002;
+  transform-style:preserve-3d;
   transform:perspective(900px)
     rotateX(var(--rx,0deg))
     rotateY(var(--ry,0deg));
   transition:transform .45s var(--ease),border-color .4s;
 }
+.gift.rare-bg{border-color:#b7a2f345}
+.gift.mythic-bg{border-color:#f3d28466;box-shadow:inset 0 1px 0 #ffe9ad33,0 12px 28px #f3d28412}
 .gift:after{
   content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(
     circle at var(--mx,50%) var(--my,20%),
-    #ffffff20,transparent 65%
+    #ffffff26,transparent 65%
   );
   opacity:0;transition:opacity .3s;
 }
 .gift-stage{
   position:relative;isolation:isolate;overflow:hidden;padding:12px;
   background:radial-gradient(ellipse at 40% 10%,var(--a),var(--b));
+}
+.gift-stage:before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(#ffffff2a 1px,transparent 1px);
+  background-size:14px 14px;opacity:.18;
 }
 .media{
   position:relative;isolation:isolate;
@@ -376,6 +396,7 @@ input,select{
   border:1px solid #ffffff33;border-radius:15px;
   background:#182030;
   box-shadow:0 10px 18px #0003,inset 0 1px 0 #fff3;
+  transform-style:preserve-3d;
 }
 .photo{
   display:block;width:100%;height:100%;
@@ -385,15 +406,15 @@ input,select{
 .media:after{
   content:"";position:absolute;z-index:2;inset:0;pointer-events:none;
   background:linear-gradient(
-    125deg,#ffffff20,transparent 30%,transparent 65%,#ffffff0a
+    125deg,#ffffff25,transparent 30%,transparent 65%,#ffffff0d
   );
 }
 .gift.inview .media{
-  animation:breathe 8s ease-in-out infinite;
+  animation:breathe 7s ease-in-out infinite;
   animation-delay:var(--delay,0s);
 }
 .gift.inview .photo.loaded{
-  animation:drift 12s ease-in-out infinite;
+  animation:tg-float 9s ease-in-out infinite;
   animation-delay:var(--delay,0s);
 }
 .skeleton{
@@ -420,14 +441,27 @@ input,select{
 .badge{
   position:absolute;z-index:3;top:7px;left:7px;
   padding:4px 6px;border:1px solid #ffffff2b;
-  border-radius:7px;background:#222034a8;
+  border-radius:7px;background:#171929b8;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
   color:#fff;font-size:8px;
+}
+.serial-badge{
+  position:absolute;z-index:3;top:7px;right:7px;
+  padding:4px 6px;border:1px solid #f4d38a66;
+  border-radius:7px;background:#352915cc;
+  color:#ffe5a8;font-size:8px;font-weight:700;
 }
 .levelbadge{
   position:absolute;z-index:3;right:7px;bottom:7px;
   padding:5px 7px;border:1px solid #e1c4ff66;
-  border-radius:8px;background:#382a52bf;
+  border-radius:8px;background:#382a52cc;
   color:#f1ddff;font-size:9px;
+}
+.pinbadge{
+  position:absolute;z-index:3;left:7px;bottom:7px;
+  padding:4px 6px;border:1px solid #a3e2c755;
+  border-radius:7px;background:#19352dcc;
+  color:#c2f2de;font-size:8px;
 }
 .gift-body{padding:12px}
 .gift-name{
@@ -435,7 +469,10 @@ input,select{
   font-size:13px;font-weight:700;
   text-overflow:ellipsis;white-space:nowrap;
 }
-.gift-sub{margin-bottom:9px;color:#929db6;font-size:9px}
+.gift-sub{
+  margin-bottom:9px;color:#929db6;font-size:9px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
 .gift-body .price{font-size:13px}
 .change{font-size:9px;color:var(--green)}
 .change.down{color:#df9caa}
@@ -513,6 +550,7 @@ input,select{
   padding:10px 0;border-bottom:1px solid #ffffff0b;
   color:var(--muted);font-size:11px;line-height:1.7;
 }
+.feed div:last-child{border-bottom:0;padding-bottom:0}
 .album{
   display:grid;grid-template-columns:repeat(8,minmax(0,1fr));
   gap:8px;margin-top:15px;
@@ -530,8 +568,8 @@ input,select{
 }
 .overlay{
   position:fixed;z-index:50;inset:0;
-  display:grid;place-items:center;padding:17px;
-  background:#060913c2;
+  display:grid;place-items:center;padding:14px;
+  background:#060913c8;
   backdrop-filter:blur(18px) saturate(135%);
   -webkit-backdrop-filter:blur(18px) saturate(135%);
   animation:fade .25s ease both;
@@ -539,9 +577,9 @@ input,select{
 .sheet{
   position:relative;overflow:auto;overscroll-behavior:contain;
   width:100%;max-width:490px;
-  max-height:91vh;max-height:91dvh;
+  max-height:92vh;max-height:92dvh;
   border:1px solid #ffffff35;border-radius:28px;
-  background:linear-gradient(135deg,#ffffff0a,#ffffff02),#182033f5;
+  background:linear-gradient(135deg,#ffffff0a,#ffffff02),#182033f7;
   box-shadow:inset 0 1px 0 #ffffff3b,0 35px 100px #0009;
   animation:sheet .55s var(--ease) both;
 }
@@ -549,65 +587,94 @@ input,select{
 .close{
   position:absolute;z-index:5;top:12px;right:12px;
   display:grid;place-items:center;
-  width:34px;height:34px;
+  width:36px;height:36px;
   border:1px solid #ffffff33;border-radius:50%;
-  background:#202737bd;
+  background:#202737cc;
 }
 .sheet-body{padding:22px}
+/* Объёмная 3D-витрина в стиле Telegram */
 .inspect-stage{
   position:relative;isolation:isolate;
   display:grid;place-items:center;overflow:hidden;
-  min-height:305px;padding:36px 70px 28px;
+  min-height:310px;padding:38px 68px 30px;
   background:radial-gradient(ellipse at 35% 0%,var(--a),var(--b));
-  perspective:1000px;
+  perspective:1100px;
+  touch-action:pan-y;
 }
 .inspect-stage:before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(#ffffff35 1px,transparent 1px);
+  background-size:16px 16px;opacity:.22;
+}
+.inspect-stage:after{
   content:"";position:absolute;bottom:14px;
-  width:210px;height:45px;border-radius:50%;
-  background:#0004;filter:blur(16px);
+  width:210px;height:42px;border-radius:50%;
+  background:#0006;filter:blur(16px);
+  transform:translateX(calc(var(--ty,0deg) * -1.4));
+  transition:transform .25s ease-out;
 }
 .inspect-card{
-  width:100%;border-radius:20px;
-  box-shadow:8px 0 0 #ffffff20,0 20px 30px #0005;
-  animation:inspect 8s ease-in-out infinite;
+  position:relative;width:100%;border-radius:22px;
+  transform-style:preserve-3d;
+  box-shadow:
+    0 24px 38px #0006,
+    0 0 0 1px #ffffff44;
+  animation:tg-inspect 7.5s ease-in-out infinite;
+  transition:transform .18s ease-out;
+}
+.inspect-stage.interacting .inspect-card{
+  animation:none;
+  transform:rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg)) scale(1.03);
 }
 .inspect-card .media{
-  border-radius:20px;box-shadow:none;
+  border-radius:22px;box-shadow:none;
+  transform:translateZ(18px);
+}
+.inspect-glare{
+  position:absolute;inset:0;z-index:4;border-radius:22px;
+  pointer-events:none;
+  background:radial-gradient(
+    circle at var(--gx,50%) var(--gy,30%),
+    #ffffff42,transparent 58%
+  );
+  mix-blend-mode:overlay;
 }
 .stage-label{
-  position:absolute;z-index:2;top:15px;left:16px;
+  position:absolute;z-index:2;top:14px;left:15px;
   padding:6px 8px;border:1px solid #ffffff25;
-  border-radius:8px;background:#0002;
-  color:#fffc;font-size:8px;letter-spacing:1px;
+  border-radius:8px;background:#0004;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  color:#fffd;font-size:8px;letter-spacing:1px;
 }
 .stage-caption{
-  position:absolute;bottom:8px;color:#fff9;font-size:8px;
+  position:absolute;bottom:9px;color:#fffb;font-size:8px;letter-spacing:.4px;
 }
 .forge-aura{
   box-shadow:
-    8px 0 0 #d2a9ff33,
-    0 0 35px #bb8bee44,
-    0 20px 30px #0005;
+    0 0 40px #bb8bee66,
+    0 24px 38px #0006,
+    0 0 0 1px #e7c6ff88;
 }
 .attrs{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:7px;margin:18px 0;
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:8px;margin:16px 0;
 }
 .attrs div{
-  padding:10px 7px;border:1px solid #ffffff15;
-  border-radius:11px;background:#ffffff06;font-size:10px;
+  padding:10px 11px;border:1px solid #ffffff16;
+  border-radius:12px;background:#ffffff06;font-size:11px;
 }
 .attrs small{
-  display:block;margin-bottom:5px;
+  display:block;margin-bottom:4px;
   color:var(--muted);font-size:9px;
 }
+.attrs strong{color:#f3e5b8;font-weight:700}
 .receipt{
   display:flex;justify-content:space-between;gap:10px;
-  margin:14px 0;padding-top:13px;
+  margin:12px 0;padding-top:12px;
   border-top:1px solid #ffffff15;
   color:var(--muted);font-size:12px;
 }
-.actions{display:grid;gap:10px;margin-top:17px}
+.actions{display:grid;gap:10px;margin-top:16px}
 .sale-box,.forge-box{
   padding:14px;border:1px solid #ffffff20;
   border-radius:17px;background:#ffffff05;
@@ -617,13 +684,13 @@ input,select{
   background:linear-gradient(135deg,#b38bdf0d,#ffffff03);
 }
 .stepper{
-  display:grid;grid-template-columns:39px minmax(0,1fr) 39px;
+  display:grid;grid-template-columns:42px minmax(0,1fr) 42px;
   gap:7px;margin:12px 0;
 }
 .stepper input{
   width:100%;padding:12px 5px;
   border-color:#b7aaff3b;background:#111927aa;
-  font-size:22px;font-weight:750;text-align:center;
+  font-size:21px;font-weight:750;text-align:center;
   appearance:textfield;-moz-appearance:textfield;
 }
 .step{
@@ -746,14 +813,15 @@ input,select{
 .spark{width:100%;height:70px;margin-top:12px}
 .toast-area{
   position:fixed;z-index:100;bottom:105px;left:50%;
-  width:min(400px,90%);pointer-events:none;
+  width:min(400px,92%);pointer-events:none;
   transform:translateX(-50%);
 }
 .toast{
   margin-top:8px;padding:13px 16px;
   border:1px solid #ffffff35;border-radius:15px;
-  background:#34415be8;
-  box-shadow:inset 0 1px 0 #ffffff20,0 10px 30px #0004;
+  background:#2a354df2;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:inset 0 1px 0 #ffffff20,0 10px 30px #0005;
   font-size:12px;line-height:1.6;
   animation:enter .3s var(--ease);
 }
@@ -794,14 +862,14 @@ footer{
   opacity:0;transform:scale(1.04);pointer-events:none;
 }
 .gate-card{
-  width:100%;max-width:380px;padding:30px;
+  width:100%;max-width:400px;padding:28px;
   border:1px solid #ffffff35;border-radius:28px;
   background:var(--glass);
   box-shadow:inset 0 1px 0 #ffffff2b,0 30px 90px #0005;
   animation:sheet .7s var(--ease);
 }
-.gate-card h2{text-align:center;font-size:27px}
-.gate-card input{width:100%;margin:15px 0}
+.gate-card h2{text-align:center;font-size:25px}
+.gate-card input{width:100%;margin:10px 0 0}
 .splash-content{text-align:center;width:min(300px,85vw)}
 .splash-orbit{
   position:relative;display:grid;place-items:center;
@@ -841,23 +909,53 @@ footer{
   background:linear-gradient(90deg,#8a9ee8,#e1bff8);
   animation:load 1.5s var(--ease) both;
 }
+/* Telegram-профиль и витрина подарков */
+.tg-header{
+  text-align:center;padding-bottom:14px;
+  border-bottom:1px solid #ffffff12;
+}
+.tg-handle{
+  display:inline-block;margin-top:4px;
+  color:#b9c8ff;font-size:12px;font-weight:600;
+}
+.tg-bio{
+  margin:8px auto 0;max-width:340px;
+  color:#c2c9dc;font-size:11px;line-height:1.6;
+}
+.showcase-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:8px;margin:12px 0 16px;
+}
+.showcase-slot{
+  position:relative;aspect-ratio:1;overflow:hidden;
+  padding:6px;border:1px solid #ffffff26;border-radius:15px;
+  background:radial-gradient(circle at top,var(--a,#3c465e),var(--b,#1a2234));
+  text-align:left;
+}
+.showcase-slot .media{border-radius:10px}
+.showcase-slot span{
+  position:absolute;left:6px;right:6px;bottom:5px;z-index:3;
+  padding:2px 4px;border-radius:5px;background:#090d18cc;
+  font-size:8px;text-align:center;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
 .profile-line{
   display:flex;justify-content:space-between;gap:12px;
-  padding:12px 0;border-bottom:1px solid #ffffff0d;
+  padding:11px 0;border-bottom:1px solid #ffffff0d;
   color:var(--muted);font-size:11px;overflow-wrap:anywhere;
 }
 .profile-line span:last-child{
   max-width:65%;text-align:right;color:#ced2e5;
 }
 .swatches{
-  display:flex;justify-content:center;gap:9px;margin:17px 0;
+  display:flex;justify-content:center;gap:10px;margin:16px 0;
 }
 .swatch{
-  width:26px;height:26px;
+  width:28px;height:28px;
   border:2px solid transparent;border-radius:50%;
   background:var(--color);
 }
-.swatch.on{border-color:#fff}
+.swatch.on{border-color:#fff;transform:scale(1.1)}
 .reels{
   display:flex;justify-content:center;gap:9px;
   margin:25px 0;padding:12px;
@@ -959,18 +1057,18 @@ footer{
 }
 .aim-target{
   position:absolute;
-  width:64px;height:64px;
+  width:66px;height:66px;
   border:1px solid #ffffff66;border-radius:50%;
   background:
     radial-gradient(circle at 35% 25%,#e2d0ff55,transparent 60%),
     radial-gradient(circle,#b7a2f320,transparent 70%);
   box-shadow:0 0 0 10px #b7a2f30a,0 12px 25px #0003;
-  animation:target-in .3s var(--ease);
+  animation:target-in .25s var(--ease);
 }
 .aim-target:active{transform:scale(.85)}
 .aim-target img{
   width:100%;height:100%;object-fit:cover;
-  border-radius:50%;opacity:.9;
+  border-radius:50%;opacity:.92;
 }
 .aim-hit{
   position:absolute;pointer-events:none;
@@ -986,13 +1084,24 @@ footer{
   background:linear-gradient(90deg,#8397db,#c2a8e5);
   transition:width .2s linear;
 }
+.market-ticker{
+  display:flex;align-items:center;gap:8px;
+  margin-top:10px;padding:8px 11px;
+  border-radius:11px;background:#ffffff06;
+  font-size:10px;color:#c9d2eb;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
 @keyframes shimmer{to{background-position:-220% 0}}
-@keyframes inspect{
-  0%,100%{transform:translateY(0) rotateY(-10deg) rotate(-4deg)}
-  50%{transform:translateY(-7px) rotateY(8deg) rotate(3deg)}
+@keyframes tg-inspect{
+  0%,100%{transform:translateY(0) rotateX(4deg) rotateY(-11deg) rotate(-3deg)}
+  33%{transform:translateY(-6px) rotateX(-3deg) rotateY(9deg) rotate(2.5deg)}
+  66%{transform:translateY(-3px) rotateX(5deg) rotateY(4deg) rotate(-1.5deg)}
 }
 @keyframes breathe{50%{transform:translateY(-3px)}}
-@keyframes drift{50%{transform:scale(1.04)}}
+@keyframes tg-float{
+  0%,100%{transform:scale(1.01) rotate(0deg)}
+  50%{transform:scale(1.055) rotate(1.2deg)}
+}
 @keyframes float{50%{transform:translateY(-6px) rotate(5deg)}}
 @keyframes bump{
   40%{transform:scale(1.05);border-color:#dfc8ff88}
@@ -1064,23 +1173,23 @@ footer{
   .cases{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:650px){
-  .app{padding-left:15px;padding-right:15px}
-  .top{gap:7px;margin-bottom:20px}
-  .logo{width:35px;height:37px;border-radius:12px}
+  .app{padding-left:14px;padding-right:14px}
+  .top{gap:7px;margin-bottom:18px}
+  .logo{width:35px;height:36px;border-radius:12px}
   .word{font-size:11px;letter-spacing:1px}
   .word small{font-size:7px;letter-spacing:.3px}
-  .balance{padding:9px 8px;font-size:11px}
-  .top .iconbtn{width:29px;min-width:29px;height:32px}
+  .balance{padding:9px 9px;font-size:11px}
+  .top .iconbtn{width:32px;min-width:32px;height:33px}
   .top .ic{width:17px;height:17px}
-  .top .small-avatar{width:29px;height:29px;font-size:11px}
+  .top .small-avatar{width:32px;height:32px;font-size:11px}
   .hero{
     grid-template-columns:1.2fr 1fr;
-    min-height:275px;border-radius:24px;
+    min-height:268px;border-radius:24px;
   }
-  .hero-copy{padding:27px 0 27px 20px}
+  .hero-copy{padding:24px 0 24px 18px}
   .hero p{font-size:10px}
   .hero .btn{
-    min-height:39px;padding:11px 12px;font-size:10px;
+    min-height:40px;padding:11px 12px;font-size:10px;
   }
   .eyebrow{font-size:7px;letter-spacing:1px}
   .hero-card{
@@ -1089,26 +1198,26 @@ footer{
   }
   .hero-label{padding:10px;font-size:9px}
   .hero-label small{font-size:7px}
-  .hero-stage:before{bottom:38px;width:145px;height:40px}
-  .side-note{right:7px;bottom:29px;font-size:6px}
+  .hero-stage:before{bottom:36px;width:145px;height:40px}
+  .side-note{right:7px;bottom:26px;font-size:6px}
   .cases{gap:11px}
-  .case-showcase{height:190px;padding:12px}
+  .case-showcase{height:185px;padding:12px}
   .case-body{padding:12px}
   .case h3{font-size:13px}
   .case p{font-size:10px}
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .gift-stage,.gift-body{padding:10px}
   .gift-name,.gift-body .price{font-size:12px}
   .gift-sub{font-size:8px}
-  .badge{font-size:7px}
+  .badge,.serial-badge{font-size:7px}
   .earn-grid{grid-template-columns:1fr}
-  .stat{padding:15px 11px}
-  .stat strong{font-size:22px}
+  .stat{padding:14px 10px}
+  .stat strong{font-size:21px}
   .stat span{font-size:9px}
   h2{font-size:19px}
   .toolbar select{max-width:137px;font-size:11px}
   .inspect-stage{
-    min-height:285px;padding:34px 65px 26px;
+    min-height:285px;padding:34px 58px 26px;
   }
   .album{grid-template-columns:repeat(6,minmax(0,1fr))}
   .memory-grid{gap:7px}
@@ -1120,14 +1229,14 @@ footer{
   .word{font-size:10px}
   .logo{width:29px}
   .hero-card{width:110px}
-  .hero-copy{padding-left:17px}
+  .hero-copy{padding-left:16px}
   .case h3{font-size:12px}
-  .case-showcase{height:180px}
+  .case-showcase{height:175px}
   .case-object{
     width:91px;left:calc(50% - 46px);
   }
   .inspect-stage{
-    padding-left:52px;padding-right:52px;
+    padding-left:48px;padding-right:48px;
   }
 }
 @media(prefers-reduced-motion:reduce){
@@ -1165,12 +1274,12 @@ html.lite .nav,html.lite .overlay{
     <div class="logo" id="logo">G</div>
     <div class="word">
       GIFT LAB
-      <small>NEON TERMINAL · LOCAL DEMO</small>
+      <small>NEON TERMINAL · COLLECTOR EDITION</small>
     </div>
     <div class="balance" id="balance">Загрузка…</div>
     <button class="iconbtn" id="sound" aria-label="Включить звук">♪</button>
     <button class="avatar small-avatar" id="profileButton"
-            aria-label="Локальный профиль">G</button>
+            aria-label="Профиль Telegram">G</button>
   </header>
 
   <div id="errorBox" role="alert"></div>
@@ -1185,9 +1294,8 @@ html.lite .nav,html.lite .overlay{
   <noscript>Для игры нужен JavaScript.</noscript>
 
   <footer>
-    Локальная демоигра · Предметы и баланс виртуальные.<br>
-    Без платежей, вывода и настоящих NFT-сделок. Картинкам нужен интернет.<br>
-    Движение подарков — визуальные эффекты, а не оригинальные 3D-модели Telegram.
+    Локальная демоигра · Предметы, серийные номера и баланс виртуальные.<br>
+    Без платежей, вывода и настоящих блокчейн-сделок. Картинкам нужен интернет.
   </footer>
 </div>
 
@@ -1227,6 +1335,7 @@ var KEY="gift-lab-studio-v1";
 var PK="gift-lab-profile-v1";
 var FEE=.05;
 
+/* 40 уникальных коллекций подарков */
 var D=[
   ["Loot Bag","lootbag",25,0],
   ["Love Potion","lovepotion",40,0],
@@ -1260,81 +1369,84 @@ var D=[
   ["Hypno Lollipop","hypnolollipop",240,1],
   ["Genie Lamp","genielamp",1800,3],
   ["Flying Broom","flyingbroom",620,2],
-  ["Hex Pot","hexpot",380,2],
-  ["Perfume Bottle","perfumebottle",900,3],
-  ["Berry Box","berrybox",160,1],
-  ["Spiced Wine","spicedwine",90,0],
-  ["Santa Hat","santahat",130,1],
-  ["Hypno Lollipop","hypnolollipop",240,1],
-  ["Genie Lamp","genielamp",1800,3],
-  ["Flying Broom","flyingbroom",620,2]
+  ["Desk Calendar","deskcalendar",85,0],
+  ["Homemade Cake","homemadecake",140,1],
+  ["Skull Flower","skullflower",340,2],
+  ["Trapped Heart","trappedheart",480,2],
+  ["Voodoo Doll","voodoodoll",760,2],
+  ["Electric Skull","electricskull",1250,3],
+  ["Ion Gem","iongem",2700,4],
+  ["Mini Oscar","minioscar",3100,4]
 ];
 
 var CASES=[
   {
     n:"First Drop",tag:"ПЕРВАЯ КОЛЛЕКЦИЯ",
     p:80,tint:"#5f668b",cover:12,
-    w:[[0,25],[1,23],[2,23],[27,12],[26,9],[28,6],[7,2]]
+    w:[[0,24],[1,22],[2,22],[32,12],[27,10],[26,6],[28,4]]
   },
   {
     n:"Mint Garden",tag:"СВЕЖАЯ СЕРИЯ",
     p:180,tint:"#407568",cover:21,
-    w:[[1,18],[2,17],[3,18],[4,12],[13,13],[21,10],[26,8],[8,3.8],[12,.2]]
+    w:[[1,18],[2,17],[3,18],[4,12],[13,13],[21,10],[33,8],[8,3.8],[12,.2]]
   },
   {
     n:"Purple Vault",tag:"РЕДКИЙ АРХИВ",
     p:450,tint:"#79558f",cover:5,
-    w:[[3,15],[4,15],[5,15],[6,12],[7,12],[24,10],[16,10],[8,5],[9,3],[19,1],[11,1.5],[12,.5]]
+    w:[[3,15],[4,15],[5,15],[6,12],[7,12],[34,10],[16,10],[8,5],[9,3],[19,1],[11,1.5],[12,.5]]
   },
   {
     n:"Alchemy Room",tag:"АЛХИМИЧЕСКАЯ СЕРИЯ",
     p:700,tint:"#477c88",cover:24,
-    w:[[1,15],[13,12],[16,15],[24,20],[20,10],[14,12],[31,8],[9,4],[30,3],[12,1]]
+    w:[[1,15],[13,12],[16,15],[24,20],[36,10],[14,12],[31,8],[9,4],[30,3],[12,1]]
   },
   {
     n:"Frozen Orbit",tag:"ЛЕДЯНАЯ ОРБИТА",
     p:1000,tint:"#487a9f",cover:23,
-    w:[[16,20],[23,24],[6,18],[19,15],[7,10],[9,7],[17,4],[18,1.5],[12,.5]]
+    w:[[16,20],[23,24],[6,18],[19,15],[35,10],[9,7],[17,4],[18,1.5],[12,.5]]
   },
   {
     n:"Royal Reserve",tag:"ВЫСШАЯ ЛИГА",
     p:2000,tint:"#8c704e",cover:10,
-    w:[[5,12],[6,12],[7,12],[15,10],[19,14],[8,10],[9,10],[25,7],[17,6],[10,3],[11,2],[18,1],[12,1]]
+    w:[[5,12],[6,12],[7,12],[15,10],[19,14],[8,10],[9,10],[25,7],[37,6],[10,3],[11,2],[39,1],[12,1]]
   },
   {
     n:"Astral Archive",tag:"АСТРАЛЬНАЯ СЕРИЯ",
     p:3000,tint:"#6e589c",cover:18,
-    w:[[16,18],[19,22],[17,25],[9,15],[14,8],[10,6],[18,4],[12,2]]
+    w:[[16,18],[19,22],[17,22],[37,15],[14,9],[38,6],[18,5],[12,3]]
   },
   {
     n:"Pepe Archive",tag:"ЛЕГЕНДАРНЫЙ АРХИВ",
     p:4500,tint:"#587965",cover:12,
-    w:[[8,20],[9,20],[14,15],[17,15],[10,12],[11,8],[18,6],[12,4]]
+    w:[[8,18],[9,18],[14,15],[17,15],[10,12],[11,8],[38,6],[39,4],[12,4]]
   },
   {
     n:"Midnight Atelier",tag:"НОВАЯ СЕРИЯ",
     p:600,tint:"#745879",cover:24,
-    w:[[27,20],[26,18],[29,20],[24,18],[31,12],[25,8],[30,3],[18,1]]
+    w:[[27,18],[26,18],[29,18],[34,18],[35,14],[25,9],[30,4],[18,1]]
   },
   {
     n:"Genie Reserve",tag:"ВОСТОЧНЫЙ АРХИВ",
     p:1500,tint:"#8b7450",cover:30,
-    w:[[16,20],[19,20],[24,15],[31,15],[25,12],[17,8],[30,7],[18,2],[12,1]]
+    w:[[16,20],[19,20],[36,15],[31,15],[25,12],[17,8],[30,7],[38,2],[12,1]]
   }
 ];
 
+/* Фоны: [Название, Цвет1, Цвет2, Редкость (0-Базовый, 1-Редкий, 2-Мифический), Множитель цены] */
 var BG=[
-  ["Lavender","#76678e","#34334e"],
-  ["Ocean","#55759b","#263d5b"],
-  ["Mint","#4b8277","#243f42"],
-  ["Rose","#925f7e","#4d304c"],
-  ["Honey","#968151","#4f402e"],
-  ["Midnight","#575d8c","#282d48"],
-  ["Ice","#7297ab","#3b526c"],
-  ["Sunset","#a27669","#563c4d"],
-  ["Aurora","#587e87","#3e3d6b"],
-  ["Graphite","#657183","#2d3649"]
+  ["Graphite","#657183","#2d3649",0,1.0],
+  ["Lavender","#76678e","#34334e",0,1.0],
+  ["Ocean","#55759b","#263d5b",0,1.02],
+  ["Mint","#4b8277","#243f42",0,1.05],
+  ["Rose","#925f7e","#4d304c",1,1.12],
+  ["Ice","#7297ab","#3b526c",1,1.15],
+  ["Midnight","#575d8c","#282d48",1,1.18],
+  ["Sunset","#a27669","#563c4d",1,1.22],
+  ["Honey","#968151","#4f402e",2,1.35],
+  ["Aurora","#587e87","#3e3d6b",2,1.45]
 ];
+
+var BG_RAR=["Базовый","Редкий","Мифический"];
 
 var RAR=[
   "Обычный","Необычный","Редкий","Эпический","Легендарный"
@@ -1342,6 +1454,16 @@ var RAR=[
 
 var COLORS=[
   "#aa98df","#7ca1d2","#72b3a0","#c88eac","#c4a470"
+];
+
+/* Типы рыночных ботов */
+var BOTS=[
+  {name:"mira",role:"Охотник за скидками",type:"bargain"},
+  {name:"velvet",role:"Коллекционер фонов",type:"bg"},
+  {name:"luna",role:"Охотник за номерами",type:"serial"},
+  {name:"kir",role:"Мастер Ателье",type:"forge"},
+  {name:"nova",role:"Трейдер",type:"balanced"},
+  {name:"alex",role:"Инвестор",type:"balanced"}
 ];
 
 var PATH={
@@ -1355,7 +1477,8 @@ var PATH={
   arrow:"M5 12h14m-5-5 5 5-5 5",
   sound:"M11 4 6 8H3v8h3l5 4V4zM15 8c3 2 3 6 0 8M18 5c5 4 5 10 0 14",
   mute:"M11 4 6 8H3v8h3l5 4V4zM16 9l5 6m0-6-5 6",
-  heart:"M12 21 3 12C-2 5 7 0 12 7c5-7 14-2 9 5z"
+  heart:"M12 21 3 12C-2 5 7 0 12 7c5-7 14-2 9 5z",
+  pin:"M12 17v5M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"
 };
 
 var $=function(id){
@@ -1396,6 +1519,12 @@ function btn(a,t,id,cl,disabled){
     (disabled?" disabled":"")+">"+t+"</button>";
 }
 
+function haptic(ms){
+  try{
+    if(navigator.vibrate&&S.effects)navigator.vibrate(ms||12);
+  }catch(e){}
+}
+
 function rng(){
   try{
     var a=new Uint32Array(1);
@@ -1416,8 +1545,56 @@ function uid(){
     rng().toString(36).slice(2);
 }
 
+/* Оценка редкости серийного номера */
+function serialInfo(num){
+  var s=String(num);
+  if(num<=99){
+    return {tag:"ТОП #100",mult:1.6,rare:true};
+  }
+  if(num<1000){
+    return {tag:"РАННИЙ #"+num,mult:1.3,rare:true};
+  }
+  if(/^(\d)\1+$/.test(s)){
+    return {tag:"МОНО #"+s,mult:1.5,rare:true};
+  }
+  if(s.length>=4&&s===s.split("").reverse().join("")){
+    return {tag:"ЗЕРКАЛО #"+s,mult:1.25,rare:true};
+  }
+  if(num%10000===0){
+    return {tag:"КРУГЛЫЙ #"+fmt(num),mult:1.25,rare:true};
+  }
+  if(/(\d)\1{3,}/.test(s)){
+    return {tag:"КОМБО #"+s,mult:1.18,rare:true};
+  }
+  return {tag:"Обычный",mult:1.0,rare:false};
+}
+
+/* Взвешенный выбор фона (редкие фоны выпадают реже) */
+function pickBg(){
+  var weights=[18,18,16,14,9,8,7,5,3,2];
+  var r=rng()*100;
+  for(var i=0;i<weights.length;i++){
+    r-=weights[i];
+    if(r<0)return i;
+  }
+  return 0;
+}
+
+/* Генерация серийного номера с небольшим шансом на красивый номер */
+function genSerial(){
+  var roll=rng();
+  if(roll<.008)return int(1,99);
+  if(roll<.035)return int(100,999);
+  if(roll<.055){
+    var d=int(1,9);
+    return Number(String(d).repeat(int(4,5)));
+  }
+  if(roll<.075)return int(1,90)*10000;
+  return int(1000,999999);
+}
+
 var tab="home",busy=false,entered=false;
-var search="",sort="new",rarity=-1,favoritesOnly=false;
+var search="",sort="new",rarity=-1,favoritesOnly=false,rareTraitsOnly=false;
 var caseFilter="all",bet=10,arcade="slot";
 var previousFocus=null,profile=null,gateColor=COLORS[0];
 var lastBalance=null,lastTap=0,audio=null,sound=false;
@@ -1425,6 +1602,7 @@ var lastTone=0,storageWarning=false,activeRoll=null;
 var forgeQuote=null,memory=null,memoryTimer=null;
 var aim=null,aimTimer=null;
 var tilt=null,tiltEvent=null,tiltFrame=0;
+var marketEventText="Рынок стабилен · спрос на коллекции сбалансирован";
 
 var maxFor=function(level){
   return 150+(level-1)*10;
@@ -1444,7 +1622,7 @@ function fresh(){
     },
     claimed:[],history:[],seen:[],favorites:[],
     indexHistory:[],memoryRewardAt:0,
-    pendingCase:null,economyVersion:2
+    pendingCase:null,economyVersion:3
   };
 }
 
@@ -1459,7 +1637,8 @@ function norm(i){
   return {
     uid:i.uid,id:i.id,bg:i.bg,serial:i.serial,
     ref:safe(i.ref,1,1,4),
-    upgrade:safe(i.upgrade,0,0,5)
+    upgrade:safe(i.upgrade,0,0,5),
+    origin:typeof i.origin==="string"?i.origin.slice(0,60):"Архив студии"
   };
 }
 
@@ -1468,36 +1647,6 @@ function read(){
 
   try{
     var x=JSON.parse(localStorage.getItem(KEY)||"null");
-
-    if(!x){
-      var old=JSON.parse(
-        localStorage.getItem("gift-lab-pages-v1")||"null"
-      );
-
-      if(old){
-        var map=[
-          0,1,2,1,3,3,4,4,5,6,7,7,
-          9,8,9,10,10,10,11,11,12,12,12,12
-        ];
-
-        var convert=function(i){
-          return i&&map[i.id]!==undefined?
-            Object.assign({},i,{id:map[i.id],ref:1}):null;
-        };
-
-        old.inventory=(old.inventory||[])
-          .map(convert).filter(Boolean);
-
-        old.listings=(old.listings||[]).map(function(l){
-          return Object.assign({},l,{item:convert(l.item)});
-        });
-
-        old.market=[];
-        old.prices=[];
-        old.previous=[];
-        x=old;
-      }
-    }
 
     if(!x||typeof x!=="object")return s;
 
@@ -1621,6 +1770,12 @@ function read(){
 
 var S=read();
 
+function cleanUsername(u){
+  var raw=String(u||"").trim().replace(/^@+/,"")
+    .replace(/[^a-zA-Z0-9_]/g,"").toLowerCase().slice(0,20);
+  return raw.length>=3?raw:"collector_"+uid().slice(0,4);
+}
+
 try{
   sound=localStorage.getItem(
     "gift-lab-sound-enabled"
@@ -1637,6 +1792,9 @@ try{
     profile={
       id:typeof p.id==="string"?p.id:uid(),
       name:p.name.slice(0,24),
+      username:cleanUsername(p.username||p.name),
+      bio:typeof p.bio==="string"?p.bio.slice(0,80):"Коллекционер Neon Terminal",
+      pinned:Array.isArray(p.pinned)?p.pinned.filter(function(x){return typeof x==="string";}).slice(0,6):[],
       color:COLORS.includes(p.color)?
         p.color:COLORS[0],
       created:Number.isFinite(p.created)?
@@ -1672,6 +1830,10 @@ function save(){
     localStorage.setItem(KEY,JSON.stringify(S));
 
     if(profile){
+      /* Очищаем закреплённые подарки, если их больше нет в инвентаре */
+      var invIds=new Set(S.inventory.map(function(i){return i.uid;}));
+      profile.pinned=(profile.pinned||[]).filter(function(u){return invIds.has(u);}).slice(0,6);
+
       localStorage.setItem(
         PK,JSON.stringify(profile)
       );
@@ -1701,11 +1863,15 @@ function discover(id){
   if(!S.seen.includes(id))S.seen.push(id);
 }
 
-function item(id){
+function item(id,originText){
   return {
-    uid:uid(),id:id,bg:int(0,9),
-    serial:int(1000,999999),
-    ref:int(1,4),upgrade:0
+    uid:uid(),
+    id:id,
+    bg:pickBg(),
+    serial:genSerial(),
+    ref:int(1,4),
+    upgrade:0,
+    origin:originText||"Выпущен в студии"
   };
 }
 
@@ -1717,16 +1883,19 @@ var estimate=function(id){
   return Math.round(S.prices[id]);
 };
 
+/* Итоговая игровая оценка с учётом редкости фона, красивого серийника и Ателье */
 var itemValue=function(i){
-  return Math.round(
-    estimate(i.id)*(1+.1*(i.upgrade||0))
-  );
+  var base=estimate(i.id);
+  var bgMult=BG[i.bg][4]||1;
+  var serMult=serialInfo(i.serial).mult||1;
+  var upgMult=1+.1*(i.upgrade||0);
+  return Math.max(1,Math.round(base*bgMult*serMult*upgMult));
 };
 
 var forgeCost=function(i){
   return Math.max(
     25,Math.round(
-      estimate(i.id)*.12*((i.upgrade||0)+1)
+      itemValue(i)*.12*((i.upgrade||0)+1)
     )
   );
 };
@@ -2087,21 +2256,28 @@ function showGate(){
   $("gateRoot").innerHTML=
     '<div class="gate" id="gate">'+
     '<section class="gate-card">'+
-    '<div class="logo" style="margin:0 auto 24px;'+
-    'width:62px;height:62px;border-radius:21px">'+
+    '<div class="logo" style="margin:0 auto 20px;'+
+    'width:60px;height:60px;border-radius:20px">'+
     ic("gift")+'</div>'+
     '<span class="eyebrow" style="justify-content:center">'+
-    'GIFT LAB / NEON TERMINAL</span>'+
-    '<h2 style="margin-top:16px">'+
-    (profile?"Твой профиль":"Твоя новая коллекция")+
-    '</h2><p class="small" style="text-align:center">'+
-    'Локальный профиль в этом браузере.<br>'+
-    'Следующий вход — автоматический.</p>'+
+    'TELEGRAM COLLECTOR PROFILE</span>'+
+    '<h2 style="margin-top:12px">'+
+    (profile?"Настройка профиля":"Твой профиль коллекционера")+
+    '</h2><p class="small" style="text-align:center;margin-bottom:10px">'+
+    'Имя, @username и витрина подарков хранятся локально.</p>'+
     '<input id="loginName" maxlength="24" '+
     'autocomplete="nickname" '+
-    'placeholder="Как тебя называть?" '+
+    'placeholder="Имя (например, Марк)" '+
     'aria-label="Имя" value="'+
     esc(profile?profile.name:"")+'">'+
+    '<input id="loginUser" maxlength="21" '+
+    'placeholder="@username (латиница, цифры, _)" '+
+    'aria-label="Юзернейм" value="'+
+    esc(profile?"@"+profile.username:"")+'">'+
+    '<input id="loginBio" maxlength="80" '+
+    'placeholder="Статус или описание профиля" '+
+    'aria-label="О себе" value="'+
+    esc(profile?profile.bio:"")+'">'+
     '<div class="swatches">'+COLORS.map(function(c){
       return btn(
         "gateColor","",c,
@@ -2110,12 +2286,10 @@ function showGate(){
     }).join("")+'</div>'+
     btn(
       "login",
-      profile?"Сохранить и продолжить":
-        "Создать локальный профиль",
+      profile?"Сохранить профиль":
+        "Создать профиль и войти",
       undefined,"btn full"
     )+
-    '<p class="small" style="text-align:center;margin:14px 0 0">'+
-    'Без пароля и облачной синхронизации.</p>'+
     '</section></div>';
 
   $("gateRoot").querySelectorAll(".swatch").forEach(
@@ -2167,9 +2341,16 @@ function login(){
     return;
   }
 
+  var uRaw=$("loginUser")?$("loginUser").value:"";
+  var bioRaw=$("loginBio")?$("loginBio").value:"";
+
   profile={
     id:profile?profile.id:uid(),
-    name:name,color:gateColor,
+    name:name,
+    username:cleanUsername(uRaw||name),
+    bio:bioRaw.trim().slice(0,80)||"Коллекционер Neon Terminal",
+    pinned:profile&&Array.isArray(profile.pinned)?profile.pinned:[],
+    color:gateColor,
     created:profile?profile.created:now()
   };
 
@@ -2223,32 +2404,53 @@ function closeModal(){
 function profileView(){
   if(busy||!profile)return;
 
+  var pinnedItems=(profile.pinned||[]).map(function(u){
+    return S.inventory.find(function(i){return i.uid===u;});
+  }).filter(Boolean);
+
+  var portfolioVal=S.inventory.reduce(function(sum,i){
+    return sum+itemValue(i);
+  },0);
+
   showModal(
-    '<div class="sheet-body" style="padding-top:34px">'+
+    '<div class="sheet-body" style="padding-top:32px">'+
+    '<div class="tg-header">'+
     '<div class="avatar big-avatar" style="--avatar:'+profile.color+'">'+
     esc(initials(profile.name))+'</div>'+
-    '<h2 style="text-align:center;margin-top:18px">'+
-    esc(profile.name)+'</h2>'+
-    '<p class="small" style="text-align:center">'+
-    'Локальный профиль · автоматический вход</p>'+
-    '<div class="profile-line"><span>ID</span>'+
-    '<span>'+esc(profile.id)+'</span></div>'+
-    '<div class="profile-line"><span>Открыто коллекций</span>'+
+    '<h2 style="margin-top:14px">'+esc(profile.name)+'</h2>'+
+    '<span class="tg-handle">@'+esc(profile.username)+'</span>'+
+    '<p class="tg-bio">'+esc(profile.bio)+'</p>'+
+    '</div>'+
+
+    '<div class="heading" style="margin:16px 0 8px">'+
+    '<h3>Витрина подарков ('+pinnedItems.length+'/6)</h3>'+
+    '<span class="small">Нажми для осмотра</span></div>'+
+    (pinnedItems.length?
+      '<div class="showcase-grid">'+pinnedItems.map(function(i){
+        return '<button class="showcase-slot" style="'+theme(i)+'" data-action="previewItem" data-id="'+esc(i.uid)+'">'+
+          media(i.id,i.ref,true)+
+          '<span>#'+fmt(i.serial)+'</span></button>';
+      }).join("")+'</div>':
+      '<p class="small" style="padding:12px;border:1px dashed #ffffff20;border-radius:14px;text-align:center">'+
+      'Витрина пуста. Открой любой подарок в коллекции и нажми «Закрепить в профиле».</p>')+
+
+    '<div class="profile-line"><span>Оценка коллекции</span>'+
+    '<span>'+stars(portfolioVal)+'</span></div>'+
+    '<div class="profile-line"><span>Открыто альбома</span>'+
     '<span>'+S.seen.length+' / '+D.length+'</span></div>'+
-    '<div class="profile-line"><span>Улучшено предметов</span>'+
+    '<div class="profile-line"><span>Улучшено в Ателье</span>'+
     '<span>'+S.stats.forged+'</span></div>'+
-    '<div class="profile-line"><span>Лучший Aim Lab</span>'+
+    '<div class="profile-line"><span>Рекорд Aim Lab</span>'+
     '<span>'+fmt(S.stats.aimBest)+' очков</span></div>'+
-    '<div class="profile-line"><span>Звезда</span>'+
-    '<span>'+esc(starSource)+'</span></div>'+
+
     '<div class="actions">'+
-    btn("rename","Изменить имя и цвет",undefined,"btn secondary full")+
+    btn("rename","Редактировать профиль и @username",undefined,"btn secondary full")+
     btn("effects",S.effects?
-      "Облегчённый режим":"Полные эффекты",
+      "Облегчённый режим (экономия заряда)":"Полные 3D-эффекты",
       undefined,"btn secondary full")+
-    btn("backup","Скачать резервную копию",undefined,"btn secondary full")+
-    btn("help","Правила и ограничения",undefined,"btn secondary full")+
-    btn("close","В игру",undefined,"btn full")+
+    btn("backup","Скачать резервную копию (JSON)",undefined,"btn secondary full")+
+    btn("help","Правила и редкости",undefined,"btn secondary full")+
+    btn("close","Закрыть",undefined,"btn full")+
     '</div></div>'
   );
 }
@@ -2257,7 +2459,7 @@ function backup(){
   save();
 
   var b=new Blob([JSON.stringify({
-    version:"neon-terminal",
+    version:"neon-terminal-v3",
     exportedAt:new Date().toISOString(),
     profile:profile,game:S
   },null,2)],{type:"application/json"});
@@ -2342,25 +2544,30 @@ function go(t){
   window.scrollTo(0,0);
 }
 
-function giftCard(i,price,action,id){
+function giftCard(i,price,action,id,isPinned){
   id=id||i.uid;
 
   var delta=(
     S.prices[i.id]/S.previous[i.id]-1
   )*100;
 
-  return '<button class="gift" data-key="'+esc(id)+
+  var bgRar=BG[i.bg][3];
+  var ser=serialInfo(i.serial);
+  var cardClass="gift"+(bgRar===2?" mythic-bg":bgRar===1?" rare-bg":"");
+
+  return '<button class="'+cardClass+'" data-key="'+esc(id)+
     '" data-action="'+action+'" data-id="'+esc(id)+'">'+
     '<div class="gift-stage" style="'+theme(i)+'">'+
     media(i.id,i.ref)+
     '<span class="badge">'+RAR[D[i.id][3]]+
-    ' · #'+i.ref+'</span>'+
+    (bgRar>0?' · '+BG_RAR[bgRar]:'')+'</span>'+
+    (ser.rare?'<span class="serial-badge">'+ser.tag+'</span>':'')+
+    (isPinned?'<span class="pinbadge">В профиле</span>':'')+
     (i.upgrade?
-      '<span class="levelbadge">Ателье +'+
-      i.upgrade+'</span>':"")+
+      '<span class="levelbadge">+'+i.upgrade+'</span>':"")+
     '</div><div class="gift-body">'+
     '<div class="gift-name">'+D[i.id][0]+'</div>'+
-    '<div class="gift-sub">Демо №'+fmt(i.serial)+
+    '<div class="gift-sub">№'+fmt(i.serial)+
     ' · '+BG[i.bg][0]+'</div>'+
     '<div class="row"><span class="price">'+
     stars(price)+'</span>'+
@@ -2391,16 +2598,16 @@ function homeView(){
     '<div class="hero-glow"></div>'+
     '<div class="hero-copy">'+
     '<span class="eyebrow"><i class="dot"></i>'+
-    'NEON TERMINAL / VOL. 09</span>'+
-    '<h1>Открывай.<br>Собирай. Улучшай.</h1>'+
-    '<p>40 коллекций, 10 серий кейсов.<br>'+
-    'Ателье, маркет и три мини-игры.</p>'+
+    'NEON TERMINAL / COLLECTOR</span>'+
+    '<h1>Открывай.<br>Собирай. Цени.</h1>'+
+    '<p>40 коллекций, редкие фоны и номера.<br>'+
+    'Витрина профиля, маркет и аркада.</p>'+
     btn("goEarn","В мастерскую "+ic("bolt"))+
     '</div><div class="hero-stage">'+
     '<div class="hero-card">'+media(12,1,true)+
     '<div class="hero-label">Plush Pepe'+
     '<small>Референс #1</small></div></div>'+
-    '<span class="side-note">NEON TERMINAL / VOL. 09</span>'+
+    '<span class="side-note">NEON TERMINAL / VOL. 10</span>'+
     '</div></section>'+
 
     '<div class="heading"><h2>Коллекции кейсов</h2>'+
@@ -2421,8 +2628,8 @@ function homeView(){
     }).join("")+'</div>'+
 
     '<div class="heading"><h2>Твоя студия</h2>'+
-    '<span class="muted">'+
-    esc(profile?profile.name:"Гость")+'</span></div>'+
+    '<span class="muted">@'+
+    esc(profile?profile.username:"collector")+'</span></div>'+
     '<div class="stats">'+
     '<div class="panel stat"><strong>'+fmt(S.stats.opened)+
     '</strong><span>Кейсов открыто</span></div>'+
@@ -2430,7 +2637,7 @@ function homeView(){
     (S.inventory.length+S.listings.length)+
     '</strong><span>Предметов</span></div>'+
     '<div class="panel stat"><strong>'+S.seen.length+'/'+
-    D.length+'</strong><span>Коллекций обнаружено</span></div>'+
+    D.length+'</strong><span>Альбом открыт</span></div>'+
     '</div>'+
 
     '<div class="heading"><h2>Журнал событий</h2></div>'+
@@ -2479,28 +2686,30 @@ function graph(){
 
 function spawn(){
   var id=int(0,D.length-1);
-  var i=item(id);
+  var bot=BOTS[int(0,BOTS.length-1)];
+  var i=item(id,"Выставлен @"+bot.name);
 
   return {
     uid:uid(),item:i,
     price:Math.max(
       1,Math.round(
-        itemValue(i)*(.83+rng()*.43)
+        itemValue(i)*(.84+rng()*.38)
       )
     ),
-    seller:[
-      "mira","velvet","luna","kir","nova","alex"
-    ][int(0,5)],
+    seller:bot.name,
     at:now()
   };
 }
 
 function filteredMarket(){
   return S.market.filter(function(l){
+    var ser=serialInfo(l.item.serial);
+    var bgRar=BG[l.item.bg][3];
     return D[l.item.id][0].toLowerCase()
       .includes(search.toLowerCase())&&
       (rarity<0||D[l.item.id][3]===rarity)&&
-      (!favoritesOnly||S.favorites.includes(l.item.id));
+      (!favoritesOnly||S.favorites.includes(l.item.id))&&
+      (!rareTraitsOnly||ser.rare||bgRar>0);
   }).sort(function(a,b){
     return sort==="low"?a.price-b.price:
       sort==="high"?b.price-a.price:b.at-a.at;
@@ -2510,14 +2719,14 @@ function filteredMarket(){
 function marketView(){
   return '<div class="heading" style="margin-top:5px">'+
     '<h2>Маркет подарков</h2>'+
-    '<span class="pill">Локальные боты</span></div>'+
+    '<span class="pill">Живой стакан</span></div>'+
     '<div class="panel"><div class="row">'+
-    '<span class="muted">Индекс игрового рынка</span>'+
+    '<span class="muted">Индекс коллекций</span>'+
     '<span class="price" id="indexNumber">'+
     fmt(indexValue())+' pts</span></div>'+
     '<div id="chart">'+graph()+'</div>'+
-    '<p class="small" style="margin:0">Оценки — раз в 15 секунд. '+
-    'Проверка лотов — раз в 10 секунд.</p></div>'+
+    '<div class="market-ticker" id="marketTicker"><i class="dot"></i> '+
+    esc(marketEventText)+'</div></div>'+
 
     '<div class="toolbar">'+
     '<input id="search" placeholder="Найти подарок…" '+
@@ -2531,6 +2740,7 @@ function marketView(){
     '>Дороже</option></select></div>'+
 
     '<div class="chips">'+
+    btn("rareTraitsFilter","Редкий фон / №",undefined,rareTraitsOnly?"on":"")+
     btn("favoritesFilter","Избранное",undefined,favoritesOnly?"on":"")+
     ["Все"].concat(RAR).map(function(r,i){
       return btn("filter",r,i-1,rarity===i-1?"on":"");
@@ -2545,11 +2755,7 @@ function marketView(){
 
     '<div class="empty" id="marketEmpty"'+
     (filteredMarket().length?' style="display:none"':"")+
-    '>Подходящих предложений нет.</div>'+
-
-    '<p class="small">Внешние референсы #1–4. '+
-    'Номера, категории, цены и улучшения — игровые. '+
-    'Это не сделки с настоящими NFT.</p>';
+    '>Подходящих предложений нет.</div>';
 }
 
 function reconcileMarket(){
@@ -2672,11 +2878,13 @@ function reconcileMarket(){
 }
 
 function inventoryView(){
+  var pinnedSet=new Set((profile&&profile.pinned)||[]);
+
   var listings=S.listings.map(function(l){
     return '<div class="task"><div class="task-content">'+
-      '<h3>'+D[l.item.id][0]+
+      '<h3>'+D[l.item.id][0]+' #'+fmt(l.item.serial)+
       (l.item.upgrade?
-        ' · ателье +'+l.item.upgrade:"")+
+        ' · +'+l.item.upgrade:"")+
       '</h3><p>'+stars(l.price)+
       ' · до снятия '+
       Math.max(0,Math.ceil(
@@ -2695,7 +2903,7 @@ function inventoryView(){
     '<h3>Альбом открытий</h3>'+
     '<span class="muted">'+S.seen.length+' / '+
     D.length+'</span></div>'+
-    '<p class="small">Коллекции остаются в альбоме после продажи.</p>'+
+    '<p class="small">Коллекции остаются в альбоме даже после продажи.</p>'+
     '<div class="progress"><i style="width:'+(
       S.seen.length/D.length*100
     )+'%"></i></div>'+
@@ -2712,24 +2920,21 @@ function inventoryView(){
 
     (listings?
       '<div class="heading"><h2>Мои объявления</h2>'+
-      '<span class="pill">Локальный рынок</span></div>'+
+      '<span class="pill">На маркете</span></div>'+
       listings:"")+
 
     '<div class="heading"><h2>В наличии</h2>'+
-    '<span class="muted">Нажми для продажи и улучшения</span></div>'+
+    '<span class="muted">Осмотр, витрина, продажа</span></div>'+
 
     (S.inventory.length?
       '<div class="grid">'+
       S.inventory.slice().reverse().map(function(i){
         return giftCard(
-          i,itemValue(i),"previewItem"
+          i,itemValue(i),"previewItem",i.uid,pinnedSet.has(i.uid)
         );
       }).join("")+'</div>':
       '<div class="empty">Коллекция пока пуста.<br><br>'+
-      btn("goHome","Выбрать кейс")+'</div>')+
-
-    '<p class="small">Ателье улучшает игровое оформление и оценку предмета. '+
-    'Оригинальный NFT и его изображение не изменяются.</p>';
+      btn("goHome","Выбрать кейс")+'</div>');
 }
 
 var dailyReady=function(){
@@ -2822,7 +3027,7 @@ function earnView(){
     )+'%"></i></div>'+
 
     '<p class="small">Нажатие стоит 1 энергии. '+
-    'Восстановление +1 каждую секунду. Бонус не сгорает.</p>'+
+    'Восстановление +1 каждую секунду.</p>'+
     '<div class="progress"><i id="energyBar" style="width:'+(
       S.energy/maxEnergy()*100
     )+'%"></i></div>'+
@@ -2833,15 +3038,7 @@ function earnView(){
       "Улучшить до +"+(S.level+1)+
       " за тап · "+stars(c),
       undefined,"btn full",S.level>=20)+
-    '</div>'+
-
-    '<p class="small" style="text-align:center;margin:12px 0 0">'+
-    (S.level>=20?
-      "Максимальная мощность.":
-      "Улучшение: +1 за тап и +10 к запасу энергии. "+
-      "Дополнительная звезда за "+fmt(c)+
-      " нажатий покроет игровую стоимость улучшения.")+
-    '</p></div>'+
+    '</div></div>'+
 
     '<div><div class="panel">'+
     '<span class="eyebrow">РАЗ В 24 ЧАСА</span>'+
@@ -2863,13 +3060,7 @@ function earnView(){
     'data-action="job"'+
     (["working","cooldown"].includes(jobState())?
       " disabled":"")+'>'+jobLabel()+
-    '</button></div>'+
-
-    '<div class="panel" style="margin-top:15px">'+
-    '<h3>Без скрытых условий</h3>'+
-    '<p class="small" style="margin:0">Доход за тап фиксированный. '+
-    'Офлайн восстанавливается только энергия. '+
-    'Нет штрафов за паузу.</p></div></div></div>'+
+    '</button></div></div></div>'+
 
     '<div class="heading"><h2>Достижения</h2>'+
     '<span class="muted">Разовые награды</span></div>'+
@@ -2890,7 +3081,7 @@ function earnView(){
 function tap(e){
   replenish();
 
-  if(now()-lastTap<90)return;
+  if(now()-lastTap<85)return;
 
   if(S.energy<1){
     return toast(
@@ -2902,12 +3093,14 @@ function tap(e){
   S.energy--;
   S.stats.taps++;
   S.bonusProgress++;
+  haptic(8);
 
   var bonus=0;
 
   if(S.bonusProgress>=25){
     S.bonusProgress-=25;
     bonus=5;
+    haptic(25);
   }
 
   var earned=power()+bonus;
@@ -2947,12 +3140,17 @@ function tap(e){
 }
 
 function head(i,label){
-  return '<div class="inspect-stage" style="'+theme(i)+'">'+
+  var bgRar=BG[i.bg][3];
+  var bgBonus=Math.round((BG[i.bg][4]-1)*100);
+  var ser=serialInfo(i.serial);
+  var serBonus=Math.round((ser.mult-1)*100);
+
+  return '<div class="inspect-stage" id="inspectStage" style="'+theme(i)+'">'+
     '<span class="stage-label">'+label+'</span>'+
     '<div class="inspect-card'+(i.upgrade?" forge-aura":"")+'">'+
-    media(i.id,i.ref,true)+'</div>'+
-    '<span class="stage-caption">ОБЪЁМНАЯ ВИТРИНА · '+
-    'НЕ ОРИГИНАЛЬНАЯ 3D-МОДЕЛЬ</span></div>'+
+    media(i.id,i.ref,true)+
+    '<div class="inspect-glare"></div></div>'+
+    '<span class="stage-caption">ПРОВЕДИ ПАЛЬЦЕМ ИЛИ КУРСОРОМ ДЛЯ 3D-ОСМОТРА</span></div>'+
 
     '<div class="sheet-body"><div class="row">'+
     '<h2>'+D[i.id][0]+'</h2>'+
@@ -2962,13 +3160,16 @@ function head(i,label){
     '" aria-label="Избранное" aria-pressed="'+
     S.favorites.includes(i.id)+'">'+ic("heart")+
     '</button></div>'+
-    '<p class="small" style="margin-top:7px">Демо №'+
-    fmt(i.serial)+' · не настоящий NFT</p>'+
+    '<p class="small" style="margin-top:6px">'+esc(i.origin||"Архив студии")+'</p>'+
 
     '<div class="attrs">'+
-    '<div><small>Категория</small>'+RAR[D[i.id][3]]+'</div>'+
-    '<div><small>Сцена</small>'+BG[i.bg][0]+'</div>'+
-    '<div><small>Ателье</small>'+(i.upgrade||0)+' / 5</div>'+
+    '<div><small>Коллекция</small>'+RAR[D[i.id][3]]+'</div>'+
+    '<div><small>Серийный номер</small>#'+fmt(i.serial)+
+      (ser.rare?' · <strong>'+ser.tag+' (+'+serBonus+'%)</strong>':'')+'</div>'+
+    '<div><small>Фон ('+BG_RAR[bgRar]+')</small>'+BG[i.bg][0]+
+      (bgBonus>0?' · <strong>+'+bgBonus+'%</strong>':'')+'</div>'+
+    '<div><small>Ателье</small>'+(i.upgrade||0)+' / 5'+
+      (i.upgrade?' · <strong>+'+(i.upgrade*10)+'%</strong>':'')+'</div>'+
     '</div>';
 }
 
@@ -2988,13 +3189,12 @@ function previewBuy(id){
 
   showModal(
     head(l.item,"ПРЕДЛОЖЕНИЕ НА МАРКЕТЕ")+
-    '<p class="small">Демо-продавец @'+esc(l.seller)+
-    '. После покупки предмет появится в коллекции.</p>'+
+    '<p class="small">Продавец @'+esc(l.seller)+
+    '. После покупки предмет появится в вашей коллекции.</p>'+
     '<div class="receipt"><span>Цена продавца</span>'+
     '<span class="price">'+stars(l.price)+'</span></div>'+
-    '<div class="receipt"><span>Игровая оценка</span>'+
+    '<div class="receipt"><span>Оценка с учётом фона и номера</span>'+
     '<span>'+stars(itemValue(l.item))+'</span></div>'+
-    '<p class="small">Перепродажа по оценке не гарантируется.</p>'+
     '<div class="actions">'+
     btn("buy",S.coins<l.price?
       "Не хватает звёзд":
@@ -3004,11 +3204,20 @@ function previewBuy(id){
   );
 }
 
-var buyerChance=function(r){
-  return r<=.8?.35:
-    r<=1?.22:
-    r<=1.15?.08:
-    r<=1.5?.015:0;
+/* Учёт характера ботов при покупке лотов игрока */
+var buyerChance=function(r,itemObj){
+  var serRare=serialInfo(itemObj.serial).rare;
+  var bgRare=BG[itemObj.bg][3]>0;
+  var forged=(itemObj.upgrade||0)>=2;
+
+  /* Коллекционеры чаще выкупают редкие фоны, красивые номера и прокачанные предметы даже с наценкой */
+  var collectorBonus=(serRare?.06:0)+(bgRare?.05:0)+(forged?.05:0);
+
+  if(r<=.8)return .38+collectorBonus;
+  if(r<=1)return .24+collectorBonus;
+  if(r<=1.2)return .09+collectorBonus;
+  if(r<=1.45)return .02+(collectorBonus*.7);
+  return 0;
 };
 
 function previewItem(id){
@@ -3020,9 +3229,12 @@ function previewItem(id){
 
   var base=itemValue(i);
   var cost=forgeCost(i);
+  var isPinned=profile&&Array.isArray(profile.pinned)&&profile.pinned.includes(id);
 
   var nextValue=Math.round(
     estimate(i.id)*
+    (BG[i.bg][4]||1)*
+    (serialInfo(i.serial).mult||1)*
     (1+.1*((i.upgrade||0)+1))
   );
 
@@ -3032,14 +3244,20 @@ function previewItem(id){
 
   showModal(
     head(i,"ТВОЯ КОЛЛЕКЦИЯ")+
+    '<div style="margin-bottom:14px">'+
+    btn("togglePin",
+      (isPinned?"Убрать с витрины профиля":"Закрепить в профиле Telegram"),
+      id,"btn secondary full")+
+    '</div>'+
+
     '<div class="forge-box"><div class="row">'+
     '<h3>Ателье подарков</h3>'+
     '<span class="pill">'+(i.upgrade||0)+' / 5</span></div>'+
     '<p class="small">'+
     (i.upgrade>=5?
       "Максимальный уровень оформления.":
-      "Следующая ступень: подсветка витрины и +10% базовой игровой оценки. "+
-      "Шанс успеха 100%. Новая оценка сейчас: "+fmt(nextValue)+".")+
+      "Улучшает подсветку витрины и повышает оценку (+10%). "+
+      "Новая оценка: "+fmt(nextValue)+".")+
     '</p>'+
     btn("forge",i.upgrade>=5?
       "Максимальное улучшение":
@@ -3047,11 +3265,9 @@ function previewItem(id){
       " · "+stars(cost),
       id,"btn secondary full",
       i.upgrade>=5||S.coins<cost)+
-    '<p class="small" style="margin:9px 0 0">'+
-    'Не изменяет настоящий NFT, его изображение или редкость. '+
-    'Продажа и возврат затрат не гарантируются.</p></div>'+
+    '</div>'+
 
-    '<div class="sale-box"><h3>Твоя цена продажи</h3>'+
+    '<div class="sale-box"><h3>Выставить на маркет</h3>'+
     '<div class="stepper">'+
     btn("priceStep","−",-1,"step")+
     '<input id="sellPrice" type="number" '+
@@ -3065,8 +3281,8 @@ function previewItem(id){
     btn("preset","Наценка<br>+15%",1.15,"preset")+
     '</div>'+
 
-    '<div class="sale-line"><span>Оценка при открытии</span>'+
-    '<span id="saleRef" data-value="'+base+'">'+
+    '<div class="sale-line"><span>Текущая оценка предмета</span>'+
+    '<span id="saleRef" data-value="'+base+'" data-uid="'+esc(id)+'">'+
     fmt(base)+'</span></div>'+
     '<div class="sale-line"><span>Комиссия 5%</span>'+
     '<span id="saleFee"></span></div>'+
@@ -3078,9 +3294,7 @@ function previewItem(id){
     '<div class="actions">'+
     btn("list","Выставить на маркет",id,"btn full")+
     btn("close","Оставить в коллекции",undefined,"btn secondary full")+
-    refLink(i)+'</div>'+
-    '<p class="small">Срок лота 30 минут. '+
-    'Комиссия округляется вверх.</p></div>'
+    refLink(i)+'</div></div>'
   );
 
   updateSale();
@@ -3106,11 +3320,11 @@ function forge(id){
   S.coins-=q.cost;
   i.upgrade=(i.upgrade||0)+1;
   S.stats.forged++;
+  haptic(20);
 
   log(
     "Ателье: "+D[i.id][0]+
-    " улучшен до +"+i.upgrade+
-    " за "+q.cost
+    " #"+fmt(i.serial)+" улучшен до +"+i.upgrade
   );
 
   save();
@@ -3135,7 +3349,10 @@ function updateSale(){
   var valid=Number.isSafeInteger(p)&&
     p>=1&&p<=1e7;
 
-  var ref=+$("saleRef").dataset.value;
+  var refEl=$("saleRef");
+  var ref=+refEl.dataset.value;
+  var itemObj=S.inventory.find(function(v){return v.uid===refEl.dataset.uid;});
+
   var b=$("modal").querySelector(
     '[data-action="list"]'
   );
@@ -3170,20 +3387,19 @@ function updateSale(){
 
   var fee=Math.ceil(p*FEE);
   var r=p/ref;
+  var chance=itemObj?buyerChance(r,itemObj):0;
 
   $("saleFee").textContent=fmt(fee);
   $("saleNet").textContent=fmt(p-fee);
 
-  if(r>1.5)d.classList.add("bad");
+  if(r>1.45)d.classList.add("bad");
   else if(r>1)d.classList.add("warn");
 
-  d.textContent="Шанс покупки за проверку при текущей "+
-    "отображённой оценке: "+
-    (buyerChance(r)*100).toLocaleString(
+  d.textContent="Шанс выкупа ботами (каждые 10 с): "+
+    (chance*100).toLocaleString(
       "ru-RU",{maximumFractionDigits:1}
     )+
-    "%. Проверка раз в 10 секунд при открытой игре. "+
-    "Рыночная оценка меняется.";
+    "%. Редкие фоны и красивые номера привлекают коллекционеров.";
 }
 
 function buy(id){
@@ -3205,13 +3421,15 @@ function buy(id){
 
   S.coins-=l.price;
   S.market.splice(n,1);
+  l.item.origin="Куплен на маркете у @"+l.seller;
   S.inventory.push(l.item);
   discover(l.item.id);
   S.stats.bought++;
+  haptic(18);
 
   log(
     "Куплен "+D[l.item.id][0]+
-    " за "+l.price
+    " #"+fmt(l.item.serial)+" за "+l.price
   );
 
   save();
@@ -3242,22 +3460,25 @@ function listItem(id){
 
   var i=S.inventory.splice(n,1)[0];
 
+  /* Снимаем с витрины профиля, если выставлен на продажу */
+  if(profile&&Array.isArray(profile.pinned)){
+    profile.pinned=profile.pinned.filter(function(u){return u!==id;});
+  }
+
   S.listings.push({
     uid:uid(),item:i,price:p,
     expires:now()+1800000
   });
 
   log(
-    "Выставлен "+D[i.id][0]+" за "+p
+    "Выставлен "+D[i.id][0]+" #"+fmt(i.serial)+" за "+p
   );
 
   save();
   closeModal();
   render(false);
 
-  toast(
-    "Лот размещён. Продажа не гарантируется."
-  );
+  toast("Лот размещён на маркете.");
 }
 
 function cancelListing(id){
@@ -3316,11 +3537,17 @@ function updatePrices(){
   S.indexHistory=S.indexHistory.slice(-35);
 
   S.market=S.market.filter(function(){
-    return rng()>.06;
+    return rng()>.07;
   });
 
   while(S.market.length<36){
     S.market.push(spawn());
+  }
+
+  var sample=S.market[int(0,S.market.length-1)];
+  if(sample){
+    marketEventText="@"+sample.seller+" выставил "+D[sample.item.id][0]+" #"+fmt(sample.item.serial)+" за "+fmt(sample.price);
+    if($("marketTicker"))$("marketTicker").innerHTML='<i class="dot"></i> '+esc(marketEventText);
   }
 
   save();
@@ -3336,24 +3563,34 @@ function checkBuyers(){
   S.listings=S.listings.filter(function(l){
     if(
       rng()>=buyerChance(
-        l.price/itemValue(l.item)
+        l.price/itemValue(l.item),l.item
       )
     )return true;
 
     var net=l.price-Math.ceil(l.price*FEE);
 
+    /* Подбираем подходящего бота по характеристикам предмета */
+    var buyerBot=BOTS[int(0,BOTS.length-1)];
+    if(serialInfo(l.item.serial).rare)buyerBot=BOTS[2];
+    else if(BG[l.item.bg][3]>0)buyerBot=BOTS[1];
+    else if((l.item.upgrade||0)>=2)buyerBot=BOTS[3];
+
     S.coins+=net;
     S.stats.sold++;
     changed=true;
+    haptic(22);
+
+    marketEventText="@"+buyerBot.name+" ("+buyerBot.role+") купил "+D[l.item.id][0]+" #"+fmt(l.item.serial);
+    if($("marketTicker"))$("marketTicker").innerHTML='<i class="dot"></i> '+esc(marketEventText);
 
     log(
-      "Продан "+D[l.item.id][0]+
-      ". Получено "+net
+      "@"+buyerBot.name+" купил "+D[l.item.id][0]+
+      " #"+fmt(l.item.serial)+" (+"+net+")"
     );
 
     toast(
-      "Бот купил "+D[l.item.id][0]+
-      ": +"+fmt(net)+" после комиссии."
+      "@"+buyerBot.name+" купил "+D[l.item.id][0]+
+      ": +"+fmt(net)+" звёзд."
     );
 
     return false;
@@ -3419,10 +3656,7 @@ function caseModal(n){
         '<span>'+(w[1]/total*100).toLocaleString(
           "ru-RU",{maximumFractionDigits:2}
         )+'%</span></div>';
-    }).join("")+'</div></details>'+
-    '<p class="small" style="text-align:center;margin-bottom:0">'+
-    'Предмет сохраняется до анимации. '+
-    'Пропуск и перезагрузка не меняют результат.</p></div>'
+    }).join("")+'</div></details></div>'
   );
 }
 
@@ -3486,25 +3720,29 @@ function settleRoll(){
     function(b){b.disabled=false;}
   );
 
+  var ser=serialInfo(r.item.serial);
+  var bgRar=BG[r.item.bg][3];
+  var extraTags=[];
+  if(ser.rare)extraTags.push(ser.tag);
+  if(bgRar>0)extraTags.push("Фон: "+BG_RAR[bgRar]);
+
   $("caseStatus").textContent=
     "Рулетка остановлена. Выигранный предмет — точно под указателем.";
 
   $("caseControls").innerHTML="";
   $("caseResult").innerHTML=
     '<div class="result-card" style="margin-top:16px">'+
-    '<span class="eyebrow">ТВОЯ НАХОДКА · '+
-    'РЕЗУЛЬТАТ СОХРАНЁН</span>'+
+    '<span class="eyebrow">ТВОЯ НАХОДКА'+
+    (extraTags.length?' · '+extraTags.join(" · "):'')+'</span>'+
     '<h3>'+D[r.item.id][0]+'</h3>'+
-    '<div class="row"><span class="small">Демо №'+
-    fmt(r.item.serial)+' · референс #'+r.item.ref+
+    '<div class="row"><span class="small">№'+
+    fmt(r.item.serial)+' · '+BG[r.item.bg][0]+
     '</span><span class="price">'+
     stars(itemValue(r.item))+'</span></div>'+
     '<div class="actions">'+
     btn("claimCase","Забрать подарок",undefined,"btn full")+
-    btn("inspectCase","Рассмотреть и улучшить",undefined,"btn secondary full")+
-    '</div><p class="small" style="margin:10px 0 0">'+
-    'Рулетка останется здесь, пока ты не продолжишь. '+
-    'Предмет уже находится в коллекции.</p></div>';
+    btn("inspectCase","3D-осмотр и витрина",undefined,"btn secondary full")+
+    '</div></div>';
 
   var focus=$("modal").querySelector(
     '[data-action="claimCase"]'
@@ -3513,6 +3751,7 @@ function settleRoll(){
   if(focus)focus.focus();
 
   if(!r.resumed){
+    haptic(30);
     sparkleModal();
     winSound();
   }
@@ -3526,12 +3765,13 @@ function openCase(n){
   var c=CASES[n];
   if(!c||S.coins<c.p)return;
 
-  var winner=item(pick(c.w));
+  var winner=item(pick(c.w),"Из кейса «"+c.n+"»");
 
   S.coins-=c.p;
   S.inventory.push(winner);
   discover(winner.id);
   S.stats.opened++;
+  haptic(15);
 
   S.pendingCase={
     uid:winner.uid,caseId:n
@@ -3539,7 +3779,7 @@ function openCase(n){
 
   log(
     "Кейс "+c.n+": "+D[winner.id][0]+
-    " · #"+winner.ref
+    " #"+fmt(winner.serial)
   );
 
   save();
@@ -3723,7 +3963,7 @@ function slotView(){
     '<p class="small" id="slotResult" aria-live="polite">'+
     'Ставка списывается перед запуском.</p></div>'+
 
-    '<div class="panel"><h3>Прозрачные правила</h3>'+
+    '<div class="panel"><h3>Правила выплат</h3>'+
     '<p class="small">Каждый барабан независимо выбирает '+
     'один из 5 символов с вероятностью 20%.</p>'+
     [["Три одинаковых","4%","×10"],
@@ -3732,10 +3972,7 @@ function slotView(){
       return '<div class="task"><div class="task-content">'+
         '<h3>'+x[0]+'</h3><p>Вероятность '+x[1]+'</p></div>'+
         '<span class="pill">'+x[2]+'</span></div>';
-    }).join("")+
-    '<p class="small">Множитель — полная выплата с учётом ставки. '+
-    'Теоретический возврат 88%, средняя потеря 12% ставки. '+
-    'Не способ заработка. Автозапуска нет.</p></div></div>';
+    }).join("")+'</div></div>';
 }
 
 function spin(){
@@ -3747,6 +3984,7 @@ function spin(){
 
   busy=true;
   nav();
+  haptic(12);
 
   var current=bet;
   var result=[
@@ -3790,8 +4028,7 @@ function spin(){
       ", прибыль "+fmt(payout-current)+".":
       mult===1?
         "Пара! Ставка возвращена.":
-        "Все разные. Выплата 0. "+
-        "Бесплатные звёзды — в мастерской.";
+        "Все разные. Выплата 0.";
 
     if(mult===10){
       reels.forEach(function(r){
@@ -3803,6 +4040,7 @@ function spin(){
         r.left+r.width/2,r.top+r.height/2
       );
 
+      haptic(35);
       winSound();
     }
   }
@@ -3844,6 +4082,7 @@ function spin(){
 
       reel.classList.add("stopped");
       tone(490+index*110,.1,.013);
+      haptic(10);
 
       if(++count===3)all();
       else $("slotResult").textContent=
@@ -3895,11 +4134,7 @@ function memoryView(){
       '<div class="panel"><h3>Как играть</h3>'+
       '<p class="small">Открывай по две карточки. '+
       'Совпавшие пары остаются открытыми. '+
-      'Награда доступна раз в 15 минут. '+
-      'Повторные тренировки бесплатные, '+
-      'без дополнительной награды до окончания перерыва.</p>'+
-      '<p class="small">Незавершённый раунд не сохраняется при выходе. '+
-      'Баланс не списывается.</p></div></div>';
+      'Награда доступна раз в 15 минут.</p></div></div>';
   }
 
   return '<div class="panel"><div class="row">'+
@@ -3971,6 +4206,7 @@ function memoryFlip(n){
   )return;
 
   m.open.push(n);
+  haptic(8);
 
   var buttons=$("main").querySelectorAll(
     ".memory-card"
@@ -3998,6 +4234,7 @@ function memoryFlip(n){
 
     m.open=[];
     m.locked=false;
+    haptic(16);
 
     tone(720,.1,.01);
 
@@ -4059,19 +4296,14 @@ function aimView(){
       '<span class="eyebrow">AIM LAB</span>'+
       '<h2 style="margin-top:14px">Реакция и точность</h2>'+
       '<p class="small">Лови подарки за 30 секунд. '+
-      'Без ставки, без проигрыша, без автозапуска.</p>'+
+      'Без ставки, без проигрыша.</p>'+
       btn("startAim","Начать раунд",undefined,"btn full")+
       '<p class="small">Лучший результат: '+
       fmt(S.stats.aimBest)+' очков. '+
-      'Награда 20 звёзд за 10 очков, не чаще раза в 10 минут.</p>'+
+      'Награда 20 звёзд за 10 очков, раз в 10 минут.</p>'+
       '</div><div class="panel"><h3>Правила</h3>'+
-      '<p class="small">Цель появляется случайно. '+
-      'Попадание — +1 очко, промах — −1, но не ниже нуля. '+
-      'Награда доступна раз в 10 минут. '+
-      'Повторные раунды бесплатные.</p>'+
-      '<p class="small">Незавершённый раунд не сохраняется. '+
-      'Это тренировка на виртуальный баланс, не способ заработка.</p>'+
-      '</div></div>';
+      '<p class="small">Нажимай на появляющиеся подарки как можно быстрее. '+
+      'Награда доступна раз в 10 минут.</p></div></div>';
   }
 
   return '<div class="panel"><div class="row">'+
@@ -4079,24 +4311,30 @@ function aimView(){
     '<span class="pill" id="aimScore">Очки '+
     aim.score+' · время '+aim.time+' с</span></div>'+
     '<div class="aim-stage" id="aimStage">'+
-    '<div class="aim-target" data-action="aimHit" '+
-    'style="left:'+aim.x+'%;top:'+aim.y+'%">'+
-    '<img data-slot src="'+asset(aim.id,1)+
-    '" alt="'+esc(D[aim.id][0])+
-    '" referrerpolicy="no-referrer"></div></div>'+
+    (aim.finished?'':
+      '<div class="aim-target" id="aimTarget" data-action="aimHit" '+
+      'style="left:'+aim.x+'%;top:'+aim.y+'%">'+
+      '<img data-slot src="'+asset(aim.id,1)+
+      '" alt="'+esc(D[aim.id][0])+
+      '" referrerpolicy="no-referrer"></div>')+
+    '</div>'+
     '<div class="aim-bar"><i id="aimBar" style="width:'+(
       aim.time/30*100
     )+'%"></i></div>'+
-    '<div id="aimResult" aria-live="polite"></div></div>';
+    '<div id="aimResult" aria-live="polite">'+
+    (aim.finished?
+      '<p class="small" style="margin-top:12px">'+esc(aim.message)+'</p>'+
+      btn("startAim","Ещё раунд",undefined,"btn secondary full"):'')+
+    '</div></div>';
 }
 
 function startAim(){
   clearTimeout(aimTimer);
 
   aim={
-    token:uid(),score:0,time:30,
+    token:uid(),score:0,time:30,finished:false,
     id:int(0,D.length-1),
-    x:int(10,75),y:int(10,70)
+    x:int(10,75),y:int(10,70),message:""
   };
 
   render(false);
@@ -4104,14 +4342,15 @@ function startAim(){
 }
 
 function aimTick(){
-  if(!aim)return;
+  if(!aim||aim.finished)return;
 
   aimTimer=setTimeout(function(){
-    if(!aim)return;
+    if(!aim||aim.finished)return;
 
     aim.time--;
 
     if(aim.time<=0){
+      aim.finished=true;
       var reward=0;
       var best=S.stats.aimBest;
 
@@ -4148,27 +4387,23 @@ function aimTick(){
       return;
     }
 
-    var stage=$("aimStage");
-
-    if(stage){
-      var target=stage.querySelector(".aim-target");
-
-      if(target){
-        target.style.left=aim.x+"%";
-        target.style.top=aim.y+"%";
-        target.querySelector("img").src=
-          asset(aim.id,1);
-      }
+    if($("aimScore")){
+      $("aimScore").textContent="Очки "+aim.score+" · время "+aim.time+" с";
+    }
+    if($("aimBar")){
+      $("aimBar").style.width=(aim.time/30*100)+"%";
     }
 
     aimTick();
   },1000);
 }
 
+/* Оптимизированное попадание в Aim Lab без полной перерисовки DOM */
 function aimHit(e){
   if(!aim||aim.finished)return;
 
   e.stopPropagation();
+  haptic(10);
 
   aim.score++;
   S.stats.aimHits++;
@@ -4177,6 +4412,8 @@ function aimHit(e){
   aim.y=int(10,70);
 
   var stage=$("aimStage");
+  if(!stage)return;
+
   var r=stage.getBoundingClientRect();
   var x=e.clientX||r.left+r.width/2;
   var y=e.clientY||r.top+r.height/2;
@@ -4197,8 +4434,21 @@ function aimHit(e){
   }
 
   tone(720,.08,.012);
-  render(false);
-  aimTick();
+
+  if($("aimScore")){
+    $("aimScore").textContent="Очки "+aim.score+" · время "+aim.time+" с";
+  }
+
+  var target=$("aimTarget");
+  if(target){
+    target.style.left=aim.x+"%";
+    target.style.top=aim.y+"%";
+    var img=target.querySelector("img");
+    if(img)img.src=asset(aim.id,1);
+    target.style.animation="none";
+    void target.offsetWidth;
+    target.style.animation="";
+  }
 }
 
 function timers(){
@@ -4230,42 +4480,18 @@ function timers(){
 function help(){
   showModal(
     '<div class="sheet-body" style="padding-top:30px">'+
-    '<span class="eyebrow">GIFT LAB / NEON TERMINAL</span>'+
-    '<h2 style="margin-top:14px">Правила и ограничения</h2>'+
-    '<p class="small">40 коллекций, 10 кейсов, референсы #1–4. '+
-    'Предметы, номера, категории, сцены, цены и улучшения игровые. '+
-    'Никаких платежей, вывода, блокчейн-транзакций и владения настоящими NFT.</p>'+
-    '<p class="small">Кейс сохраняет результат до анимации. '+
-    'Рулетка остаётся на выигранном предмете до твоего действия. '+
-    'Если закрыть страницу во время открытия, сохранённая находка '+
-    'появится при следующем входе. '+
-    'Закрытие окна после остановки также считается получением предмета.</p>'+
-    '<p class="small">Движение подарков, стекло и блики — '+
-    'эффекты интерфейса. Это не настоящие трёхмерные модели '+
-    'и не оригинальные анимации NFT.</p>'+
-    '<p class="small">Ателье: пять ступеней, успех 100%. '+
-    'Каждая добавляет 10% базовой игровой оценки и меняет оформление. '+
-    'Стоимость — 12% базовой текущей оценки × номер следующей ступени, '+
-    'минимум 25 звёзд. Нажатие списывает показанную цену. '+
-    'Никакой гарантии продажи или окупаемости.</p>'+
-    '<p class="small">Кликер: доход равен уровню, энергия +1 в секунду, '+
-    '+5 каждые 25 нажатий. Улучшение добавляет +1 к тапу и +10 к запасу энергии. '+
-    'Стоимость 60 × 1,45^(уровень − 1), округление до 5. '+
-    'Максимум 20 уровней. Офлайн восстанавливается только энергия.</p>'+
-    '<p class="small">Маркет — локальные боты. Проверка раз в 10 секунд '+
-    'при открытой игре. Цена до 80% оценки: 35%; до 100%: 22%; '+
-    'до 115%: 8%; до 150%: 1,5%; выше: 0%. Комиссия 5%, округляется вверх. '+
-    'Срок лота 30 минут. Офлайн-продаж нет. '+
-    'Оценки меняются раз в 15 секунд в пределах 40–250% базовых значений.</p>'+
-    '<p class="small">Memory Lab — без ставки, награда 30 звёзд '+
-    'раз в 15 минут. Aim Lab — без ставки, награда 20 звёзд '+
-    'за 10 очков раз в 10 минут. Незаконченные раунды не сохраняются. '+
-    '«Три в ряд»: теоретический возврат 88%, не способ заработка.</p>'+
-    '<p class="small">Данные хранятся в браузере, не на сервере. '+
-    'Не открывай игру одновременно в нескольких вкладках. '+
-    'Резервная копия скачивается в JSON; автоматический импорт '+
-    'в этой версии не подключён. Картинкам нужен интернет. '+
-    'Источник звезды: '+esc(starSource)+'</p>'+
+    '<span class="eyebrow">GIFT LAB / COLLECTOR EDITION</span>'+
+    '<h2 style="margin-top:14px">Правила и ценности</h2>'+
+    '<p class="small">40 уникальных коллекций подарков, 10 серий кейсов. '+
+    'Все предметы, номера и баланс виртуальные.</p>'+
+    '<p class="small"><strong>Редкость фонов:</strong> у каждого подарка случайный фон. '+
+    'Базовые фоны не дают бонуса, Редкие добавляют +12–22% к оценке, '+
+    'Мифические (Honey, Aurora) — +35–45%.</p>'+
+    '<p class="small"><strong>Серийные номера:</strong> ранние номера (#1–999), '+
+    'моно-номера (#77777), зеркальные (#123321) и круглые (#50000) '+
+    'увеличивают ценность подарка до +60% и чаще выкупаются коллекционерами.</p>'+
+    '<p class="small"><strong>Витрина Telegram:</strong> ты можешь закрепить до 6 лучших подарков '+
+    'из коллекции прямо в своём локальном профиле.</p>'+
     btn("close","Понятно",undefined,"btn full")+'</div>'
   );
 }
@@ -4333,9 +4559,9 @@ function action(a,id,e){
       var r=activeRoll;
 
       if(r&&r.settled){
-        var uid=r.item.uid;
+        var uidVal=r.item.uid;
         acknowledge();
-        previewItem(uid);
+        previewItem(uidVal);
       }
 
       break;
@@ -4345,6 +4571,25 @@ function action(a,id,e){
       break;
 
     case "previewItem":
+      previewItem(id);
+      break;
+
+    case "togglePin":
+      if(!profile)return;
+      if(!Array.isArray(profile.pinned))profile.pinned=[];
+      var idx=profile.pinned.indexOf(id);
+      if(idx>=0){
+        profile.pinned.splice(idx,1);
+        toast("Убрано с витрины профиля.");
+      }else{
+        if(profile.pinned.length>=6){
+          return toast("Максимум 6 подарков на витрине.");
+        }
+        profile.pinned.push(id);
+        toast("Закреплено в профиле Telegram.");
+      }
+      save();
+      if(tab==="inventory")render(false);
       previewItem(id);
       break;
 
@@ -4400,6 +4645,11 @@ function action(a,id,e){
 
     case "filter":
       rarity=+id;
+      render(false);
+      break;
+
+    case "rareTraitsFilter":
+      rareTraitsOnly=!rareTraitsOnly;
       render(false);
       break;
 
@@ -4483,6 +4733,7 @@ function action(a,id,e){
       S.energy=Math.min(
         maxEnergy(),S.energy+10
       );
+      haptic(20);
 
       log(
         "Мастерская: +"+power()+
@@ -4501,6 +4752,7 @@ function action(a,id,e){
       if(dailyReady()){
         S.dailyAt=now();
         S.coins+=50;
+        haptic(25);
 
         log("Ежедневная награда +50");
         save();
@@ -4510,16 +4762,17 @@ function action(a,id,e){
       break;
 
     case "job":
-      var j=jobState();
+      var jState=jobState();
 
-      if(j==="start"){
+      if(jState==="start"){
         S.jobReady=now()+60000;
         toast("Курьер отправился в путь.");
 
-      }else if(j==="claim"){
+      }else if(jState==="claim"){
         S.coins+=20;
         S.jobReady=0;
         S.jobCooldown=now()+120000;
+        haptic(20);
 
         log("Доставка завершена +20");
         toast("+20 игровых звёзд.");
@@ -4541,6 +4794,7 @@ function action(a,id,e){
 
       S.claimed.push(id);
       S.coins+=m[5];
+      haptic(25);
 
       log(
         "Достижение "+m[1]+": +"+m[5]
@@ -4696,6 +4950,7 @@ document.addEventListener("keydown",function(e){
   }
 });
 
+/* Интерактивный 3D-параллакс для карточек и 3D-витрины осмотра (ПК и тач-экраны) */
 function resetTilt(){
   if(!tilt)return;
 
@@ -4708,11 +4963,37 @@ function resetTilt(){
   tilt=null;
 }
 
+function updateInspect3D(stage,clientX,clientY){
+  if(!motion()||!stage)return;
+  var r=stage.getBoundingClientRect();
+  var x=Math.max(0,Math.min(1,(clientX-r.left)/r.width));
+  var y=Math.max(0,Math.min(1,(clientY-r.top)/r.height));
+  stage.classList.add("interacting");
+  stage.style.setProperty("--tx",((.5-y)*24).toFixed(1)+"deg");
+  stage.style.setProperty("--ty",((x-.5)*28).toFixed(1)+"deg");
+  stage.style.setProperty("--gx",(x*100).toFixed(1)+"%");
+  stage.style.setProperty("--gy",(y*100).toFixed(1)+"%");
+}
+
+function resetInspect3D(){
+  var stage=$("inspectStage");
+  if(!stage)return;
+  stage.classList.remove("interacting");
+  ["--tx","--ty","--gx","--gy"].forEach(function(p){
+    stage.style.removeProperty(p);
+  });
+}
+
 document.addEventListener("pointermove",function(e){
-  if(
-    !motion()||
-    !matchMedia("(hover:hover) and (pointer:fine)").matches
-  )return;
+  if(!motion())return;
+
+  var stage=e.target.closest("#inspectStage");
+  if(stage){
+    updateInspect3D(stage,e.clientX,e.clientY);
+    return;
+  }
+
+  if(!matchMedia("(hover:hover) and (pointer:fine)").matches)return;
 
   var c=e.target.closest(".gift");
 
@@ -4742,11 +5023,11 @@ document.addEventListener("pointermove",function(e){
     );
 
     tilt.style.setProperty(
-      "--rx",(.5-y)*8+"deg"
+      "--rx",(.5-y)*9+"deg"
     );
 
     tilt.style.setProperty(
-      "--ry",(x-.5)*9+"deg"
+      "--ry",(x-.5)*11+"deg"
     );
 
     tilt.style.setProperty("--mx",x*100+"%");
@@ -4754,7 +5035,13 @@ document.addEventListener("pointermove",function(e){
   });
 },{passive:true});
 
+document.addEventListener("pointerup",resetInspect3D,{passive:true});
+document.addEventListener("pointercancel",resetInspect3D,{passive:true});
+
 document.addEventListener("pointerout",function(e){
+  if(e.target.closest("#inspectStage")&&(!e.relatedTarget||!e.target.closest("#inspectStage").contains(e.relatedTarget))){
+    resetInspect3D();
+  }
   if(
     tilt&&
     (!e.relatedTarget||!tilt.contains(e.relatedTarget))
@@ -4763,7 +5050,10 @@ document.addEventListener("pointerout",function(e){
   }
 },{passive:true});
 
-window.addEventListener("blur",resetTilt);
+window.addEventListener("blur",function(){
+  resetTilt();
+  resetInspect3D();
+});
 window.addEventListener("resize",centerRoll);
 
 $("logo").innerHTML=ic("gift");
