@@ -5435,7 +5435,7 @@ marketView=function(){
   var seg='<div class="seg"><button data-action="mkt" data-id="stars" class="'+(mkt==="stars"?"on":"")+'">⭐ Звёзды</button><button data-action="mkt" data-id="gram" class="'+(mkt==="gram"?"on":"")+'">'+GRAM+' Gram</button></div>';
   if(mkt==="gram"){while(lots.length<10)lots.push(mkLot());
     return seg+'<div class="panel gramhead"><div class="row"><div><h3>Рынок Gram</h3><p class="small">Уникальные и дорогие подарки за премиум-валюту</p></div><span class="price">'+GRAM+' '+S.gram+'</span></div></div><div class="grid lotgrid" id="gramLots" style="margin-top:14px">'+lotsHtml()+'</div>';}
-  return seg+_mv3().replace(/<div class="heading"><h2>💎 Уникальные[sS]*?(?=<div class="toolbar">)/,"");};
+  return seg+_mv3().replace(/<div class="heading"><h2>💎 Уникальные(?:(?!<div class="toolbar">)[^])*/,"");};
 var _gw=gamesView;
 gamesView=function(){var h=_gw();if(arcade!=="upgrade")return h;
   var i=h.indexOf("</div>",h.indexOf('class="chips"'))+6;return h.slice(0,i)+upgradeView();};
@@ -5501,7 +5501,7 @@ var _sr=settleRoll;settleRoll=function(){_sr();var r=activeRoll;if(!r||!r.settle
 var _gcf=giftCard;
 giftCard=function(i,price,a,id,pin){var h=_gcf(i,price,a,id,pin);
   if(a==="previewBuy"){var f=Infinity;S.market.forEach(function(l){if(l.item.id===i.id&&l.price<f)f=l.price;});
-    if(f<Infinity)h=h.replace(/(<div class="usd">[^<]*)(</div>)/,'$1 · флор '+fmt(f)+'$2');}
+    if(f<Infinity){var k=h.indexOf('</div>',h.indexOf('<div class="usd">'));if(k>0)h=h.slice(0,k)+' · флор '+fmt(f)+h.slice(k);}}
   return h;};
 function upCand(tv){return D.map(function(d,i){return i;}).sort(function(a,b){return Math.abs(D[a][2]-tv)-Math.abs(D[b][2]-tv);}).slice(0,3);}
 upg.hist=[];
