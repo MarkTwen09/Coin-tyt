@@ -1311,6 +1311,26 @@ body:before{content:"";position:fixed;inset:-20%;z-index:-1;pointer-events:none;
 .uq-aura{box-shadow:0 0 50px #ff7ad988,0 0 90px #7a9bff55,0 24px 38px #0006!important}
 .quick{padding:14px;border:1px solid #ffffff20;border-radius:17px;background:#ffffff05;margin-bottom:12px}
 .toast{border-left:3px solid #46aaff}
+.top{position:static;top:auto;margin:0 0 22px;padding:0;border-radius:0;background:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+.seg{display:flex;gap:6px;padding:4px;margin:4px 0 14px;border-radius:16px;background:#ffffff0a}
+.seg button{flex:1;padding:11px;border-radius:12px;background:transparent;color:var(--muted);font-weight:700;font-size:13px;display:flex;justify-content:center;align-items:center;gap:6px}
+.seg button.on{background:linear-gradient(135deg,#46aaff,#2f7bff);color:#fff}
+.usd{font-size:10px;color:var(--muted);margin-bottom:6px}
+.gift-body .price{font-variant-numeric:tabular-nums}
+.gramhead{border-color:#2aa5ff44;background:linear-gradient(135deg,#2aa5ff14,#ffffff03)}
+.hero-glow,body:before{animation:none}
+.gift.inview:before{animation:none;opacity:0}
+.gift.inview:nth-child(4n+1):before{opacity:1;animation:shine 8s ease-in-out infinite}
+.up-wheel{position:relative;width:200px;height:200px;margin:18px auto;border-radius:50%;background:conic-gradient(#3ddc97 0 var(--p),#ff5d6c var(--p) 360deg);box-shadow:0 0 40px #3ddc9733,inset 0 0 0 1px #ffffff33}
+.up-wheel:after{content:"";position:absolute;inset:22px;border-radius:50%;background:#182033}
+.up-ptr{position:absolute;inset:0;z-index:2}
+.up-ptr:before{content:"";position:absolute;left:50%;top:-8px;margin-left:-8px;border-left:8px solid transparent;border-right:8px solid transparent;border-top:18px solid #fff;filter:drop-shadow(0 2px 4px #0008)}
+.up-c{position:absolute;inset:0;z-index:3;display:grid;place-content:center;text-align:center}
+.up-c b{font-size:30px}.up-c span{font-size:11px;color:var(--muted)}
+.up-list{display:flex;gap:8px;overflow:auto;padding:10px 0;scrollbar-width:none}
+.up-tile{flex:0 0 78px;border-radius:14px;padding:5px;border:2px solid transparent;background:radial-gradient(circle at 50% 20%,var(--a),var(--b));color:#fff;font-size:10px;text-align:center}
+.up-tile.sel{border-color:#fff;box-shadow:0 0 20px #46aaff88}
+.up-tile .media{border-radius:10px;box-shadow:none}
 </style>
 </head>
 
@@ -1777,7 +1797,7 @@ function read(){
           l.price>0&&l.price<=1e7&&
           typeof l.seller==="string"&&
           Number.isFinite(l.at);
-      }).slice(-40).map(function(l){
+      }).slice(-70).map(function(l){
         return {
           uid:l.uid,item:norm(l.item),
           price:l.price,seller:l.seller,at:l.at
@@ -3624,7 +3644,7 @@ function updatePrices(){
     return rng()>.07;
   });
 
-  while(S.market.length<36){
+  while(S.market.length<48){
     S.market.push(spawn());
   }
 
@@ -4024,7 +4044,7 @@ function gamesView(){
     '<span class="pill">Виртуальный баланс</span></div>'+
     '<div class="chips">'+
     btn("arcade","Три в ряд","slot",arcade==="slot"?"on":"")+
-    btn("arcade","Memory Lab","memory",arcade==="memory"?"on":"")+
+    btn("arcade","Memory Lab","memory",arcade==="memory"?"on":"")+btn("arcade","🚀 Апгрейд","upgrade",arcade==="upgrade"?"on":"")+
     
     '</div>'+
     (arcade==="slot"?slotView():
@@ -4901,7 +4921,7 @@ function action(a,id,e){
       break;
 
     case "arcade":
-      if(["slot","memory","aim"].includes(id)){
+      if(["slot","memory","aim","upgrade"].includes(id)){
         clearTimeout(memoryTimer);
         clearTimeout(aimTimer);
 
@@ -5223,9 +5243,9 @@ marketView=function(){return '<div class="trends" id="trendStrip">'+trends()+'</
 function pushFeed(t){feed.unshift(t);feed=feed.slice(0,6);var e=$("marketTicker");if(e)e.innerHTML='<i class="dot"></i> '+esc(t);}
 setInterval(function(){
   if(!entered||busy||document.hidden)return;
-  if(rng()<.5&&S.market.length<46){var l=spawn();S.market.push(l);
+  if(rng()<.5&&S.market.length<64){var l=spawn();S.market.push(l);
     pushFeed("@"+l.seller+" выставил "+D[l.item.id][0]+" #"+fmt(l.item.serial)+" за "+fmt(l.price));}
-  else if(S.market.length>30){var m=S.market.splice(int(0,S.market.length-1),1)[0];
+  else if(S.market.length>40){var m=S.market.splice(int(0,S.market.length-1),1)[0];
     pushFeed("Продано: "+D[m.item.id][0]+" #"+fmt(m.item.serial)+" за "+fmt(m.price));}
   var id=int(0,D.length-1);S.previous[id]=S.prices[id];
   S.prices[id]=Math.max(Math.round(D[id][2]*.4),Math.min(Math.round(D[id][2]*2.5),Math.round(S.prices[id]*(.97+rng()*.06))));
@@ -5305,7 +5325,7 @@ head=function(i,l){var h=_hd(i,l);
   return i.uq?h.replace('<h2>'+D[i.id][0]+'</h2>','<h2>✨ '+esc(i.uq.n)+'</h2>').replace('class="inspect-card','class="inspect-card uq-aura'):h;};
 var lots=[];
 function mkLot(){var ids=[10,11,12,18,38,39,57,58,59,64,72,76,77,78,79].filter(function(x){return D[x];});
-  var it=item(ids[int(0,ids.length-1)],"Лот за Gram");it.upgrade=int(3,5);it.uq={t:uqTier(),n:uqName()};
+  var it=item(ids[int(0,ids.length-1)],"Лот за Gram");it.upgrade=int(3,5);if(rng()<.6)it.uq={t:uqTier(),n:uqName()};
   return {uid:uid(),item:it,price:Math.max(2,Math.round(gv(it)*(.85+rng()*.35))),seller:BOTS[int(0,BOTS.length-1)].name};}
 function lotsHtml(){return lots.map(function(l){return giftCard(l.item,l.price,"previewG",l.uid).replace(stars(l.price),GRAM+" "+l.price);}).join("");}
 var _mv2=marketView;
@@ -5325,7 +5345,7 @@ var _pi=previewItem;
 previewItem=function(id){_pi(id);
   var i=S.inventory.find(function(v){return v.uid===id;}),sb=$("modal").querySelector(".sale-box");if(!i||!sb)return;
   var h='<div class="quick"><h3>⚡ Быстрые действия</h3>'+btn("quickSell","Продать сразу за "+stars(Math.round(itemValue(i)*.85)),id,"btn secondary full");
-  if(i.uq){var g=gv(i);h+='<div class="stepper" style="margin-top:12px">'+btn("gStep","−",-1,"step")+'<input id="gramPrice" type="number" inputmode="numeric" min="1" value="'+g+'">'+btn("gStep","+",1,"step")+'</div>'+btn("listGram","Выставить за Gram",id,"btn full")+'<p class="small">Рекомендуемая цена: '+g+' '+GRAM+'. Комиссия 5%.</p>';}
+  if(i.uq||itemValue(i)>=2500){var g=gv(i);h+='<div class="stepper" style="margin-top:12px">'+btn("gStep","−",-1,"step")+'<input id="gramPrice" type="number" inputmode="numeric" min="1" value="'+g+'">'+btn("gStep","+",1,"step")+'</div>'+btn("listGram","Выставить за Gram",id,"btn full")+'<p class="small">Рекомендуемая цена: '+g+' '+GRAM+'. Комиссия 5%.</p>';}
   else if(i.upgrade>=5)h+=btn("makeUnique","✨ Сделать уникальным · 2 "+GRAM,id,"btn full",S.gram<2)+'<p class="small">Уникальное имя, голографическая рамка, оценка ×2–×6. Можно продавать за Gram.</p>';
   else h+='<p class="small">Улучши до +5 в Ателье, чтобы сделать подарок уникальным и продавать за Gram.</p>';
   sb.insertAdjacentHTML("beforebegin",h+'</div>');};
@@ -5355,7 +5375,7 @@ document.addEventListener("click",function(e){
   else if(a==="buyG"){var l=lots.find(function(z){return z.uid===id;});
     if(!l)return toast("Лот уже продан.");if(S.gram<l.price)return toast("Не хватает Gram.");
     S.gram-=l.price;lots=lots.filter(function(z){return z!==l;});l.item.origin="Куплен за Gram у @"+l.seller;
-    S.inventory.push(l.item);discover(l.item.id);S.stats.bought++;log("Куплен уникальный "+l.item.uq.n+" за "+l.price+" Gram");
+    S.inventory.push(l.item);discover(l.item.id);S.stats.bought++;log("Куплен "+(l.item.uq?l.item.uq.n:D[l.item.id][0])+" за "+l.price+" Gram");
     save();closeModal();balance();render(false);winSound();toast("Уникальный подарок в коллекции.");}
   else if(a==="quickSell"){var n=S.inventory.findIndex(function(z){return z.uid===id;});if(n<0)return;
     it=S.inventory.splice(n,1)[0];var q=Math.round(itemValue(it)*.85);S.coins+=q;S.stats.sold++;unpin(id);
@@ -5373,6 +5393,76 @@ document.addEventListener("click",function(e){
     var k=S.inventory.findIndex(function(z){return z.uid===id;});if(k<0)return;
     it=S.inventory.splice(k,1)[0];unpin(id);S.listings.push({uid:uid(),item:it,price:pr,expires:now()+3600000,cur:"gram"});
     log("Выставлен "+(it.uq?it.uq.n:D[it.id][0])+" за "+pr+" Gram");save();closeModal();render(false);toast("Лот за Gram размещён на час.");}
+});
+var mkt="stars",upg={mode:"gift",src:null,mult:2,bet:200,res:""};
+var USD_S=.013,USD_G=6;
+var _gc3=giftCard;
+giftCard=function(i,price,a,id,pin){var h=_gc3(i,price,a,id,pin);
+  var usd=a==="previewG"?price*USD_G:price*USD_S;
+  return h.replace('<div class="row"><span class="price">','<div class="usd">≈ $'+(usd>=100?Math.round(usd):usd.toFixed(2))+'</div><div class="row"><span class="price">');};
+var _mv3=marketView;
+marketView=function(){
+  var seg='<div class="seg"><button data-action="mkt" data-id="stars" class="'+(mkt==="stars"?"on":"")+'">⭐ Звёзды</button><button data-action="mkt" data-id="gram" class="'+(mkt==="gram"?"on":"")+'">'+GRAM+' Gram</button></div>';
+  if(mkt==="gram"){while(lots.length<10)lots.push(mkLot());
+    return seg+'<div class="panel gramhead"><div class="row"><div><h3>Рынок Gram</h3><p class="small">Уникальные и дорогие подарки за премиум-валюту</p></div><span class="price">'+GRAM+' '+S.gram+'</span></div></div><div class="grid lotgrid" id="gramLots" style="margin-top:14px">'+lotsHtml()+'</div>';}
+  return seg+_mv3().replace(/<div class="heading"><h2>💎 Уникальные[sS]*?(?=<div class="toolbar">)/,"");};
+var _gw=gamesView;
+gamesView=function(){var h=_gw();if(arcade!=="upgrade")return h;
+  var i=h.indexOf("</div>",h.indexOf('class="chips"'))+6;return h.slice(0,i)+upgradeView();};
+function upChance(){return Math.min(.9,.92/upg.mult);}
+function upgradeView(){
+  var inv=S.inventory.slice().sort(function(a,b){return itemValue(b)-itemValue(a);}).slice(0,24);
+  var src=S.inventory.find(function(i){return i.uid===upg.src;});if(!src)upg.src=null;
+  var ch=upChance(),h='<div class="panel upg"><span class="eyebrow">UPGRADE</span><h2 style="margin-top:12px">Апгрейд</h2><p class="small">Рискни подарком или звёздами и получи ×2–×10. Шанс = 92% ÷ множитель.</p>';
+  h+='<div class="chips">'+btn("upMode","🎁 Подарок","gift",upg.mode==="gift"?"on":"")+btn("upMode","⭐ Ставка звёзд","stars",upg.mode==="stars"?"on":"")+'</div>';
+  h+='<div class="up-wheel" id="upWheel" style="--p:'+(ch*360)+'deg"><div class="up-ptr" id="upPtr"></div><div class="up-c"><b>'+Math.round(ch*100)+'%</b><span>шанс</span></div></div>';
+  h+='<div class="chips" style="justify-content:center">'+[2,3,5,10].map(function(m){return btn("upMult","×"+m,m,upg.mult===m?"on":"");}).join("")+'</div>';
+  var can=false;
+  if(upg.mode==="stars"){
+    h+='<div class="chips" style="justify-content:center">'+[50,200,1000,5000].map(function(b){return btn("upBet",stars(b),b,upg.bet===b?"on":"");}).join("")+'</div><p class="small" style="text-align:center">Выигрыш: '+stars(upg.bet*upg.mult)+'</p>';
+    can=S.coins>=upg.bet;
+  }else{
+    h+=inv.length?'<div class="up-list">'+inv.map(function(i){return '<button class="up-tile'+(i.uid===upg.src?" sel":"")+'" style="'+theme(i)+'" data-action="upPick" data-id="'+esc(i.uid)+'">'+media(i.id,i.ref)+'<span>'+fmt(itemValue(i))+'</span></button>';}).join("")+'</div>':'<p class="small" style="text-align:center">Нет подарков. Открой кейс.</p>';
+    if(src)h+='<p class="small" style="text-align:center">Цель ≈ '+stars(Math.round(itemValue(src)*upg.mult))+'</p>';
+    can=!!src;
+  }
+  return h+btn("upRun","🚀 Апгрейд",undefined,"btn full",!can)+'<p class="small" style="text-align:center" aria-live="polite">'+esc(upg.res||"")+'</p></div>';}
+function upRun(){
+  if(busy)return;var ch=upChance(),win=rng()<ch,msg;
+  if(upg.mode==="stars"){
+    if(S.coins<upg.bet)return toast("Не хватает звёзд.");
+    S.coins-=upg.bet;if(win)S.coins+=upg.bet*upg.mult;
+    msg=win?"Победа! +"+fmt(upg.bet*upg.mult)+" ⭐":"Не повезло: −"+fmt(upg.bet)+" ⭐";
+  }else{
+    var n=S.inventory.findIndex(function(i){return i.uid===upg.src;});if(n<0)return;
+    var it=S.inventory[n],tv=itemValue(it)*upg.mult,mx=0;D.forEach(function(d){if(d[2]>mx)mx=d[2];});
+    if(tv>mx*1.4)return toast("Цель слишком высокая — выбери меньший множитель.");
+    S.inventory.splice(n,1);unpin(it.uid);
+    if(win){var c=D.map(function(d,i){return i;}).sort(function(a,b){return Math.abs(D[a][2]-tv)-Math.abs(D[b][2]-tv);}).slice(0,3);
+      var ni=item(c[int(0,2)],"Апгрейд ×"+upg.mult);S.inventory.push(ni);discover(ni.id);
+      msg="Победа! Получен "+D[ni.id][0]+" (≈ "+fmt(itemValue(ni))+" ⭐)";}
+    else msg="Не повезло: "+D[it.id][0]+" сгорел";
+    upg.src=null;
+  }
+  log("Апгрейд ×"+upg.mult+": "+(win?"победа":"поражение"));save();balance();
+  busy=true;nav();var ptr=$("upPtr"),w=$("upWheel");
+  document.querySelectorAll("#main button").forEach(function(b){b.disabled=true;});
+  var a=win?rng()*ch*324+ch*18:ch*360+rng()*(1-ch)*324+(1-ch)*18;
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    ptr.style.transition="transform "+(motion()?4:.2)+"s cubic-bezier(.12,.7,.14,1)";ptr.style.transform="rotate("+(1440+a)+"deg)";});});
+  setTimeout(function(){busy=false;nav();upg.res=msg;toast(msg);
+    if(win){haptic(35);winSound();var r=w.getBoundingClientRect();particles(r.left+r.width/2,r.top+r.height/2);}
+    render(false);},motion()?4300:500);}
+document.addEventListener("click",function(e){
+  if(!entered||busy)return;
+  var el=e.target.closest("[data-action]");if(!el||el.disabled)return;
+  var a=el.dataset.action,id=el.dataset.id;
+  if(a==="mkt"){mkt=id==="gram"?"gram":"stars";render(false);}
+  else if(a==="upMode"){upg.mode=id==="stars"?"stars":"gift";render(false);}
+  else if(a==="upMult"){upg.mult=+id;render(false);}
+  else if(a==="upBet"){upg.bet=+id;render(false);}
+  else if(a==="upPick"){upg.src=id;render(false);}
+  else if(a==="upRun")upRun();
 });
 $("logo").innerHTML=ic("gift");
 $("splashLogo").innerHTML=ic("gift");
@@ -5426,7 +5516,7 @@ document.addEventListener(
 
 expire();
 
-while(S.market.length<36){
+while(S.market.length<48){
   S.market.push(spawn());
 }
 
